@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model HomeStat {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  label     String
+  value     String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Partner {
+  id        String   @id @default(cuid())
+  name      String
+  center    String?
+  phone     String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DailyChallenge {
+  id          String   @id @default(cuid())
+  title       String
+  targetCount Int      @default(1)
+  xpReward    Int      @default(60)
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HomeVideo {
+  id        String   @id @default(cuid())
+  title     String
+  youtubeId String?
+  sortOrder Int      @default(0)
+  isFree    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LeaderboardEntry {
+  id        String   @id @default(cuid())
+  name      String
+  level     Int      @default(1)
+  xp        Int      @default(0)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Lớp 1–9 English curriculum levels (route still uses /hsk for compatibility).
+model GradeLevel {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  level       Int      @unique
+  title       String
+  description String?
+  color       String?
+  sortOrder   Int      @default(0)
+  topics      Topic[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Topic {
+  id           String     @id @default(cuid())
+  gradeLevelId String
+  gradeLevel   GradeLevel @relation(fields: [gradeLevelId], references: [id], onDelete: Cascade)
+  slug         String
+  title        String
+  description  String?
+  iconLabel    String?
+  sortOrder    Int        @default(0)
+  lessons      Lesson[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([gradeLevelId, slug])
+}
+
+model Lesson {
+  id            String   @id @default(cuid())
+  topicId       String
+  topic         Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  slug          String
+  title         String
+  description   String?
+  vocabCount    Int      @default(0)
+  grammarCount  Int      @default(0)
+  dialogueCount Int      @default(0)
+  durationMin   Int      @default(10)
+  sortOrder     Int      @default(0)
+  content       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([topicId, slug])
+}
+
+enum PracticeType {
+  WORD_ORDER
+  FILL_BLANK
+  LISTENING_FILL
+  LISTENING_ORDER
+  CLOZE_READING
+}
+
+/// Demo practice items (Lớp 1+). payload/answer are JSON per type.
+model PracticeItem {
+  id          String       @id @default(cuid())
+  type        PracticeType
+  level       Int          @default(1)
+  title       String?
+  prompt      String
+  instruction String?
+  /// Type-specific: tokens, options, transcript, passage, blanks…
+  payload     Json
+  /// Correct answer(s) for client-side check (demo).
+  answer      Json
+  sortOrder   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([type, level])
+}
+
+enum ExamDifficulty {
+  BASIC
+  STANDARD
+  ADVANCED
+}
+
+model ExamPaper {
+  id            String         @id @default(cuid())
+  level         Int
+  slug          String
+  title         String
+  difficulty    ExamDifficulty @default(BASIC)
+  durationMin   Int            @default(40)
+  totalPoints   Int            @default(100)
+  questionCount Int            @default(10)
+  /// Simple quiz: [{id, prompt, options[], correctIndex}]
+  questions     Json?
+  sortOrder     Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([level, slug])
+  @@index([level, difficulty])
+}
+
+model Story {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  summary     String?
+  level       Int      @default(1)
+  readingMin  Int      @default(5)
+  coverLabel  String?
+  body        String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model VocabTopic {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  wordCount   Int      @default(0)
+  level       Int      @default(1)
+  sortOrder   Int      @default(0)
+  words       Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String?
+  body        String?
+  publishedAt DateTime @default(now())
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
