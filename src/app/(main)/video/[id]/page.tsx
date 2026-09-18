@@ -1,65 +1,21 @@
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { Card } from "@/components/ui/Card";
-import { PageHero } from "@/components/ui/PageHero";
-import { prisma } from "@/lib/prisma";
+import { VideoLearningPlayer } from "@/components/video/VideoLearningPlayer";
+import { LoginGate } from "@/components/auth/LoginGate";
+import { findLearningVideo } from "@/lib/video-config";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  return { title: `Video ${id} | WEWIN EDUCATION` };
+  const video = findLearningVideo(id);
+  return { title: video ? `${video.title} | WEWIN EDUCATION` : "Video | WEWIN EDUCATION" };
 }
 
 export default async function VideoDetailPage({ params }: Props) {
   const { id } = await params;
-  let video = null;
-  try {
-    video = await prisma.homeVideo.findUnique({ where: { id } });
-  } catch {
-    notFound();
-  }
+  const video = findLearningVideo(id);
   if (!video) notFound();
-
-  return (
-    <div className="mx-auto max-w-[900px]">
-      <Link
-        href="/video"
-        className="mb-3 inline-block text-[13px] font-semibold text-brand hover:underline"
-      >
-        ← Tất cả video
-      </Link>
-      <PageHero eyebrow="VIDEO" title={video.title} />
-
-      <div className="mt-5 overflow-hidden rounded-2xl border border-border bg-ink">
-        {video.youtubeId ? (
-          <div className="aspect-video">
-            <iframe
-              title={video.title}
-              src={`https://www.youtube.com/embed/${video.youtubeId}`}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        ) : (
-          <div className="flex aspect-video items-center justify-center text-sm text-white/70">
-            Video chưa có YouTube ID — sẽ bổ sung sau.
-          </div>
-        )}
-      </div>
-
-      <Card className="mt-4" padding="lg">
-        <h2 className="text-sm font-bold text-ink">Transcript (placeholder)</h2>
-        <p className="mt-2 text-[13px] leading-relaxed text-ink-muted">
-          Transcript song ngữ sẽ hiển thị tại đây. Hiện tại đây là bản stub để giữ layout.
-          Hãy nghe và ghi chú các từ khoá quan trọng trong bài.
-        </p>
-      </Card>
-
-      <SiteFooter />
-    </div>
-  );
+  return <div className="mx-auto max-w-[1180px]"><Link href="/video" className="mb-3 inline-flex text-sm font-semibold text-brand hover:underline">← Học qua video</Link><div className="mb-5 flex flex-wrap items-end gap-3"><span className="rounded-full bg-[#ECFBF3] px-3 py-1 text-xs font-extrabold text-[#1F7A4D]">MIỄN PHÍ · {video.level}</span><h1 className="font-[family-name:var(--font-jakarta)] text-2xl font-extrabold text-ink md:text-3xl">{video.title}</h1></div><p className="mb-5 text-sm text-ink-muted">{video.description}</p><LoginGate title="Đăng nhập để mở video" description="Guest có thể xem danh mục video; tài khoản WEWIN mới mở player, transcript và lưu tiến độ." callbackUrl={`/video/${id}`}><VideoLearningPlayer video={video} /></LoginGate></div>;
 }

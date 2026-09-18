@@ -6,12 +6,10 @@ export default function RefundPage() {
   return (
     <LegalLayout title="Chính sách hoàn tiền">
       <p>
-        Khi mở bán, yêu cầu hoàn tiền trong 7 ngày kể từ lần thanh toán đầu tiên sẽ được xem xét
-        nếu tài khoản chưa sử dụng vượt ngưỡng nội dung Premium quy định.
+        Các yêu cầu bảo lưu hoặc hoàn phí được xử lý theo chính sách của chương trình và thỏa thuận trực tiếp với trung tâm.
       </p>
       <p>
-        Gói đã gia hạn hoặc khuyến mãi đặc biệt có thể không áp dụng hoàn tiền — sẽ ghi rõ lúc
-        thanh toán.
+        LMS không lưu thông tin thanh toán và không tự động gia hạn chương trình.
       </p>
       <p>
         Liên hệ hỗ trợ qua trang Liên hệ kèm mã đơn hàng. Bản demo hiện tại không phát sinh giao

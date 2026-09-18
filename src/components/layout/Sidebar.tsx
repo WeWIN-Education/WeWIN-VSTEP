@@ -1,9 +1,8 @@
 "use client";
 
-import { NAV_GROUPS } from "@/config/navigation";
+import { NAV_GROUPS, type NavRole } from "@/config/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -14,12 +13,37 @@ function isActivePath(pathname: string, href?: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Sidebar() {
+function isAllowed(roles: readonly NavRole[] | undefined, role: NavRole | null | undefined) {
+  return !roles || Boolean(role && roles.includes(role));
+}
+
+type SidebarUser = {
+  name?: string | null;
+  email?: string | null;
+  role?: NavRole | null;
+};
+
+export function Sidebar({ user }: { user?: SidebarUser | null }) {
   const pathname = usePathname();
+
+  const visibleGroups = useMemo(
+    () =>
+      NAV_GROUPS.map((group) => ({
+        ...group,
+        items: group.items
+          .filter((item) => isAllowed(item.roles, user?.role))
+          .map((item) => ({
+            ...item,
+            children: item.children?.filter((child) => isAllowed(child.roles, user?.role)),
+          }))
+          .filter((item) => !item.children || item.children.length > 0),
+      })).filter((group) => group.items.length > 0),
+    [user?.role],
+  );
 
   const initiallyOpen = useMemo(() => {
     const open = new Set<string>();
-    for (const group of NAV_GROUPS) {
+    for (const group of visibleGroups) {
       for (const item of group.items) {
         if (item.children?.some((child) => isActivePath(pathname, child.href))) {
           open.add(item.label);
@@ -28,7 +52,7 @@ export function Sidebar() {
     }
     if (open.size === 0) open.add("Khóa học");
     return open;
-  }, [pathname]);
+  }, [pathname, visibleGroups]);
 
   const [openMenus, setOpenMenus] = useState<Set<string>>(initiallyOpen);
 
@@ -42,22 +66,10 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 flex w-[var(--sidebar-width)] flex-col border-r border-border bg-white">
-      <div className="flex h-[var(--header-height)] items-center border-b border-border px-4">
-        <Link href="/" className="flex min-w-0 items-center gap-2.5">
-          <Image
-            src="/brand/wewin-logo-gold.png"
-            alt="WEWIN EDUCATION"
-            height={40}
-            width={160}
-            className="h-9 w-auto max-w-[168px] object-contain object-left"
-            priority
-          />
-        </Link>
-      </div>
+    <aside className="sticky top-0 hidden h-[calc(100vh-var(--header-height))] w-[var(--sidebar-width)] shrink-0 flex-col border-r border-border bg-white lg:flex">
 
       <nav className="flex-1 overflow-y-auto px-3 py-3 font-[family-name:var(--font-jakarta)]">
-        {NAV_GROUPS.map((group) => (
+        {visibleGroups.map((group) => (
           <div key={group.id} className="mb-4">
             {group.label ? (
               <div className="mb-1.5 px-2 text-[10px] font-semibold tracking-[0.08em] text-ink-faint">
@@ -69,8 +81,10 @@ export function Sidebar() {
                 const Icon = item.icon;
                 const hasChildren = Boolean(item.children?.length);
                 const open = openMenus.has(item.label);
+                const label = user ? item.authenticatedLabel ?? item.label : item.label;
+                const href = user ? item.authenticatedHref ?? item.href : item.href;
                 const active =
-                  isActivePath(pathname, item.href) ||
+                  isActivePath(pathname, href) ||
                   item.children?.some((c) => isActivePath(pathname, c.href));
 
                 if (hasChildren) {
@@ -79,6 +93,8 @@ export function Sidebar() {
                       <button
                         type="button"
                         onClick={() => toggle(item.label)}
+                        aria-expanded={open}
+                        aria-controls={`nav-${group.id}-${item.label.replace(/\s+/g, "-").toLowerCase()}`}
                         className={cn(
                           "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-[13px] font-medium transition-colors",
                           active
@@ -93,7 +109,7 @@ export function Sidebar() {
                           )}
                           strokeWidth={1.5}
                         />
-                        <span className="flex-1">{item.label}</span>
+                        <span className="flex-1">{label}</span>
                         <ChevronDown
                           className={cn(
                             "size-4 transition-transform",
@@ -103,7 +119,7 @@ export function Sidebar() {
                         />
                       </button>
                       {open ? (
-                        <ul className="mt-0.5 ml-3 space-y-0.5 border-l border-border pl-3">
+                        <ul id={`nav-${group.id}-${item.label.replace(/\s+/g, "-").toLowerCase()}`} className="mt-0.5 ml-3 space-y-0.5 border-l border-border pl-3">
                           {item.children!.map((child) => {
                             const childActive = isActivePath(pathname, child.href);
                             return (
@@ -116,6 +132,7 @@ export function Sidebar() {
                                       ? "bg-brand-soft font-semibold text-brand"
                                       : "text-ink-muted hover:bg-surface hover:text-ink",
                                   )}
+                                  aria-current={childActive ? "page" : undefined}
                                 >
                                   <span
                                     className={cn(
@@ -137,7 +154,8 @@ export function Sidebar() {
                 return (
                   <li key={item.label}>
                     <Link
-                      href={item.href!}
+                      href={href!}
+                      aria-current={active ? "page" : undefined}
                       className={cn(
                         "flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-[13px] font-medium transition-colors",
                         active
@@ -152,7 +170,7 @@ export function Sidebar() {
                         )}
                         strokeWidth={1.5}
                       />
-                      <span>{item.label}</span>
+                        <span>{label}</span>
                     </Link>
                   </li>
                 );
@@ -162,16 +180,18 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-border p-3">
-        <Link
-          href="/register"
-          className="flex w-full items-center justify-center rounded-[var(--radius-btn)] bg-brand px-3 py-2.5 font-[family-name:var(--font-jakarta)] text-[13px] font-bold text-white hover:bg-brand-dark"
-        >
-          Bắt đầu miễn phí
-        </Link>
-        <p className="mt-2 px-1 text-center font-[family-name:var(--font-be-vietnam)] text-[11px] leading-snug text-ink-muted">
-          Đăng ký để lưu tiến độ, nhận XP, streak và lộ trình tiếng Anh riêng cho bạn.
-        </p>
+      <div className="shrink-0 border-t border-border bg-white p-3">
+        {user ? (
+          <Link href="/profile/settings" className="flex min-w-0 items-center gap-2 rounded-2xl bg-brand-soft px-3 py-2.5 transition-colors hover:bg-brand-soft/70">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-extrabold text-white">{(user.name || user.email || "W").slice(0, 1).toUpperCase()}</span>
+            <span className="min-w-0"><strong className="block truncate text-[12px] font-extrabold text-ink">{user.name || "Tài khoản WEWIN"}</strong><span className="block truncate text-[10px] text-ink-muted">{user.role === "ADMIN" ? "Quản trị viên" : user.email}</span></span>
+          </Link>
+        ) : (
+          <Link href="/login" className="flex w-full items-center justify-center rounded-[var(--radius-btn)] bg-brand px-3 py-2.5 font-[family-name:var(--font-jakarta)] text-[13px] font-bold text-white hover:bg-brand-dark">
+            Đăng nhập
+          </Link>
+        )}
+        {!user ? <p className="mt-2 px-1 text-center font-[family-name:var(--font-be-vietnam)] text-[11px] leading-snug text-ink-muted">Tài khoản học do WEWIN cấp sau khi đăng ký chương trình.</p> : null}
       </div>
     </aside>
   );

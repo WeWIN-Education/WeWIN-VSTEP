@@ -1,28 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --font-jakarta: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-inter: "Inter", system-ui, sans-serif;
-  --font-be-vietnam: "Be Vietnam Pro", system-ui, sans-serif;
-  --font-noto-sans-sc: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-  --font-jetbrains-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-jakarta: var(--font-be-vietnam);
+  --font-noto-sans-sc: var(--font-be-vietnam);
+  --font-jetbrains-mono: var(--font-inter);
 
-  --brand: #0B1F5C;
-  --brand-dark: #071540;
-  --brand-soft: #E8EEF9;
+  --brand: #004AAD;
+  --brand-dark: #003A8C;
+  --brand-soft: #E8F0FC;
   --brand-pink: #D6E2F5; /* keep var name for compatibility, but blue tint */
   --accent-orange: #D4A017; /* gold accent from WEWIN logo */
   --accent-green: #22c55e;
-  --surface: #f3f4f6;
+  --surface: #f8fafc;
   --surface-card: #ffffff;
   --ink: #1f2937;
   --ink-muted: #6b7280;
   --ink-faint: #9ca3af;
   --border: #e5e7eb;
-  --sidebar-width: 260px;
-  --header-height: 56px;
-  --radius-card: 16px;
-  --radius-btn: 12px;
+  --sidebar-width: 256px;
+  --header-height: 80px;
+  --radius-card: 24px;
+  --radius-btn: 20px;
 }
 
 @theme inline {
@@ -38,12 +36,14 @@
   --color-ink-muted: var(--ink-muted);
   --color-ink-faint: var(--ink-faint);
   --color-border: var(--border);
-  --font-sans: var(--font-jakarta);
-  --font-display: var(--font-jakarta);
+  --font-sans: var(--font-be-vietnam);
+  --font-display: var(--font-be-vietnam);
   --font-body: var(--font-be-vietnam);
   --font-ui: var(--font-inter);
   --font-chinese: var(--font-noto-sans-sc);
   --font-mono: var(--font-jetbrains-mono);
+  --font-weight-extrabold: 600;
+  --font-weight-black: 700;
   --radius-card: var(--radius-card);
   --radius-btn: var(--radius-btn);
 }
@@ -55,6 +55,24 @@
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 1023px) {
+  :root { --header-height: 64px; }
+
+  main {
+    width: 100%;
+    max-width: 100vw;
+    flex-basis: 0;
+    overflow-x: hidden;
+  }
+
+  main > div {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
 }
 
 body {
@@ -62,20 +80,63 @@ body {
   color: var(--ink);
   background: var(--surface);
   /* Match Drive/production stack: Jakarta UI + Be Vietnam for Vietnamese copy */
-  font-family: var(--font-jakarta), var(--font-be-vietnam), var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-be-vietnam), var(--font-inter), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer base {
+  a { text-decoration: none; }
+  button { font-family: inherit; touch-action: manipulation; }
+  h1 { font-weight: 600; line-height: 1.3; }
+  h2, h3 { font-weight: 600; line-height: 1.4; }
 }
 
-button {
-  font: inherit;
+button:not(:disabled),
+select,
+a {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--brand) 45%, white);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 ::selection {
   background: color-mix(in srgb, var(--brand) 25%, white);
 }
+
+@keyframes mascot-welcome {
+  from { opacity: 0; transform: translateY(6px) rotate(-3deg); }
+  to { opacity: 1; transform: translateY(0) rotate(0); }
+}
+.mascot-welcome { animation: mascot-welcome 450ms ease-out both, mascot-float 3.5s 450ms ease-in-out 3; }
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+.mascot-welcome:hover { animation-play-state: paused; }

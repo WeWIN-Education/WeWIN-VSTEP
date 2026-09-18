@@ -1,35 +1,34 @@
 import type { LucideIcon } from "lucide-react";
 import {
-  BookOpen,
-  BookMarked,
-  Gamepad2,
+  FileText,
   GraduationCap,
-  Handshake,
   Headphones,
-  Languages,
   LayoutGrid,
   Library,
+  ListChecks,
   Newspaper,
   PenLine,
+  BookOpen,
   Settings,
-  Share2,
-  Smartphone,
-  Sparkles,
-  Trophy,
-  Users,
-  Wrench,
+  ShieldCheck,
 } from "lucide-react";
+
+export type NavRole = "LEARNER" | "ADMIN";
 
 export type NavLeaf = {
   label: string;
   href: string;
+  roles?: readonly NavRole[];
 };
 
 export type NavItem = {
   label: string;
   href?: string;
+  authenticatedLabel?: string;
+  authenticatedHref?: string;
   icon: LucideIcon;
   children?: NavLeaf[];
+  roles?: readonly NavRole[];
 };
 
 export type NavGroup = {
@@ -38,13 +37,18 @@ export type NavGroup = {
   items: NavItem[];
 };
 
-/** Icon set aligned with Drive reference sidebar (thin line icons). */
+/** Teacher-facing navigation aligned with Hanbeego's grouped sidebar. */
 export const NAV_GROUPS: NavGroup[] = [
   {
     id: "top",
     items: [
-      { label: "Dashboard", href: "/", icon: LayoutGrid },
-      { label: "Tải ứng dụng", href: "/download", icon: Smartphone },
+      {
+        label: "Trang chủ",
+        authenticatedLabel: "Tổng quan",
+        href: "/",
+        authenticatedHref: "/dashboard",
+        icon: LayoutGrid,
+      },
     ],
   },
   {
@@ -55,62 +59,61 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Khóa học",
         icon: GraduationCap,
         children: [
-          { label: "Người mới bắt đầu", href: "/beginner" },
-          { label: "Giáo trình Lớp 1-9", href: "/hsk" },
-          { label: "Bài tập", href: "/hsk-practice" },
-          { label: "Luyện thi", href: "/exam" },
+          { label: "Luyện thi VSTEP", href: "/exam/vstep" },
+          { label: "Bài tập", href: "/practice" },
           { label: "Học qua video", href: "/video" },
         ],
       },
-      {
-        label: "Kỹ năng",
-        icon: Headphones,
-        children: [
-          { label: "Luyện nghe", href: "/listening" },
-          { label: "Luyện nói", href: "/speaking" },
-          { label: "Luyện phát âm", href: "/pronunciation" },
-        ],
-      },
-      { label: "Luyện tập", href: "/practice", icon: PenLine },
+      { label: "Kỹ năng", href: "/coming-soon/skills", icon: Headphones },
+      { label: "Luyện tập", href: "/coming-soon/practice", icon: PenLine },
     ],
   },
   {
-    id: "tu-vung",
-    label: "TỪ VỰNG & NỀN TẢNG",
+    id: "on-luyen",
+    label: "HỌC LIỆU & ÔN LUYỆN",
+    items: [
+      { label: "Luyện tập tổng hợp", href: "/review", icon: ListChecks },
+      { label: "Cộng đồng", href: "/feed", icon: Newspaper },
+      { label: "Lịch sử bài làm", href: "/history", icon: ListChecks, roles: ["LEARNER", "ADMIN"] },
+      { label: "Tài liệu học tập", href: "/materials", icon: Library },
+      { label: "Công cụ", href: "/tools", icon: FileText },
+      { label: "Bài viết", href: "/blog", icon: Newspaper },
+      { label: "Cài đặt", href: "/profile/settings", icon: Settings, roles: ["LEARNER", "ADMIN"] },
+    ],
+  },
+  {
+    id: "vocabulary",
+    label: "TỪ VỰNG",
     items: [
       {
         label: "Từ vựng",
         icon: BookOpen,
         children: [
-          { label: "Theo chủ đề", href: "/vocab/topics" },
-          { label: "Ngữ pháp", href: "/grammar" },
-        ],
-      },
-      {
-        label: "Phát âm & từ vựng",
-        icon: Languages,
-        children: [
-          { label: "Bảng phiên âm", href: "/pronunciation" },
-          { label: "Luyện phát âm", href: "/pronunciation" },
+          { label: "Sổ tay từ vựng", href: "/vocabulary/notebook", roles: ["LEARNER", "ADMIN"] },
+          { label: "Từ vựng theo chủ đề", href: "/vocabulary/topics" },
+          { label: "Mẹo nhớ từ vựng", href: "/vocabulary/tips" },
+          { label: "Cụm từ & collocations", href: "/vocabulary/collocations" },
         ],
       },
     ],
   },
   {
-    id: "on-luyen",
-    label: "ÔN LUYỆN & CỘNG ĐỒNG",
+    id: "quan-tri",
+    label: "QUẢN TRỊ",
     items: [
-      { label: "Luyện tập tổng hợp", href: "/practice", icon: Sparkles },
-      { label: "Trò chơi", href: "/game", icon: Gamepad2 },
-      { label: "Truyện tiếng Anh", href: "/stories", icon: BookMarked },
-      { label: "Tài liệu học tập", href: "/materials", icon: Library },
-      { label: "Công cụ", href: "/tools", icon: Wrench },
-      { label: "Bảng xếp hạng", href: "/leaderboard", icon: Trophy },
-      { label: "Bạn bè", href: "/friends", icon: Users },
-      { label: "Bài viết", href: "/blog", icon: Newspaper },
-      { label: "Giới thiệu bạn bè", href: "/affiliate", icon: Share2 },
-      { label: "Hợp tác", href: "/partners", icon: Handshake },
-      { label: "Cài đặt", href: "/profile/settings", icon: Settings },
+      {
+        label: "Quản trị",
+        icon: ShieldCheck,
+        roles: ["ADMIN"],
+        children: [
+          { label: "Tài khoản", href: "/manage/users", roles: ["ADMIN"] },
+          { label: "Đề thi", href: "/manage/exams", roles: ["ADMIN"] },
+          { label: "Duyệt bài viết", href: "/manage/posts", roles: ["ADMIN"] },
+          { label: "Nhập từ vựng", href: "/manage/vocabulary/import", roles: ["ADMIN"] },
+          { label: "Nhập collocations", href: "/manage/collocations/import", roles: ["ADMIN"] },
+          { label: "Tải tài liệu", href: "/manage/materials", roles: ["ADMIN"] },
+        ],
+      },
     ],
   },
 ];
@@ -120,9 +123,7 @@ export const FOOTER_COLUMNS = [
     title: "WEWIN",
     links: [
       { label: "Giới thiệu", href: "/about" },
-      { label: "Tải ứng dụng", href: "/download" },
       { label: "Liên hệ", href: "/contact" },
-      { label: "Bảng giá", href: "/pricing" },
     ],
   },
   {

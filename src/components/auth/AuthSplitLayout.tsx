@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Mascot } from "@/components/ui/Mascot";
 
 export function AuthSplitLayout({
   children,
@@ -29,9 +30,10 @@ export function AuthSplitLayout({
           </Link>
           <span
             className="inline-flex size-8 items-center justify-center overflow-hidden rounded-full border border-border text-[14px]"
-            title="Tiếng Việt"
+            title="Ngôn ngữ tiếng Việt"
+            aria-label="Ngôn ngữ tiếng Việt"
           >
-            🇻🇳
+            VN
           </span>
         </div>
 
@@ -75,21 +77,11 @@ export function AuthSplitLayout({
           <div className="relative mb-8">
             <div className="flex size-56 items-center justify-center rounded-full bg-white/95 shadow-xl">
               <div className="relative size-44">
-                <Image
-                  src="/brand/mascot-right-clear.png"
-                  alt="WEWIN mascot"
-                  fill
-                  className="object-contain"
-                  sizes="176px"
-                  priority
-                />
+                <Mascot state="friendly" size={176} animated />
               </div>
             </div>
             <span className="absolute -right-2 top-6 rounded-2xl bg-white px-3 py-1.5 text-[12px] font-semibold text-brand shadow-md">
-              Hello! 👋
-            </span>
-            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-accent-orange px-3 py-1 text-[11px] font-bold text-white shadow-md">
-              🔥 7 NGÀY STREAK
+              Hello!
             </span>
           </div>
 

@@ -1,0 +1,21 @@
+FROM node:20-bookworm-slim
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ffmpeg openssl ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+ENV NODE_ENV=production
+ENV FFMPEG_PATH=ffmpeg
+
+COPY package.json package-lock.json ./
+COPY tsconfig.json ./
+COPY prisma ./prisma
+RUN npm ci --include=dev --ignore-scripts
+
+COPY src ./src
+COPY scripts ./scripts
+
+RUN npx prisma generate
+
+CMD ["npm", "run", "grading:worker:loop"]

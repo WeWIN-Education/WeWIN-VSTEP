@@ -1,21 +1,21 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: hanbeego-postgres
+    container_name: wewin-postgres
     restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: hanbeego
-      POSTGRES_PASSWORD: hanbeego
-      POSTGRES_DB: hanbeego
+      POSTGRES_USER: wewin
+      POSTGRES_PASSWORD: wewin
+      POSTGRES_DB: wewin
     volumes:
-      - hanbeego_pg_data:/var/lib/postgresql/data
+      - wewin_pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hanbeego -d hanbeego"]
+      test: ["CMD-SHELL", "pg_isready -U wewin -d wewin"]
       interval: 5s
       timeout: 5s
       retries: 10
 
 volumes:
-  hanbeego_pg_data:
+  wewin_pg_data:

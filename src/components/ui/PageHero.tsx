@@ -21,20 +21,20 @@ export function PageHero({
   return (
     <section
       className={cn(
-        "rounded-[20px] border border-[#C5D4EE] bg-gradient-to-br from-[#EEF3FC] to-[#DDE7F8] p-5 md:p-7",
+        "w-full min-w-0 max-w-full overflow-hidden rounded-[20px] border border-[#C5D4EE] bg-gradient-to-br from-[#EEF3FC] to-[#DDE7F8] p-5 md:p-7",
         className,
       )}
     >
-      <div className={cn(aside ? "grid gap-5 md:grid-cols-[1fr_auto] md:items-center" : "")}>
+      <div className={cn("w-full min-w-0", aside ? "grid gap-5 md:grid-cols-[1fr_auto] md:items-center" : "")}>
         <div>
           {eyebrow ? (
             <p className="text-[12px] font-bold tracking-wide text-brand">{eyebrow}</p>
           ) : null}
-          <h1 className="mt-1 font-[family-name:var(--font-jakarta)] text-[24px] font-extrabold text-ink md:text-[30px]">
+          <h1 className="mt-1 max-w-full break-words whitespace-normal font-[family-name:var(--font-jakarta)] text-[22px] font-extrabold leading-tight text-ink sm:text-[24px] md:text-[30px]">
             {title}
           </h1>
           {description ? (
-            <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-ink-muted">
+            <p className="mt-2 max-w-[34rem] break-words text-[14px] leading-relaxed text-ink-muted">
               {description}
             </p>
           ) : null}

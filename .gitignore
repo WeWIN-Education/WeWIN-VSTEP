@@ -10,9 +10,14 @@ node_modules
 
 # testing
 coverage
+test-results/
+playwright-report/
 
 # next.js
 .next/
+.tmp/
+.qa/
+.data/
 out/
 
 # production
@@ -36,6 +41,9 @@ yarn-error.log*
 
 # local reference dump (not part of the app)
 reference/
+
+# local Codex/agent skill files
+.agents/
 
 # vercel
 .vercel

@@ -29,8 +29,7 @@ export function SiteFooter() {
             Học tiếng Anh dễ dàng
           </h3>
           <p className="text-[13px] leading-relaxed text-ink-muted">
-            WEWIN EDUCATION giúp người Việt học tiếng Anh từ Lớp 1–9 với lộ trình rõ ràng,
-            bài tập, đề thi thử và hệ thống game hoá.
+            WEWIN EDUCATION giúp giáo viên Việt Nam luyện VSTEP và tiếng Anh dùng trong lớp học.
           </p>
         </div>
       </div>

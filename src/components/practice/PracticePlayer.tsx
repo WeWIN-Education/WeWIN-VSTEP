@@ -6,20 +6,22 @@ import { cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
 
 export type PracticePayload = {
-  tokens?: string[];
+  tokens?: readonly string[];
   sentence?: string;
   blankIndex?: number;
-  options?: string[];
+  options?: readonly string[];
   transcript?: string;
-  turns?: string[];
+  turns?: readonly string[];
   passage?: string;
-  blanks?: { index: number; answer: string }[];
+  blanks?: readonly { index: number; answer: string }[];
+  audioUrl?: string;
 };
 
 type PracticePlayerProps = {
   type: string;
   items: {
     id: string;
+    type?: string;
     prompt: string;
     instruction: string | null;
     payload: PracticePayload;
@@ -36,7 +38,7 @@ function shuffle<T>(arr: T[]): T[] {
   return copy;
 }
 
-function arraysEqual(a: string[], b: string[]) {
+function arraysEqual(a: readonly string[], b: readonly string[]) {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 }
 
@@ -44,24 +46,46 @@ export function PracticePlayer({ type, items }: PracticePlayerProps) {
   const [index, setIndex] = useState(0);
   const [feedback, setFeedback] = useState<"idle" | "correct" | "wrong">("idle");
   const [score, setScore] = useState(0);
+  const [completed, setCompleted] = useState(false);
+  const [finalScore, setFinalScore] = useState<number | null>(null);
   const item = items[index];
+  const effectiveType = type === "MIXED" ? item?.type ?? "FILL_BLANK" : type;
 
   if (!items.length) {
     return (
       <Card padding="lg">
         <p className="text-sm text-ink-muted">
-          Chưa có câu hỏi demo cho dạng bài này. Chạy lại seed để tải dữ liệu Lớp 1.
+          Chưa có câu hỏi cho dạng bài này. Hãy thử một dạng luyện tập khác.
         </p>
       </Card>
     );
   }
 
+  if (completed) {
+    return (
+      <Card padding="lg" className="text-center">
+        <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-brand">HOÀN THÀNH PHIÊN ÔN</p>
+        <h2 className="mt-2 font-[family-name:var(--font-jakarta)] text-2xl font-extrabold text-ink">Kết quả của bạn</h2>
+        <p className="mt-4 text-4xl font-extrabold text-brand">{finalScore ?? score}<span className="text-xl text-ink-muted">/{items.length}</span></p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-muted">Kết quả chỉ hiển thị trong phiên này và không được lưu vào lịch sử làm bài.</p>
+        <Button type="button" className="mt-5" onClick={() => { setIndex(0); setFeedback("idle"); setScore(0); setFinalScore(null); setCompleted(false); }}>Làm lại phiên này</Button>
+      </Card>
+    );
+  }
+
   const next = (ok: boolean) => {
+    if (feedback !== "idle") return;
+    const nextScore = score + (ok ? 1 : 0);
     setFeedback(ok ? "correct" : "wrong");
-    if (ok) setScore((s) => s + 1);
+    setScore(nextScore);
     window.setTimeout(() => {
       setFeedback("idle");
-      setIndex((i) => (i + 1) % items.length);
+      if (index === items.length - 1) {
+        setFinalScore(nextScore);
+        setCompleted(true);
+      } else {
+        setIndex((i) => i + 1);
+      }
     }, 700);
   };
 
@@ -72,7 +96,7 @@ export function PracticePlayer({ type, items }: PracticePlayerProps) {
           Câu {index + 1}/{items.length}
         </span>
         <span>
-          Điểm demo: <strong className="text-brand">{score}</strong>
+          Điểm: <strong className="text-brand">{score}</strong>
         </span>
       </div>
 
@@ -84,11 +108,11 @@ export function PracticePlayer({ type, items }: PracticePlayerProps) {
         ) : null}
         <p className="text-[15px] font-semibold text-ink">{item.prompt}</p>
 
-        {type === "WORD_ORDER" || type === "LISTENING_ORDER" ? (
+        {effectiveType === "WORD_ORDER" || effectiveType === "LISTENING_ORDER" ? (
           <OrderExercise
             key={item.id}
             tokens={
-              type === "LISTENING_ORDER"
+              effectiveType === "LISTENING_ORDER"
                 ? (item.payload.turns ?? [])
                 : (item.payload.tokens ?? [])
             }
@@ -97,18 +121,19 @@ export function PracticePlayer({ type, items }: PracticePlayerProps) {
           />
         ) : null}
 
-        {type === "FILL_BLANK" || type === "LISTENING_FILL" ? (
+        {effectiveType === "FILL_BLANK" || effectiveType === "LISTENING_FILL" ? (
           <ChoiceExercise
             key={item.id}
             options={item.payload.options ?? []}
             answer={String(item.answer)}
             sentence={item.payload.sentence}
             transcript={item.payload.transcript}
+            audioUrl={item.payload.audioUrl}
             onSubmit={next}
           />
         ) : null}
 
-        {type === "CLOZE_READING" ? (
+        {effectiveType === "CLOZE_READING" ? (
           <ClozeExercise
             key={item.id}
             passage={item.payload.passage ?? ""}
@@ -138,11 +163,11 @@ function OrderExercise({
   answer,
   onSubmit,
 }: {
-  tokens: string[];
-  answer: string[];
+  tokens: readonly string[];
+  answer: readonly string[];
   onSubmit: (ok: boolean) => void;
 }) {
-  const poolInit = useMemo(() => shuffle(tokens), [tokens]);
+  const poolInit = useMemo(() => shuffle([...tokens]), [tokens]);
   const [pool, setPool] = useState(poolInit);
   const [picked, setPicked] = useState<string[]>([]);
 
@@ -198,7 +223,7 @@ function OrderExercise({
           type="button"
           variant="outline"
           onClick={() => {
-            setPool(shuffle(tokens));
+            setPool(shuffle([...tokens]));
             setPicked([]);
           }}
         >
@@ -214,24 +239,26 @@ function ChoiceExercise({
   answer,
   sentence,
   transcript,
+  audioUrl,
   onSubmit,
 }: {
-  options: string[];
+  options: readonly string[];
   answer: string;
   sentence?: string;
   transcript?: string;
+  audioUrl?: string;
   onSubmit: (ok: boolean) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <div className="mt-4 space-y-3">
-      {transcript ? (
+      {audioUrl ? <audio className="w-full rounded-xl" controls preload="metadata" src={audioUrl} /> : transcript ? (
         <div className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-ink-muted">
           <span className="mr-2 inline-flex size-7 items-center justify-center rounded-full bg-brand text-[11px] font-bold text-white">
             ▶
           </span>
-          Audio demo: <em>{transcript}</em>
+          Audio: <em>{transcript}</em>
         </div>
       ) : null}
       {sentence ? (
@@ -270,7 +297,7 @@ function ClozeExercise({
   onSubmit,
 }: {
   passage: string;
-  options: string[];
+  options: readonly string[];
   answer: string;
   onSubmit: (ok: boolean) => void;
 }) {

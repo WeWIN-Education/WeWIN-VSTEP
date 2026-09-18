@@ -1,0 +1,23 @@
+import { LearningMaterialUploadForm, type LearningMaterialSummary } from "@/components/manage/LearningMaterialUploadForm";
+import { PageHero } from "@/components/ui/PageHero";
+import { getCurrentUser } from "@/lib/access";
+import { prisma } from "@/lib/prisma";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+export default async function ManageMaterialsPage() {
+  const actor = await getCurrentUser();
+  if (!actor) redirect("/login?callbackUrl=/manage/materials");
+  if (actor.role !== "ADMIN") redirect("/dashboard");
+
+  const materials = await prisma.learningMaterial.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 100,
+    select: { id: true, title: true, description: true, programme: true, skill: true, level: true, fileName: true, mimeType: true, sizeBytes: true, published: true, createdAt: true },
+  });
+  const initialMaterials: LearningMaterialSummary[] = materials.map((material) => ({ ...material, createdAt: material.createdAt.toISOString() }));
+  const publishedCount = materials.filter((material) => material.published).length;
+
+  return <div className="mx-auto w-full max-w-[1120px] space-y-6"><PageHero eyebrow="QUẢN TRỊ HỌC LIỆU" title="Tải tài liệu học tập" description="Đưa tài liệu VSTEP lên kho học tập, gắn theo kỹ năng và trình độ, rồi mở ngay cho học viên khi cần." aside={<Link href="/materials" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-btn)] border border-brand/30 bg-white px-4 text-sm font-extrabold text-brand transition hover:border-brand hover:bg-brand-soft">Xem kho học viên<ArrowUpRight className="size-4" /></Link>} stats={[{ label: "Tổng file", value: String(materials.length) }, { label: "Đang mở", value: String(publishedCount) }, { label: "Giới hạn mỗi file", value: "50 MB" }]} /><LearningMaterialUploadForm initialMaterials={initialMaterials} /></div>;
+}

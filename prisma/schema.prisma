@@ -5,115 +5,20 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String?
-  passwordHash String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+enum Programme {
+  VSTEP
+  IELTS
+  CLASSROOM
 }
 
-model HomeStat {
-  id        String   @id @default(cuid())
-  key       String   @unique
-  label     String
-  value     String
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Partner {
-  id        String   @id @default(cuid())
-  name      String
-  center    String?
-  phone     String?
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model DailyChallenge {
-  id          String   @id @default(cuid())
-  title       String
-  targetCount Int      @default(1)
-  xpReward    Int      @default(60)
-  sortOrder   Int      @default(0)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model HomeVideo {
-  id        String   @id @default(cuid())
-  title     String
-  youtubeId String?
-  sortOrder Int      @default(0)
-  isFree    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model LeaderboardEntry {
-  id        String   @id @default(cuid())
-  name      String
-  level     Int      @default(1)
-  xp        Int      @default(0)
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-/// Lớp 1–9 English curriculum levels (route still uses /hsk for compatibility).
-model GradeLevel {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  level       Int      @unique
-  title       String
-  description String?
-  color       String?
-  sortOrder   Int      @default(0)
-  topics      Topic[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Topic {
-  id           String     @id @default(cuid())
-  gradeLevelId String
-  gradeLevel   GradeLevel @relation(fields: [gradeLevelId], references: [id], onDelete: Cascade)
-  slug         String
-  title        String
-  description  String?
-  iconLabel    String?
-  sortOrder    Int        @default(0)
-  lessons      Lesson[]
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-
-  @@unique([gradeLevelId, slug])
-}
-
-model Lesson {
-  id            String   @id @default(cuid())
-  topicId       String
-  topic         Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  slug          String
-  title         String
-  description   String?
-  vocabCount    Int      @default(0)
-  grammarCount  Int      @default(0)
-  dialogueCount Int      @default(0)
-  durationMin   Int      @default(10)
-  sortOrder     Int      @default(0)
-  content       String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  @@unique([topicId, slug])
+enum ExamSkill {
+  LISTENING
+  READING
+  WRITING
+  SPEAKING
 }
 
 enum PracticeType {
@@ -122,87 +27,546 @@ enum PracticeType {
   LISTENING_FILL
   LISTENING_ORDER
   CLOZE_READING
+  WRITING
 }
 
-/// Demo practice items (Lớp 1+). payload/answer are JSON per type.
+enum ExamStatus {
+  SAMPLE
+  READY
+  PUBLISHED
+}
+
+enum ExamCatalog {
+  FULL
+  LISTENING
+  READING
+  WRITING
+  SPEAKING
+}
+
+enum UserPostStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  HIDDEN
+}
+
+enum VocabularyCollectionKind {
+  VOCABULARY
+  COLLOCATION
+}
+
+enum UserRole {
+  LEARNER
+  ADMIN
+}
+
+enum VocabularyProgressStatus {
+  NEW
+  LEARNING
+  MASTERED
+}
+
+enum VstepLevel {
+  B1
+  B2
+  C1
+}
+
+model User {
+  id                 String                @id @default(cuid())
+  email              String                @unique
+  name               String?
+  passwordHash       String?
+  role               UserRole              @default(LEARNER)
+  isActive           Boolean               @default(true)
+  sessionVersion     Int                   @default(0)
+  vstepTarget        VstepLevel            @default(B1)
+  xp                 Int                   @default(0)
+  heartsReceived     Int                   @default(0)
+  streakDays         Int                   @default(0)
+  lastActiveDate     DateTime?             @db.Date
+  enrollments        ProgrammeEnrollment[]
+  attempts           ExamAttempt[]
+  xpAwards           XpAward[]
+  dailyActivities    DailyActivity[]
+  vocabularyProgress VocabularyProgress[]
+  personalVocabulary PersonalVocabulary[]
+  vocabularyImports  VocabularyImport[]
+  videoProgress      VideoProgress[]
+  learningMaterials  LearningMaterial[]
+  questionBookmarks  QuestionBookmark[]
+  posts              UserPost[]            @relation("PostAuthor")
+  reviewedPosts      UserPost[]            @relation("PostReviewer")
+  postLikes          PostLike[]            @relation("PostLikeAuthor")
+  postComments       PostComment[]         @relation("PostCommentAuthor")
+  approvedBlogPosts  BlogPost[]            @relation("BlogAuthor")
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+}
+
+model ProgrammeEnrollment {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programme Programme
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, programme])
+}
+
+model ExamPaper {
+  id                String             @id @default(cuid())
+  programme         Programme
+  slug              String
+  title             String
+  subtitle          String?
+  target            String?
+  durationMin       Int                @default(60)
+  questionCount     Int                @default(0)
+  sections          Json?
+  questions         Json?
+  status            ExamStatus         @default(READY)
+  sortOrder         Int                @default(0)
+  trialSlot         Int?               @unique
+  attempts          ExamAttempt[]
+  parts             ExamPaperPart[]
+  questionBookmarks QuestionBookmark[]
+  guestAttemptUses  GuestAttemptUse[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@unique([programme, slug])
+  @@index([programme, status])
+}
+
+model ExamAttempt {
+  id               String           @id @default(cuid())
+  userId           String?
+  guestSessionId   String?
+  trialSlot        Int?
+  catalog          ExamCatalog      @default(FULL)
+  skill            ExamSkill?
+  paperPartId      String?
+  examPaperId      String
+  user             User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestSession     GuestSession?    @relation(fields: [guestSessionId], references: [id], onDelete: Cascade)
+  examPaper        ExamPaper        @relation(fields: [examPaperId], references: [id], onDelete: Cascade)
+  paperPart        ExamPaperPart?   @relation(fields: [paperPartId], references: [id], onDelete: SetNull)
+  guestAttemptUse  GuestAttemptUse?
+  status           String           @default("IN_PROGRESS")
+  startedAt        DateTime         @default(now())
+  expiresAt        DateTime?
+  submittedAt      DateTime?
+  currentSkill     ExamSkill?
+  currentPart      Int              @default(0)
+  currentUnit      Int              @default(0)
+  answers          Json?
+  recordings       Json?
+  recordingFiles   ExamRecording[]
+  grading          Json?
+  gradingJob       ExamGradingJob?
+  gradingStartedAt DateTime?
+  listeningScore   Float?
+  readingScore     Float?
+  writingStatus    String           @default("NOT_GRADED")
+  speakingStatus   String           @default("NOT_GRADED")
+  xpAward          XpAward?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@unique([guestSessionId, trialSlot])
+  @@index([userId, status])
+  @@index([userId, catalog, updatedAt])
+  @@index([examPaperId, catalog, status])
+}
+
+model ExamRecording {
+  id              String      @id @default(cuid())
+  attemptId       String
+  partId          String
+  storageKey      String
+  storageUrl      String?
+  mimeType        String
+  sizeBytes       Int
+  durationSeconds Int?
+  status          String      @default("SAVED")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  attempt         ExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@unique([attemptId, partId])
+  @@index([attemptId, status])
+}
+
+model ExamGradingJob {
+  id          String      @id @default(cuid())
+  attemptId   String      @unique
+  status      String      @default("QUEUED")
+  attempts    Int         @default(0)
+  availableAt DateTime    @default(now())
+  lockedAt    DateTime?
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  errorCode   String?
+  errorMessage String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  attempt     ExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@index([status, availableAt])
+}
+
+model XpAward {
+  id         String      @id @default(cuid())
+  userId     String
+  attemptId  String      @unique
+  amount     Int
+  baseXp     Int
+  scoreBonus Int         @default(0)
+  catalog    ExamCatalog
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attempt    ExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  createdAt  DateTime    @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model DailyActivity {
+  id           String   @id @default(cuid())
+  userId       String
+  activityDate DateTime @db.Date
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, activityDate])
+  @@index([userId, activityDate])
+}
+
+model ExamPaperPart {
+  id            String             @id @default(cuid())
+  examPaperId   String
+  examPaper     ExamPaper          @relation(fields: [examPaperId], references: [id], onDelete: Cascade)
+  catalog       ExamCatalog
+  skill         ExamSkill?
+  title         String
+  durationMin   Int                @default(0)
+  questionCount Int                @default(0)
+  sections      Json?
+  questions     Json?
+  sortOrder     Int                @default(0)
+  attempts      ExamAttempt[]
+  bookmarks     QuestionBookmark[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  @@unique([examPaperId, catalog])
+  @@index([catalog, skill, createdAt])
+}
+
+model GuestSession {
+  id          String            @id @default(cuid())
+  tokenHash   String            @unique
+  expiresAt   DateTime
+  createdAt   DateTime          @default(now())
+  attempts    ExamAttempt[]
+  attemptUses GuestAttemptUse[]
+
+  @@index([expiresAt])
+}
+
+model TrialRateLimit {
+  key       String   @id
+  count     Int      @default(0)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model GuestAttemptUse {
+  id             String       @id @default(cuid())
+  guestSessionId String
+  guestSession   GuestSession @relation(fields: [guestSessionId], references: [id], onDelete: Cascade)
+  examPaperId    String
+  examPaper      ExamPaper    @relation(fields: [examPaperId], references: [id], onDelete: Cascade)
+  catalog        ExamCatalog
+  attemptId      String?      @unique
+  attempt        ExamAttempt? @relation(fields: [attemptId], references: [id], onDelete: SetNull)
+  createdAt      DateTime     @default(now())
+
+  @@unique([guestSessionId, catalog, examPaperId])
+  @@index([guestSessionId, catalog])
+}
+
+model QuestionBookmark {
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examPaperId String
+  examPaper   ExamPaper      @relation(fields: [examPaperId], references: [id], onDelete: Cascade)
+  paperPartId String?
+  paperPart   ExamPaperPart? @relation(fields: [paperPartId], references: [id], onDelete: Cascade)
+  catalog     ExamCatalog    @default(FULL)
+  questionId  String
+  note        String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@unique([userId, examPaperId, catalog, questionId])
+  @@index([userId, catalog, createdAt])
+}
+
 model PracticeItem {
   id          String       @id @default(cuid())
+  programme   Programme?
+  skill       ExamSkill?
   type        PracticeType
-  level       Int          @default(1)
   title       String?
   prompt      String
   instruction String?
-  /// Type-specific: tokens, options, transcript, passage, blanks…
   payload     Json
-  /// Correct answer(s) for client-side check (demo).
   answer      Json
   sortOrder   Int          @default(0)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  @@index([type, level])
+  @@index([programme, skill, type])
 }
 
-enum ExamDifficulty {
-  BASIC
-  STANDARD
-  ADVANCED
-}
-
-model ExamPaper {
-  id            String         @id @default(cuid())
-  level         Int
-  slug          String
-  title         String
-  difficulty    ExamDifficulty @default(BASIC)
-  durationMin   Int            @default(40)
-  totalPoints   Int            @default(100)
-  questionCount Int            @default(10)
-  /// Simple quiz: [{id, prompt, options[], correctIndex}]
-  questions     Json?
-  sortOrder     Int            @default(0)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  @@unique([level, slug])
-  @@index([level, difficulty])
-}
-
-model Story {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  summary     String?
-  level       Int      @default(1)
-  readingMin  Int      @default(5)
-  coverLabel  String?
-  body        String?
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model VocabTopic {
+model LearningVideo {
   id          String   @id @default(cuid())
   slug        String   @unique
   title       String
   description String?
-  wordCount   Int      @default(0)
-  level       Int      @default(1)
+  youtubeId   String
+  level       String?
+  category    String?
+  duration    String?
+  transcript  Json?
+  published   Boolean  @default(true)
   sortOrder   Int      @default(0)
-  words       Json?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
+model LearningMaterial {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  programme    String   @default("VSTEP")
+  skill        String   @default("GENERAL")
+  level        String?
+  fileName     String
+  storageName  String   @unique
+  mimeType     String
+  sizeBytes    Int
+  published    Boolean  @default(true)
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([published, programme, skill, createdAt])
+  @@index([uploadedById, createdAt])
+}
+
 model BlogPost {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String        @id @default(cuid())
+  slug        String        @unique
   title       String
   excerpt     String?
   body        String?
-  publishedAt DateTime @default(now())
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  publishedAt DateTime      @default(now())
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  authorId    String?
+  author      User?         @relation("BlogAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  likes       PostLike[]    @relation("BlogPostLikes")
+  comments    PostComment[] @relation("BlogPostComments")
+}
+
+model UserPost {
+  id              String         @id @default(cuid())
+  authorId        String
+  author          User           @relation("PostAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  reviewedById    String?
+  reviewedBy      User?          @relation("PostReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  slug            String         @unique
+  title           String?
+  body            String
+  imageUrl        String?
+  status          UserPostStatus @default(PENDING)
+  rejectionReason String?
+  publishedAt     DateTime?
+  reviewedAt      DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  likes           PostLike[]     @relation("UserPostLikes")
+  comments        PostComment[]  @relation("UserPostComments")
+
+  @@index([status, publishedAt])
+  @@index([authorId, status, createdAt])
+}
+
+model PostLike {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation("PostLikeAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  userPostId String?
+  userPost   UserPost? @relation("UserPostLikes", fields: [userPostId], references: [id], onDelete: Cascade)
+  blogPostId String?
+  blogPost   BlogPost? @relation("BlogPostLikes", fields: [blogPostId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+
+  @@unique([userId, userPostId])
+  @@unique([userId, blogPostId])
+  @@index([userPostId, createdAt])
+  @@index([blogPostId, createdAt])
+}
+
+model PostComment {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation("PostCommentAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  userPostId String?
+  userPost   UserPost? @relation("UserPostComments", fields: [userPostId], references: [id], onDelete: Cascade)
+  blogPostId String?
+  blogPost   BlogPost? @relation("BlogPostComments", fields: [blogPostId], references: [id], onDelete: Cascade)
+  body       String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([userPostId, createdAt])
+  @@index([blogPostId, createdAt])
+}
+
+model VocabularyCollection {
+  id          String                   @id @default(cuid())
+  code        String                   @unique
+  name        String
+  description String?
+  sourceFile  String?
+  kind        VocabularyCollectionKind @default(VOCABULARY)
+  entries     VocabularyEntry[]
+  topics      VocabularyTopic[]
+  imports     VocabularyImport[]
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+}
+
+model VocabularyTopic {
+  id           String               @id @default(cuid())
+  collectionId String
+  collection   VocabularyCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  code         String
+  name         String
+  sortOrder    Int                  @default(0)
+  entries      VocabularyEntry[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@unique([collectionId, code])
+  @@index([collectionId, sortOrder])
+}
+
+model VocabularyEntry {
+  id           String               @id @default(cuid())
+  collectionId String
+  topicId      String?
+  collection   VocabularyCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  topic        VocabularyTopic?     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  entryCode    String
+  level        String
+  term         String
+  meaningVi    String
+  partOfSpeech String?
+  ipa          String?
+  exampleEn    String?
+  exampleVi    String?
+  audioUrl     String?
+  note         String?
+  sourceSheet  String?
+  sourceRow    Int?
+  progress     VocabularyProgress[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@unique([collectionId, entryCode])
+  @@index([collectionId, topicId, level])
+  @@index([term])
+}
+
+model VocabularyProgress {
+  id             String                   @id @default(cuid())
+  userId         String
+  entryId        String
+  user           User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entry          VocabularyEntry          @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  status         VocabularyProgressStatus @default(NEW)
+  note           String?
+  reviewCount    Int                      @default(0)
+  lastReviewedAt DateTime?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  @@unique([userId, entryId])
+  @@index([userId, status])
+}
+
+model PersonalVocabulary {
+  id        String                   @id @default(cuid())
+  userId    String
+  user      User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  term      String
+  ipa       String?
+  meaningVi String
+  exampleEn String?
+  note      String?
+  tags      String[]                 @default([])
+  status    VocabularyProgressStatus @default(NEW)
+  createdAt DateTime                 @default(now())
+  updatedAt DateTime                 @updatedAt
+
+  @@index([userId, status])
+  @@index([userId, term])
+}
+
+model VocabularyImport {
+  id           String                   @id @default(cuid())
+  uploadedById String
+  collectionId String?
+  kind         VocabularyCollectionKind @default(VOCABULARY)
+  uploadedBy   User                     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  collection   VocabularyCollection?    @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  fileName     String
+  status       String                   @default("COMPLETED")
+  totalRows    Int                      @default(0)
+  insertedRows Int                      @default(0)
+  updatedRows  Int                      @default(0)
+  skippedRows  Int                      @default(0)
+  errorRows    Int                      @default(0)
+  errors       Json?
+  createdAt    DateTime                 @default(now())
+
+  @@index([uploadedById, createdAt])
+}
+
+model VideoProgress {
+  id               String   @id @default(cuid())
+  userId           String
+  videoSlug        String
+  currentSec       Int      @default(0)
+  completed        Boolean  @default(false)
+  watchedIntervals Json?
+  quizAnswers      Json?
+  updatedAt        DateTime @updatedAt
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, videoSlug])
+  @@index([userId, completed])
 }

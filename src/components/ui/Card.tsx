@@ -19,10 +19,12 @@ export function Card({
   padding = "md",
   ...props
 }: CardProps) {
+  const hasCustomBackground = className?.split(/\s+/).some((token) => token.startsWith("bg-"));
   return (
     <div
       className={cn(
-        "rounded-[var(--radius-card)] border border-border/80 bg-surface-card shadow-[0_1px_2px_rgba(16,24,40,0.04)]",
+        "min-w-0 rounded-[var(--radius-card)] border border-border/80 shadow-[0_1px_2px_rgba(16,24,40,0.04)]",
+        !hasCustomBackground && "bg-surface-card",
         paddings[padding],
         className,
       )}

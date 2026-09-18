@@ -2,6 +2,9 @@
   "name": "wewin-education",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -12,24 +15,35 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "test:roles": "node scripts/test-role-access.mjs",
+    "grading:worker": "tsx scripts/process-grading-jobs.ts",
+    "grading:worker:loop": "tsx scripts/process-grading-jobs.ts --loop",
+    "storage:migrate": "tsx scripts/migrate-local-storage.ts",
+    "cleanup:guest": "tsx scripts/cleanup-guest-sessions.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",
+    "@vercel/blob": "^2.8.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "lucide-react": "^0.544.0",
+    "mammoth": "^1.12.3",
     "next": "^15.5.3",
     "next-auth": "^5.0.0-beta.32",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "xlsx": "^0.18.5"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.1.13",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.18.1",
@@ -40,6 +54,7 @@
     "prisma": "^6.16.1",
     "tailwindcss": "^4.1.13",
     "tsx": "^4.20.5",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^5.0.1"
   }
 }

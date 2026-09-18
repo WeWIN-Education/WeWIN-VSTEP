@@ -2,13 +2,16 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { PageHero } from "@/components/ui/PageHero";
+import { LoginGate } from "@/components/auth/LoginGate";
+import { getCurrentUser } from "@/lib/access";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Công cụ | WEWIN EDUCATION",
 };
 
-export default function ToolsPage() {
+export default async function ToolsPage() {
+  if (!(await getCurrentUser())) return <div className="mx-auto max-w-[900px]"><PageHero eyebrow="CÔNG CỤ" title="Công cụ học tiếng Anh" description="Guest có thể xem danh mục công cụ. Tài khoản WEWIN mới mở các công cụ học." /><LoginGate title="Đăng nhập để mở công cụ" description="Tài khoản được trung tâm WEWIN cấp sau khi đăng ký chương trình." callbackUrl="/tools">{null}</LoginGate></div>;
   return (
     <div className="mx-auto max-w-[900px]">
       <PageHero

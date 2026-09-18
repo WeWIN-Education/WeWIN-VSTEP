@@ -1,0 +1,26 @@
+import assert from "node:assert/strict";
+import { mergeIntervals, watchedSeconds } from "../src/lib/watched-intervals";
+import { validateSubmission } from "../src/lib/exam-submission";
+import type { VstepTest1Public } from "../src/lib/vstep-test-1-public";
+import prompts from "../src/lib/grading-prompts.json";
+import transcript from "../src/lib/classroom-transcript.json";
+
+assert.deepEqual(mergeIntervals([[0,5],[4,8],[20,25]],100),[[0,8],[20,25]]);
+assert.equal(watchedSeconds(mergeIntervals([[0,5],[0,5],[50,60]],100)),15,"replay/seek gaps do not earn extra coverage");
+assert.deepEqual(mergeIntervals([[NaN,4],[20,10],[-10,8],[99,200]],100),[[0,8],[99,100]]);
+const testPaper: VstepTest1Public = { slug: "qa-paper", title: "QA paper", subtitle: "", target: "B1", listening: { instructions: "", parts: [] }, reading: { instructions: "", passages: [{ id: "passage-1", title: "", text: "", questions: [{ id: "reading-1", number: 1, prompt: "", options: ["A", "B"] }, { id: "reading-2", number: 2, prompt: "", options: ["A", "B"] }] }] }, writing: [{ id: "writing-1", title: "", durationMinutes: 1, minimumWords: 1, prompt: "" }], speaking: { parts: [{ id: "speaking-1", title: "", prompt: "", questions: [] }] } };
+const saved=validateSubmission({answers:{"reading-2":"B"}}, {answers:{"reading-1":"A"},writingAnswers:{"writing-1":"Kept response"}},{},testPaper);
+assert.deepEqual(saved.answers,{"reading-1":"A","reading-2":"B"});
+assert.equal(saved.writingAnswers["writing-1"],"Kept response");
+assert.throws(()=>validateSubmission({answers:{"reading-41":"A"}},{},{},testPaper));
+assert.throws(()=>validateSubmission({answers:{"reading-1":"E"}},{},{},testPaper));
+assert.throws(()=>validateSubmission({recordings:{"speaking-1":{audioData:"https://malicious.invalid/audio"}}},{},{},testPaper));
+assert.throws(()=>validateSubmission({writingAnswers:{"other":"injected task"}},{},{},testPaper));
+assert.equal(transcript.length,224);
+assert.ok(transcript.every(t=>t.en&&t.vi&&t.ipa));
+assert.ok(transcript.every((t,i)=>t.startSeconds>=0&&t.endSeconds>t.startSeconds&&(i===0||t.startSeconds>=transcript[i-1].startSeconds)));
+assert.ok(transcript.at(-1)!.endSeconds<=766);
+assert.equal(Object.keys(prompts).length,10);
+assert.ok(prompts["speak-01-examiner-system"].includes("ORIGINAL AUDIO"));
+assert.ok(prompts["write-01-examiner-system"].includes("Weight in Writing: 2/3"));
+console.log("PASS: interval coverage, submission validation/preservation, 224 transcript entries, modular prompt pack.");

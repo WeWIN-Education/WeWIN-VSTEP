@@ -12,12 +12,12 @@ type Props = {
 
 export default async function LoginPage({ searchParams }: Props) {
   const params = await searchParams;
-  const callbackUrl = params.callbackUrl || "/";
+  const callbackUrl = params.callbackUrl || "/dashboard";
 
   return (
     <AuthSplitLayout
       badge="HỌC MỖI NGÀY 15 PHÚT"
-      title="Chào mừng quay lại 👋"
+      title="Chào mừng quay lại"
       subtitle="Tiếp tục lộ trình học tiếng Anh của bạn."
     >
       <LoginForm callbackUrl={callbackUrl} />

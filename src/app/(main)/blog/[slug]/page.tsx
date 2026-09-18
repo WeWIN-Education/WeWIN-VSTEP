@@ -25,7 +25,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-[720px]">
       <Link
-        href="/blog"
+        href="/feed"
         className="mb-3 inline-block text-[13px] font-semibold text-brand hover:underline"
       >
         ← Bài viết
