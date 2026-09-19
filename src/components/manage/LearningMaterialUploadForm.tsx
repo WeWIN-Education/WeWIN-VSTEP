@@ -60,8 +60,9 @@ export function LearningMaterialUploadForm({ initialMaterials }: { initialMateri
     setSuccess("");
     try {
       const capabilityResponse = await fetch("/api/manage/materials/upload", { cache: "no-store" });
-      const capabilities = await capabilityResponse.json().catch(() => ({})) as { directUpload?: boolean; error?: string };
+      const capabilities = await capabilityResponse.json().catch(() => ({})) as { directUpload?: boolean; serverUpload?: boolean; error?: string };
       if (!capabilityResponse.ok) throw new Error(capabilities.error || "Không kiểm tra được nơi lưu tài liệu.");
+      if (!capabilities.directUpload && !capabilities.serverUpload) throw new Error("Blob storage chưa được kết nối với deployment hiện tại. Hãy redeploy Vercel rồi thử lại.");
 
       let response: Response;
       if (capabilities.directUpload) {

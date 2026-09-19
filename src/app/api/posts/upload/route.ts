@@ -11,7 +11,7 @@ const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Bạn cần đăng nhập để đăng bài." }, { status: 401 });
-  return NextResponse.json({ directUpload: Boolean(process.env.BLOB_READ_WRITE_TOKEN) }, { headers: { "Cache-Control": "private, no-store" } });
+  return NextResponse.json({ directUpload: Boolean(process.env.BLOB_READ_WRITE_TOKEN), serverUpload: process.env.NODE_ENV !== "production" }, { headers: { "Cache-Control": "private, no-store" } });
 }
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) return NextResponse.json({ error: "Yêu cầu không hợp lệ." }, { status: 403 });

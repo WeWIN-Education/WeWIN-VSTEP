@@ -9,7 +9,7 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 export async function GET() {
   const actor = await getCurrentUser();
   if (!actor || actor.role !== "ADMIN") return NextResponse.json({ error: "Bạn không có quyền tải tài liệu." }, { status: 403 });
-  return NextResponse.json({ directUpload: Boolean(process.env.BLOB_READ_WRITE_TOKEN) }, { headers: { "Cache-Control": "private, no-store" } });
+  return NextResponse.json({ directUpload: Boolean(process.env.BLOB_READ_WRITE_TOKEN), serverUpload: process.env.NODE_ENV !== "production" }, { headers: { "Cache-Control": "private, no-store" } });
 }
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) return NextResponse.json({ error: "Yêu cầu không hợp lệ." }, { status: 403 });

@@ -1,5 +1,6 @@
 "use client";
 
+import { upload as uploadBlob } from "@vercel/blob/client";
 import {
   AlertCircle,
   Check,
@@ -58,6 +59,7 @@ type PublishedResponse = PreviewResponse & {
 };
 
 type Action = "preview" | "publish";
+type UploadedAudioReference = { name: string; pathname: string; contentType: string };
 
 function formatBytes(value: number) {
   if (value === 0) return "0 B";
@@ -70,10 +72,22 @@ function extensionOf(name: string) {
   return dot >= 0 ? name.slice(dot).toLowerCase() : "";
 }
 
-function normaliseResponse(value: unknown): PreviewResponse {
-  if (!value || typeof value !== "object") return { error: "Máy chủ trả về dữ liệu không hợp lệ." };
+function normaliseResponse(value: unknown, status?: number): PreviewResponse {
+  if (!value || typeof value !== "object") {
+    if (status === 413) return { error: "Tổng dung lượng gửi lên vượt giới hạn máy chủ. Audio sẽ được tải trực tiếp lên Blob sau khi redeploy." };
+    return { error: `Máy chủ không trả về dữ liệu hợp lệ${status ? ` (HTTP ${status})` : ""}.` };
+  }
   return value as PreviewResponse;
 }
+
+const audioMimeByExtension: Record<string, string> = {
+  ".mp3": "audio/mpeg",
+  ".wav": "audio/wav",
+  ".m4a": "audio/mp4",
+  ".mp4": "audio/mp4",
+  ".ogg": "audio/ogg",
+  ".webm": "audio/webm",
+};
 
 function firstError(body: PreviewResponse) {
   return body.error || body.errors?.filter(Boolean).join(" ") || "Không thể kiểm tra đề.";
@@ -172,12 +186,41 @@ export function ExamImportForm() {
     setPublished(null);
     setPendingAction(action);
     try {
+      let uploadedAudio: UploadedAudioReference[] | null = null;
+      if (action === "publish" && audioFiles.length) {
+        const capabilityResponse = await fetch("/api/manage/exams/import/upload", { cache: "no-store" });
+        const capabilities = await capabilityResponse.json().catch(() => ({})) as { directUpload?: boolean; serverUpload?: boolean; error?: string };
+        if (!capabilityResponse.ok) throw new Error(capabilities.error || "Không kiểm tra được nơi lưu audio đề.");
+        if (!capabilities.directUpload && !capabilities.serverUpload) {
+          throw new Error("Blob storage chưa được kết nối với deployment hiện tại. Hãy redeploy Vercel rồi thử lại.");
+        }
+        if (capabilities.directUpload) {
+          uploadedAudio = [];
+          for (const file of audioFiles) {
+            const extension = extensionOf(file.name);
+            const contentType = audioMimeByExtension[extension] || file.type || "application/octet-stream";
+            const uploaded = await uploadBlob(`exams/${crypto.randomUUID()}${extension}`, file, {
+              access: "private",
+              contentType,
+              multipart: file.size > 5 * 1024 * 1024,
+              handleUploadUrl: "/api/manage/exams/import/upload",
+              clientPayload: JSON.stringify({ fileName: file.name }),
+            });
+            uploadedAudio.push({ name: file.name, pathname: uploaded.pathname, contentType });
+          }
+        }
+      }
       const form = new FormData();
       form.append("docx", docx);
-      audioFiles.forEach((file) => form.append("audio", file));
+      form.append("audioNames", JSON.stringify(audioFiles.map((file) => file.name)));
+      if (uploadedAudio) {
+        form.append("audioRefs", JSON.stringify(uploadedAudio));
+      } else if (action === "publish") {
+        audioFiles.forEach((file) => form.append("audio", file));
+      }
       form.append("mode", action);
       const response = await fetch("/api/manage/exams/import", { method: "POST", body: form });
-      const body = normaliseResponse(await response.json().catch(() => null));
+      const body = normaliseResponse(await response.json().catch(() => null), response.status);
       if (!response.ok) {
         if (action === "preview") {
           setPreview({

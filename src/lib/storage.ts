@@ -94,7 +94,8 @@ export async function getObject(key: string, options: { range?: { start: number;
       access: "private",
       headers: range ? { Range: `bytes=${range.start}-${range.end}` } : undefined,
     });
-    if (!result || result.statusCode !== 200) return null;
+    const statusCode = result?.statusCode as number | undefined;
+    if (!result || !result.stream || (statusCode !== 200 && statusCode !== 206)) return null;
     const contentLength = Number(result.headers.get("content-length") || 0);
     return {
       stream: result.stream,

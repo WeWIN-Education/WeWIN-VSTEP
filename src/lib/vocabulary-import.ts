@@ -265,87 +265,92 @@ export async function importVocabularyRows({
   let updatedRows = 0;
   let skippedRows = 0;
   try {
-    await prisma.$transaction(async (tx) => {
-      const collectionIds = new Map<string, string>();
-      const topicIds = new Map<string, string>();
-      for (const row of rows) {
-        if (!collectionIds.has(row.collectionCode)) {
-          const existingCollection = await tx.vocabularyCollection.findUnique({ where: { code: row.collectionCode }, select: { id: true, kind: true } });
-          if (existingCollection && existingCollection.kind !== kind) throw new Error(`Bộ ${row.collectionCode} đã tồn tại với loại nội dung khác.`);
-          const collection = existingCollection
-            ? await tx.vocabularyCollection.update({ where: { id: existingCollection.id }, data: { name: row.collectionName, description: row.collectionDescription, sourceFile: row.sourceFile } })
-            : await tx.vocabularyCollection.create({ data: { code: row.collectionCode, name: row.collectionName, description: row.collectionDescription, sourceFile: row.sourceFile, kind: kind as VocabularyCollectionKind } });
-          collectionIds.set(row.collectionCode, collection.id);
-        }
-        const collectionId = collectionIds.get(row.collectionCode)!;
-        const topicKey = `${row.collectionCode}::${row.topicCode}`;
-        if (row.topicCode && !topicIds.has(topicKey)) {
-          const topic = await tx.vocabularyTopic.upsert({
-            where: { collectionId_code: { collectionId, code: row.topicCode } },
-            create: { collectionId, code: row.topicCode, name: row.topicName || row.topicCode, sortOrder: row.topicSortOrder ?? 0 },
-            update: { name: row.topicName || row.topicCode, sortOrder: row.topicSortOrder ?? 0 },
-          });
-          topicIds.set(topicKey, topic.id);
-        }
+    // Keep database transactions short. Vercel + Neon can close interactive
+    // transactions while a large workbook is still doing row-by-row work.
+    const collectionIds = new Map<string, string>();
+    const topicIds = new Map<string, string>();
+    for (const row of rows) {
+      if (!collectionIds.has(row.collectionCode)) {
+        const existingCollection = await prisma.vocabularyCollection.findUnique({ where: { code: row.collectionCode }, select: { id: true, kind: true } });
+        if (existingCollection && existingCollection.kind !== kind) throw new Error(`Bộ ${row.collectionCode} đã tồn tại với loại nội dung khác.`);
+        const collection = existingCollection
+          ? await prisma.vocabularyCollection.update({ where: { id: existingCollection.id }, data: { name: row.collectionName, description: row.collectionDescription, sourceFile: row.sourceFile } })
+          : await prisma.vocabularyCollection.create({ data: { code: row.collectionCode, name: row.collectionName, description: row.collectionDescription, sourceFile: row.sourceFile, kind: kind as VocabularyCollectionKind } });
+        collectionIds.set(row.collectionCode, collection.id);
       }
-
-      const collectionIdList = [...collectionIds.values()];
-      const existing = await tx.vocabularyEntry.findMany({ where: { collectionId: { in: collectionIdList } }, select: { id: true, collectionId: true, entryCode: true } });
-      const existingMap = new Map(existing.map((entry) => [`${entry.collectionId}::${entry.entryCode}`, entry.id]));
-      const createData: Prisma.VocabularyEntryCreateManyInput[] = [];
-      const updateData: Array<{ id: string; data: Prisma.VocabularyEntryUpdateInput }> = [];
-      const incoming = new Set<string>();
-
-      for (const row of rows) {
-        const collectionId = collectionIds.get(row.collectionCode)!;
-        const topicId = row.topicCode ? topicIds.get(`${row.collectionCode}::${row.topicCode}`) : undefined;
-        const key = `${collectionId}::${row.entryCode}`;
-        if (incoming.has(key)) {
-          skippedRows += 1;
-          continue;
-        }
-        incoming.add(key);
-        const data = {
-          collectionId,
-          topicId: topicId ?? null,
-          entryCode: row.entryCode,
-          level: row.level,
-          term: row.term,
-          meaningVi: row.meaningVi,
-          partOfSpeech: row.partOfSpeech,
-          ipa: row.ipa,
-          exampleEn: row.exampleEn,
-          exampleVi: row.exampleVi,
-          audioUrl: row.audioUrl,
-          note: row.note,
-          sourceSheet: row.sourceSheet,
-          sourceRow: row.sourceRow,
-        };
-        const existingId = existingMap.get(key);
-        if (existingId) {
-          updatedRows += 1;
-          updateData.push({ id: existingId, data });
-        } else {
-          insertedRows += 1;
-          createData.push(data);
-        }
+      const collectionId = collectionIds.get(row.collectionCode)!;
+      const topicKey = `${row.collectionCode}::${row.topicCode}`;
+      if (row.topicCode && !topicIds.has(topicKey)) {
+        const topic = await prisma.vocabularyTopic.upsert({
+          where: { collectionId_code: { collectionId, code: row.topicCode } },
+          create: { collectionId, code: row.topicCode, name: row.topicName || row.topicCode, sortOrder: row.topicSortOrder ?? 0 },
+          update: { name: row.topicName || row.topicCode, sortOrder: row.topicSortOrder ?? 0 },
+        });
+        topicIds.set(topicKey, topic.id);
       }
+    }
 
-      if (createData.length) await tx.vocabularyEntry.createMany({ data: createData, skipDuplicates: true });
-      for (const update of updateData) await tx.vocabularyEntry.update({ where: { id: update.id }, data: update.data });
+    const collectionIdList = [...collectionIds.values()];
+    const existing = await prisma.vocabularyEntry.findMany({ where: { collectionId: { in: collectionIdList } }, select: { id: true, collectionId: true, entryCode: true } });
+    const existingMap = new Map(existing.map((entry) => [`${entry.collectionId}::${entry.entryCode}`, entry.id]));
+    const createData: Prisma.VocabularyEntryCreateManyInput[] = [];
+    const updateData: Array<{ id: string; data: Prisma.VocabularyEntryUpdateInput }> = [];
+    const incoming = new Set<string>();
 
-      await tx.vocabularyImport.update({
-        where: { id: importRecord.id },
-        data: {
-          collectionId: collectionIdList.length === 1 ? collectionIdList[0] : null,
-          status: errors.length ? "COMPLETED_WITH_ERRORS" : "COMPLETED",
-          insertedRows,
-          updatedRows,
-          skippedRows,
-          errorRows: errors.length,
-          errors: errors.slice(0, 100) as unknown as Prisma.InputJsonValue,
-        },
-      });
+    for (const row of rows) {
+      const collectionId = collectionIds.get(row.collectionCode)!;
+      const topicId = row.topicCode ? topicIds.get(`${row.collectionCode}::${row.topicCode}`) : undefined;
+      const key = `${collectionId}::${row.entryCode}`;
+      if (incoming.has(key)) {
+        skippedRows += 1;
+        continue;
+      }
+      incoming.add(key);
+      const data = {
+        collectionId,
+        topicId: topicId ?? null,
+        entryCode: row.entryCode,
+        level: row.level,
+        term: row.term,
+        meaningVi: row.meaningVi,
+        partOfSpeech: row.partOfSpeech,
+        ipa: row.ipa,
+        exampleEn: row.exampleEn,
+        exampleVi: row.exampleVi,
+        audioUrl: row.audioUrl,
+        note: row.note,
+        sourceSheet: row.sourceSheet,
+        sourceRow: row.sourceRow,
+      };
+      const existingId = existingMap.get(key);
+      if (existingId) {
+        updatedRows += 1;
+        updateData.push({ id: existingId, data });
+      } else {
+        insertedRows += 1;
+        createData.push(data);
+      }
+    }
+
+    for (let index = 0; index < createData.length; index += 500) {
+      await prisma.vocabularyEntry.createMany({ data: createData.slice(index, index + 500), skipDuplicates: true });
+    }
+    for (let index = 0; index < updateData.length; index += 50) {
+      const batch = updateData.slice(index, index + 50);
+      await prisma.$transaction(batch.map((update) => prisma.vocabularyEntry.update({ where: { id: update.id }, data: update.data })));
+    }
+
+    await prisma.vocabularyImport.update({
+      where: { id: importRecord.id },
+      data: {
+        collectionId: collectionIdList.length === 1 ? collectionIdList[0] : null,
+        status: errors.length ? "COMPLETED_WITH_ERRORS" : "COMPLETED",
+        insertedRows,
+        updatedRows,
+        skippedRows,
+        errorRows: errors.length,
+        errors: errors.slice(0, 100) as unknown as Prisma.InputJsonValue,
+      },
     });
   } catch (error) {
     await prisma.vocabularyImport.update({ where: { id: importRecord.id }, data: { status: "FAILED", errors: [{ sheet: "", row: 0, message: error instanceof Error ? error.message : "Import thất bại." }] } });

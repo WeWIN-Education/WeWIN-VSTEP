@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { importVocabularyRows, parseVocabularyWorkbook, type VocabularyImportKind } from "@/lib/vocabulary-import";
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+export const maxDuration = 60;
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export async function POST(request: Request) {

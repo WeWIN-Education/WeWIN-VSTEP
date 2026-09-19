@@ -318,8 +318,9 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
     const id = attemptIdRef.current;
     if (!id) throw new Error("Không có mã lượt thi để lưu bản ghi.");
     const capabilityResponse = await fetch(`/api/exams/attempts/${encodeURIComponent(id)}/recordings/upload`, { cache: "no-store" });
-    const capabilities = await capabilityResponse.json().catch(() => ({})) as { directUpload?: boolean; error?: string };
+    const capabilities = await capabilityResponse.json().catch(() => ({})) as { directUpload?: boolean; serverUpload?: boolean; error?: string };
     if (!capabilityResponse.ok) throw new Error(capabilities.error || "Không kiểm tra được nơi lưu bản ghi.");
+    if (!capabilities.directUpload && !capabilities.serverUpload) throw new Error("Blob storage chưa được kết nối với deployment hiện tại. Hãy redeploy Vercel rồi thử lại.");
 
     let response: Response;
     if (capabilities.directUpload) {
