@@ -20,6 +20,7 @@
     "test:roles": "node scripts/test-role-access.mjs",
     "grading:worker": "tsx scripts/process-grading-jobs.ts",
     "grading:worker:loop": "tsx scripts/process-grading-jobs.ts --loop",
+    "grading:health": "tsx scripts/grading-health.ts",
     "storage:migrate": "tsx scripts/migrate-local-storage.ts",
     "cleanup:guest": "tsx scripts/cleanup-guest-sessions.ts",
     "postinstall": "prisma generate"

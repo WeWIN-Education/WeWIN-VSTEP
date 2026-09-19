@@ -169,6 +169,7 @@ model ExamAttempt {
   recordingFiles   ExamRecording[]
   grading          Json?
   gradingJob       ExamGradingJob?
+  gradingParts     ExamGradingPart[]
   gradingStartedAt DateTime?
   listeningScore   Float?
   readingScore     Float?
@@ -209,6 +210,9 @@ model ExamGradingJob {
   attempts    Int         @default(0)
   availableAt DateTime    @default(now())
   lockedAt    DateTime?
+  leaseToken  String?
+  leaseExpiresAt DateTime?
+  pipelineVersion String @default("v1")
   startedAt   DateTime?
   finishedAt  DateTime?
   errorCode   String?
@@ -218,6 +222,28 @@ model ExamGradingJob {
   attempt     ExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
 
   @@index([status, availableAt])
+}
+
+model GradingWorker {
+  id String @id
+  lastSeenAt DateTime @default(now())
+
+  @@index([lastSeenAt])
+}
+
+model ExamGradingPart {
+  id String @id @default(cuid())
+  attemptId String
+  partId String
+  pipelineVersion String
+  status String @default("QUEUED")
+  checkpoint Json?
+  result Json?
+  errorCode String?
+  updatedAt DateTime @updatedAt
+  attempt ExamAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@unique([attemptId, partId, pipelineVersion])
 }
 
 model XpAward {

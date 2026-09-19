@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { publicGrading } from "@/lib/grading-jobs";
 import { getAttemptOwner, ownerWhere } from "@/lib/exam-attempt-access";
 import { consumeGuestRateLimit, guestRateLimitResponse } from "@/lib/guest-exams";
 import { object, savedAnswers, validateSubmission } from "@/lib/exam-submission";
@@ -19,8 +20,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ att
   const saved=savedAnswers(attempt.answers);
   const exam=resolveCatalogExamData({ slug: attempt.examPaper.slug, sections: attempt.examPaper.sections, questions: attempt.examPaper.questions, catalog: attempt.catalog, partSections: attempt.paperPart?.sections, partQuestions: attempt.paperPart?.questions });
   const bookmarks = owner.kind === "user" ? await prisma.questionBookmark.findMany({ where: { userId: owner.userId, examPaperId: attempt.examPaperId, catalog: attempt.catalog }, select: { questionId: true, note: true, createdAt: true } }) : [];
-  const publicAttempt = Object.fromEntries(Object.entries(attempt).filter(([key]) => key !== "userId" && key !== "guestSessionId" && key !== "examPaper" && key !== "paperPart"));
-  return NextResponse.json({...publicAttempt,...saved,bookmarks,...(attempt.status==="SUBMITTED"&&exam?{...scoreExam(exam.paper,exam.privateData,saved.answers as Record<string,string>),...object(attempt.grading)}:{})}, {headers:{"Cache-Control":"private, no-store"}});
+  const publicAttempt = Object.fromEntries(Object.entries(attempt).filter(([key]) => !["userId","guestSessionId","examPaper","paperPart","grading","gradingStartedAt"].includes(key)));
+  return NextResponse.json({...publicAttempt,...saved,bookmarks,...(attempt.status==="SUBMITTED"&&exam?{...scoreExam(exam.paper,exam.privateData,saved.answers as Record<string,string>),...publicGrading(attempt.grading)}:{})}, {headers:{"Cache-Control":"private, no-store"}});
 }
 export async function PATCH(request: Request, { params }: { params: Promise<{ attemptId: string }> }) {
   const owner = await getAttemptOwner();

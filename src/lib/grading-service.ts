@@ -1,100 +1,148 @@
+import { createHash } from "node:crypto";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { aggregateSpeaking, gradeSpeaking, gradeWriting, PROMPT_VERSION } from "@/lib/openai-grading";
 import { dataUrlFromBuffer, readObject } from "@/lib/storage";
 import { object, savedAnswers } from "@/lib/exam-submission";
 import { resolveCatalogExamData, scoreExam } from "@/lib/exam-scoring";
-import type { Prisma } from "@prisma/client";
 
 export class GradingServiceError extends Error {
-  code: string;
-
-  constructor(code: string, message: string) {
-    super(message);
-    this.name = "GradingServiceError";
-    this.code = code;
-  }
+  constructor(public code: string, message: string, public retryable = false) { super(message); this.name = "GradingServiceError"; }
 }
+type Value = Record<string, unknown>;
+type Part = { id: string; skill: "writing" | "speaking"; status: string; state: Value; result?: Value; fingerprint: string; errorCode?: string };
+type Options = { jobId?: string; leaseToken?: string; pipelineVersion?: string };
+const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonObject;
 
-async function recordingAudioData(attemptId: string, partId: string, metadata: Record<string, unknown>, fallback: Record<string, unknown> | undefined) {
+async function recordingAudioData(attemptId: string, metadata: Value, fallback?: { storageKey: string; mimeType: string }) {
   if (typeof metadata.audioData === "string" && metadata.audioData) return metadata.audioData;
-  const storageKey = typeof metadata.storageKey === "string" ? metadata.storageKey : "";
-  if (!storageKey) return "";
-  if (!storageKey.startsWith(`exam-recordings/${attemptId}/`)) throw new GradingServiceError("INVALID_RECORDING", `${partId}: bản ghi không thuộc lượt thi.`);
-  const bytes = await readObject(storageKey);
-  if (!bytes?.length) return "";
-  const mimeType = typeof metadata.mimeType === "string" ? metadata.mimeType : typeof fallback?.mimeType === "string" ? fallback.mimeType : "audio/webm";
-  return dataUrlFromBuffer(bytes, mimeType);
+  const key = typeof metadata.storageKey === "string" ? metadata.storageKey : fallback?.storageKey;
+  if (!key || !key.startsWith(`exam-recordings/${attemptId}/`)) throw new GradingServiceError("INVALID_RECORDING", "Bản ghi không thuộc lượt thi.");
+  const bytes = await readObject(key);
+  if (!bytes?.length) throw new GradingServiceError("RECORDING_UNAVAILABLE", "Chưa đọc được bản ghi đã lưu.", true);
+  return dataUrlFromBuffer(bytes, typeof metadata.mimeType === "string" ? metadata.mimeType : fallback?.mimeType || "audio/webm");
 }
 
-export async function gradeAttempt(attemptId: string, options: { jobId?: string } = {}) {
+export async function gradeAttempt(attemptId: string, options: Options = {}) {
   const attempt = await prisma.examAttempt.findFirst({ where: { id: attemptId, status: "SUBMITTED" }, include: { examPaper: { select: { slug: true, sections: true, questions: true } }, paperPart: { select: { sections: true, questions: true } } } });
   if (!attempt) throw new GradingServiceError("ATTEMPT_NOT_FOUND", "Lượt thi chưa nộp hoặc không tồn tại.");
-  const exam = resolveCatalogExamData({ slug: attempt.examPaper.slug, sections: attempt.examPaper.sections, questions: attempt.examPaper.questions, catalog: attempt.catalog, partSections: attempt.paperPart?.sections, partQuestions: attempt.paperPart?.questions });
-  if (!exam) throw new GradingServiceError("INVALID_EXAM", "Nội dung đề không hợp lệ.");
   const cached = object(attempt.grading);
   if (cached.complete) return cached;
-  if (!process.env.OPENAI_API_KEY) throw new GradingServiceError("MISSING_OPENAI_KEY", "Dịch vụ chấm điểm chưa được cấu hình.");
-
+  const exam = resolveCatalogExamData({ slug: attempt.examPaper.slug, sections: attempt.examPaper.sections, questions: attempt.examPaper.questions, catalog: attempt.catalog, partSections: attempt.paperPart?.sections, partQuestions: attempt.paperPart?.questions });
+  if (!exam) throw new GradingServiceError("INVALID_EXAM", "Nội dung đề không hợp lệ.");
+  const paper = exam.paper;
+  const pipelineVersion = (options.pipelineVersion || process.env.GRADING_PIPELINE || "v2") === "v1" ? "v1" : "v2";
   const lease = new Date();
-  const claimed = await prisma.examAttempt.updateMany({ where: { id: attemptId, OR: [{ gradingStartedAt: null }, { gradingStartedAt: { lt: new Date(Date.now() - 15 * 60_000) } }] }, data: { gradingStartedAt: lease } });
-  if (!claimed.count) throw new GradingServiceError("GRADING_IN_PROGRESS", "Bài đang được chấm. Vui lòng đợi rồi xem lại.");
-
-  const writing = Array.isArray(cached.writing) ? cached.writing as Record<string, unknown>[] : [];
-  const speaking = Array.isArray(cached.speaking) ? cached.speaking as Record<string, unknown>[] : [];
-  const pipelines = object(cached.pipelines);
-  const recordingFiles = await prisma.examRecording.findMany({ where: { attemptId, status: "SAVED" }, select: { partId: true, storageKey: true, mimeType: true } });
-  const recordingFileMap = new Map(recordingFiles.map((recording) => [recording.partId, recording]));
-
-  async function checkpoint() {
-    await prisma.examAttempt.updateMany({ where: { id: attemptId, gradingStartedAt: lease }, data: { grading: { writing, speaking, pipelines, prompt_version: PROMPT_VERSION, complete: false } as unknown as Prisma.InputJsonObject } });
+  if (options.jobId && !options.leaseToken) throw new GradingServiceError("LEASE_LOST", "Phiên chấm không còn hiệu lực.");
+  if (!options.jobId) {
+    const claimed = await prisma.examAttempt.updateMany({ where: { id: attemptId, OR: [{ gradingStartedAt: null }, { gradingStartedAt: { lt: new Date(Date.now() - 15 * 60_000) } }] }, data: { gradingStartedAt: lease } });
+    if (!claimed.count) throw new GradingServiceError("GRADING_IN_PROGRESS", "Bài đang được chấm.");
   }
-
+  // Fence each result write in the same transaction that locks the owning job.
+  async function fenced<T>(write: (tx: Prisma.TransactionClient) => Promise<T>) {
+    return prisma.$transaction(async tx => {
+      const owned = options.jobId
+        ? await tx.examGradingJob.updateMany({ where: { id: options.jobId, leaseToken: options.leaseToken, status: "PROCESSING", leaseExpiresAt: { gt: new Date() } }, data: { updatedAt: new Date() } })
+        : await tx.examAttempt.updateMany({ where: { id: attemptId, gradingStartedAt: lease }, data: { updatedAt: new Date() } });
+      if (!owned.count) throw new GradingServiceError("LEASE_LOST", "Phiên chấm đã được chuyển sang tiến trình khác.");
+      return write(tx);
+    });
+  }
   try {
-    const saved = savedAnswers(attempt.answers);
-    for (const [index, task] of exam.paper.writing.entries()) {
-      if (writing.some((result) => result.id === task.id)) continue;
-      const response = saved.writingAnswers[task.id];
-      if (typeof response !== "string" || !response.trim()) continue;
-      const prompt = task.prompt + (task.bullets ? `\n${task.bullets.join("\n")}` : "");
-      writing.push({ id: task.id, ...await gradeWriting(index === 0 ? "task1" : "task2", prompt, response, object(pipelines[task.id]), async (state) => { pipelines[task.id] = state; await checkpoint(); }) });
-      await checkpoint();
-    }
-
-    const recordings = object(attempt.recordings);
-    for (const part of exam.paper.speaking.parts) {
-      if (speaking.some((result) => result.id === part.id)) continue;
-      const metadata = object(recordings[part.id]);
-      const file = recordingFileMap.get(part.id);
-      const audioData = await recordingAudioData(attemptId, part.id, metadata, file ? { mimeType: file.mimeType } : undefined);
-      if (!audioData) continue;
-      speaking.push({ id: part.id, ...await gradeSpeaking(part.id.replace("speaking-", "part"), `${part.prompt}\n${part.questions.join("\n")}`, audioData, object(pipelines[part.id]), async (state) => { pipelines[part.id] = state; await checkpoint(); }) });
-      await checkpoint();
-    }
-
-    const score = (items: Record<string, unknown>[], id: string) => {
-      const item = items.find((value) => value.id === id);
-      return item && typeof item.task_score === "number" ? item.task_score : null;
-    };
-    const writingValues = exam.paper.writing.map((task) => score(writing, task.id));
-    const speakingValues = exam.paper.speaking.parts.map((part) => score(speaking, part.id));
-    const writingComplete = exam.paper.writing.length === 0 || (writingValues.length === exam.paper.writing.length && writingValues.every((value): value is number => typeof value === "number"));
-    const scoredWritingValues = writingValues.filter((value): value is number => typeof value === "number");
-    const writingScore = writingComplete && scoredWritingValues.length === 2 ? Math.round((scoredWritingValues[0] + 2 * scoredWritingValues[1]) / 3 * 2) / 2 : null;
-    let speakingSummary = object(cached.speakingSummary);
-    const speakingComplete = exam.paper.speaking.parts.length === 0 || (speakingValues.length === exam.paper.speaking.parts.length && speakingValues.every((value): value is number => typeof value === "number"));
-    if (speakingComplete && !Object.keys(speakingSummary).length) speakingSummary = await aggregateSpeaking(speaking);
-    const speakingScore = typeof speakingSummary.speaking_estimated_score === "number" ? speakingSummary.speaking_estimated_score : null;
+    const saved = savedAnswers(attempt.answers), recordings = object(attempt.recordings);
+    const files = await prisma.examRecording.findMany({ where: { attemptId, status: "SAVED" }, select: { partId: true, storageKey: true, mimeType: true } });
+    const fileMap = new Map(files.map(file => [file.partId, file]));
+    const previous = await prisma.examGradingPart.findMany({ where: { attemptId, pipelineVersion } });
+    const parts: Part[] = [], jobs: Array<() => Promise<void>> = [];
     const objective = scoreExam(exam.paper, exam.privateData, saved.answers as Record<string, string>);
-    const allScores = [objective.listening.score, objective.reading.score, writingScore, speakingScore];
-    const overallScore = allScores.every((value): value is number => typeof value === "number") ? Math.round(allScores.reduce((sum, value) => sum + value, 0) / allScores.length * 10) / 10 : null;
-    const complete = writingComplete && speakingComplete;
-    const result = { writing, speaking, writingScore, speakingScore, overallScore, speakingSummary, pipelines, prompt_version: PROMPT_VERSION, writingStatus: writingComplete ? "GRADED" : writing.length ? "PARTIAL" : "NOT_STARTED", speakingStatus: speakingComplete ? "GRADED" : speaking.length ? "PARTIAL" : "NOT_STARTED", complete };
-    await prisma.examAttempt.updateMany({ where: { id: attemptId, gradingStartedAt: lease }, data: { grading: result as unknown as Prisma.InputJsonObject, gradingStartedAt: null, writingStatus: result.writingStatus, speakingStatus: result.speakingStatus } });
-    if (options.jobId) await prisma.examGradingJob.update({ where: { id: options.jobId }, data: { status: complete ? "GRADED" : "PARTIAL", finishedAt: new Date(), lockedAt: null, errorCode: null, errorMessage: null } });
+    let queue: Promise<unknown> = Promise.resolve();
+    function summary() {
+      const writing = parts.filter(p => p.skill === "writing" && p.result).map(p => ({ ...p.result!, id: p.id }));
+      const speaking = parts.filter(p => p.skill === "speaking" && p.result).map(p => ({ ...p.result!, id: p.id }));
+      const score = (id: string): number | null => {
+        const p = parts.find(p => p.id === id), value = p?.result?.task_score;
+        return p?.status === "GRADED" && typeof value === "number" && Number.isFinite(value) ? value : null;
+      };
+      const w = paper.writing.map(p => score(p.id)), s = paper.speaking.parts.map(p => score(p.id));
+      const writingScore = w.length === 2 && w.every((v): v is number => v !== null) ? Math.round((w[0] + 2 * w[1]) / 3 * 2) / 2 : null;
+      const speakingScore = s.length === 3 && s.every((v): v is number => v !== null) ? Math.round(s.reduce((a,b) => a+b,0) / 3 * 2) / 2 : null;
+      const skillStatus = (skill: Part["skill"]) => {
+        const subset = parts.filter(p => p.skill === skill);
+        return !subset.length ? "NOT_STARTED" : subset.every(p => p.status === "GRADED") ? "GRADED" : subset.some(p => p.result) ? "PARTIAL" : "NOT_GRADED";
+      };
+      const all = [objective.listening.score, objective.reading.score, writingScore, speakingScore];
+      return { writing, speaking, writingScore, speakingScore,
+        overallScore: attempt!.catalog === "FULL" && all.every((v): v is number => v !== null) ? Math.round(all.reduce((a,b)=>a+b,0) / 4 * 10) / 10 : null,
+        speakingSummary: { speaking_estimated_score: speakingScore, method: "practice_part_mean" },
+        writingStatus: skillStatus("writing"), speakingStatus: skillStatus("speaking"), complete: parts.every(p => p.status === "GRADED"), pipelineVersion, prompt_version: PROMPT_VERSION,
+        progress: { completed: parts.filter(p => ["GRADED","PARTIAL","MISSING","FAILED"].includes(p.status)).length, total: parts.length, parts: parts.map(({ id, skill, status }) => ({ id, skill, status })) } };
+    }
+    function persist(part?: Part) {
+      const report = summary();
+      const reportJson = json(report);
+      const snapshot = part ? { ...part, state: json(part.state), result: part.result ? json(part.result) : undefined } : undefined;
+      const operation = queue.then(() => fenced(async tx => {
+        if (snapshot) await tx.examGradingPart.upsert({
+          where: { attemptId_partId_pipelineVersion: { attemptId, partId: snapshot.id, pipelineVersion } },
+          create: { attemptId, partId: snapshot.id, pipelineVersion, status: snapshot.status, checkpoint: json({ fingerprint: snapshot.fingerprint, state: snapshot.state }), ...(snapshot.result ? { result: snapshot.result } : {}), errorCode: snapshot.errorCode || null },
+          update: { status: snapshot.status, checkpoint: json({ fingerprint: snapshot.fingerprint, state: snapshot.state }), result: snapshot.result || Prisma.JsonNull, errorCode: snapshot.errorCode || null },
+        });
+        await tx.examAttempt.update({ where: { id: attemptId }, data: { grading: reportJson, writingStatus: report.writingStatus, speakingStatus: report.speakingStatus } });
+      }));
+      queue = operation.catch(() => undefined);
+      return operation;
+    }
+    function addPart(id: string, skill: Part["skill"], input: unknown, run: (state: Value, checkpoint: (state: Value) => Promise<void>) => Promise<Value>, missing: boolean) {
+      const fingerprint = createHash("sha256").update(JSON.stringify({ input, pipelineVersion, prompt: PROMPT_VERSION, model: skill === "writing" ? process.env.OPENAI_GRADING_MODEL || "gpt-4o-mini" : process.env.OPENAI_SPEAKING_MODEL || "gpt-audio-1.5", transcription: process.env.OPENAI_TRANSCRIPTION_MODEL || "whisper-1" })).digest("hex");
+      const prior = previous.find(p => p.partId === id && object(p.checkpoint).fingerprint === fingerprint);
+      const legacy = pipelineVersion === "v1" ? object(object(cached.pipelines)[id]) : {};
+      const part: Part = { id, skill, fingerprint, status: missing ? "MISSING" : prior && ["GRADED","PARTIAL"].includes(prior.status) ? prior.status : "QUEUED", state: prior ? object(object(prior.checkpoint).state) : legacy, ...(prior?.result ? { result: object(prior.result) } : {}) };
+      parts.push(part);
+      jobs.push(async () => {
+        if (missing || part.status === "GRADED" || part.status === "PARTIAL") { await persist(part); return; }
+        part.status = "PROCESSING";
+        await persist(part);
+        try {
+          part.result = await run(part.state, async state => { part.state = state; part.status = String(state.stage).toUpperCase() === "REVIEWING" ? "REVIEWING" : "PROCESSING"; await persist(part); });
+          part.status = typeof part.result.task_score === "number" ? "GRADED" : "PARTIAL";
+          await persist(part);
+        } catch (error) {
+          if (error instanceof GradingServiceError && error.code === "LEASE_LOST") throw error;
+          part.status = "FAILED";
+          part.errorCode = typeof object(error).code === "string" ? String(object(error).code) : "GRADING_FAILED";
+          await persist(part);
+          throw error;
+        }
+      });
+    }
+    for (const [index, task] of exam.paper.writing.entries()) {
+      const answer = typeof saved.writingAnswers[task.id] === "string" ? String(saved.writingAnswers[task.id]) : "", prompt = task.prompt + (task.bullets ? `\n${task.bullets.join("\n")}` : "");
+      addPart(task.id,"writing",{ prompt,answer },(state,checkpoint)=>gradeWriting(index===0?"task1":"task2",prompt,answer,state,checkpoint,{ pipelineVersion }),!answer.trim());
+    }
+    for (const part of exam.paper.speaking.parts) {
+      const metadata = object(recordings[part.id]), file = fileMap.get(part.id), prompt = `${part.prompt}\n${part.questions.join("\n")}`;
+      addPart(part.id,"speaking",{ prompt,metadata,file },async(state,checkpoint)=>gradeSpeaking(part.id.replace("speaking-","part"),prompt,await recordingAudioData(attemptId,metadata,file),state,checkpoint,{ pipelineVersion }),!metadata.audioData && !metadata.storageKey && !file);
+    }
+    await persist();
+    const outcomes = await Promise.allSettled(jobs.map(run=>run()));
+    await queue;
+    const failures = outcomes.filter((v): v is PromiseRejectedResult=>v.status==="rejected");
+    const lost = failures.find(v=>v.reason instanceof GradingServiceError && v.reason.code==="LEASE_LOST");
+    if (lost) throw lost.reason;
+    const retry = failures.find(v=>object(v.reason).retryable===true);
+    if (retry) throw retry.reason;
+    if (failures.length) throw failures[0].reason;
+    const result = summary();
+    if (pipelineVersion === "v1" && result.speakingScore !== null) {
+      const aggregate = await aggregateSpeaking(result.speaking, { pipelineVersion });
+      result.speakingSummary = { ...result.speakingSummary, ...aggregate };
+      result.speakingScore = typeof aggregate.speaking_estimated_score === "number" ? aggregate.speaking_estimated_score : null;
+      const scores = [objective.listening.score, objective.reading.score, result.writingScore, result.speakingScore];
+      result.overallScore = attempt.catalog === "FULL" && scores.every((v): v is number => v !== null) ? Math.round(scores.reduce((a,b)=>a+b,0) / 4 * 10) / 10 : null;
+    }
+    await fenced(tx=>tx.examAttempt.update({ where:{id:attemptId}, data:{grading:json(result),gradingStartedAt:null,writingStatus:result.writingStatus,speakingStatus:result.speakingStatus} }));
     return result;
-  } catch (error) {
-    await prisma.examAttempt.updateMany({ where: { id: attemptId, gradingStartedAt: lease }, data: { gradingStartedAt: null } });
-    if (options.jobId) await prisma.examGradingJob.update({ where: { id: options.jobId }, data: { status: "FAILED", finishedAt: new Date(), lockedAt: null, errorCode: error instanceof GradingServiceError ? error.code : "GRADING_FAILED", errorMessage: error instanceof Error ? error.message : "Không thể chấm." } }).catch(() => undefined);
-    throw error;
+  } finally {
+    if (!options.jobId) await prisma.examAttempt.updateMany({where:{id:attemptId,gradingStartedAt:lease},data:{gradingStartedAt:null}});
   }
 }

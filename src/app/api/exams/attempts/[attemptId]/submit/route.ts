@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { publicGrading } from "@/lib/grading-jobs";
 import { getAttemptOwner, ownerWhere } from "@/lib/exam-attempt-access";
 import { consumeGuestRateLimit, guestRateLimitResponse } from "@/lib/guest-exams";
 import type { Prisma } from "@prisma/client";
@@ -23,7 +24,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ att
     if(!exam)return NextResponse.json({error:"Nội dung đề không hợp lệ."},{status:409});
     if (attempt.status === "SUBMITTED") {
       const xpAward = owner.kind === "user" ? await awardXpForAttempt(attemptId, owner.userId).catch(() => null) : null;
-      return NextResponse.json({id:attemptId,...scoreExam(exam.paper,exam.privateData,savedAnswers(attempt.answers).answers as Record<string,string>),...object(attempt.grading),writingStatus:attempt.writingStatus,speakingStatus:attempt.speakingStatus,xpAward});
+      return NextResponse.json({id:attemptId,...scoreExam(exam.paper,exam.privateData,savedAnswers(attempt.answers).answers as Record<string,string>),...publicGrading(attempt.grading),writingStatus:attempt.writingStatus,speakingStatus:attempt.speakingStatus,xpAward},{headers:{"Cache-Control":"private, no-store"}});
     }
     const data = validateSubmission(body,attempt.answers,attempt.recordings,exam.paper,attemptId);
     const storedRecordings = await prisma.examRecording.findMany({ where: { attemptId, status: "SAVED" }, select: { partId: true, storageKey: true } });

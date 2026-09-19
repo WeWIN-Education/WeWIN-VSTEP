@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { publicGrading } from "@/lib/grading-jobs";
 import { getAttemptOwner, ownerWhere } from "@/lib/exam-attempt-access";
 import { consumeGuestRateLimit, guestRateLimitResponse } from "@/lib/guest-exams";
 import { savedAnswers } from "@/lib/exam-submission";
@@ -20,5 +21,5 @@ export async function GET(_request:Request,{params}:{params:Promise<{attemptId:s
   const saved=savedAnswers(attempt.answers);
   const bookmarks = owner.kind === "user" ? await prisma.questionBookmark.findMany({ where: { userId: owner.userId, examPaperId: attempt.examPaper.id, catalog: attempt.catalog }, select: { questionId: true } }) : [];
   const bookmarkedQuestionIds = new Set(bookmarks.map((bookmark) => bookmark.questionId));
-  return NextResponse.json({review:examReview(exam.paper,exam.privateData,saved.answers,bookmarkedQuestionIds),bookmarks,writingAnswers:saved.writingAnswers,recordings:attempt.recordings,grading:attempt.grading},{headers:{"Cache-Control":"private, no-store"}});
+  return NextResponse.json({review:examReview(exam.paper,exam.privateData,saved.answers,bookmarkedQuestionIds),bookmarks,writingAnswers:saved.writingAnswers,recordings:attempt.recordings,grading:publicGrading(attempt.grading)},{headers:{"Cache-Control":"private, no-store"}});
 }
