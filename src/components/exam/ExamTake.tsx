@@ -1159,7 +1159,7 @@ function gradingStatusLabel(status: unknown, parts: GradingPart[]) {
   if (normalized === "REVIEWING") return "Đang kiểm tra thêm";
   if (normalized === "GRADED") return "Đã có kết quả";
   if (normalized === "PARTIAL") return "Đã có một phần kết quả";
-  if (normalized === "FAILED") return "Chưa hoàn tất chấm bài";
+  if (normalized === "FAILED") return "Chấm bài thất bại";
   if (normalized === "MISSING") return "Chưa đủ dữ liệu để chấm";
   if (normalized === "NOT_STARTED") return "Đang chuẩn bị chấm bài";
   return "Đang tải trạng thái chấm…";
@@ -1188,7 +1188,7 @@ function gradingPartStatusLabel(status: unknown) {
   if (normalized === "REVIEWING") return "Đang kiểm tra thêm";
   if (normalized === "GRADED") return "Đã có kết quả";
   if (normalized === "PARTIAL") return "Có một phần kết quả";
-  if (normalized === "FAILED") return "Chưa hoàn tất";
+  if (normalized === "FAILED") return "Chấm lỗi";
   if (normalized === "MISSING") return "Chưa đủ dữ liệu";
   return "Chưa bắt đầu";
 }
@@ -1203,7 +1203,7 @@ function GradingProgressPanel({ snapshot, busy, error, onRetry }: { snapshot: Gr
   const message = status === "PARTIAL"
     ? "Một số phần đã có kết quả; phần chưa đủ dữ liệu sẽ không bị thay bằng điểm ước đoán."
     : status === "FAILED"
-      ? "Hệ thống chưa thể hoàn tất việc chấm. Bài làm của bạn vẫn được lưu."
+      ? "Máy chấm gặp lỗi. Bài làm của bạn vẫn được lưu; hãy thử lại sau khi hệ thống ổn định."
       : status === "MISSING"
         ? "Chưa đủ dữ liệu để chấm phần này. Các kết quả hợp lệ vẫn được giữ lại."
         : status === "GRADED"

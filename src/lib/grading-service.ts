@@ -84,7 +84,7 @@ export async function gradeAttempt(attemptId: string, options: Options = {}) {
         overallScore: attempt!.catalog === "FULL" && all.every((v): v is number => v !== null) ? Math.round(all.reduce((a,b)=>a+b,0) / 4 * 10) / 10 : null,
         speakingSummary: { speaking_estimated_score: speakingScore, method: "practice_part_mean" },
         writingStatus: skillStatus("writing"), speakingStatus: skillStatus("speaking"), complete: parts.every(p => p.status === "GRADED"), pipelineVersion, prompt_version: promptVersion,
-        progress: { completed: parts.filter(p => ["GRADED","PARTIAL","MISSING","FAILED"].includes(p.status)).length, total: parts.length, parts: parts.map(({ id, skill, status }) => ({ id, skill, status })) } };
+        progress: { completed: parts.filter(p => ["GRADED", "PARTIAL"].includes(p.status)).length, total: parts.length, parts: parts.map(({ id, skill, status }) => ({ id, skill, status })) } };
     }
     function persist(part?: Part) {
       const report = summary();

@@ -119,7 +119,6 @@ const PART_SELECT = {
   updatedAt: true,
 };
 
-const TERMINAL_PART_STATUSES = new Set<GradingPartStatus>(["GRADED", "PARTIAL", "FAILED", "MISSING"]);
 const INTERNAL_GRADING_KEYS = new Set([
   "pipeline",
   "pipelines",
@@ -725,7 +724,8 @@ export function buildGradingProgress(
       status: row?.status ?? fallbackPartStatus(job, gradingComplete),
     };
   });
-  const completed = parts.filter((part) => TERMINAL_PART_STATUSES.has(part.status)).length;
+  // Failed or missing parts are terminal, but they do not have a learner-visible result.
+  const completed = parts.filter((part) => part.status === "GRADED" || part.status === "PARTIAL").length;
   return { completed, total: parts.length, parts };
 }
 

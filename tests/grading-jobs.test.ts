@@ -258,6 +258,24 @@ describe("learner grading output", () => {
       ],
     });
   });
+
+  it("does not count failed or missing parts as completed results", () => {
+    const progress = buildGradingProgress(
+      job(),
+      [
+        { partId: "writing-task-1", pipelineVersion: "v2", status: "FAILED", updatedAt: new Date() },
+        { partId: "speaking-part-1", pipelineVersion: "v2", status: "MISSING", updatedAt: new Date() },
+      ],
+      [
+        { id: "writing-task-1", skill: "WRITING" },
+        { id: "speaking-part-1", skill: "SPEAKING" },
+      ],
+      false,
+    );
+
+    expect(progress.completed).toBe(0);
+    expect(progress.parts.map((part) => part.status)).toEqual(["FAILED", "MISSING"]);
+  });
 });
 
 describe("worker concurrency", () => {
