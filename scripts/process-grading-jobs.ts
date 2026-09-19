@@ -2,66 +2,120 @@ import "dotenv/config";
 
 import { prisma } from "../src/lib/prisma";
 import { gradeAttempt } from "../src/lib/grading-service";
+import {
+  LostGradingLeaseError,
+  checkWorkerHealth,
+  claimNextJob,
+  completeClaimedJob,
+  configuredMaxConcurrentJobs,
+  failClaimedJob,
+  runWorkerBatch,
+  startJobLeaseHeartbeat,
+  startWorkerHeartbeat,
+  touchWorker,
+  type ClaimedGradingJob,
+} from "../src/lib/grading-jobs";
 
-const LEASE_MINUTES = 15;
-const MAX_ATTEMPTS = 3;
+const LOOP_DELAY_MS = 1_000;
+const IDLE_DELAY_MS = 5_000;
 
-async function claimJob() {
-  const now = new Date();
-  const stale = new Date(now.getTime() - LEASE_MINUTES * 60_000);
-  const candidate = await prisma.examGradingJob.findFirst({
-    where: {
-      OR: [
-        { status: "QUEUED", availableAt: { lte: now } },
-        { status: "PROCESSING", lockedAt: { lt: stale } },
-      ],
-    },
-    orderBy: [{ availableAt: "asc" }, { createdAt: "asc" }],
-    select: { id: true, attemptId: true, status: true, attempts: true },
-  });
-  if (!candidate) return null;
-  const claimed = await prisma.examGradingJob.updateMany({
-    where: { id: candidate.id, status: candidate.status, ...(candidate.status === "PROCESSING" ? { lockedAt: { lt: stale } } : { availableAt: { lte: now } }) },
-    data: { status: "PROCESSING", lockedAt: now, startedAt: now, attempts: { increment: 1 }, errorCode: null, errorMessage: null },
-  });
-  return claimed.count ? candidate : null;
+function resultComplete(value: unknown) {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value) && (value as Record<string, unknown>).complete === true);
 }
 
-async function processOne() {
-  const job = await claimJob();
-  if (!job) {
-    console.log(JSON.stringify({ processed: false, reason: "NO_JOB" }));
-    return false;
-  }
+function safeErrorCode(error: unknown) {
+  const value = error && typeof error === "object" && typeof (error as Record<string, unknown>).code === "string"
+    ? String((error as Record<string, unknown>).code).toUpperCase()
+    : "WORKER_ERROR";
+  return /^[A-Z][A-Z0-9_]{0,63}$/.test(value) ? value : "WORKER_ERROR";
+}
+
+const leaseAwareGradeAttempt = gradeAttempt as unknown as (
+  attemptId: string,
+  options: { jobId: string; leaseToken: string; pipelineVersion: string },
+) => Promise<unknown>;
+
+async function processClaimedJob(job: ClaimedGradingJob) {
+  const lease = startJobLeaseHeartbeat(job);
   try {
-    const result = await gradeAttempt(job.attemptId, { jobId: job.id });
-    console.log(JSON.stringify({ processed: true, jobId: job.id, attemptId: job.attemptId, status: result.complete ? "GRADED" : "PARTIAL" }));
-    return true;
+    const result = await leaseAwareGradeAttempt(job.attemptId, {
+      jobId: job.id,
+      leaseToken: job.leaseToken,
+      pipelineVersion: job.pipelineVersion,
+    });
+    if (lease.isLost()) throw lease.lastError() ?? new LostGradingLeaseError();
+    await completeClaimedJob(job, resultComplete(result) ? "GRADED" : "PARTIAL");
+    console.log(JSON.stringify({ processed: true, jobId: job.id, attemptId: job.attemptId, status: resultComplete(result) ? "GRADED" : "PARTIAL", pipelineVersion: job.pipelineVersion }));
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Không thể chấm.";
-    const failed = await prisma.examGradingJob.findUnique({ where: { id: job.id }, select: { attempts: true } });
-    if ((failed?.attempts ?? MAX_ATTEMPTS) < MAX_ATTEMPTS) {
-      const delayMs = Math.min(15 * 60_000, 30_000 * 2 ** Math.max(0, (failed?.attempts ?? 1) - 1));
-      await prisma.examGradingJob.update({ where: { id: job.id }, data: { status: "QUEUED", availableAt: new Date(Date.now() + delayMs), lockedAt: null, errorMessage: message } });
+    // A reclaimed lease means another worker owns the job. Do not retry or
+    // settle it here, because either operation could overwrite the new owner.
+    if (lease.isLost() || error instanceof LostGradingLeaseError || (error && typeof error === "object" && (error as Record<string, unknown>).code === "LEASE_LOST")) {
+      console.error(JSON.stringify({ processed: false, jobId: job.id, attemptId: job.attemptId, status: "LEASE_LOST" }));
+      return;
     }
-    console.error(JSON.stringify({ processed: true, jobId: job.id, attemptId: job.attemptId, status: "FAILED", error: message }));
-    process.exitCode = 1;
-    return true;
+    try {
+      const failure = await failClaimedJob(job, error);
+      console.error(JSON.stringify({ processed: true, jobId: job.id, attemptId: job.attemptId, status: failure.retry ? "RETRY_QUEUED" : "FAILED", errorCode: safeErrorCode(failure.code) }));
+    } catch (settleError) {
+      if (settleError instanceof LostGradingLeaseError) {
+        console.error(JSON.stringify({ processed: false, jobId: job.id, attemptId: job.attemptId, status: "LEASE_LOST" }));
+        return;
+      }
+      console.error(JSON.stringify({ processed: false, jobId: job.id, attemptId: job.attemptId, status: "SETTLE_FAILED", errorCode: safeErrorCode(settleError) }));
+    }
+  } finally {
+    lease.stop();
   }
+}
+
+async function runOnce() {
+  return runWorkerBatch({
+    claim: () => claimNextJob(),
+    process: processClaimedJob,
+    maxConcurrent: configuredMaxConcurrentJobs(),
+  });
+}
+
+async function delay(milliseconds: number) {
+  await new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
 }
 
 async function main() {
-  if (!process.argv.includes("--loop")) {
-    await processOne();
+  const health = await checkWorkerHealth();
+  console.log(JSON.stringify({ worker: "grading", health }));
+  if (!health.ok) {
+    process.exitCode = 1;
     return;
   }
-  while (true) {
-    process.exitCode = 0;
-    const processed = await processOne();
-    await new Promise((resolve) => setTimeout(resolve, processed ? 1000 : 5000));
+
+  try {
+    await touchWorker();
+  } catch (error) {
+    console.error(JSON.stringify({ worker: "grading", status: "WORKER_HEARTBEAT_FAILED", errorCode: safeErrorCode(error) }));
+    process.exitCode = 1;
+    return;
+  }
+
+  const heartbeat = startWorkerHeartbeat();
+  try {
+    if (!process.argv.includes("--loop")) {
+      await runOnce();
+      return;
+    }
+    while (true) {
+      const processed = await runOnce();
+      await delay(processed ? LOOP_DELAY_MS : IDLE_DELAY_MS);
+    }
+  } finally {
+    heartbeat.stop();
   }
 }
 
-main().finally(async () => {
-  await prisma.$disconnect();
-});
+main()
+  .catch((error) => {
+    process.exitCode = 1;
+    console.error(JSON.stringify({ worker: "grading", status: "FATAL", errorCode: safeErrorCode(error) }));
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

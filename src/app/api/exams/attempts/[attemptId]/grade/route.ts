@@ -1,20 +1,70 @@
 import { getAttemptOwner, ownerWhere } from "@/lib/exam-attempt-access";
 import { consumeGuestRateLimit, guestRateLimitResponse } from "@/lib/guest-exams";
-import { GradingServiceError, gradeAttempt } from "@/lib/grading-service";
 import { object } from "@/lib/exam-submission";
+import { resolveCatalogExamData } from "@/lib/exam-scoring";
+import { ensureGradingJob, readGradingStatus, type ExpectedGradingPart } from "@/lib/grading-jobs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
 
-function asyncMode() {
-  return String(process.env.GRADING_MODE || "sync").toLowerCase() === "async";
-}
+type OwnedAttempt = {
+  id: string;
+  grading: unknown;
+  writingStatus: string;
+  speakingStatus: string;
+  updatedAt: Date;
+  catalog: "FULL" | "LISTENING" | "READING" | "WRITING" | "SPEAKING";
+  examPaper: { slug: string; sections: unknown; questions: unknown };
+  paperPart: { sections: unknown; questions: unknown } | null;
+};
 
 async function loadOwnedAttempt(attemptId: string, owner: Awaited<ReturnType<typeof getAttemptOwner>>) {
   if (!owner || owner.kind === "invalid") return null;
-  return prisma.examAttempt.findFirst({ where: { id: attemptId, ...ownerWhere(owner), status: "SUBMITTED" }, select: { id: true, grading: true, writingStatus: true, speakingStatus: true } });
+  return prisma.examAttempt.findFirst({
+    where: { id: attemptId, ...ownerWhere(owner), status: "SUBMITTED" },
+    select: {
+      id: true,
+      grading: true,
+      writingStatus: true,
+      speakingStatus: true,
+      updatedAt: true,
+      catalog: true,
+      examPaper: { select: { slug: true, sections: true, questions: true } },
+      paperPart: { select: { sections: true, questions: true } },
+    },
+  }) as Promise<OwnedAttempt | null>;
+}
+
+function expectedParts(attempt: OwnedAttempt): ExpectedGradingPart[] {
+  const exam = resolveCatalogExamData({
+    slug: attempt.examPaper.slug,
+    sections: attempt.examPaper.sections,
+    questions: attempt.examPaper.questions,
+    catalog: attempt.catalog,
+    partSections: attempt.paperPart?.sections,
+    partQuestions: attempt.paperPart?.questions,
+  });
+  if (!exam) return [];
+  return [
+    ...exam.paper.writing.map((task) => ({ id: task.id, skill: "WRITING" as const })),
+    ...exam.paper.speaking.parts.map((part) => ({ id: part.id, skill: "SPEAKING" as const })),
+  ];
+}
+
+async function statusFor(attempt: OwnedAttempt) {
+  return readGradingStatus({
+    attemptId: attempt.id,
+    grading: attempt.grading,
+    writingStatus: attempt.writingStatus,
+    speakingStatus: attempt.speakingStatus,
+    updatedAt: attempt.updatedAt,
+    expectedParts: expectedParts(attempt),
+  });
+}
+
+function headers() {
+  return { "Cache-Control": "private, no-store" };
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ attemptId: string }> }) {
@@ -27,12 +77,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ atte
   const { attemptId } = await params;
   const attempt = await loadOwnedAttempt(attemptId, owner);
   if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404 });
-  const grading = object(attempt.grading);
-  const job = await prisma.examGradingJob.findUnique({ where: { attemptId }, select: { id: true, status: true, attempts: true, errorCode: true, errorMessage: true, createdAt: true } });
-  const status = grading.complete ? "GRADED" : job?.status || (attempt.writingStatus === "PARTIAL" || attempt.speakingStatus === "PARTIAL" ? "PARTIAL" : "NOT_STARTED");
-  const queuedForSeconds = status === "QUEUED" && job ? Math.max(0, Math.floor((Date.now() - job.createdAt.getTime()) / 1000)) : 0;
-  const workerUnavailable = status === "QUEUED" && (job?.attempts ?? 0) === 0 && queuedForSeconds >= 30;
-  return NextResponse.json({ jobId: job?.id ?? null, status, attempts: job?.attempts ?? 0, queuedForSeconds, workerUnavailable, errorCode: job?.errorCode ?? null, error: job?.errorMessage ?? null, grading }, { headers: { "Cache-Control": "private, no-store" } });
+  try {
+    return NextResponse.json(await statusFor(attempt), { headers: headers() });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Không thể đọc tiến độ chấm." }, { status: 503, headers: headers() });
+  }
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ attemptId: string }> }) {
@@ -45,27 +94,20 @@ export async function POST(request: Request, { params }: { params: Promise<{ att
   const { attemptId } = await params;
   const attempt = await loadOwnedAttempt(attemptId, owner);
   if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404 });
-  const cached = object(attempt.grading);
-  if (cached.complete) return NextResponse.json(cached);
-  if (!asyncMode() && !process.env.OPENAI_API_KEY) return NextResponse.json({ error: "Dịch vụ chấm điểm chưa được cấu hình. Bài làm vẫn được lưu." }, { status: 503 });
-
-  if (asyncMode()) {
-    const existing = await prisma.examGradingJob.findUnique({ where: { attemptId }, select: { id: true, status: true, lockedAt: true, attempts: true } });
-    if (existing?.status === "PROCESSING" && existing.lockedAt && existing.lockedAt.getTime() > Date.now() - 15 * 60_000) {
-      return NextResponse.json({ jobId: existing.id, status: existing.status, attempts: existing.attempts }, { status: 202, headers: { "Cache-Control": "private, no-store" } });
-    }
-    const job = existing
-      ? await prisma.examGradingJob.update({ where: { id: existing.id }, data: { status: "QUEUED", availableAt: new Date(), lockedAt: null, finishedAt: null, errorCode: null, errorMessage: null }, select: { id: true, status: true, attempts: true } })
-      : await prisma.examGradingJob.create({ data: { attemptId, status: "QUEUED" }, select: { id: true, status: true, attempts: true } });
-    return NextResponse.json({ jobId: job.id, status: job.status, attempts: job.attempts }, { status: 202, headers: { "Cache-Control": "private, no-store" } });
-  }
 
   try {
-    const result = await gradeAttempt(attemptId);
-    return NextResponse.json(result);
+    const current = await statusFor(attempt);
+    if (object(attempt.grading).complete === true) return NextResponse.json(current, { headers: headers() });
+
+    await ensureGradingJob(attemptId);
+    const status = await statusFor(attempt);
+    const responseStatus = status.status === "FAILED" && !status.retryable
+      ? 409
+      : status.status === "GRADED" || status.status === "PARTIAL"
+        ? 200
+        : 202;
+    return NextResponse.json(status, { status: responseStatus, headers: headers() });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Không thể chấm. Bài làm vẫn được lưu.";
-    const status = error instanceof GradingServiceError && error.code === "GRADING_IN_PROGRESS" ? 409 : 502;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Không thể đưa bài vào hàng đợi chấm." }, { status: 503, headers: headers() });
   }
 }
