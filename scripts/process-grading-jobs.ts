@@ -57,7 +57,7 @@ async function processClaimedJob(job: ClaimedGradingJob) {
       const failure = await failClaimedJob(job, error);
       // `failure.code` is already the sanitized code returned by failClaimedJob.
       // Wrap it so the log does not collapse every failure into WORKER_ERROR.
-      console.error(JSON.stringify({ processed: true, jobId: job.id, attemptId: job.attemptId, status: failure.retry ? "RETRY_QUEUED" : "FAILED", errorCode: safeErrorCode({ code: failure.code }) }));
+      console.error(JSON.stringify({ processed: true, jobId: job.id, attemptId: job.attemptId, status: failure.retry ? "RETRY_QUEUED" : "FAILED", errorCode: safeErrorCode({ code: failure.code }), causeCode: safeErrorCode({ code: failure.causeCode }) }));
     } catch (settleError) {
       if (settleError instanceof LostGradingLeaseError) {
         console.error(JSON.stringify({ processed: false, jobId: job.id, attemptId: job.attemptId, status: "LEASE_LOST" }));

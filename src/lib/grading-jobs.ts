@@ -509,13 +509,14 @@ export async function failClaimedJob(
   const db = options.db ?? database();
   const now = normalizeDateForQuery(options.now);
   const transient = isTransientGradingError(error);
+  const causeCode = errorCode(error);
   // The grading engine already retries individual network calls. An exhausted
   // engine error must become terminal here instead of multiplying retries at
   // the job level (3 engine attempts x 3 worker attempts).
   const retry = transient && !isAttemptExhausted(error) && job.attempts < MAX_GRADING_ATTEMPTS;
   // Keep exhausted engine retries terminal. Mapping them to a non-transient
   // code prevents POST from silently requeueing an already exhausted step.
-  const code = isAttemptExhausted(error) ? "GRADING_RETRIES_EXHAUSTED" : errorCode(error);
+  const code = isAttemptExhausted(error) ? "GRADING_RETRIES_EXHAUSTED" : causeCode;
   const message = errorMessage(error);
   const data = retry
     ? {
@@ -542,7 +543,7 @@ export async function failClaimedJob(
     data,
   });
   if (!result.count) throw new LostGradingLeaseError();
-  return { retry, code, message };
+  return { retry, code, message, causeCode };
 }
 
 export function workerId() {

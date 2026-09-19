@@ -188,6 +188,16 @@ describe("grading job leases", () => {
     expect(MAX_GRADING_ATTEMPTS).toBe(3);
   });
 
+  it("preserves the exhausted engine cause code for safe worker diagnostics", async () => {
+    const jobs = db();
+    jobs.examGradingJob.updateMany.mockResolvedValue({ count: 1 });
+
+    const result = await failClaimedJob(job(), { code: "OPENAI_RATE_LIMITED", retryable: true, attemptsExhausted: true }, { db: jobs });
+
+    expect(result.code).toBe("GRADING_RETRIES_EXHAUSTED");
+    expect(result.causeCode).toBe("OPENAI_RATE_LIMITED");
+  });
+
   it("retries a transient recording availability failure", async () => {
     const jobs = db();
     jobs.examGradingJob.updateMany.mockResolvedValue({ count: 1 });
