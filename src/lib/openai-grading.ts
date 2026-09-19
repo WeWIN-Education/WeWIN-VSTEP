@@ -1,6 +1,12 @@
 import { spawn } from "node:child_process";
 import prompts from "./grading-prompts.json";
 import { object } from "./exam-submission";
+import {
+  aggregateSpeakingV2,
+  gradeSpeakingV2,
+  gradeWritingV2,
+  type GradingV2Options,
+} from "./grading-v2";
 
 export const PROMPT_VERSION = "modular-2026-09-11";
 export const PROMPT_SOURCE = "VSTEP_AI_Grading_Prompt_Pack_Modular/prompts";
@@ -349,7 +355,7 @@ async function adjudicate(kind:"writing"|"speaking",reports:Assessment[],questio
     direct_feedback_vi:{...feedback,biggest_score_killers:feedback.three_main_score_limiters,highest_priority_fix:feedback.highest_priority_action,next_band_requirements:feedback.next_score_requirements},
     examiner_reports:reports,assessable:!unusable,prompt_version:PROMPT_VERSION,prompt_source:PROMPT_SOURCE};
 }
-export async function gradeWriting(taskType:"task1"|"task2",question:string,response:string,state:PipelineState={},checkpoint:Checkpoint=async()=>{}) {
+async function gradeWritingV1(taskType:"task1"|"task2",question:string,response:string,state:PipelineState={},checkpoint:Checkpoint=async()=>{}) {
   const reports:Assessment[]=[];
   for (const id of ["A","B","C"]) {
     const key="examiner_"+id;
@@ -374,7 +380,7 @@ async function speakingExaminer(system:string,payload:string,audio:string) {
     return validateExaminer(parseReport(await request(contract)),speakingKeys,true);
   }
 }
-export async function gradeSpeaking(part:string,question:string,audioData:string,state:PipelineState={},checkpoint:Checkpoint=async()=>{}) {
+async function gradeSpeakingV1(part:string,question:string,audioData:string,state:PipelineState={},checkpoint:Checkpoint=async()=>{}) {
   // FFmpeg and transcription are independent; overlap them to shorten the first stage.
   const audioPromise=wavAudio(audioData);
   const transcriptPromise=typeof state.transcript==="string"?Promise.resolve(state.transcript):transcribe(audioData);
@@ -404,7 +410,7 @@ export async function gradeSpeaking(part:string,question:string,audioData:string
   if(!state.adjudicated) {state.adjudicated=await adjudicate("speaking",reports,question,String(state.transcript),audio);await checkpoint(state);}
   return {...object(state.adjudicated),part,transcript:state.transcript,audio_assessed:true};
 }
-export async function aggregateSpeaking(parts:Assessment[]) {
+async function aggregateSpeakingV1(parts:Assessment[]) {
   const result=await textReport(common+"\n"+prompts["agg-s-speaking-final-aggregator"],JSON.stringify(parts));
   const values=parts.map(p=>p.task_score);
   if(values.some(v=>!score(v))) return {...result,speaking_estimated_score:null};
@@ -415,4 +421,43 @@ export async function aggregateSpeaking(parts:Assessment[]) {
   if(Math.abs(adjustment)>0.5) throw new Error("Điều chỉnh Speaking không hợp lệ.");
   const mean=(values as number[]).reduce((a,b)=>a+b,0)/3;
   return {...result,holistic_adjustment:adjustment,reference_mean:mean,speaking_estimated_score:Math.round(Math.max(0,Math.min(10,mean+adjustment))*2)/2};
+}
+
+export type PipelineOptions = GradingV2Options & { pipelineVersion?: "v1" | "v2" };
+
+/**
+ * v2 is the default. Pass { pipelineVersion: "v1" } only for an existing
+ * checkpoint or an explicitly selected legacy run.
+ */
+export async function gradeWriting(
+  taskType:"task1"|"task2",
+  question:string,
+  response:string,
+  state:PipelineState={},
+  checkpoint:Checkpoint=async()=>{},
+  options:PipelineOptions={},
+) {
+  if (options.pipelineVersion === "v1") return gradeWritingV1(taskType, question, response, state, checkpoint);
+  return gradeWritingV2(taskType, question, response, state, checkpoint, options);
+}
+
+/**
+ * Audio is validated before transcription in v2. Pass { pipelineVersion: "v1" }
+ * to resume the legacy multi-examiner checkpoint.
+ */
+export async function gradeSpeaking(
+  part:string,
+  question:string,
+  audioData:string,
+  state:PipelineState={},
+  checkpoint:Checkpoint=async()=>{},
+  options:PipelineOptions={},
+) {
+  if (options.pipelineVersion === "v1") return gradeSpeakingV1(part, question, audioData, state, checkpoint);
+  return gradeSpeakingV2(part, question, audioData, state, checkpoint, options);
+}
+
+export async function aggregateSpeaking(parts:Assessment[], options:PipelineOptions={}) {
+  if (options.pipelineVersion === "v1") return aggregateSpeakingV1(parts);
+  return aggregateSpeakingV2(parts);
 }
