@@ -28,9 +28,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ atte
   const attempt = await loadOwnedAttempt(attemptId, owner);
   if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404 });
   const grading = object(attempt.grading);
-  const job = await prisma.examGradingJob.findUnique({ where: { attemptId }, select: { id: true, status: true, attempts: true, errorCode: true, errorMessage: true } });
+  const job = await prisma.examGradingJob.findUnique({ where: { attemptId }, select: { id: true, status: true, attempts: true, errorCode: true, errorMessage: true, createdAt: true } });
   const status = grading.complete ? "GRADED" : job?.status || (attempt.writingStatus === "PARTIAL" || attempt.speakingStatus === "PARTIAL" ? "PARTIAL" : "NOT_STARTED");
-  return NextResponse.json({ jobId: job?.id ?? null, status, attempts: job?.attempts ?? 0, errorCode: job?.errorCode ?? null, error: job?.errorMessage ?? null, grading }, { headers: { "Cache-Control": "private, no-store" } });
+  const queuedForSeconds = status === "QUEUED" && job ? Math.max(0, Math.floor((Date.now() - job.createdAt.getTime()) / 1000)) : 0;
+  const workerUnavailable = status === "QUEUED" && (job?.attempts ?? 0) === 0 && queuedForSeconds >= 30;
+  return NextResponse.json({ jobId: job?.id ?? null, status, attempts: job?.attempts ?? 0, queuedForSeconds, workerUnavailable, errorCode: job?.errorCode ?? null, error: job?.errorMessage ?? null, grading }, { headers: { "Cache-Control": "private, no-store" } });
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ attemptId: string }> }) {

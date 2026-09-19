@@ -960,6 +960,8 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
           const statusData=await statusResponse.json();
           if(!statusResponse.ok)throw new Error(statusData.error || "Không tải được trạng thái chấm.");
           setGradingStatus(statusData.status || "PROCESSING");
+          if(statusData.workerUnavailable) setGradingError("Bản ghi đã được lưu nhưng máy chấm chưa hoạt động. Hãy bật worker Speaking rồi thử lại.");
+          else if(statusData.status === "PROCESSING" || statusData.status === "GRADED") setGradingError("");
           if(statusData.status==="COMPLETED" || statusData.status==="GRADED"){
             setResult(current=>({...current,...statusData.grading}));
             break;
@@ -969,7 +971,7 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
             break;
           }
           if(statusData.status==="FAILED")throw new Error(statusData.error || "Worker chấm Speaking thất bại.");
-          if(attempt===89)throw new Error("Bài đang chấm lâu hơn dự kiến. Bạn có thể tải lại trang sau.");
+          if(attempt===89)throw new Error(statusData.workerUnavailable ? "Bản ghi đã được lưu nhưng máy chấm chưa hoạt động. Hãy thử lại sau khi worker Speaking được bật." : "Bài đang chấm lâu hơn dự kiến. Bạn có thể tải lại trang sau.");
         }
       }else{
         setGradingStatus("COMPLETED");

@@ -375,19 +375,32 @@ async function speakingExaminer(system:string,payload:string,audio:string) {
   }
 }
 export async function gradeSpeaking(part:string,question:string,audioData:string,state:PipelineState={},checkpoint:Checkpoint=async()=>{}) {
-  const audio=await wavAudio(audioData);
-  if(typeof state.transcript!=="string") {state.transcript=await transcribe(audioData);await checkpoint(state);}
-  const reports:Assessment[]=[];
-  for(const id of ["A","B","C"]) {
-    const key="examiner_"+id;
-    if(!state[key]) {
+  // FFmpeg and transcription are independent; overlap them to shorten the first stage.
+  const audioPromise=wavAudio(audioData);
+  const transcriptPromise=typeof state.transcript==="string"?Promise.resolve(state.transcript):transcribe(audioData);
+  const [audio,transcript]=await Promise.all([audioPromise,transcriptPromise]);
+  if(typeof state.transcript!=="string") {state.transcript=transcript;await checkpoint(state);}
+
+  const examinerIds=["A","B","C"];
+  const missing=examinerIds.filter(id=>!state["examiner_"+id]);
+  if(missing.length) {
+    const system=common+"\n"+prompts["speak-01-examiner-system"]+"\nUse null for pronunciation or fluency scores if audio prevents assessment; never substitute a made-up number.";
+    // The three examiners are independent. Run them concurrently, while preserving
+    // successful reports when one request needs a retry.
+    const results=await Promise.allSettled(missing.map(async id=>{
       const payload=fill(prompts["speak-02-user-payload"],{EXAMINER_ID:id,SPEAKING_PART:part,QUESTION:question,TRANSCRIPT:String(state.transcript)});
-      const system=common+"\n"+prompts["speak-01-examiner-system"]+"\nUse null for pronunciation or fluency scores if audio prevents assessment; never substitute a made-up number.";
-      state[key]=await speakingExaminer(system,payload,audio);
-      await checkpoint(state);
-    }
-    reports.push(object(state[key]));
+      return [id,await speakingExaminer(system,payload,audio)] as const;
+    }));
+    let firstError:unknown;
+    results.forEach((result)=>{
+      if(result.status==="fulfilled") state["examiner_"+result.value[0]]=result.value[1];
+      else if(firstError===undefined) firstError=result.reason;
+    });
+    await checkpoint(state);
+    if(firstError!==undefined) throw firstError;
   }
+
+  const reports:Assessment[]=examinerIds.map(id=>object(state["examiner_"+id]));
   if(!state.adjudicated) {state.adjudicated=await adjudicate("speaking",reports,question,String(state.transcript),audio);await checkpoint(state);}
   return {...object(state.adjudicated),part,transcript:state.transcript,audio_assessed:true};
 }
