@@ -94,6 +94,19 @@ type SubmitResult = {
   bookmarks?: { questionId: string }[];
 };
 
+type GradingPartStatus = "QUEUED" | "PROCESSING" | "REVIEWING" | "GRADED" | "PARTIAL" | "FAILED" | "MISSING";
+type GradingStatus = GradingPartStatus | "NOT_STARTED";
+type GradingPart = { id: string; skill: string; status: GradingPartStatus | string };
+type GradingProgress = { completed: number; total: number; parts: GradingPart[] };
+type GradingSnapshot = {
+  status?: GradingStatus | string;
+  grading?: Record<string, unknown>;
+  progress?: GradingProgress;
+  workerAvailable?: boolean;
+  retryable?: boolean;
+  updatedAt?: string;
+};
+
 type RecorderSession = {
   key: string;
   recorder: MediaRecorder;
@@ -928,70 +941,275 @@ function SubmitModal({ open, busy, hasPendingRecording, onClose, onSubmit }: { o
 }
 
 function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, recordings }: { exam: ExamFixture; result: SubmitResult; candidate?: ExamCandidate; writingAnswers: WritingAnswers; recordings: RecordingState }) {
-  const [result,setResult]=useState(initialResult);
-  const [gradingBusy,setGradingBusy]=useState(false);
-  const [gradingError,setGradingError]=useState("");
-  const [gradingStatus,setGradingStatus]=useState("");
-  const autoGradeRef=useRef(false);
-  useEffect(()=>{
-    const id=initialResult.id ?? initialResult.attemptId;
-    if(!id)return;
-    let cancelled=false;
-    void fetch(`/api/exams/attempts/${id}/review`).then(async response=>{
-      if(!response.ok)throw new Error("Chưa tải được đáp án. Hãy tải lại trang.");
-      const data=await response.json();
-      if(!cancelled)setResult(current=>({...current,...data.grading,review:data.review}));
-    }).catch(error=>{if(!cancelled)setGradingError(error.message);});
-    return ()=>{cancelled=true;};
-  },[initialResult.id,initialResult.attemptId]);
-  async function requestGrading(){
-    setGradingBusy(true);setGradingError("");
-    try{
-      const attemptId=result.id ?? result.attemptId;
-      if(!attemptId)throw new Error("Không có mã lượt thi để chấm.");
-      const response=await fetch(`/api/exams/attempts/${attemptId}/grade`,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"});
-      const data=await response.json();
-      if(!response.ok)throw new Error(data.error || "Chưa chấm được bài. Hãy thử lại.");
-      if(response.status===202){
-        setGradingStatus(data.status || "QUEUED");
-        for(let attempt=0;attempt<90;attempt+=1){
-          await new Promise(resolve=>window.setTimeout(resolve,2000));
-          const statusResponse=await fetch(`/api/exams/attempts/${attemptId}/grade`,{cache:"no-store"});
-          const statusData=await statusResponse.json();
-          if(!statusResponse.ok)throw new Error(statusData.error || "Không tải được trạng thái chấm.");
-          setGradingStatus(statusData.status || "PROCESSING");
-          if(statusData.workerUnavailable) setGradingError("Bản ghi đã được lưu nhưng máy chấm chưa hoạt động. Hãy bật worker Speaking rồi thử lại.");
-          else if(statusData.status === "PROCESSING" || statusData.status === "GRADED") setGradingError("");
-          if(statusData.status==="COMPLETED" || statusData.status==="GRADED"){
-            setResult(current=>({...current,...statusData.grading}));
-            break;
-          }
-          if(statusData.status==="PARTIAL"){
-            setResult(current=>({...current,...statusData.grading}));
-            break;
-          }
-          if(statusData.status==="FAILED")throw new Error(statusData.error || "Worker chấm Speaking thất bại.");
-          if(attempt===89)throw new Error(statusData.workerUnavailable ? "Bản ghi đã được lưu nhưng máy chấm chưa hoạt động. Hãy thử lại sau khi worker Speaking được bật." : "Bài đang chấm lâu hơn dự kiến. Bạn có thể tải lại trang sau.");
+  const attemptId = initialResult.id ?? initialResult.attemptId;
+  const [result, setResult] = useState(() => mergeGradingResult(initialResult));
+  const [gradingSnapshot, setGradingSnapshot] = useState<GradingSnapshot>({});
+  const [gradingBusy, setGradingBusy] = useState(false);
+  const [gradingError, setGradingError] = useState("");
+  const gradingSnapshotRef = useRef(gradingSnapshot);
+  const gradingRunRef = useRef(0);
+  const gradingRequestRef = useRef<AbortController | null>(null);
+  const mountedRef = useRef(true);
+
+  const applyGradingSnapshot = useCallback((snapshot: GradingSnapshot, run: number) => {
+    if (!mountedRef.current || gradingRunRef.current !== run) return false;
+    gradingSnapshotRef.current = snapshot;
+    setGradingSnapshot(snapshot);
+    if (snapshot.grading) setResult((current) => ({ ...current, ...toPublicGrading(snapshot.grading) }));
+    return true;
+  }, []);
+
+  const fetchGradingSnapshot = useCallback(async (method: "GET" | "POST", run: number) => {
+    if (!attemptId) return null;
+    gradingRequestRef.current?.abort();
+    const controller = new AbortController();
+    gradingRequestRef.current = controller;
+    try {
+      const response = await fetch(`/api/exams/attempts/${encodeURIComponent(attemptId)}/grade`, {
+        method,
+        cache: "no-store",
+        headers: method === "POST" ? { "Content-Type": "application/json" } : undefined,
+        body: method === "POST" ? "{}" : undefined,
+        signal: controller.signal,
+      });
+      const data = await response.json().catch(() => ({})) as GradingSnapshot & { error?: string };
+      if (!response.ok) throw new Error(data.error || "Không thể cập nhật trạng thái chấm.");
+      const snapshot = normalizeGradingSnapshot(data);
+      if (!snapshot.status) throw new Error("Phản hồi trạng thái chấm không hợp lệ.");
+      if (!applyGradingSnapshot(snapshot, run)) return null;
+      return snapshot;
+    } finally {
+      if (gradingRequestRef.current === controller) gradingRequestRef.current = null;
+    }
+  }, [applyGradingSnapshot, attemptId]);
+
+  const requestGrading = useCallback(async () => {
+    if (!attemptId) return;
+    const run = gradingRunRef.current + 1;
+    gradingRunRef.current = run;
+    gradingRequestRef.current?.abort();
+    setGradingBusy(true);
+    setGradingError("");
+    try {
+      await fetchGradingSnapshot("POST", run);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      if (mountedRef.current && gradingRunRef.current === run) setGradingError("Hệ thống chưa thể gửi yêu cầu chấm lại. Bài làm của bạn vẫn được lưu.");
+    } finally {
+      if (mountedRef.current && gradingRunRef.current === run) setGradingBusy(false);
+    }
+  }, [attemptId, fetchGradingSnapshot]);
+
+  useEffect(() => {
+    if (!attemptId) return;
+    const run = gradingRunRef.current;
+    setGradingBusy(true);
+    setGradingError("");
+    void (async () => {
+      try {
+        const snapshot = await fetchGradingSnapshot("GET", run);
+        if (!snapshot || !mountedRef.current || gradingRunRef.current !== run) return;
+        if (normalizeGradingStatus(snapshot.status) === "NOT_STARTED") await requestGrading();
+        else setGradingBusy(false);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (mountedRef.current && gradingRunRef.current === run) {
+          setGradingBusy(false);
+          setGradingError("Chưa tải được trạng thái chấm. Hãy tải lại trang để kiểm tra lại.");
         }
-      }else{
-        setGradingStatus("COMPLETED");
-        setResult(current=>({...current,...data}));
       }
-    }catch(error){setGradingError(error instanceof Error?error.message:"Chưa chấm được bài.");}
-    finally{setGradingBusy(false);}
-  }
-  useEffect(()=>{
-    if(autoGradeRef.current || !(initialResult.id ?? initialResult.attemptId))return;
-    autoGradeRef.current=true;
-    void requestGrading();
-  // requestGrading is guarded by autoGradeRef so a result re-render cannot submit twice.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[initialResult.id,initialResult.attemptId]);
+    })();
+  }, [attemptId, fetchGradingSnapshot, requestGrading]);
+
+  useEffect(() => {
+    if (!attemptId || !gradingSnapshot.status || gradingBusy || isTerminalGradingStatus(gradingSnapshot.status)) return;
+    let cancelled = false;
+    let timer: number | null = null;
+    let inFlight = false;
+    const schedule = () => {
+      if (cancelled || inFlight) return;
+      const delay = document.visibilityState === "hidden" ? 15_000 : 3_000;
+      timer = window.setTimeout(() => {
+        timer = null;
+        void poll();
+      }, delay);
+    };
+    const poll = async () => {
+      if (cancelled || inFlight) return;
+      inFlight = true;
+      const run = gradingRunRef.current;
+      try {
+        await fetchGradingSnapshot("GET", run);
+        if (mountedRef.current && gradingRunRef.current === run) setGradingError("");
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (!cancelled && mountedRef.current && gradingRunRef.current === run) setGradingError("Chưa cập nhật được trạng thái chấm. Hệ thống sẽ tự thử lại.");
+      } finally {
+        inFlight = false;
+      }
+      if (!cancelled && gradingRunRef.current === run && !isTerminalGradingStatus(gradingSnapshotRef.current.status)) schedule();
+    };
+    const onVisibilityChange = () => {
+      if (timer !== null) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+      schedule();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    schedule();
+    return () => {
+      cancelled = true;
+      if (timer !== null) window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [attemptId, gradingBusy, gradingSnapshot.status, fetchGradingSnapshot]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    if (!attemptId) return () => controller.abort();
+    void fetch(`/api/exams/attempts/${encodeURIComponent(attemptId)}/review`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Chưa tải được đáp án. Hãy tải lại trang.");
+        return response.json();
+      })
+      .then((data) => {
+        if (!mountedRef.current) return;
+        setResult((current) => ({ ...current, ...toPublicGrading(data.grading), review: data.review }));
+      })
+      .catch((error) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (mountedRef.current) setGradingError("Chưa tải được đáp án. Hãy tải lại trang.");
+      });
+    return () => controller.abort();
+  }, [attemptId]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      gradingRunRef.current += 1;
+      gradingRequestRef.current?.abort();
+    };
+  }, []);
+
   const reviewItems = extractReviewItems(result);
   const name = candidate?.name?.trim() || candidate?.email?.trim() || "Tài khoản WEWIN";
   const account = candidate?.email?.trim() || "Tài khoản hiện tại";
   const attempt = result.id ?? result.attemptId ?? "—";
-  return <div className="min-h-screen bg-[#F8FAFC] px-4 py-8 text-ink"><div className="mx-auto max-w-[1220px]"><header className="flex flex-wrap items-start justify-between gap-4"><div><Image src="/brand/wewin-logo.png" alt="WEWIN EDUCATION" width={150} height={37} className="h-9 w-auto" /><p className="mt-6 text-xs font-extrabold uppercase tracking-[0.15em] text-brand">BÁO CÁO KẾT QUẢ</p><h1 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Bài luyện đã được nộp</h1><p className="mt-2 text-sm text-ink-muted">Xem điểm, đáp án và những phần cần cải thiện.</p></div><div className="rounded-2xl border border-brand-soft bg-white px-4 py-3 text-sm"><p className="text-xs text-ink-muted">Mã lượt thi</p><p className="mt-1 break-all font-mono text-xs font-bold text-brand">{attempt}</p></div></header><div className="mt-7 grid gap-5 lg:grid-cols-[1.08fr_.72fr]"><section className="overflow-hidden rounded-3xl border border-brand-soft bg-white shadow-sm"><div className="border-t-4 border-brand bg-brand-soft/40 px-6 py-7 text-center md:px-10"><h2 className="text-2xl font-extrabold tracking-wide text-brand md:text-3xl">KẾT QUẢ {exam.program.toUpperCase()}</h2><p className="mt-2 text-sm text-ink-muted">Kết quả luyện tập, không thay thế chứng chỉ VSTEP</p><div className="mt-7 flex flex-wrap items-center justify-center gap-7"><div><p className="text-xs font-bold text-ink-muted">ĐIỂM TỔNG</p><p className="mt-1 text-5xl font-extrabold text-brand">{typeof result.overallScore === "number" ? result.overallScore : "—"}</p></div><div className="hidden h-14 w-px bg-brand-soft sm:block" /><div><p className="text-xs font-bold text-ink-muted">TRẠNG THÁI</p><p className="mt-1 text-2xl font-extrabold text-brand">Đã nộp</p></div></div></div><div className="px-6 py-7 md:px-10"><h3 className="flex items-center gap-2 text-xl font-extrabold"><BarChart3 className="size-5 text-brand" aria-hidden="true" />Điểm thành phần</h3><div className="mt-5 grid gap-3 sm:grid-cols-4"><ScoreCard label="Nghe" score={result.listening} /><ScoreCard label="Đọc" score={result.reading} /><ScoreCard label="Viết" score={typeof result.writingScore === "number" ? { score: result.writingScore } : undefined} /><ScoreCard label="Nói" score={typeof result.speakingScore === "number" ? { score: result.speakingScore } : undefined} /></div><div className="mt-7 flex flex-wrap justify-center gap-3 border-t border-border pt-6"><a href="#answer-review" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-brand px-6 text-sm font-extrabold text-brand transition hover:bg-brand-soft"><CheckCircle2 className="size-4" aria-hidden="true" />Xem dữ liệu đáp án</a><Link href={`/exam/${exam.program}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand px-8 text-sm font-extrabold text-white shadow-sm transition hover:bg-brand-dark"><Send className="size-4" aria-hidden="true" />Làm bài khác</Link></div></div></section><aside className="space-y-5"><section className="rounded-3xl border border-border bg-white p-5 shadow-sm md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><ShieldCheck className="size-5 text-brand" aria-hidden="true" />Thông tin thí sinh</h3><div className="mt-5 rounded-2xl bg-surface p-5"><div className="flex items-center gap-4"><span className="flex size-12 items-center justify-center rounded-full bg-brand text-white"><span className="text-lg font-extrabold">{name.slice(0, 1).toUpperCase()}</span></span><div className="min-w-0"><p className="break-words font-extrabold">{name}</p><span className="mt-1 block break-all text-xs text-ink-muted">{account}</span></div></div></div><InfoRow label="Vai trò" value={candidate?.role === "ADMIN" ? "Quản trị viên" : candidate?.role === "LEARNER" ? "Học viên" : "Khách học thử"} /><InfoRow label="Mã lượt thi" value={attempt} /></section><section className="rounded-3xl border border-brand-soft bg-brand-soft/40 p-5 md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><Headphones className="size-5 text-brand" aria-hidden="true" />Bước tiếp theo</h3><p className="mt-4 text-sm leading-relaxed text-ink">Bạn có thể xem lại dữ liệu đã lưu bên dưới hoặc bắt đầu một bài luyện khác.</p></section></aside></div><section className="mt-5 rounded-3xl border border-brand-soft bg-white p-6"><h2 className="text-xl font-bold">Nhận xét Writing & Speaking</h2><p className="mt-2 text-sm text-ink-muted">Điểm luyện tập từ bài viết và bản ghi âm đã nộp. Khi gửi chấm, nội dung được chuyển tới OpenAI. Quá trình chấm có thể mất vài phút.</p><button type="button" onClick={()=>void requestGrading()} disabled={gradingBusy} className="mt-4 rounded-full bg-brand px-6 py-3 font-semibold text-white disabled:opacity-60">{gradingBusy?`Đang chấm ${gradingStatus ? `(${gradingStatus})` : ""}…`:"Chấm Writing & Speaking"}</button>{gradingError?<p role="alert" className="mt-3 text-sm text-red-700">{gradingError}</p>:null}<GradingFeedback value={result.writing}/><GradingFeedback value={result.speaking}/></section><ResultReview items={reviewItems} writingAnswers={writingAnswers} recordings={recordings} /></div></div>;
+  const canRetry = Boolean(gradingSnapshot.retryable) && !gradingBusy;
+  return <div className="min-h-screen bg-[#F8FAFC] px-4 py-8 text-ink"><div className="mx-auto max-w-[1220px]"><header className="flex flex-wrap items-start justify-between gap-4"><div><Image src="/brand/wewin-logo.png" alt="WEWIN EDUCATION" width={150} height={37} className="h-9 w-auto" /><p className="mt-6 text-xs font-extrabold uppercase tracking-[0.15em] text-brand">BÁO CÁO KẾT QUẢ</p><h1 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Bài luyện đã được nộp</h1><p className="mt-2 text-sm text-ink-muted">Xem điểm, đáp án và những phần cần cải thiện.</p></div><div className="rounded-2xl border border-brand-soft bg-white px-4 py-3 text-sm"><p className="text-xs text-ink-muted">Mã lượt thi</p><p className="mt-1 break-all font-mono text-xs font-bold text-brand">{attempt}</p></div></header><div className="mt-7 grid gap-5 lg:grid-cols-[1.08fr_.72fr]"><section className="overflow-hidden rounded-3xl border border-brand-soft bg-white shadow-sm"><div className="border-t-4 border-brand bg-brand-soft/40 px-6 py-7 text-center md:px-10"><h2 className="text-2xl font-extrabold tracking-wide text-brand md:text-3xl">KẾT QUẢ {exam.program.toUpperCase()}</h2><p className="mt-2 text-sm text-ink-muted">Kết quả luyện tập, không thay thế chứng chỉ VSTEP</p><div className="mt-7 flex flex-wrap items-center justify-center gap-7"><div><p className="text-xs font-bold text-ink-muted">ĐIỂM TỔNG</p><p className="mt-1 text-5xl font-extrabold text-brand">{typeof result.overallScore === "number" ? result.overallScore : "—"}</p></div><div className="hidden h-14 w-px bg-brand-soft sm:block" /><div><p className="text-xs font-bold text-ink-muted">TRẠNG THÁI</p><p className="mt-1 text-2xl font-extrabold text-brand">Đã nộp</p></div></div></div><div className="px-6 py-7 md:px-10"><h3 className="flex items-center gap-2 text-xl font-extrabold"><BarChart3 className="size-5 text-brand" aria-hidden="true" />Điểm thành phần</h3><div className="mt-5 grid gap-3 sm:grid-cols-4"><ScoreCard label="Nghe" score={result.listening} /><ScoreCard label="Đọc" score={result.reading} /><ScoreCard label="Viết" score={typeof result.writingScore === "number" ? { score: result.writingScore } : undefined} /><ScoreCard label="Nói" score={typeof result.speakingScore === "number" ? { score: result.speakingScore } : undefined} /></div><div className="mt-7 flex flex-wrap justify-center gap-3 border-t border-border pt-6"><a href="#answer-review" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-brand px-6 text-sm font-extrabold text-brand transition hover:bg-brand-soft"><CheckCircle2 className="size-4" aria-hidden="true" />Xem dữ liệu đáp án</a><Link href={`/exam/${exam.program}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand px-8 text-sm font-extrabold text-white shadow-sm transition hover:bg-brand-dark"><Send className="size-4" aria-hidden="true" />Làm bài khác</Link></div></div></section><aside className="space-y-5"><section className="rounded-3xl border border-border bg-white p-5 shadow-sm md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><ShieldCheck className="size-5 text-brand" aria-hidden="true" />Thông tin thí sinh</h3><div className="mt-5 rounded-2xl bg-surface p-5"><div className="flex items-center gap-4"><span className="flex size-12 items-center justify-center rounded-full bg-brand text-white"><span className="text-lg font-extrabold">{name.slice(0, 1).toUpperCase()}</span></span><div className="min-w-0"><p className="break-words font-extrabold">{name}</p><span className="mt-1 block break-all text-xs text-ink-muted">{account}</span></div></div></div><InfoRow label="Vai trò" value={candidate?.role === "ADMIN" ? "Quản trị viên" : candidate?.role === "LEARNER" ? "Học viên" : "Khách học thử"} /><InfoRow label="Mã lượt thi" value={attempt} /></section><section className="rounded-3xl border border-brand-soft bg-brand-soft/40 p-5 md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><Headphones className="size-5 text-brand" aria-hidden="true" />Bước tiếp theo</h3><p className="mt-4 text-sm leading-relaxed text-ink">Bạn có thể xem lại dữ liệu đã lưu bên dưới hoặc bắt đầu một bài luyện khác.</p></section></aside></div><section className="mt-5 rounded-3xl border border-brand-soft bg-white p-6"><h2 className="text-xl font-bold">Nhận xét phần Viết & Nói</h2><p className="mt-2 text-sm text-ink-muted">Kết quả từng phần sẽ hiện ngay khi có dữ liệu. Bạn có thể rời trang và quay lại; trạng thái chấm sẽ được đọc lại từ hệ thống.</p><GradingProgressPanel snapshot={gradingSnapshot} busy={gradingBusy} error={gradingError} onRetry={canRetry ? () => void requestGrading() : undefined} /><GradingFeedback value={result.writing}/><GradingFeedback value={result.speaking}/></section><ResultReview items={reviewItems} writingAnswers={writingAnswers} recordings={recordings} /></div></div>;
+}
+
+function mergeGradingResult(result: SubmitResult): SubmitResult {
+  return { ...result, grading: undefined, ...toPublicGrading(result.grading) };
+}
+
+function toPublicGrading(value: unknown): Partial<SubmitResult> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const source = value as Record<string, unknown>;
+  const allowed = ["listening", "reading", "writingStatus", "speakingStatus", "overallScore", "writingScore", "speakingScore", "writing", "speaking", "review", "answers", "bookmarks"];
+  return Object.fromEntries(allowed.filter((key) => key in source).map((key) => [key, source[key]])) as Partial<SubmitResult>;
+}
+
+function normalizeGradingStatus(status: unknown): GradingStatus | string | undefined {
+  if (typeof status !== "string") return undefined;
+  return status === "COMPLETED" ? "GRADED" : status;
+}
+
+function normalizeGradingSnapshot(value: unknown): GradingSnapshot {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const source = value as Record<string, unknown>;
+  const rawProgress = source.progress;
+  const progressSource = rawProgress && typeof rawProgress === "object" && !Array.isArray(rawProgress) ? rawProgress as Record<string, unknown> : undefined;
+  const parts = Array.isArray(progressSource?.parts) ? progressSource.parts.flatMap((part) => {
+    if (!part || typeof part !== "object" || Array.isArray(part)) return [];
+    const item = part as Record<string, unknown>;
+    if (typeof item.id !== "string" || typeof item.skill !== "string" || typeof item.status !== "string") return [];
+    return [{ id: item.id, skill: item.skill, status: item.status }];
+  }) : [];
+  const progress = progressSource ? {
+    completed: typeof progressSource.completed === "number" ? progressSource.completed : 0,
+    total: typeof progressSource.total === "number" ? progressSource.total : parts.length,
+    parts,
+  } : undefined;
+  const grading = source.grading && typeof source.grading === "object" && !Array.isArray(source.grading) ? source.grading as Record<string, unknown> : undefined;
+  return {
+    status: normalizeGradingStatus(source.status),
+    grading,
+    progress,
+    workerAvailable: typeof source.workerAvailable === "boolean" ? source.workerAvailable : undefined,
+    retryable: typeof source.retryable === "boolean" ? source.retryable : undefined,
+    updatedAt: typeof source.updatedAt === "string" ? source.updatedAt : undefined,
+  };
+}
+
+function isTerminalGradingStatus(status: unknown) {
+  const normalized = normalizeGradingStatus(status);
+  return normalized === "GRADED" || normalized === "PARTIAL" || normalized === "FAILED" || normalized === "MISSING";
+}
+
+function gradingStatusLabel(status: unknown, parts: GradingPart[]) {
+  const normalized = normalizeGradingStatus(status);
+  if (normalized === "QUEUED") return "Đã nhận bài · Đang chờ chấm";
+  if (normalized === "PROCESSING") {
+    const current = parts.findIndex((part) => part.status === "PROCESSING");
+    return current >= 0 ? `Đang chấm phần ${current + 1}/${Math.max(parts.length, 1)}` : "Đang chấm bài";
+  }
+  if (normalized === "REVIEWING") return "Đang kiểm tra thêm";
+  if (normalized === "GRADED") return "Đã có kết quả";
+  if (normalized === "PARTIAL") return "Đã có một phần kết quả";
+  if (normalized === "FAILED") return "Chưa hoàn tất chấm bài";
+  if (normalized === "MISSING") return "Chưa đủ dữ liệu để chấm";
+  if (normalized === "NOT_STARTED") return "Đang chuẩn bị chấm bài";
+  return "Đang tải trạng thái chấm…";
+}
+
+function gradingPartSkillLabel(skill: string) {
+  const normalized = skill.toLowerCase();
+  if (normalized.includes("writing") || normalized.includes("write")) return "Viết";
+  if (normalized.includes("speaking") || normalized.includes("speak")) return "Nói";
+  if (normalized.includes("reading") || normalized.includes("read")) return "Đọc";
+  if (normalized.includes("listening") || normalized.includes("listen")) return "Nghe";
+  return "Phần thi";
+}
+
+function gradingPartLabel(part: GradingPart, index: number, parts: GradingPart[]) {
+  const skill = gradingPartSkillLabel(part.skill);
+  const sameSkillIndex = parts.slice(0, index).filter((item) => gradingPartSkillLabel(item.skill) === skill).length;
+  const sameSkillCount = parts.filter((item) => gradingPartSkillLabel(item.skill) === skill).length;
+  return sameSkillCount > 1 ? `${skill} ${sameSkillIndex + 1}` : skill;
+}
+
+function gradingPartStatusLabel(status: unknown) {
+  const normalized = normalizeGradingStatus(status);
+  if (normalized === "QUEUED") return "Đang chờ";
+  if (normalized === "PROCESSING") return "Đang chấm";
+  if (normalized === "REVIEWING") return "Đang kiểm tra thêm";
+  if (normalized === "GRADED") return "Đã có kết quả";
+  if (normalized === "PARTIAL") return "Có một phần kết quả";
+  if (normalized === "FAILED") return "Chưa hoàn tất";
+  if (normalized === "MISSING") return "Chưa đủ dữ liệu";
+  return "Chưa bắt đầu";
+}
+
+function GradingProgressPanel({ snapshot, busy, error, onRetry }: { snapshot: GradingSnapshot; busy: boolean; error: string; onRetry?: () => void }) {
+  const status = normalizeGradingStatus(snapshot.status);
+  const parts = snapshot.progress?.parts ?? [];
+  const total = typeof snapshot.progress?.total === "number" ? snapshot.progress.total : parts.length;
+  const completed = typeof snapshot.progress?.completed === "number" ? snapshot.progress.completed : parts.filter((part) => part.status === "GRADED" || part.status === "PARTIAL").length;
+  const progressPercent = total > 0 ? Math.min(100, Math.max(0, Math.round((completed / total) * 100))) : 0;
+  const terminal = isTerminalGradingStatus(status);
+  const message = status === "PARTIAL"
+    ? "Một số phần đã có kết quả; phần chưa đủ dữ liệu sẽ không bị thay bằng điểm ước đoán."
+    : status === "FAILED"
+      ? "Hệ thống chưa thể hoàn tất việc chấm. Bài làm của bạn vẫn được lưu."
+      : status === "MISSING"
+        ? "Chưa đủ dữ liệu để chấm phần này. Các kết quả hợp lệ vẫn được giữ lại."
+        : status === "GRADED"
+          ? "Kết quả đã được lưu."
+          : "Bạn có thể rời trang; hệ thống vẫn giữ bài làm và tiến độ chấm.";
+  return <section className="mt-5 rounded-2xl border border-border bg-surface p-4" aria-live="polite"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-sm font-extrabold text-brand">{busy ? "Đang cập nhật trạng thái…" : gradingStatusLabel(status, parts)}</p><p className="mt-1 text-sm leading-relaxed text-ink-muted">{message}</p></div>{busy ? <LoaderCircle className="size-5 shrink-0 animate-spin text-brand" aria-label="Đang cập nhật" /> : null}</div>{total > 0 ? <div className="mt-4"><div className="flex items-center justify-between gap-3 text-xs font-bold text-ink-muted"><span>{completed}/{total} phần đã có kết quả</span><span>{progressPercent}%</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={Math.min(completed, total)} aria-label="Tiến độ chấm"><div className="h-full rounded-full bg-brand transition-[width]" style={{ width: `${progressPercent}%` }} /></div></div> : null}{parts.length ? <div className="mt-4 grid gap-2 sm:grid-cols-2">{parts.map((part, index) => <div key={`${part.id}-${index}`} className="flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2 text-sm"><span className="font-semibold text-ink">{gradingPartLabel(part, index, parts)}</span><span className="shrink-0 text-xs font-bold text-ink-muted">{gradingPartStatusLabel(part.status)}</span></div>)}</div> : null}{error ? <p className="mt-4 rounded-xl border border-[#F0B7B0] bg-[#FFF7F5] px-3 py-2 text-sm text-[#9B2C20]" role={status === "FAILED" ? "alert" : "status"}>{error}</p> : null}{onRetry && terminal ? <button type="button" onClick={onRetry} className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-5 text-sm font-extrabold text-white transition hover:bg-brand-dark"><RotateCcw className="size-4" aria-hidden="true" />{status === "PARTIAL" ? "Chấm lại phần còn thiếu" : "Thử chấm lại"}</button> : null}</section>;
 }
 
 function ScoreCard({ label, score }: { label: string; score?: ScoreSummary }) {
@@ -1049,14 +1267,33 @@ function isReviewItem(value: unknown): value is ReviewItem {
 function wordCount(value: string) {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
 }
-function GradingFeedback({value}:{value:unknown}){
-  if(!Array.isArray(value))return null;
-  return <div className="mt-5 space-y-4">{value.map((raw,index)=>{
-    const report=raw as Record<string,unknown>;
-    const feedback=(report.direct_feedback_vi || {}) as Record<string,unknown>;
-    const criteria=(report.scores || {}) as Record<string,{score:unknown;evidence:string}>;
-    const labels:Record<string,string>={task_fulfillment:"Đáp ứng đề",organization:"Tổ chức bài",vocabulary:"Từ vựng",grammar:"Ngữ pháp",fluency_coherence:"Độ trôi chảy",pronunciation:"Phát âm"};
-    const examinerReports=Array.isArray(report.examiner_reports)?report.examiner_reports as Record<string,unknown>[]:[];
-    return <article key={String(report.id||index)} className="rounded-2xl bg-surface p-5"><h3 className="font-bold text-brand">{String(report.task_type||report.part||report.id)} · {typeof report.task_score==="number"?report.task_score:"Chưa đủ bằng chứng"}/10</h3><p className="mt-2 text-sm">{String(feedback.current_reality||"")}</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{Object.entries(criteria).map(([key,criterion])=><div key={key} className="rounded-xl bg-white p-3 text-sm"><b>{labels[key]||key}: {typeof criterion.score==="number"?criterion.score:"—"}</b><p className="mt-1 text-ink-muted">{criterion.evidence}</p></div>)}</div><p className="mt-3 text-sm"><b>Ưu tiên cải thiện:</b> {String(feedback.highest_priority_fix||"")}</p>{typeof report.transcript==="string"?<details className="mt-3 text-sm"><summary className="cursor-pointer font-semibold">Bản chép lời</summary><p className="mt-2 whitespace-pre-wrap">{report.transcript}</p></details>:null}<details className="mt-3 text-sm"><summary className="cursor-pointer font-semibold">Dẫn chứng và sửa lỗi từ các lượt chấm</summary>{examinerReports.map((examiner,i)=><div key={i} className="mt-3"><b>Lượt {String(examiner.examiner_id||i+1)}</b>{["errors","grammar_errors","pronunciation_issues","vocabulary_issues"].flatMap(key=>Array.isArray(examiner[key])?(examiner[key] as Record<string,unknown>[]).map((error,j)=><p key={key+j} className="mt-2 rounded-lg bg-white p-3">{String(error.original||error.spoken_form||error.word_or_phrase||"")} → {String(error.correction||error.better_form||error.better_expression||error.issue||"")}<span className="mt-1 block text-ink-muted">{String(error.explanation_vi||error.suggestion_vi||"")}</span></p>):[])}</div>)}</details></article>;
+function GradingFeedback({ value }: { value: unknown }) {
+  if (!Array.isArray(value)) return null;
+  const labels: Record<string, string> = { task_fulfillment: "Đáp ứng đề", organization: "Tổ chức bài", vocabulary: "Từ vựng", grammar: "Ngữ pháp", fluency_coherence: "Độ trôi chảy", pronunciation: "Phát âm" };
+  return <div className="mt-5 space-y-4">{value.map((raw, index) => {
+    const report = asRecord(raw);
+    if (!report) return null;
+    const feedback = asRecord(report.direct_feedback_vi) ?? {};
+    const criteria = asRecord(report.scores) ?? asRecord(report.criteria) ?? {};
+    const title = gradingReportTitle(report);
+    const score = typeof report.task_score === "number" ? `${report.task_score}/10` : "Chưa đủ dữ liệu";
+    const limiters = firstStringArray(feedback.three_main_score_limiters) ?? firstStringArray(feedback.top_priorities);
+    const nextRequirements = firstStringArray(feedback.next_score_requirements);
+    return <article key={String(report.id ?? index)} className="rounded-2xl bg-surface p-5"><h3 className="font-bold text-brand">{title} · {score}</h3>{typeof feedback.current_reality === "string" ? <p className="mt-2 text-sm">{feedback.current_reality}</p> : null}<div className="mt-3 grid gap-3 sm:grid-cols-2">{Object.entries(criteria).map(([key, rawCriterion]) => { const criterion = asRecord(rawCriterion); if (!criterion) return null; return <div key={key} className="rounded-xl bg-white p-3 text-sm"><b>{labels[key] ?? key}: {typeof criterion.score === "number" ? criterion.score : "—"}</b>{typeof criterion.evidence === "string" ? <p className="mt-1 text-ink-muted">{criterion.evidence}</p> : null}</div>; })}</div>{typeof feedback.why_not_higher === "string" ? <p className="mt-3 text-sm"><b>Vì sao chưa cao hơn:</b> {feedback.why_not_higher}</p> : null}{typeof feedback.highest_priority_fix === "string" ? <p className="mt-3 text-sm"><b>Ưu tiên cải thiện:</b> {feedback.highest_priority_fix}</p> : null}{limiters?.length ? <div className="mt-3 text-sm"><b>Điểm cần ưu tiên:</b><ul className="mt-2 list-disc space-y-1 pl-5 text-ink-muted">{limiters.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul></div> : null}{nextRequirements?.length ? <div className="mt-3 text-sm"><b>Để tiến bộ ở bước tiếp theo:</b><ul className="mt-2 list-disc space-y-1 pl-5 text-ink-muted">{nextRequirements.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul></div> : null}</article>;
   })}</div>;
+}
+
+function asRecord(value: unknown): Record<string, unknown> | undefined {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : undefined;
+}
+
+function firstStringArray(value: unknown) {
+  return Array.isArray(value) && value.every((item) => typeof item === "string") ? value as string[] : undefined;
+}
+
+function gradingReportTitle(report: Record<string, unknown>) {
+  const raw = String(report.task_type ?? report.part ?? report.id ?? "Phần thi").toLowerCase();
+  const skill = raw.includes("speak") || raw.includes("part") && !raw.includes("task") ? "Nói" : "Viết";
+  const number = raw.match(/(?:task|part)[-_ ]?(\d+)/)?.[1];
+  return number ? `${skill} · Phần ${number}` : skill;
 }

@@ -17,6 +17,8 @@ Worker Speaking riêng (Node + FFmpeg + OpenAI)
 
 Vercel không chạy worker Speaking dài hạn. Vercel chỉ nhận bài, lưu trạng thái và tạo job; worker lấy job từ database, xử lý audio và ghi kết quả lại.
 
+Luồng chấm mặc định là **pipeline v2 (thử nghiệm)**: một examiner cho từng task Writing hoặc phần Speaking, sau đó chỉ gọi thêm một reviewer khi có tín hiệu cần kiểm tra. Reviewer được gọi khi confidence dưới **0,75**, bằng chứng Writing không khớp bài hoặc có mâu thuẫn về khả năng đánh giá; không gọi examiner thứ ba. Mỗi worker giữ tối đa **2 job đồng thời** và tối đa **3 request AI đang chạy**. Mỗi bước lỗi được retry tối đa **3 lần** theo backoff; retry không xóa checkpoint, audio hoặc kết quả đã hoàn tất.
+
 ## 1. Chuẩn bị
 
 Cần có:
@@ -24,8 +26,11 @@ Cần có:
 - Repository của `D:\hanbee` trên GitHub/GitLab hoặc thư mục local để import bằng Vercel CLI.
 - Một project Neon PostgreSQL.
 - Một Blob store trong Vercel.
-- Tài khoản Vercel và một tài khoản worker managed service, ví dụ Railway.
+- Tài khoản Vercel.
+- Tài khoản Railway và một service worker grading; hiện chưa có service Railway trong môi trường này.
 - OpenAI API key chỉ dành cho worker.
+
+**Lưu ý:** Push lên Vercel chỉ triển khai website/API, không tự khởi động worker chấm. Production queue smoke vẫn bị chặn cho đến khi tạo và kiểm tra service Railway.
 
 Không đưa các giá trị sau vào Git, ảnh chụp màn hình hoặc file `.env.example`:
 
@@ -122,7 +127,9 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
 
 ## 6. Chạy migration production
 
-Migration phải chạy sau khi database đã có và trước khi mở tính năng mới. Thực hiện từ máy có `npx` và quyền truy cập Neon:
+Migration là additive và phải chạy sau khi database đã có, trước khi mở pipeline v2. Tạo Neon backup/branch trước khi migrate. Không xóa attempt, audio, checkpoint hoặc kết quả đã hoàn tất; các kết quả cũ tiếp tục được hiển thị và không tự chấm lại. Bài `QUEUED` chưa bắt đầu có thể được chuyển sang pipeline mặc định, còn bài đang xử lý phải hoàn tất theo phiên bản đã nhận.
+
+Thực hiện từ máy có `npx` và quyền truy cập Neon:
 
 ```powershell
 $env:DATABASE_URL = "<NEON_POOLED_URL>"
@@ -194,10 +201,13 @@ Trong Preview, kiểm tra theo thứ tự:
 4. Mở một đề Speaking, cho phép microphone và hoàn thành một phần.
 5. Kiểm tra Network không có request gửi audio dạng base64 trong JSON tiến độ.
 6. Kiểm tra Blob có object trong `exam-recordings/`.
-7. Nộp bài, xác nhận trạng thái `QUEUED` rồi `PROCESSING`/`GRADED`.
-8. Tải lại trang kết quả và phát lại audio.
+7. Nộp bài, xác nhận `GET /grade` được đọc trước khi yêu cầu mới; chỉ `POST /grade` khi trạng thái là `NOT_STARTED` hoặc người dùng bấm thử lại.
+8. Xác nhận trạng thái `QUEUED` → `PROCESSING`/`REVIEWING` → `GRADED` hoặc `PARTIAL`, cùng tiến độ từng phần.
+9. Tải lại trang kết quả và phát lại audio; `PARTIAL` là trạng thái kết thúc, không phải trạng thái đang chờ.
 
 Nếu Preview dùng Neon branch hoặc Blob store riêng, worker test cũng phải trỏ đúng branch và store đó.
+
+Nếu chưa có Railway service, chỉ kiểm tra được việc tạo job, GET tiến độ, giao diện reload và trạng thái retry. Không đánh dấu smoke `QUEUED` → `PROCESSING` → `GRADED`/`PARTIAL` là đạt cho đến khi worker thật đã nhận job.
 
 ## 10. Chạy worker Speaking
 
@@ -207,11 +217,14 @@ Repository có `Dockerfile.grading-worker`. Docker image đã cài FFmpeg và ch
 npm run grading:worker:loop
 ```
 
-### Railway
+### Railway: tạo service mới
 
-1. Tạo một service mới từ cùng repository.
-2. Chọn builder Dockerfile và đặt Dockerfile path là `Dockerfile.grading-worker`.
-3. Thêm các biến môi trường:
+Hiện chưa có tài khoản hoặc service Railway, nên cần hoàn tất các bước này trước production queue smoke:
+
+1. Đăng ký hoặc đăng nhập tại Railway và tạo một project mới.
+2. Chọn **Deploy from GitHub repo**, cấp quyền cho repository WEWIN và chọn đúng repository/branch.
+3. Để Railway đọc `railway.json` trong repository. Cấu hình này chọn `Dockerfile.grading-worker` và lệnh health `npm run grading:health`; nếu Dashboard hỏi thủ công, chọn Dockerfile path tương ứng.
+4. Thêm các biến môi trường:
 
 ```text
 DATABASE_URL=<NEON_POOLED_URL>
@@ -224,8 +237,10 @@ OPENAI_TRANSCRIPTION_MODEL=whisper-1
 FFMPEG_PATH=ffmpeg
 ```
 
-4. Bật restart tự động.
-5. Kiểm tra log worker có thể kết nối database, không báo thiếu FFmpeg và chuyển một job từ `QUEUED` sang `GRADED`.
+5. Bật restart tự động và chờ health check `npm run grading:health` đạt.
+6. Cấu hình pipeline v2 với tối đa 2 job đồng thời và 3 request AI đang chạy; giữ model hiện tại để đo riêng tác động của thay đổi pipeline.
+7. Gửi heartbeat mỗi 15 giây. Chỉ coi worker không phản hồi sau 60 giây không có heartbeat; job chờ khi worker còn hoạt động vẫn là đang xếp hàng.
+8. Tạo một lượt test trên Preview, kiểm tra log worker kết nối được Neon/Blob, không báo thiếu FFmpeg và chuyển một job từ `QUEUED` sang `GRADED` hoặc `PARTIAL`.
 
 Không chạy hai worker bằng hai database khác nhau. Có thể chạy nhiều worker cùng một database vì job có lease và chống claim trùng.
 
@@ -237,11 +252,13 @@ npm run grading:worker
 
 ## 11. Mở Production
 
-Chỉ chạy sau khi Preview đạt tài liệu [speaking-test-plan.md](speaking-test-plan.md):
+Chỉ chạy sau khi Preview đạt tài liệu [speaking-test-plan.md](speaking-test-plan.md) **và Railway worker đã được tạo, health check đạt, nhận được job test**. Đây là rollout **thử nghiệm có giới hạn**, chưa có số đo đối chiếu giáo viên và không được công bố như bằng chứng accuracy đã được kiểm chứng. Nếu chưa có Railway service, dừng ở Preview/API smoke; không mở production queue smoke:
 
 ```powershell
 vercel --prod
 ```
+
+Mở cờ pipeline v2 theo từng nhóm nhỏ sau khi xác nhận worker đọc được Blob và heartbeat ổn định. Giữ đường lui cho job mới về pipeline cũ nếu cần; không xóa audio, kết quả hoặc lịch sử. Chỉ đánh giá chất lượng sau khi có bộ bài được phép sử dụng và đối chiếu giáo viên ẩn danh.
 
 Sau khi deploy, kiểm tra nhanh:
 
@@ -252,7 +269,11 @@ Sau khi deploy, kiểm tra nhanh:
 - bản ghi Speaking phát được sau khi kiểm tra quyền;
 - dữ liệu cá nhân trả `private, no-store`;
 - Vercel Functions không có lỗi 5xx tăng đột biến;
-- worker không có job `FAILED` kéo dài.
+- worker không có job `FAILED` kéo dài;
+- dashboard hiển thị heartbeat trong 15 giây gần nhất và cảnh báo sau 60 giây;
+- learner chỉ thấy điểm, nhận xét và tiến độ; không thấy pipeline, prompt, checkpoint hoặc báo cáo examiner nội bộ.
+
+Nếu Railway chưa tồn tại, ghi rõ trong biên bản rollout: **production queue smoke: BLOCKED — chưa có worker service**. Vercel deploy/push không thay thế bước này.
 
 ## 12. Giới hạn cần biết
 
@@ -270,4 +291,4 @@ Các luồng bản ghi Speaking, tài liệu và ảnh bài viết đã có dire
 - Không rollback migration bằng cách xóa bảng thủ công.
 - Giữ Neon backup/branch trước migration lớn.
 - Không xóa Blob object khi chưa xác minh record database không còn trỏ tới object đó.
-- Nếu worker lỗi, có thể dừng worker; bài làm và audio vẫn được giữ, job sẽ tiếp tục sau khi worker hoạt động lại hoặc hết lease.
+- Nếu worker lỗi, có thể dừng worker; bài làm và audio vẫn được giữ, job sẽ tiếp tục sau khi worker hoạt động lại hoặc hết lease. Không coi thời gian chờ theo dõi ở trình duyệt là thất bại.

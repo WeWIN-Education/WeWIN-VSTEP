@@ -11,12 +11,15 @@ ready -> permission -> question -> preparation -> recording -> saving -> done
 Trạng thái chấm:
 
 ```text
-NOT_STARTED -> QUEUED -> PROCESSING -> GRADED
-                                      \-> PARTIAL
-                                      \-> FAILED -> QUEUED (retry)
+NOT_STARTED -> QUEUED -> PROCESSING -> REVIEWING -> GRADED
+                                                   \-> PARTIAL
+                                                   \-> FAILED (retry tối đa 3 lần)
+                                                   \-> MISSING
 ```
 
-`PARTIAL` chỉ ra còn phần chưa đủ dữ liệu hoặc chưa có điểm hợp lệ. Hệ thống không tự tạo điểm thay thế.
+`PARTIAL` là trạng thái kết thúc: còn phần chưa đủ dữ liệu hoặc chưa có điểm hợp lệ, nhưng các phần hợp lệ vẫn được hiển thị. Hệ thống không tự tạo điểm thay thế. `MISSING` là trạng thái kết thúc khi thiếu dữ liệu cần thiết.
+
+Luồng thử nghiệm dùng pipeline v2 mặc định: một examiner cho từng task Writing hoặc phần Speaking. Chỉ gọi thêm một reviewer khi confidence dưới **0,75**, bằng chứng Writing không khớp bài hoặc có mâu thuẫn về khả năng đánh giá. Reviewer Speaking phải nghe audio gốc; không gọi examiner thứ ba và không lấy trung bình examiner với reviewer. Mỗi worker xử lý tối đa **2 job đồng thời** và **3 request AI đang chạy**.
 
 ## 1. Kiểm thử giao diện và microphone
 
@@ -32,6 +35,11 @@ NOT_STARTED -> QUEUED -> PROCESSING -> GRADED
 | UI-08 | Microphone bị rút giữa chừng | Lưu lỗi có thể retry, không mất phần đã lưu |
 | UI-09 | Reload khi đang upload | Sau khi mở lại không ghi đè sai attempt |
 | UI-10 | Unmount khi upload | Không set state vào component đã rời trang |
+| UI-11 | Mở trang kết quả | GET trạng thái chấm trước; chỉ POST khi `NOT_STARTED` |
+| UI-12 | Rời trang khi đang chấm | Hủy request đang mở, quay lại đọc lại job cũ |
+| UI-13 | Tab bị ẩn | Poll mỗi 15 giây; tab đang mở poll mỗi 3 giây |
+| UI-14 | Kết quả `PARTIAL` | Dừng poll, giữ điểm hợp lệ và phân biệt với tiến độ đang chạy |
+| UI-15 | Bấm thử lại | Chỉ POST do thao tác rõ ràng, không tạo request trùng |
 
 ## 2. Ma trận trình duyệt
 
@@ -107,9 +115,9 @@ Kiểm tra database sau mỗi lượt:
 3. Worker claim job, chuyển `PROCESSING` và giữ lease.
 4. Worker đọc Blob, FFmpeg kiểm tra/chuyển WAV và kiểm tra silence.
 5. Transcription chạy thành công.
-6. Ba examiner và adjudicator chạy.
-7. Checkpoint xuất hiện sau transcription, từng examiner và adjudication.
-8. Trạng thái chuyển `GRADED`, kết quả và điểm được hiển thị.
+6. Một examiner chạy cho từng task Writing hoặc phần Speaking; reviewer chỉ chạy nếu confidence < 0,75, bằng chứng không khớp hoặc có mâu thuẫn.
+7. Checkpoint xuất hiện sau từng bước; kết quả từng phần được trả ngay khi có thể.
+8. Trạng thái chuyển `GRADED`, `PARTIAL` hoặc `FAILED`; điểm và nhận xét công khai không chứa pipeline hay báo cáo nội bộ.
 
 ### Luồng lỗi bắt buộc
 
@@ -119,8 +127,9 @@ Kiểm tra database sau mỗi lượt:
 - audio quá dài;
 - OpenAI trả `429`, `5xx` hoặc timeout;
 - examiner trả JSON sai cấu trúc;
+- reviewer được gọi khi confidence dưới 0,75 và phải nghe audio Speaking;
 - điểm null ở pronunciation/fluency khi không đủ bằng chứng;
-- worker dừng sau examiner A hoặc B;
+- worker dừng giữa các bước của examiner hoặc reviewer;
 - hai worker claim cùng một job;
 - lease hết hạn;
 - bấm chấm nhiều lần;
@@ -133,7 +142,8 @@ Kết quả cần đạt:
 - checkpoint không bị mất khi retry;
 - lỗi không xóa audio hay bài làm;
 - thiếu phần giữ `PARTIAL`, không tạo điểm giả;
-- hết retry chuyển `FAILED` và hiển thị nút thử lại;
+- hết retry chuyển `FAILED` và hiển thị nút thử lại khi `retryable=true`;
+- `PARTIAL`, `GRADED`, `FAILED` và `MISSING` dừng polling; `PARTIAL` không bị hiển thị như đang xử lý;
 - không có secret hoặc audio trong log.
 
 ## 6. End-to-end trên Vercel Preview
@@ -148,10 +158,10 @@ Mỗi lần thay đổi phần Speaking, chạy đủ luồng sau trên Preview 
 6. Reload ở preparation và recording.
 7. Xác nhận Blob có `exam-recordings/<attemptId>/...`.
 8. Nộp bài.
-9. Xác nhận job `QUEUED` → `PROCESSING` → `GRADED`.
+9. Xác nhận GET trạng thái trước POST; sau đó job đi qua `QUEUED` → `PROCESSING`/`REVIEWING` → `GRADED` hoặc `PARTIAL`.
 10. Mở lại trang kết quả bằng URL có `attempt`.
 11. Phát lại cả ba bản ghi.
-12. Tạo một lỗi OpenAI/worker có kiểm soát và xác nhận retry/FAILED.
+12. Tạo một lỗi OpenAI/worker có kiểm soát và xác nhận retry/FAILED mà không mất checkpoint.
 
 Đo và lưu lại:
 
@@ -176,6 +186,10 @@ Mỗi lần thay đổi phần Speaking, chạy đủ luồng sau trên Preview 
 - [ ] Không có base64 audio trong bản ghi mới.
 - [ ] Job lỗi không làm mất bài làm.
 - [ ] Dashboard/log có thể phát hiện upload failure, grading failure, timeout và chi phí OpenAI.
+- [ ] Worker có heartbeat mỗi 15 giây; chỉ đánh dấu không phản hồi sau 60 giây.
+- [ ] Giới hạn worker là 2 job đồng thời và 3 request AI đang chạy.
+- [ ] Reviewer chỉ chạy theo điều kiện confidence < 0,75 hoặc tín hiệu bằng chứng/mâu thuẫn.
+- [ ] Pipeline v2 được bật theo rollout giới hạn; không công bố accuracy khi chưa có đối chiếu giáo viên.
 
 ## 8. Automation chưa chạy trong môi trường này
 
@@ -190,8 +204,14 @@ npm run test:e2e
 
 Các test này kiểm tra URL Preview, trang login, API upload admin và ngữ cảnh được cấp quyền microphone. Chúng chưa thay thế lượt kiểm thử thủ công với thiết bị microphone thật, audio fixture và OpenAI.
 
-Repository hiện chưa có credential Preview, OpenAI, Blob hoặc microphone browser production để chạy E2E grading thật. Vì vậy checklist trên phải được chạy thủ công sau khi tạo Preview. Khi cần mở rộng tự động hóa, bổ sung:
+Repository hiện chưa có credential Preview, OpenAI, Blob hoặc microphone browser production để chạy E2E grading thật. Ngoài ra hiện chưa có tài khoản/service Railway. Vì vậy checklist trên phải được chạy thủ công sau khi tạo Preview và service worker. Trước khi có worker Railway, production queue smoke được ghi là **BLOCKED**; push Vercel không tự kích hoạt grader. Khi cần mở rộng tự động hóa, bổ sung:
 
 - Vitest cho parser/validation, state transition và grading checkpoint mock;
 - Playwright cho quyền microphone, MediaRecorder mock và flow Preview;
 - fixture audio cố định, chỉ dùng một smoke test OpenAI thật với audio ngắn.
+
+## 9. Migration và rollout
+
+Migration grading là additive. Trước khi áp dụng, tạo Neon backup/branch; chạy `npx prisma migrate deploy` rồi kiểm tra `npx prisma migrate status` và `npx prisma validate`. Không xóa attempt, audio, checkpoint hoặc kết quả đã hoàn tất. Bài đang xử lý hoàn tất theo pipeline version đã nhận; bài `QUEUED` chưa bắt đầu có thể dùng pipeline v2.
+
+Sau Preview và sau khi tạo/kiểm tra Railway worker, mở pipeline v2 theo nhóm nhỏ và giữ khả năng đưa job mới về pipeline cũ. Trình tự tạo worker là: đăng ký Railway → **Deploy from GitHub repo** → để `railway.json` chọn `Dockerfile.grading-worker` và `npm run grading:health` → thêm Neon/Blob/OpenAI env → kiểm tra heartbeat và một job test. Đây là rollout thử nghiệm kỹ thuật; mục tiêu thời gian và ngưỡng chất lượng chỉ là điều kiện đo kiểm, chưa phải số đo đã đạt hoặc cam kết accuracy. Chỉ công bố kết luận sau khi có dữ liệu audio thật được phép sử dụng và đối chiếu giáo viên ẩn danh.
