@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/Card";
+import { LinkifiedText } from "@/components/ui/LinkifiedText";
 import { PageHero } from "@/components/ui/PageHero";
 import { getCurrentUser } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
@@ -108,7 +109,7 @@ function ProgressPanel({ progress, vocabularyCount, personalCount }: { progress:
 }
 
 function PostList({ posts }: { posts: Array<{ id: string; title: string | null; body: string; status: string; rejectionReason: string | null; createdAt: Date; publishedAt: Date | null }> }) {
-  return <Card padding="lg"><div className="flex items-center gap-2"><MessageSquareText className="size-5 text-brand" /><h2 className="text-xl font-extrabold text-ink">Bài viết của học viên</h2></div>{posts.length ? <div className="mt-4 space-y-3">{posts.map((post) => <article key={post.id} className="rounded-xl border border-border p-4"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-extrabold text-ink">{post.title || "Bài viết không tiêu đề"}</h3><span className="rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-bold text-brand">{post.status}</span></div><p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-ink-muted">{post.body}</p>{post.rejectionReason ? <p className="mt-2 text-xs text-red-700">Lý do từ chối: {post.rejectionReason}</p> : null}<p className="mt-3 text-xs text-ink-faint">{date(post.createdAt)}</p></article>)}</div> : <p className="mt-4 text-sm text-ink-muted">Học viên chưa có bài viết.</p>}</Card>;
+  return <Card padding="lg"><div className="flex items-center gap-2"><MessageSquareText className="size-5 text-brand" /><h2 className="text-xl font-extrabold text-ink">Bài viết của học viên</h2></div>{posts.length ? <div className="mt-4 space-y-3">{posts.map((post) => <article key={post.id} className="rounded-xl border border-border p-4"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-extrabold text-ink">{post.title || "Bài viết không tiêu đề"}</h3><span className="rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-bold text-brand">{post.status}</span></div><p className="mt-2 whitespace-pre-wrap break-words text-sm leading-relaxed text-ink-muted"><LinkifiedText>{post.body}</LinkifiedText></p>{post.rejectionReason ? <p className="mt-2 text-xs text-red-700">Lý do từ chối: <LinkifiedText>{post.rejectionReason}</LinkifiedText></p> : null}<p className="mt-3 text-xs text-ink-faint">{date(post.createdAt)}</p></article>)}</div> : <p className="mt-4 text-sm text-ink-muted">Học viên chưa có bài viết.</p>}</Card>;
 }
 
 function BookmarkList({ bookmarks }: { bookmarks: UserBookmark[] }) {

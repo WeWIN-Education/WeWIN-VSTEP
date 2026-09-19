@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Card } from "@/components/ui/Card";
+import { LinkifiedText } from "@/components/ui/LinkifiedText";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -38,11 +39,11 @@ export default async function BlogPostPage({ params }: Props) {
           {post.title}
         </h1>
         {post.excerpt ? (
-          <p className="mt-2 text-[15px] text-ink-muted">{post.excerpt}</p>
+          <p className="mt-2 text-[15px] text-ink-muted"><LinkifiedText>{post.excerpt}</LinkifiedText></p>
         ) : null}
         <Card className="mt-5" padding="lg">
           <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-ink">
-            {post.body}
+            <LinkifiedText>{post.body}</LinkifiedText>
           </p>
         </Card>
       </article>

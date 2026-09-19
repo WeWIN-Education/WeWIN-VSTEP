@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { LinkifiedText } from "@/components/ui/LinkifiedText";
 import type { ReactNode } from "react";
 
 type PageHeroProps = {
@@ -35,7 +36,7 @@ export function PageHero({
           </h1>
           {description ? (
             <p className="mt-2 max-w-[34rem] break-words text-[14px] leading-relaxed text-ink-muted">
-              {description}
+              <LinkifiedText>{description}</LinkifiedText>
             </p>
           ) : null}
           {stats?.length ? (
