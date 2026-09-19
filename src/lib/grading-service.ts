@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { aggregateSpeaking, gradeSpeaking, gradeWriting, PROMPT_VERSION } from "@/lib/openai-grading";
+import { GRADING_V2_PROMPT_VERSION } from "@/lib/grading-v2";
 import { dataUrlFromBuffer, readObject } from "@/lib/storage";
 import { object, savedAnswers } from "@/lib/exam-submission";
 import { resolveCatalogExamData, scoreExam } from "@/lib/exam-scoring";
@@ -18,7 +19,14 @@ async function recordingAudioData(attemptId: string, metadata: Value, fallback?:
   if (typeof metadata.audioData === "string" && metadata.audioData) return metadata.audioData;
   const key = typeof metadata.storageKey === "string" ? metadata.storageKey : fallback?.storageKey;
   if (!key || !key.startsWith(`exam-recordings/${attemptId}/`)) throw new GradingServiceError("INVALID_RECORDING", "Bản ghi không thuộc lượt thi.");
-  const bytes = await readObject(key);
+  let bytes: Buffer | null;
+  try {
+    bytes = await readObject(key);
+  } catch (error) {
+    const status = Number(object(error).status || object(error).statusCode);
+    const permanent = status === 401 || status === 403;
+    throw new GradingServiceError(permanent ? "STORAGE_ACCESS_DENIED" : "RECORDING_UNAVAILABLE", permanent ? "Không có quyền đọc bản ghi đã lưu." : "Tạm thời chưa đọc được bản ghi đã lưu.", !permanent);
+  }
   if (!bytes?.length) throw new GradingServiceError("RECORDING_UNAVAILABLE", "Chưa đọc được bản ghi đã lưu.", true);
   return dataUrlFromBuffer(bytes, typeof metadata.mimeType === "string" ? metadata.mimeType : fallback?.mimeType || "audio/webm");
 }
@@ -32,6 +40,7 @@ export async function gradeAttempt(attemptId: string, options: Options = {}) {
   if (!exam) throw new GradingServiceError("INVALID_EXAM", "Nội dung đề không hợp lệ.");
   const paper = exam.paper;
   const pipelineVersion = (options.pipelineVersion || process.env.GRADING_PIPELINE || "v2") === "v1" ? "v1" : "v2";
+  const promptVersion = pipelineVersion === "v2" ? GRADING_V2_PROMPT_VERSION : PROMPT_VERSION;
   const lease = new Date();
   if (options.jobId && !options.leaseToken) throw new GradingServiceError("LEASE_LOST", "Phiên chấm không còn hiệu lực.");
   if (!options.jobId) {
@@ -74,7 +83,7 @@ export async function gradeAttempt(attemptId: string, options: Options = {}) {
       return { writing, speaking, writingScore, speakingScore,
         overallScore: attempt!.catalog === "FULL" && all.every((v): v is number => v !== null) ? Math.round(all.reduce((a,b)=>a+b,0) / 4 * 10) / 10 : null,
         speakingSummary: { speaking_estimated_score: speakingScore, method: "practice_part_mean" },
-        writingStatus: skillStatus("writing"), speakingStatus: skillStatus("speaking"), complete: parts.every(p => p.status === "GRADED"), pipelineVersion, prompt_version: PROMPT_VERSION,
+        writingStatus: skillStatus("writing"), speakingStatus: skillStatus("speaking"), complete: parts.every(p => p.status === "GRADED"), pipelineVersion, prompt_version: promptVersion,
         progress: { completed: parts.filter(p => ["GRADED","PARTIAL","MISSING","FAILED"].includes(p.status)).length, total: parts.length, parts: parts.map(({ id, skill, status }) => ({ id, skill, status })) } };
     }
     function persist(part?: Part) {
@@ -93,7 +102,7 @@ export async function gradeAttempt(attemptId: string, options: Options = {}) {
       return operation;
     }
     function addPart(id: string, skill: Part["skill"], input: unknown, run: (state: Value, checkpoint: (state: Value) => Promise<void>) => Promise<Value>, missing: boolean) {
-      const fingerprint = createHash("sha256").update(JSON.stringify({ input, pipelineVersion, prompt: PROMPT_VERSION, model: skill === "writing" ? process.env.OPENAI_GRADING_MODEL || "gpt-4o-mini" : process.env.OPENAI_SPEAKING_MODEL || "gpt-audio-1.5", transcription: process.env.OPENAI_TRANSCRIPTION_MODEL || "whisper-1" })).digest("hex");
+      const fingerprint = createHash("sha256").update(JSON.stringify({ input, pipelineVersion, prompt: promptVersion, model: skill === "writing" ? process.env.OPENAI_GRADING_MODEL || "gpt-4o-mini" : process.env.OPENAI_SPEAKING_MODEL || "gpt-audio-1.5", transcription: process.env.OPENAI_TRANSCRIPTION_MODEL || "whisper-1" })).digest("hex");
       const prior = previous.find(p => p.partId === id && object(p.checkpoint).fingerprint === fingerprint);
       const legacy = pipelineVersion === "v1" ? object(object(cached.pipelines)[id]) : {};
       const part: Part = { id, skill, fingerprint, status: missing ? "MISSING" : prior && ["GRADED","PARTIAL"].includes(prior.status) ? prior.status : "QUEUED", state: prior ? object(object(prior.checkpoint).state) : legacy, ...(prior?.result ? { result: object(prior.result) } : {}) };
@@ -117,11 +126,11 @@ export async function gradeAttempt(attemptId: string, options: Options = {}) {
     }
     for (const [index, task] of exam.paper.writing.entries()) {
       const answer = typeof saved.writingAnswers[task.id] === "string" ? String(saved.writingAnswers[task.id]) : "", prompt = task.prompt + (task.bullets ? `\n${task.bullets.join("\n")}` : "");
-      addPart(task.id,"writing",{ prompt,answer },(state,checkpoint)=>gradeWriting(index===0?"task1":"task2",prompt,answer,state,checkpoint,{ pipelineVersion }),!answer.trim());
+      addPart(task.id,"writing",{ prompt,answer },(state,checkpoint)=>gradeWriting(index===0 ? "task1" : "task2", prompt, answer, state, checkpoint, { pipelineVersion }).then((result) => result as unknown as Value),!answer.trim());
     }
     for (const part of exam.paper.speaking.parts) {
       const metadata = object(recordings[part.id]), file = fileMap.get(part.id), prompt = `${part.prompt}\n${part.questions.join("\n")}`;
-      addPart(part.id,"speaking",{ prompt,metadata,file },async(state,checkpoint)=>gradeSpeaking(part.id.replace("speaking-","part"),prompt,await recordingAudioData(attemptId,metadata,file),state,checkpoint,{ pipelineVersion }),!metadata.audioData && !metadata.storageKey && !file);
+      addPart(part.id,"speaking",{ prompt,metadata,file },async(state,checkpoint)=>gradeSpeaking(part.id.replace("speaking-","part"), prompt, await recordingAudioData(attemptId, metadata, file), state, checkpoint, { pipelineVersion }).then((result) => result as unknown as Value),!metadata.audioData && !metadata.storageKey && !file);
     }
     await persist();
     const outcomes = await Promise.allSettled(jobs.map(run=>run()));
@@ -134,7 +143,7 @@ export async function gradeAttempt(attemptId: string, options: Options = {}) {
     if (failures.length) throw failures[0].reason;
     const result = summary();
     if (pipelineVersion === "v1" && result.speakingScore !== null) {
-      const aggregate = await aggregateSpeaking(result.speaking, { pipelineVersion });
+      const aggregate = await aggregateSpeaking(result.speaking, { pipelineVersion: "v1" });
       result.speakingSummary = { ...result.speakingSummary, ...aggregate };
       result.speakingScore = typeof aggregate.speaking_estimated_score === "number" ? aggregate.speaking_estimated_score : null;
       const scores = [objective.listening.score, objective.reading.score, result.writingScore, result.speakingScore];

@@ -88,6 +88,7 @@ export interface GradingResult {
   assessable: boolean;
   reviewed: boolean;
   status: "GRADED" | "PARTIAL";
+  prompt_version?: string;
   limitation?: string;
   task_type?: WritingTaskType;
   word_count?: number;
@@ -204,13 +205,25 @@ function normalizeAudioQuality(value: unknown): AudioQuality | undefined {
 function evidenceValue(value: Record<string, unknown>) {
   return stringValue(value.evidence ?? value.evidence_vi ?? value.reason_vi ?? value.reason ?? value.explanation) ?? "";
 }
-function normalizeReport(value: Record<string, unknown>, kind: GradingKind): NormalizedReport {
+function sourceEvidenceMatches(scores: Record<CriterionKey, CriterionResult>, source: string, kind: GradingKind) {
+  if (kind !== "writing") return true;
+  const sourceTokens = new Set(source.toLowerCase().replace(/[^a-z0-9']+/g, " ").split(/\s+/).filter((token) => token.length >= 4));
+  if (!sourceTokens.size) return false;
+  return WRITING_CRITERIA.every((key) => {
+    const criterion = scores[key];
+    if (criterion.score === null) return true;
+    const evidenceTokens = criterion.evidence.toLowerCase().replace(/[^a-z0-9']+/g, " ").split(/\s+/).filter((token) => token.length >= 4);
+    return evidenceTokens.some((token) => sourceTokens.has(token));
+  });
+}
+
+function normalizeReport(value: Record<string, unknown>, kind: GradingKind, source = ""): NormalizedReport {
   const report = unwrapReport(value);
-  const source = report.scores ?? report.criteria ?? report.criterion_scores;
+  const rawCriteria = report.scores ?? report.criteria ?? report.criterion_scores;
   const required = kind === "writing" ? WRITING_CRITERIA : SPEAKING_CRITERIA;
   const scores = {} as Record<CriterionKey, CriterionResult>;
   for (const key of required) {
-    const raw = record(criteriaObject(source)[key]);
+    const raw = record(criteriaObject(rawCriteria)[key]);
     if (!Object.keys(raw).length) throw new GradingError("MODEL_OUTPUT_INVALID", "Missing criterion: " + key + ".");
     const rawScore = "score" in raw ? raw.score : "final_score" in raw ? raw.final_score : raw.value;
     const score = rawScore === null ? null : scoreValue(rawScore);
@@ -228,7 +241,7 @@ function normalizeReport(value: Record<string, unknown>, kind: GradingKind): Nor
   const assessable = complete && !poorAudio;
   const rawScore = assessable ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
   const limitation = audioQuality === "unusable" ? "Audio is not clear enough for reliable assessment." : audioQuality === "poor" ? "Audio quality limits reliable assessment; the part score is not locked." : complete ? undefined : "One or more criteria do not have enough evidence for a locked score.";
-  return { scores, confidence, directFeedback: record(report.direct_feedback_vi ?? report.feedback_vi ?? report.feedback), audioQuality, assessable, rawScore, taskScore: rawScore === null ? null : roundHalf(rawScore), evidenceGrounded: report.evidence_grounded !== false && Object.values(scores).every((item) => item.score === null || Boolean(item.evidence)), limitation };
+  return { scores, confidence, directFeedback: record(report.direct_feedback_vi ?? report.feedback_vi ?? report.feedback), audioQuality, assessable, rawScore, taskScore: rawScore === null ? null : roundHalf(rawScore), evidenceGrounded: report.evidence_grounded !== false && Object.values(scores).every((item) => item.score === null || Boolean(item.evidence)) && sourceEvidenceMatches(scores, source, kind), limitation };
 }
 function reportState(report: NormalizedReport) {
   return { scores: report.scores, confidence: report.confidence, direct_feedback_vi: report.directFeedback, audio_quality: report.audioQuality, assessable: report.assessable, task_score: report.taskScore, raw_score: report.rawScore, evidence_grounded: report.evidenceGrounded, limitation: report.limitation };
@@ -240,7 +253,7 @@ function reportFromState(value: unknown, kind: GradingKind) {
 }
 function publicReport(report: NormalizedReport, reviewed: boolean): GradingResult {
   const scores = report.scores as Record<string, CriterionResult>;
-  return { scores, criteria: scores, raw_score: report.rawScore, task_score: report.taskScore, overall_score: report.taskScore, confidence: report.confidence, direct_feedback_vi: report.directFeedback, assessable: report.assessable, reviewed, status: report.taskScore === null ? "PARTIAL" : "GRADED", ...(report.limitation ? { limitation: report.limitation } : {}) };
+  return { scores, criteria: scores, raw_score: report.rawScore, task_score: report.taskScore, overall_score: report.taskScore, confidence: report.confidence, direct_feedback_vi: report.directFeedback, assessable: report.assessable, reviewed, status: report.taskScore === null ? "PARTIAL" : "GRADED", prompt_version: GRADING_V2_PROMPT_VERSION, ...(report.limitation ? { limitation: report.limitation } : {}) };
 }
 
 function modelName(kind: GradingKind, options: GradingV2Options) {
@@ -305,7 +318,7 @@ function telemetryDuration(state: PipelineState, stage: string, startedAt: numbe
 function prepareState(state: PipelineState, fingerprint: string, model: string, transcriptModelValue?: string) {
   const same = state.pipelineVersion === GRADING_V2_VERSION && state.inputFingerprint === fingerprint && state.promptVersion === GRADING_V2_PROMPT_VERSION;
   if (!same) {
-    for (const key of ["transcript", "transcriptModel", "audioMetadata", "main", "reviewer", "result", "stage", "status", "errorCode", "errorMessage", "attemptsExhausted", "repaired"]) delete state[key];
+    for (const key of ["transcript", "transcriptModel", "audioMetadata", "main", "reviewer", "result", "stage", "status", "errorCode", "errorMessage", "attemptsExhausted", "repaired", "repairUsed"]) delete state[key];
     state.attempts = {};
   }
   state.pipelineVersion = GRADING_V2_VERSION;
@@ -569,13 +582,13 @@ async function primaryReport(kind: GradingKind, label: string, question: string,
   const model = modelName(kind, options);
   const raw = await modelCall(kind, kind === "writing" ? WRITING_RUBRIC : SPEAKING_RUBRIC, examinerUser(kind, label, question, evidence), model, audioBase64, options, state, "examiner");
   try {
-    return normalizeReport(parseJson(raw), kind);
+    return normalizeReport(parseJson(raw), kind, kind === "writing" ? evidence : "");
   } catch (error) {
     if (!(error instanceof GradingError) || error.code !== "MODEL_OUTPUT_INVALID" || state.repairUsed) throw error;
     state.repairUsed = true;
     const repaired = await modelCall(kind, REPAIR_RUBRIC, repairUser(kind, evidence, raw), model, audioBase64, options, state, "repair");
     try {
-      return normalizeReport(parseJson(repaired), kind);
+      return normalizeReport(parseJson(repaired), kind, kind === "writing" ? evidence : "");
     } catch (repairError) {
       throw new GradingError("MODEL_OUTPUT_INVALID", "Examiner output and repair output were invalid.", { attemptsExhausted: true, cause: repairError });
     }
@@ -594,7 +607,7 @@ async function reviewerReport(kind: GradingKind, label: string, question: string
   if (decision === "keep" || decision === "accept") return { decision: "keep", reason: stringValue(value.reason ?? value.explanation) ?? undefined };
   if (decision === "unassessable" || decision === "cannot_assess" || decision === "reject") return { decision: "unassessable", reason: stringValue(value.reason ?? value.explanation) ?? "Reviewer could not confirm reliable evidence." };
   try {
-    const report = normalizeReport(value, kind);
+    const report = normalizeReport(value, kind, kind === "writing" ? evidence : "");
     if (!report.assessable) return { decision: "unassessable", reason: report.limitation ?? "Reviewer could not confirm reliable evidence." };
     return { decision: "revise", reason: stringValue(value.reason ?? value.explanation) ?? undefined, report };
   } catch (error) {
@@ -640,7 +653,7 @@ export async function gradeWritingV2(taskType: WritingTaskType, question: string
   }
 
   let review: StoredReview | null = null;
-  if (needsReview(primary, "writing", opts.reviewThreshold) && !state.repairUsed) {
+  if (needsReview(primary, "writing", opts.reviewThreshold)) {
     const stored = record(state.reviewer);
     if (stored.decision === "keep" || stored.decision === "unassessable") review = { decision: stored.decision, reason: stringValue(stored.reason) ?? undefined };
     else if (stored.decision === "revise") review = { decision: "revise", reason: stringValue(stored.reason) ?? undefined, report: reportFromState(stored.report, "writing") ?? undefined };
@@ -717,7 +730,7 @@ export async function gradeSpeakingV2(part: string, question: string, audioData:
   }
 
   let review: StoredReview | null = null;
-  if (needsReview(primary, "speaking", opts.reviewThreshold) && !state.repairUsed) {
+  if (needsReview(primary, "speaking", opts.reviewThreshold)) {
     const stored = record(state.reviewer);
     if (stored.decision === "keep" || stored.decision === "unassessable") review = { decision: stored.decision, reason: stringValue(stored.reason) ?? undefined };
     else if (stored.decision === "revise") review = { decision: "revise", reason: stringValue(stored.reason) ?? undefined, report: reportFromState(stored.report, "speaking") ?? undefined };

@@ -145,6 +145,7 @@ const INTERNAL_GRADING_KEYS = new Set([
   "trace",
   "debug",
   "audiodata",
+  "audiobase64",
 ]);
 
 const TRANSIENT_ERROR_CODES = new Set([
@@ -661,6 +662,7 @@ function internalKey(key: string) {
     || normalized.includes("adjudicat")
     || normalized.includes("examiner")
     || normalized.includes("rawresponse")
+    || (normalized.includes("audio") && normalized.includes("base64"))
     || normalized.startsWith("internal")
     || normalized.startsWith("debug");
 }

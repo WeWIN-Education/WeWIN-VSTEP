@@ -79,8 +79,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ atte
   if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404 });
   try {
     return NextResponse.json(await statusFor(attempt), { headers: headers() });
-  } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Không thể đọc tiến độ chấm." }, { status: 503, headers: headers() });
+  } catch {
+    return NextResponse.json({ error: "Không thể đọc tiến độ chấm lúc này." }, { status: 503, headers: headers() });
   }
 }
 
@@ -107,7 +107,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ att
         ? 200
         : 202;
     return NextResponse.json(status, { status: responseStatus, headers: headers() });
-  } catch (error) {
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Không thể đưa bài vào hàng đợi chấm." }, { status: 503, headers: headers() });
+  } catch {
+    return NextResponse.json({ error: "Không thể đưa bài vào hàng đợi chấm lúc này." }, { status: 503, headers: headers() });
   }
 }
