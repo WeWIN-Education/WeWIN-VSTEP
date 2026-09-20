@@ -130,6 +130,24 @@ select {
   background: color-mix(in srgb, var(--brand) 25%, white);
 }
 
+/* Native selects retain keyboard/mobile behavior while sharing the WEWIN visual language. */
+select:not([multiple]):not([size]) {
+  appearance: none;
+  min-height: 44px;
+  padding-right: 2.75rem;
+  border-radius: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23004AAD' stroke-width='1.8'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 4%);
+  cursor: pointer;
+}
+select:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 30%, transparent); }
+.admin-input { display: block; width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; background-color: var(--surface); font-size: 14px; font-weight: 500; }
+.admin-input:focus { border-color: var(--brand); }
+.admin-action { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.admin-action:disabled { cursor: wait; opacity: .55; }
+
 @keyframes mascot-welcome {
   from { opacity: 0; transform: translateY(6px) rotate(-3deg); }
   to { opacity: 1; transform: translateY(0) rotate(0); }

@@ -1,4 +1,5 @@
 import { ExamImportForm } from "@/components/exam-import/ExamImportForm";
+import { RecordActions } from "@/components/manage/RecordActions";
 import { ExamVisibilityButton } from "@/components/exam-import/ExamVisibilityButton";
 import { PageHero } from "@/components/ui/PageHero";
 import { prisma } from "@/lib/prisma";
@@ -70,10 +71,11 @@ export default async function ExamImportPage() {
           <div className="mt-5 overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <caption className="sr-only">Mười đề VSTEP gần đây, gồm nguồn tạo, trạng thái và đường dẫn mở đề</caption>
-              <thead><tr className="border-b border-border text-[11px] font-extrabold uppercase tracking-[0.08em] text-ink-muted"><th scope="col" className="px-3 py-3">Đề</th><th scope="col" className="px-3 py-3">Nguồn</th><th scope="col" className="px-3 py-3">Slug</th><th scope="col" className="px-3 py-3">Mục tiêu</th><th scope="col" className="px-3 py-3">Số câu</th><th scope="col" className="px-3 py-3">Trạng thái</th><th scope="col" className="px-3 py-3">Ngày tạo</th><th scope="col" className="px-3 py-3"><span className="sr-only">Mở đề</span></th></tr></thead>
+              <thead><tr className="border-b border-border text-[11px] font-extrabold uppercase tracking-[0.08em] text-ink-muted"><th scope="col" className="px-3 py-3">Chỉnh sửa</th><th scope="col" className="px-3 py-3">Đề</th><th scope="col" className="px-3 py-3">Nguồn</th><th scope="col" className="px-3 py-3">Slug</th><th scope="col" className="px-3 py-3">Mục tiêu</th><th scope="col" className="px-3 py-3">Số câu</th><th scope="col" className="px-3 py-3">Trạng thái</th><th scope="col" className="px-3 py-3">Ngày tạo</th><th scope="col" className="px-3 py-3"><span className="sr-only">Mở đề</span></th></tr></thead>
               <tbody>
                 {recentRows.map((paper) => (
                   <tr key={paper.id} className="border-b border-border/70 last:border-0">
+                    <td className="px-3 py-3"><RecordActions endpoint={`/api/manage/exams/${paper.id}`} title={paper.title} fields={[{ key: "title", label: "Tên đề", value: paper.title, maxLength: 160 }, { key: "subtitle", label: "Mô tả", value: paper.subtitle ?? "" }]} deleteDescription="Xóa bản ghi đề và các phần đề. Chỉ được xóa khi chưa có học viên làm bài; đề đã có lượt làm hãy dùng chức năng Ẩn. Audio nguồn được giữ lại để bảo vệ file dùng chung." /></td>
                     <td className="max-w-[250px] px-3 py-3"><p className="truncate font-extrabold text-ink">{paper.title}</p>{paper.subtitle ? <p className="mt-0.5 truncate text-xs text-ink-muted">{paper.subtitle}</p> : null}</td>
                     <td className="px-3 py-3"><span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-extrabold ${paper.imported ? "bg-blue-50 text-brand" : "bg-surface text-ink-muted"}`} title={paper.sourceName || undefined}>{paper.imported ? "Nhập DOCX" : "Hệ thống"}</span></td>
                     <td className="px-3 py-3 font-mono text-xs text-ink-muted">{paper.slug}</td>

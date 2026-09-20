@@ -6,6 +6,19 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
+export async function PATCH(request: Request, { params }: { params: Promise<{ collectionId: string }> }) {
+  if (!isSameOrigin(request)) return NextResponse.json({ error: "Yêu cầu không hợp lệ." }, { status: 403 });
+  const actor = await getCurrentUser();
+  if (actor?.role !== "ADMIN") return NextResponse.json({ error: "Chỉ quản trị viên được sửa bộ từ." }, { status: 403 });
+  const body = await request.json().catch(() => null);
+  if (!body || typeof body.name !== "string" || !body.name.trim() || body.name.length > 160 || typeof body.description !== "string" || body.description.length > 1000) return NextResponse.json({ error: "Tên hoặc mô tả không hợp lệ." }, { status: 400 });
+  const { collectionId } = await params;
+  const result = await prisma.vocabularyCollection.updateMany({ where: { id: collectionId }, data: { name: body.name.trim(), description: body.description.trim() || null } });
+  if (!result.count) return NextResponse.json({ error: "Không tìm thấy bộ từ." }, { status: 404 });
+  revalidatePath("/manage/vocabulary/import"); revalidatePath("/manage/collocations/import"); revalidatePath("/vocabulary/topics"); revalidatePath("/vocabulary/collocations");
+  return NextResponse.json({ ok: true });
+}
+
 export async function DELETE(request: Request, { params }: { params: Promise<{ collectionId: string }> }) {
   if (!isSameOrigin(request)) return NextResponse.json({ error: "Yêu cầu không hợp lệ." }, { status: 403 });
 
@@ -25,7 +38,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ c
     },
   });
 
-  if (!collection || collection.kind !== "VOCABULARY") {
+  if (!collection) {
     return NextResponse.json({ error: "Không tìm thấy bộ từ vựng cần gỡ." }, { status: 404 });
   }
 
@@ -37,6 +50,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ c
     });
 
     revalidatePath("/manage/vocabulary/import");
+    revalidatePath("/manage/collocations/import");
+    revalidatePath("/vocabulary/collocations");
     revalidatePath("/vocabulary/topics");
     revalidatePath(`/vocabulary/topics/${collection.code}`);
 

@@ -3,6 +3,7 @@
 import { upload as uploadBlob } from "@vercel/blob/client";
 import { AlertCircle, CheckCircle2, Download, FileText, Loader2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
+import { RecordActions } from "@/components/manage/RecordActions";
 import { fileExtension, formatFileSize, MATERIAL_FILE_TYPES, materialLevelLabel, materialSkillLabel, type MaterialLevel, type MaterialSkill } from "@/lib/learning-materials";
 
 export type LearningMaterialSummary = {
@@ -24,6 +25,9 @@ const acceptedFiles = Object.keys(MATERIAL_FILE_TYPES).join(",");
 export function LearningMaterialUploadForm({ initialMaterials }: { initialMaterials: LearningMaterialSummary[] }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [materials, setMaterials] = useState(initialMaterials);
+  const [query, setQuery] = useState("");
+  const [filterSkill, setFilterSkill] = useState("ALL");
+  const visibleMaterials = materials.filter(item => (filterSkill === "ALL" || item.skill === filterSkill) && `${item.title} ${item.fileName}`.toLocaleLowerCase("vi").includes(query.toLocaleLowerCase("vi")));
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -113,6 +117,7 @@ export function LearningMaterialUploadForm({ initialMaterials }: { initialMateri
     <section className="space-y-6" aria-busy={pending}>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <div className="rounded-[24px] border border-border bg-white p-5 shadow-sm sm:p-6">
+
           <div className="flex items-start gap-3">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand"><Upload className="size-5" /></span>
             <div><h2 className="font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">Tải tài liệu mới</h2><p className="mt-1 text-sm leading-relaxed text-ink-muted">Hỗ trợ PDF, Word, PowerPoint, Excel, ảnh, audio và video. Mỗi file tối đa 50 MB.</p></div>
@@ -141,7 +146,13 @@ export function LearningMaterialUploadForm({ initialMaterials }: { initialMateri
 
         <div className="rounded-[24px] border border-border bg-white p-5 shadow-sm sm:p-6">
           <div className="flex items-end justify-between gap-3"><div><p className="text-xs font-extrabold uppercase tracking-wide text-brand">KHO ĐÃ TẢI</p><h2 className="mt-1 font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">Tài liệu gần đây</h2></div><span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-bold text-brand">{materials.length} file</span></div>
-          {materials.length ? <div className="mt-4 space-y-3">{materials.map((material) => <article key={material.id} className="flex items-start gap-3 rounded-2xl border border-border/80 p-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface text-brand"><FileText className="size-5" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-sm font-extrabold text-ink">{material.title}</h3><span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${material.published ? "bg-emerald-50 text-emerald-700" : "bg-surface text-ink-muted"}`}>{material.published ? "Đã mở" : "Đang ẩn"}</span></div><p className="mt-1 truncate text-xs text-ink-muted">{material.fileName}</p><p className="mt-1 text-[11px] text-ink-faint">{materialSkillLabel(material.skill)} · {materialLevelLabel(material.level)} · {formatFileSize(material.sizeBytes)}</p></div><a href={`/api/materials/${material.id}`} className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-xl border border-border text-brand transition hover:border-brand hover:bg-brand-soft" aria-label={`Tải ${material.title}`}><Download className="size-4" /></a></article>)}</div> : <div className="mt-4 rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm text-ink-muted">Chưa có tài liệu nào. Hãy tải file đầu tiên ở khung bên trái.</div>}
+          <div className="mt-5 grid gap-3 rounded-2xl bg-surface p-4 sm:grid-cols-[1fr_160px]"><label className="text-xs font-bold text-ink-muted">Tìm tài liệu<input type="search" className="admin-input mt-2 bg-white" placeholder="Tên tài liệu hoặc tên file…" value={query} onChange={event => setQuery(event.target.value)} /></label><label className="text-xs font-bold text-ink-muted">Kỹ năng<select className="admin-input mt-2 bg-white" value={filterSkill} onChange={event => setFilterSkill(event.target.value)}><option value="ALL">Tất cả kỹ năng</option>{["GENERAL", "LISTENING", "READING", "WRITING", "SPEAKING"].map(value => <option key={value} value={value}>{materialSkillLabel(value)}</option>)}</select></label></div><p role="status" className="mt-3 text-xs text-ink-muted">Hiển thị {visibleMaterials.length}/{materials.length} tài liệu đã tải</p>{visibleMaterials.length ? <div className="mt-4 space-y-3">{visibleMaterials.map((material) => <article key={material.id} className="flex flex-wrap items-start gap-3 rounded-2xl border border-border/80 p-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface text-brand"><FileText className="size-5" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-sm font-extrabold text-ink">{material.title}</h3><span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${material.published ? "bg-emerald-50 text-emerald-700" : "bg-surface text-ink-muted"}`}>{material.published ? "Đã mở" : "Đang ẩn"}</span></div><p className="mt-1 truncate text-xs text-ink-muted">{material.fileName}</p><p className="mt-1 text-[11px] text-ink-faint">{materialSkillLabel(material.skill)} · {materialLevelLabel(material.level)} · {formatFileSize(material.sizeBytes)}</p></div><a href={`/api/materials/${material.id}`} className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-xl border border-border text-brand transition hover:border-brand hover:bg-brand-soft" aria-label={`Tải ${material.title}`}><Download className="size-4" /></a><div className="w-full border-t border-border pt-3"><RecordActions endpoint={`/api/manage/materials/${material.id}`} title={material.title} deleteDescription="Xóa tài liệu khỏi database và dọn file lưu trữ. Học viên sẽ không tải được tài liệu này nữa." fields={[
+            { key: "title", label: "Tên tài liệu", value: material.title, maxLength: 160 },
+            { key: "description", label: "Mô tả", value: material.description ?? "" },
+            { key: "skill", label: "Kỹ năng", value: material.skill, options: ["GENERAL", "LISTENING", "READING", "WRITING", "SPEAKING"].map(value => ({ value, label: materialSkillLabel(value) })) },
+            { key: "level", label: "Trình độ", value: material.level ?? "ALL", options: ["ALL", "B1", "B2", "C1"].map(value => ({ value, label: value === "ALL" ? "Mọi trình độ" : value })) },
+            { key: "published", label: "Hiển thị", value: String(material.published), options: [{ value: "true", label: "Công khai" }, { value: "false", label: "Ẩn" }] },
+          ]} onSaved={values => setMaterials(current => current.map(row => row.id === material.id ? { ...row, ...values, level: values.level === "ALL" ? null : values.level, published: values.published === "true" } : row))} onDeleted={() => setMaterials(current => current.filter(row => row.id !== material.id))} /></div></article>)}</div> : <div className="mt-4 rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm text-ink-muted">Không có tài liệu phù hợp. Hãy đổi bộ lọc hoặc tải tài liệu mới.</div>}
         </div>
       </div>
     </section>

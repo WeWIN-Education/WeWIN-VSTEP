@@ -2,8 +2,42 @@ import { getCurrentUser } from "@/lib/access";
 import { isSameOrigin } from "@/lib/request-security";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { deleteObject } from "@/lib/storage";
 
 export const runtime = "nodejs";
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ userId: string }> }) {
+  if (!isSameOrigin(request)) return jsonError("Yêu cầu không hợp lệ.", 403);
+  const actor = await getCurrentUser();
+  if (!actor) return jsonError("Bạn cần đăng nhập.", 401);
+  if (actor.role !== "ADMIN") return jsonError("Chỉ quản trị viên được xóa học viên.", 403);
+  const { userId } = await params;
+  if (actor.id === userId) return jsonError("Không thể tự xóa tài khoản quản trị.", 409);
+  const body = await request.json().catch(() => null);
+  try {
+    const outcome = await prisma.$transaction(async tx => {
+      const target = await tx.user.findUnique({ where: { id: userId }, select: { role: true, email: true } });
+      if (!target || target.role !== "LEARNER") return { error: "Không tìm thấy tài khoản học viên.", status: 404 };
+      if (body?.confirmation !== target.email) return { error: "Email xác nhận chưa đúng.", status: 400 };
+      const recordings = await tx.examRecording.findMany({ where: { attempt: { userId } }, select: { storageKey: true } });
+      const posts = await tx.userPost.findMany({ where: { authorId: userId }, select: { imageUrl: true } });
+      const materials = await tx.learningMaterial.findMany({ where: { uploadedById: userId }, select: { storageName: true } });
+      // Blog authors use SetNull; explicitly remove their posts before cascading the account.
+      await tx.blogPost.deleteMany({ where: { authorId: userId } });
+      const deleted = await tx.user.deleteMany({ where: { id: userId, role: "LEARNER" } });
+      if (!deleted.count) throw new Error("Account changed during deletion");
+      return { keys: [...recordings.map(row => row.storageKey), ...posts.flatMap(row => row.imageUrl && /^[a-f0-9-]{36}\.(jpg|jpeg|png|webp)$/i.test(row.imageUrl) ? [`posts/${row.imageUrl}`] : []), ...materials.map(row => row.storageName.includes("/") ? row.storageName : `materials/${row.storageName}`)] };
+    });
+    if ("error" in outcome) return jsonError(outcome.error!, outcome.status!);
+    let failed = 0;
+    for (const key of new Set(outcome.keys)) {
+      try { await deleteObject(key); } catch { failed += 1; }
+    }
+    revalidatePath("/manage/users"); revalidatePath("/community"); revalidatePath("/blog");
+    return NextResponse.json({ ok: true, warning: failed ? `Đã xóa tài khoản và dữ liệu database; ${failed} file chưa dọn được khỏi storage.` : undefined });
+  } catch { return jsonError("Không thể xóa tài khoản lúc này.", 500); }
+}
 
 const USER_SELECT = {
   id: true,

@@ -3,6 +3,7 @@
 import { LoaderCircle, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { RecordActions } from "@/components/manage/RecordActions";
 
 type CollectionSummary = {
   id: string;
@@ -60,6 +61,7 @@ export function VocabularyCollectionManager({ initialCollections }: { initialCol
 
       {error ? <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
+
       {collections.length ? (
         <div className="mt-5 grid gap-3">
           {collections.map((collection) => (
@@ -77,6 +79,7 @@ export function VocabularyCollectionManager({ initialCollections }: { initialCol
                   <span>{collection.importCount} lượt nhập</span>
                 </div>
               </div>
+              <RecordActions endpoint={`/api/manage/vocabulary/collections/${collection.id}`} title={collection.name} allowDelete={false} deleteDescription="" fields={[{ key: "name", label: "Tên bộ", value: collection.name, maxLength: 160 }, { key: "description", label: "Mô tả", value: collection.description ?? "" }]} onSaved={values => setCollections(current => current.map(row => row.id === collection.id ? { ...row, name: values.name, description: values.description } : row))} />
               <button
                 type="button"
                 onClick={() => void removeCollection(collection)}
