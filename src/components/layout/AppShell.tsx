@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { getCurrentUser } from "@/lib/access";
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/layout/NavigationLink";
 import { BookOpen, House, LayoutGrid, LogIn, Newspaper, Settings, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 

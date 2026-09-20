@@ -3,7 +3,8 @@ import { VstepStatsBar } from "@/components/gamification/VstepStatsBar";
 import { logoutAction } from "@/lib/auth-actions";
 import { getGamificationSummary } from "@/lib/gamification";
 import Image from "next/image";
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/layout/NavigationLink";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 type HeaderUser = {
   id: string;
@@ -42,7 +43,7 @@ export async function Header({ user }: { user: HeaderUser | null }) {
               {user.role === "ADMIN" ? <Link href="/manage/users" className="hidden h-8 items-center rounded-[10px] border border-brand/30 px-3 text-xs font-semibold text-brand transition-colors hover:border-brand sm:inline-flex">Quản trị</Link> : null}
               <Link href="/dashboard" className="hidden max-w-[140px] truncate text-[13px] font-semibold text-ink sm:inline" title={user.email}>{user.name || user.email}</Link>
               <form action={logoutAction}>
-                <button type="submit" className="inline-flex h-8 min-w-[88px] items-center justify-center rounded-[10px] border border-brand/40 bg-white px-3 font-[family-name:var(--font-jakarta)] text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand">ĐĂNG XUẤT</button>
+                <LogoutButton />
               </form>
             </div>
           ) : <Link href="/login" className="inline-flex h-9 min-w-[96px] items-center justify-center rounded-[var(--radius-btn)] border border-brand/40 bg-white px-3 font-[family-name:var(--font-jakarta)] text-xs font-semibold text-ink transition-colors hover:border-brand hover:text-brand">ĐĂNG NHẬP</Link>}

@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -17,13 +18,13 @@ async function findLiveUser(id: string) {
 }
 
 /** Distinguishes a real guest from a stale/locked authenticated session. */
-export async function getAuthState(): Promise<AuthState> {
+export const getAuthState = cache(async (): Promise<AuthState> => {
   const session = await auth();
   if (!session?.user?.id) return { kind: "anonymous" };
   const user = await findLiveUser(session.user.id);
   if (!user?.isActive || user.sessionVersion !== session.user.sessionVersion) return { kind: "invalid" };
   return { kind: "authenticated", user };
-}
+});
 
 /** A signed session is not sufficient: locks and password resets apply immediately. */
 export async function getCurrentUser() {

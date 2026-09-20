@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 
 import { prisma } from "@/lib/prisma";
 import { Prisma, type ExamCatalog, type ExamSkill, type VstepLevel } from "@prisma/client";
@@ -84,14 +85,14 @@ async function recordDailyVisit(userId: string) {
         });
         if (!user) return null;
 
-        await transaction.dailyActivity.upsert({
-          where: { userId_activityDate: { userId, activityDate: dateFromKey(today) } },
-          create: { userId, activityDate: dateFromKey(today) },
-          update: {},
-        });
-
         const lastDate = user.lastActiveDate ? dateKey(user.lastActiveDate) : null;
         if (lastDate === today) return user.streakDays;
+
+        // INSERT ON CONFLICT DO NOTHING avoids Prisma's concurrent upsert race.
+        await transaction.dailyActivity.createMany({
+          data: [{ userId, activityDate: dateFromKey(today) }],
+          skipDuplicates: true,
+        });
 
         const streakDays = lastDate === yesterday ? Math.max(1, user.streakDays) + 1 : 1;
         await transaction.user.update({
@@ -101,7 +102,10 @@ async function recordDailyVisit(userId: string) {
         return streakDays;
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
     } catch (error) {
-      if (isPrismaError(error, "P2034") && retry < 2) continue;
+      if ((isPrismaError(error, "P2034") || isPrismaError(error, "P2002")) && retry < 2) {
+        await new Promise(resolve => setTimeout(resolve, 25 * 2 ** retry));
+        continue;
+      }
       throw error;
     }
   }
@@ -137,8 +141,16 @@ async function completedSkills(userId: string, target: VstepLevel) {
   return completed;
 }
 
-export async function getGamificationSummary(userId: string): Promise<GamificationSummary> {
-  await recordDailyVisit(userId);
+// React cache deduplicates Header/page reads within one server render, keyed by user.
+export const getGamificationSummary = cache(async (userId: string): Promise<GamificationSummary> => {
+  try {
+    await recordDailyVisit(userId);
+  } catch (error) {
+    // Streak writes are non-critical; render the last committed statistics instead.
+    console.warn("Daily visit update deferred", {
+      code: error instanceof Prisma.PrismaClientKnownRequestError ? error.code : "UNKNOWN",
+    });
+  }
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { vstepTarget: true, xp: true, heartsReceived: true, streakDays: true },
@@ -156,7 +168,7 @@ export async function getGamificationSummary(userId: string): Promise<Gamificati
     progressPercent: completedCount * 25,
     completedSkills: completed,
   };
-}
+});
 
 function rankEntries(users: Array<{ id: string; name: string | null; xp: number }>, currentUserId?: string): LeaderboardEntry[] {
   let rank = 0;

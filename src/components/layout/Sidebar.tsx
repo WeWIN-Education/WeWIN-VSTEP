@@ -3,7 +3,7 @@
 import { NAV_GROUPS, type NavRole } from "@/config/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/layout/NavigationLink";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 
