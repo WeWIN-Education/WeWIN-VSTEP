@@ -143,6 +143,31 @@ describe("grading engine v2", () => {
     expect(result.assessable).toBe(false);
   });
 
+  it("uses an API-compatible reviewer function schema and accepts keep without scores", async () => {
+    const mock = mockFetch([
+      { text: "I enjoy jogging." },
+      { choices: [{ message: { content: JSON.stringify(speakingReport(0.5)) } }] },
+      { choices: [{ message: { tool_calls: [{ function: { name: "emit_grading_report", arguments: JSON.stringify({ decision: "keep", reason: "Audio supports the report." }) } }] } }] },
+    ]);
+    const result = await gradeSpeakingV2("part1", "Do you jog?", "test-audio", {}, async () => undefined, { apiKey: "test", fetch: mock.fetcher, audioValidator: async () => audio });
+    const schema = JSON.parse(mock.calls[2].body!).tools[0].function.parameters;
+    expect(schema.type).toBe("object");
+    for (const keyword of ["oneOf", "anyOf", "allOf", "enum", "const", "not"]) expect(schema).not.toHaveProperty(keyword);
+    expect(schema.required).toEqual(["decision", "reason"]);
+    expect(result.reviewed).toBe(true);
+    expect(result.task_score).toBe(7);
+  });
+
+  it("rejects a revised report missing criterion evidence rather than publishing a score", async () => {
+    const mock = mockFetch([
+      { choices: [{ message: { content: JSON.stringify(writingReport(0.5)) } }] },
+      { choices: [{ message: { content: JSON.stringify({ decision: "revise", reason: "Changed", confidence: 0.9, scores: { grammar: 8 } }) } }] },
+    ]);
+    const result = await gradeWritingV2("task1", "Question", "The answer is clear.", {}, async () => undefined, { apiKey: "test", fetch: mock.fetcher });
+    expect(result.task_score).toBeNull();
+    expect(result.status).toBe("PARTIAL");
+  });
+
   it("stops internal transient retries at three attempts and marks exhaustion", async () => {
     let calls = 0;
     const state: PipelineState = {};

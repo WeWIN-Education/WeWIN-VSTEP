@@ -146,13 +146,10 @@ function reportSchema(kind: GradingKind, reviewer: boolean) {
     required.push("audio");
   }
   if (reviewer) {
-    properties.decision = { type: "string", enum: ["keep", "revise", "unassessable"] };
+    properties.decision = { type: "string", enum: ["keep", "revise", "unassessable"], description: "For revise, also return the complete scores, confidence, direct_feedback_vi and (for Speaking) audio report. Keep/unassessable require only decision and reason." };
     properties.reason = { type: "string" };
-    // Keep/unassessable need no repeated report; revise must supply a complete one.
-    return { type: "object", properties, additionalProperties: false, required: ["decision", "reason"], anyOf: [
-      { properties: { decision: { enum: ["keep", "unassessable"] } } },
-      { properties: { decision: { enum: ["revise"] } }, required },
-    ] };
+    // Function tools reject root-level anyOf. normalizeReport validates revised reports.
+    return { type: "object", properties, additionalProperties: false, required: ["decision", "reason"] };
   }
   return { type: "object", properties, additionalProperties: false, required };
 }
