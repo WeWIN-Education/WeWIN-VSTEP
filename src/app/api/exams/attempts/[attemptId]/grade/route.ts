@@ -78,7 +78,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ atte
   const attempt = await loadOwnedAttempt(attemptId, owner);
   if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404 });
   try {
-    return NextResponse.json(await statusFor(attempt), { headers: headers() });
+    const snapshot = await statusFor(attempt);
+    // The worker can finish between reading the attempt and reading its job.
+    // Refresh the report before telling the browser to stop polling.
+    if (["GRADED", "PARTIAL", "FAILED"].includes(snapshot.status)) {
+      const latest = await loadOwnedAttempt(attemptId, owner);
+      if (latest) return NextResponse.json(await statusFor(latest), { headers: headers() });
+    }
+    return NextResponse.json(snapshot, { headers: headers() });
   } catch {
     return NextResponse.json({ error: "Không thể đọc tiến độ chấm lúc này." }, { status: 503, headers: headers() });
   }

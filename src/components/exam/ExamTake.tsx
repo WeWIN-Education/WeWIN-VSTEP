@@ -964,6 +964,7 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
     gradingRequestRef.current?.abort();
     const controller = new AbortController();
     gradingRequestRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 20_000);
     try {
       const response = await fetch(`/api/exams/attempts/${encodeURIComponent(attemptId)}/grade`, {
         method,
@@ -979,6 +980,7 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
       if (!applyGradingSnapshot(snapshot, run)) return null;
       return snapshot;
     } finally {
+      window.clearTimeout(timeout);
       if (gradingRequestRef.current === controller) gradingRequestRef.current = null;
     }
   }, [applyGradingSnapshot, attemptId]);
@@ -1011,18 +1013,17 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
         if (!snapshot || !mountedRef.current || gradingRunRef.current !== run) return;
         if (normalizeGradingStatus(snapshot.status) === "NOT_STARTED") await requestGrading();
         else setGradingBusy(false);
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+      } catch {
         if (mountedRef.current && gradingRunRef.current === run) {
           setGradingBusy(false);
-          setGradingError("Chưa tải được trạng thái chấm. Hãy tải lại trang để kiểm tra lại.");
+          setGradingError("Chưa tải được trạng thái chấm. Hệ thống sẽ tự thử lại.");
         }
       }
     })();
   }, [attemptId, fetchGradingSnapshot, requestGrading]);
 
   useEffect(() => {
-    if (!attemptId || !gradingSnapshot.status || gradingBusy || isTerminalGradingStatus(gradingSnapshot.status)) return;
+    if (!attemptId || gradingBusy || isTerminalGradingStatus(gradingSnapshot.status)) return;
     let cancelled = false;
     let timer: number | null = null;
     let inFlight = false;
@@ -1039,10 +1040,10 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
       inFlight = true;
       const run = gradingRunRef.current;
       try {
-        await fetchGradingSnapshot("GET", run);
+        const snapshot = await fetchGradingSnapshot("GET", run);
+        if (snapshot?.status === "NOT_STARTED") await requestGrading();
         if (mountedRef.current && gradingRunRef.current === run) setGradingError("");
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+      } catch {
         if (!cancelled && mountedRef.current && gradingRunRef.current === run) setGradingError("Chưa cập nhật được trạng thái chấm. Hệ thống sẽ tự thử lại.");
       } finally {
         inFlight = false;
@@ -1063,19 +1064,20 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
       if (timer !== null) window.clearTimeout(timer);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
-  }, [attemptId, gradingBusy, gradingSnapshot.status, fetchGradingSnapshot]);
+  }, [attemptId, gradingBusy, gradingSnapshot.status, fetchGradingSnapshot, requestGrading]);
 
   useEffect(() => {
     const controller = new AbortController();
     if (!attemptId) return () => controller.abort();
-    void fetch(`/api/exams/attempts/${encodeURIComponent(attemptId)}/review`, { signal: controller.signal })
+    void fetch(`/api/exams/attempts/${encodeURIComponent(attemptId)}/review`, { signal: controller.signal, cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error("Chưa tải được đáp án. Hãy tải lại trang.");
         return response.json();
       })
       .then((data) => {
-        if (!mountedRef.current) return;
-        setResult((current) => ({ ...current, ...toPublicGrading(data.grading), review: data.review }));
+        if (!mountedRef.current || controller.signal.aborted) return;
+        // A slow initial review must not replace newer polled grading results.
+        setResult((current) => ({ ...current, ...(gradingSnapshotRef.current.status ? {} : toPublicGrading(data.grading)), review: data.review }));
       })
       .catch((error) => {
         if (error instanceof DOMException && error.name === "AbortError") return;
@@ -1214,7 +1216,7 @@ function GradingProgressPanel({ snapshot, busy, error, onRetry }: { snapshot: Gr
 
 function ScoreCard({ label, score }: { label: string; score?: ScoreSummary }) {
   const hasScore = typeof score?.score === "number";
-  const counts = typeof score?.correct === "number" && typeof score?.total === "number" ? `${score.correct}/${score.total} câu đúng` : "Máy chủ chưa trả dữ liệu";
+  const counts = typeof score?.correct === "number" && typeof score?.total === "number" ? `${score.correct}/${score.total} câu đúng` : hasScore ? "Thang điểm 10" : "Chưa có kết quả chấm";
   return <div className="rounded-2xl border border-border bg-surface p-4 text-center"><p className="text-sm font-bold text-ink">{label}</p><p className="mt-3 text-2xl font-extrabold text-brand">{hasScore ? score?.score : "—"}</p><p className="mt-1 text-[11px] text-ink-muted">{counts}</p></div>;
 }
 

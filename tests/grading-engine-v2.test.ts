@@ -70,6 +70,8 @@ describe("grading engine v2", () => {
     const request = JSON.parse(mock.calls[0].body!);
     expect(request.messages[0].content).toContain('"required":["score","evidence","why_not_higher"]');
     expect(request.messages[0].content).toContain('"organization"');
+    expect(request.messages[0].content).toContain("Write ALL learner-facing explanations in Vietnamese");
+    expect(request.messages[0].content).toContain("Preserve original English ONLY inside quotations");
   });
 
   it("calls at most one reviewer when confidence is below .75", async () => {
@@ -107,6 +109,8 @@ describe("grading engine v2", () => {
     expect(schema.required).toContain("audio");
     expect(schema.properties.scores.required).toEqual(["task_fulfillment", "fluency_coherence", "vocabulary", "grammar", "pronunciation"]);
     expect(schema.properties.scores.properties.pronunciation.required).toEqual(["score", "evidence", "why_not_higher"]);
+    expect(schema.properties.scores.properties.pronunciation.properties.evidence.description).toContain("Vietnamese");
+    expect(schema.properties.scores.properties.pronunciation.properties.why_not_higher.description).toContain("Vietnamese");
   });
 
   it("repairs scalar Speaking scores with the same explicit contract and original audio", async () => {

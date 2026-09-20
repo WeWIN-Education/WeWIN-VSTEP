@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
 
 export const GRADING_V2_VERSION = "v2" as const;
-export const GRADING_V2_PROMPT_VERSION = "compact-rubric-2026-09-20-contract";
+export const GRADING_V2_PROMPT_VERSION = "compact-rubric-2026-09-20-vi";
 export const DEFAULT_REVIEW_THRESHOLD = 0.75;
 export const DEFAULT_MAX_ATTEMPTS = 3;
 export const DEFAULT_MAX_AUDIO_SECONDS = 360;
@@ -132,8 +132,8 @@ function reportSchema(kind: GradingKind, reviewer: boolean) {
         required: ["score", "evidence", "why_not_higher"],
         properties: {
           score: { type: ["number", "null"], minimum: 0, maximum: 10 },
-          evidence: { type: "string", description: "Concrete observed evidence, required for numeric scores. For Writing quote words from the submission." },
-          why_not_higher: { type: "string" },
+          evidence: { type: "string", description: "Explain concrete observed evidence in Vietnamese, required for numeric scores. Keep quoted candidate English unchanged, but never return only an English quote without Vietnamese explanation." },
+          why_not_higher: { type: "string", description: "Explain in Vietnamese why the next score is not reached." },
         },
       }])),
     },
@@ -147,7 +147,7 @@ function reportSchema(kind: GradingKind, reviewer: boolean) {
   }
   if (reviewer) {
     properties.decision = { type: "string", enum: ["keep", "revise", "unassessable"], description: "For revise, also return the complete scores, confidence, direct_feedback_vi and (for Speaking) audio report. Keep/unassessable require only decision and reason." };
-    properties.reason = { type: "string" };
+    properties.reason = { type: "string", description: "Explain the review decision in Vietnamese." };
     // Function tools reject root-level anyOf. normalizeReport validates revised reports.
     return { type: "object", properties, additionalProperties: false, required: ["decision", "reason"] };
   }
@@ -559,7 +559,7 @@ async function modelCall(kind: GradingKind, system: string, user: string, model:
     ? [{ type: "text", text: user }, { type: "input_audio", input_audio: { data: audioBase64, format: "wav" } }]
     : user;
   const schema = reportSchema(kind, stage === "reviewer");
-  const contract = "\nReturn exactly one JSON object matching this schema. Never use scalar scores: each criterion is an object with score, evidence, why_not_higher. Use null for unsupported scores, never invent evidence.\n" + JSON.stringify(schema);
+  const contract = "\nWrite ALL learner-facing explanations in Vietnamese: evidence, why_not_higher, feedback, and reviewer reason. Preserve original English ONLY inside quotations from the candidate or suggested corrections, with Vietnamese explanation around them. Keep JSON keys and enum values unchanged. Return exactly one JSON object matching this schema. Never use scalar scores: each criterion is an object with score, evidence, why_not_higher. Use null for unsupported scores, never invent evidence.\n" + JSON.stringify(schema);
   const body: Record<string, unknown> = { model, temperature: 0, store: false, messages: [{ role: "system", content: system + contract }, { role: "user", content }] };
   if (audioBase64) {
     body.modalities = ["text"];
