@@ -67,6 +67,9 @@ describe("grading engine v2", () => {
     expect(mock.calls).toHaveLength(1);
     expect(state.telemetry).toMatchObject({ examiner: { requestCount: 1, total_tokens: 42 } });
     expect(checkpoints).toContain("GRADED");
+    const request = JSON.parse(mock.calls[0].body!);
+    expect(request.messages[0].content).toContain('"required":["score","evidence","why_not_higher"]');
+    expect(request.messages[0].content).toContain('"organization"');
   });
 
   it("calls at most one reviewer when confidence is below .75", async () => {
@@ -100,6 +103,32 @@ describe("grading engine v2", () => {
     expect(mock.calls[1].body).toContain("input_audio");
     expect(result.transcript).toContain("first option");
     expect(result.task_score).toBe(7);
+    const schema = JSON.parse(mock.calls[1].body!).tools[0].function.parameters;
+    expect(schema.required).toContain("audio");
+    expect(schema.properties.scores.required).toEqual(["task_fulfillment", "fluency_coherence", "vocabulary", "grammar", "pronunciation"]);
+    expect(schema.properties.scores.properties.pronunciation.required).toEqual(["score", "evidence", "why_not_higher"]);
+  });
+
+  it("repairs scalar Speaking scores with the same explicit contract and original audio", async () => {
+    const mock = mockFetch([
+      { text: "I enjoy jogging." },
+      { choices: [{ message: { content: JSON.stringify({ scores: { pronunciation: 7 }, confidence: 0.9 }) } }] },
+      { choices: [{ message: { content: JSON.stringify(speakingReport()) } }] },
+    ]);
+    const result = await gradeSpeakingV2("part1", "Do you jog?", "test-audio", {}, async () => undefined, { apiKey: "test", fetch: mock.fetcher, audioValidator: async () => audio });
+    expect(result.task_score).toBe(7);
+    expect(mock.calls).toHaveLength(3);
+    const primary = JSON.parse(mock.calls[1].body!);
+    const repair = JSON.parse(mock.calls[2].body!);
+    expect(repair.tools).toEqual(primary.tools);
+    expect(repair.messages[1].content[1].input_audio.data).toBe(audio.wavBase64);
+  });
+
+  it("does not invent evidence when examiner and repair both return scalar scores", async () => {
+    const invalid = { choices: [{ message: { content: JSON.stringify({ scores: { grammar: 7 }, confidence: 0.9 }) } }] };
+    const mock = mockFetch([invalid, invalid]);
+    await expect(gradeWritingV2("task1", "Question", "Answer", {}, async () => undefined, { apiKey: "test", fetch: mock.fetcher })).rejects.toMatchObject({ code: "MODEL_OUTPUT_INVALID", attemptsExhausted: true });
+    expect(mock.calls).toHaveLength(2);
   });
 
   it("returns a null score for an unassessable final report", async () => {

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { spawn } from "node:child_process";
 
 export const GRADING_V2_VERSION = "v2" as const;
-export const GRADING_V2_PROMPT_VERSION = "compact-rubric-2026-09-19";
+export const GRADING_V2_PROMPT_VERSION = "compact-rubric-2026-09-20-contract";
 export const DEFAULT_REVIEW_THRESHOLD = 0.75;
 export const DEFAULT_MAX_ATTEMPTS = 3;
 export const DEFAULT_MAX_AUDIO_SECONDS = 360;
@@ -122,14 +122,40 @@ const WRITING_RUBRIC = COMMON_RUBRIC + " Assess task fulfillment, organization, 
 const SPEAKING_RUBRIC = COMMON_RUBRIC + " Assess task fulfillment, fluency/coherence, vocabulary, grammar, and pronunciation independently from 0 to 10. Listen to the complete original audio. Audio is primary for pronunciation, fluency, pauses, stress, rhythm, intonation, and listener effort; transcript supports content and language. Never infer pronunciation from spelling. Use null when audio or a criterion is not reliably assessable.";
 const REPAIR_RUBRIC = COMMON_RUBRIC + " Repair only the JSON contract of the previous report. Preserve evidence-based judgments and do not change a score without evidence. Return every required criterion, evidence for every numeric score, and confidence from 0 to 1.";
 const REVIEW_RUBRIC = COMMON_RUBRIC + " Review one examiner report. Do not average reports. Return decision keep, revise, or unassessable. Revise only when evidence, score, confidence, or assessability is not defensible. For Speaking, listen to the original audio, not only the transcript. If reliable assessment is impossible, use null and unassessable.";
-const GRADING_TOOL = {
-  type: "function",
-  function: {
-    name: "emit_grading_report",
-    description: "Return the grading report as JSON.",
-    parameters: { type: "object", properties: { decision: { type: "string" }, scores: { type: "object" }, confidence: { type: "number" }, audio: { type: "object" }, direct_feedback_vi: { type: "object" }, reason: { type: "string" } }, additionalProperties: true },
-  },
-} as const;
+function reportSchema(kind: GradingKind, reviewer: boolean) {
+  const criteria = kind === "writing" ? WRITING_CRITERIA : SPEAKING_CRITERIA;
+  const properties: Record<string, unknown> = {
+    scores: {
+      type: "object", additionalProperties: false, required: criteria,
+      properties: Object.fromEntries(criteria.map((key) => [key, {
+        type: "object", additionalProperties: false,
+        required: ["score", "evidence", "why_not_higher"],
+        properties: {
+          score: { type: ["number", "null"], minimum: 0, maximum: 10 },
+          evidence: { type: "string", description: "Concrete observed evidence, required for numeric scores. For Writing quote words from the submission." },
+          why_not_higher: { type: "string" },
+        },
+      }])),
+    },
+    confidence: { type: "number", minimum: 0, maximum: 1 },
+    direct_feedback_vi: { type: "object", properties: { summary: { type: "string", description: "Concise feedback in Vietnamese." } }, required: ["summary"], additionalProperties: false },
+  };
+  const required = ["scores", "confidence", "direct_feedback_vi"];
+  if (kind === "speaking") {
+    properties.audio = { type: "object", properties: { quality: { type: "string", enum: ["good", "acceptable", "poor", "unusable"] } }, required: ["quality"], additionalProperties: false };
+    required.push("audio");
+  }
+  if (reviewer) {
+    properties.decision = { type: "string", enum: ["keep", "revise", "unassessable"] };
+    properties.reason = { type: "string" };
+    // Keep/unassessable need no repeated report; revise must supply a complete one.
+    return { type: "object", properties, additionalProperties: false, required: ["decision", "reason"], anyOf: [
+      { properties: { decision: { enum: ["keep", "unassessable"] } } },
+      { properties: { decision: { enum: ["revise"] } }, required },
+    ] };
+  }
+  return { type: "object", properties, additionalProperties: false, required };
+}
 
 class RequestSemaphore {
   private active = 0;
@@ -535,10 +561,12 @@ async function modelCall(kind: GradingKind, system: string, user: string, model:
   const content = audioBase64
     ? [{ type: "text", text: user }, { type: "input_audio", input_audio: { data: audioBase64, format: "wav" } }]
     : user;
-  const body: Record<string, unknown> = { model, temperature: 0, store: false, messages: [{ role: "system", content: system }, { role: "user", content }] };
+  const schema = reportSchema(kind, stage === "reviewer");
+  const contract = "\nReturn exactly one JSON object matching this schema. Never use scalar scores: each criterion is an object with score, evidence, why_not_higher. Use null for unsupported scores, never invent evidence.\n" + JSON.stringify(schema);
+  const body: Record<string, unknown> = { model, temperature: 0, store: false, messages: [{ role: "system", content: system + contract }, { role: "user", content }] };
   if (audioBase64) {
     body.modalities = ["text"];
-    body.tools = [GRADING_TOOL];
+    body.tools = [{ type: "function", function: { name: "emit_grading_report", description: "Return the grading report as JSON.", parameters: schema } }];
     body.tool_choice = { type: "function", function: { name: "emit_grading_report" } };
   } else {
     body.response_format = { type: "json_object" };
