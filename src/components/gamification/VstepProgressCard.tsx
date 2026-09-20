@@ -1,6 +1,7 @@
 import { BookOpen, CheckCircle2, Headphones, Mic2, PenLine } from "lucide-react";
 import type { GamificationSummary } from "@/lib/gamification";
 import { Card } from "@/components/ui/Card";
+import { SkillMascot } from "@/components/ui/SkillMascot";
 
 const skillMeta = [
   { key: "LISTENING" as const, label: "Listening", icon: Headphones },
@@ -29,13 +30,16 @@ export function VstepProgressCard({ summary }: { summary: GamificationSummary })
         {skillMeta.map(({ key, label, icon: Icon }) => {
           const complete = summary.completedSkills[key];
           return (
-            <div key={key} className={`rounded-2xl border px-3 py-3 ${complete ? "border-[#CFE4D8] bg-[#F4FCF6]" : "border-border bg-surface"}`}>
+            <div key={key} className={`group min-w-0 overflow-hidden rounded-2xl border ${complete ? "border-[#CFE4D8] bg-[#F4FCF6]" : "border-border bg-surface"}`}>
+              <SkillMascot skill={label} />
+              <div className="px-3 py-3">
               <div className="flex items-center justify-between gap-2">
                 <Icon className={`size-4 ${complete ? "text-[#1F7A4D]" : "text-ink-muted"}`} aria-hidden="true" />
                 {complete ? <CheckCircle2 className="size-4 text-[#1F7A4D]" aria-label="Đã hoàn thành" /> : <span className="text-[11px] font-bold text-ink-faint">25%</span>}
               </div>
               <p className="mt-2 text-xs font-extrabold text-ink">{label}</p>
               <p className="mt-0.5 text-[11px] text-ink-muted">{complete ? "Đã luyện" : "Chưa luyện"}</p>
+              </div>
             </div>
           );
         })}

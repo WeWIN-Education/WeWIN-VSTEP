@@ -2,9 +2,9 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { PageHero } from "@/components/ui/PageHero";
-import { ArrowRight, BookOpen, Headphones, Mic2, PenLine, PlayCircle } from "lucide-react";
+import { ArrowRight, BookOpen, PlayCircle } from "lucide-react";
+import { SkillMascot } from "@/components/ui/SkillMascot";
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -24,7 +24,8 @@ export default function HomePage() {
         eyebrow="WEWIN EDUCATION · DÀNH CHO GIÁO VIÊN"
         title="Tiếng Anh tự tin hơn trong mỗi giờ dạy"
         description="Luyện VSTEP và Classroom English theo lộ trình rõ ràng. Đăng nhập để lưu tiến độ."
-        aside={<div className="hidden min-w-[210px] items-center justify-center rounded-3xl bg-white/60 p-5 md:flex"><Image src="/brand/mascot-right-clear.png" alt="" width={144} height={144} className="h-36 w-36 object-contain" /></div>}
+        backgroundSrc="/brand/bg.png"
+        className="min-h-[220px] bg-cover bg-left md:bg-center"
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -43,8 +44,16 @@ export default function HomePage() {
       <div className="grid gap-4 lg:grid-cols-[1.35fr_.65fr]">
         <Card padding="lg">
           <div className="flex items-center justify-between gap-4"><div><p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-brand">BẮT ĐẦU NHANH</p><h2 className="mt-2 font-[family-name:var(--font-jakarta)] text-xl font-extrabold text-ink">Chọn đúng kỹ năng cho tuần này</h2><p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-muted">Bạn có thể học từng kỹ năng riêng, làm bài tập ngắn hoặc mở một đề mẫu hoàn chỉnh.</p></div><BookOpen className="hidden size-12 text-brand/25 sm:block" strokeWidth={1.25} /></div>
-          <div className="mt-5 grid gap-3 sm:grid-cols-4">
-            {([[Headphones, "Listening", "/listening"], [Mic2, "Speaking", "/speaking"], [BookOpen, "Reading", "/training"], [PenLine, "Writing", "/training"]] as const).map(([Icon, label, href]) => <Link key={label} href={href} className="rounded-2xl border border-border p-3 transition hover:border-brand/35 hover:bg-brand-soft"><Icon className="size-5 text-brand" strokeWidth={1.7} /><p className="mt-3 text-sm font-bold text-ink">{label}</p></Link>)}
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {([["Listening", "/listening"], ["Speaking", "/speaking"], ["Reading", "/training"], ["Writing", "/training"]] as const).map(([label, href]) => (
+              <Link key={label} href={href} className="group min-w-0 overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-colors hover:border-brand/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2">
+                <SkillMascot skill={label} />
+                <div className="flex min-h-12 items-center justify-between gap-1 px-3 py-3">
+                  <p className="text-sm font-bold text-ink">{label}</p>
+                  <PlayCircle className="size-5 shrink-0 text-brand" aria-hidden="true" />
+                </div>
+              </Link>
+            ))}
           </div>
         </Card>
 
