@@ -17,7 +17,7 @@ export default function TermsPage() {
         WEWIN có quyền tạm ngưng tài khoản vi phạm. Mọi tranh chấp sẽ ưu tiên thương lượng qua kênh
         hỗ trợ.
       </p>
-      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05 · Bản stub.</p>
+      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05.</p>
     </LegalLayout>
   );
 }

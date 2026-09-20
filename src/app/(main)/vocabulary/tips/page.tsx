@@ -41,7 +41,7 @@ const forgettingReasons = [
 const reviewSteps = ["Ngày 1", "Ngày 2", "Ngày 4", "Ngày 7", "Ngày 14", "Ngày 30"];
 
 export default async function VocabularyTipsPage() {
-  if (!(await getCurrentUser())) return <div className="mx-auto w-full max-w-[1120px]"><PageHero eyebrow="TỪ VỰNG · PHƯƠNG PHÁP" title="Mẹo học từ nhanh thuộc, nhớ lâu" description="Guest có thể xem giới thiệu phương pháp. Tài khoản WEWIN mới mở nội dung học đầy đủ." /><LoginGate title="Đăng nhập để mở mẹo học" description="Tài khoản được trung tâm WEWIN cấp sau khi đăng ký chương trình." callbackUrl="/vocabulary/tips">{null}</LoginGate></div>;
+  if (!(await getCurrentUser())) return <div className="mx-auto w-full max-w-[1120px]"><PageHero eyebrow="TỪ VỰNG · PHƯƠNG PHÁP" title="Mẹo học từ nhanh thuộc, nhớ lâu" description="Đăng nhập để mở mẹo học." /><LoginGate title="Đăng nhập để mở mẹo học" description="Đăng nhập để xem đầy đủ nội dung." callbackUrl="/vocabulary/tips">{null}</LoginGate></div>;
   return (
     <div className="mx-auto w-full max-w-[1120px] space-y-7">
       <PageHero

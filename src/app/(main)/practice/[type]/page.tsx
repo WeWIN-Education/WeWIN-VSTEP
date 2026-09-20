@@ -16,6 +16,6 @@ export default async function PracticeTypePage({ params }: { params: Promise<{ t
   const { type } = await params;
   const item = items[type as keyof typeof items];
   if (!item) notFound();
-  if (!(await getCurrentUser())) return <div className="mx-auto max-w-[760px]"><LoginGate title="Đăng nhập để mở bài tập" description="Guest có thể xem danh mục bài tập; tài khoản WEWIN mới mở và lưu được phiên luyện." callbackUrl={`/practice/${type}`}>{null}</LoginGate></div>;
+  if (!(await getCurrentUser())) return <div className="mx-auto max-w-[760px]"><LoginGate title="Đăng nhập để mở bài tập" description="Đăng nhập để mở và lưu phiên luyện." callbackUrl={`/practice/${type}`}>{null}</LoginGate></div>;
   return <div className="mx-auto max-w-[760px]"><Link href="/practice" className="mb-5 inline-flex text-sm font-semibold text-brand hover:underline">← Bài tập</Link><h1 className="mb-5 font-[family-name:var(--font-jakarta)] text-2xl font-extrabold text-ink">{item.instruction}</h1><PracticePlayer type={item.type} items={[{ id: `${type}-1`, type: item.type, prompt: item.prompt, instruction: item.instruction, payload: item.payload, answer: item.answer }]} /></div>;
 }

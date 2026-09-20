@@ -191,7 +191,6 @@ export function Sidebar({ user }: { user?: SidebarUser | null }) {
             Đăng nhập
           </Link>
         )}
-        {!user ? <p className="mt-2 px-1 text-center font-[family-name:var(--font-be-vietnam)] text-[11px] leading-snug text-ink-muted">Tài khoản học do WEWIN cấp sau khi đăng ký chương trình.</p> : null}
       </div>
     </aside>
   );

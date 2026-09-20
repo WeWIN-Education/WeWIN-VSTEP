@@ -375,7 +375,6 @@ export function VocabularyFlashcards({
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <h2 className="font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">{title}</h2>
-          <p className="mt-1 break-words text-sm leading-relaxed text-ink-muted">Mở thẻ để tự kiểm tra, nghe phát âm và cập nhật mức độ nhớ.</p>
         </div>
         <VocabularyFlashcardLauncher compact label="Học tiếp" />
       </div>
@@ -552,7 +551,6 @@ export function VocabularyFlashcards({
                 <Mascot state={currentMascot} size={108} animated className="shrink-0 lg:mx-auto lg:size-[150px]" />
                 <div className="min-w-0 lg:mt-3">
                   <p className="text-sm font-extrabold text-ink">{flipped ? "Tốt lắm, kiểm tra lại ngữ cảnh nhé!" : "Bạn nhớ được từ này không?"}</p>
-                  <p className="mt-1 break-words text-xs leading-relaxed text-ink-muted">Mỗi thẻ chỉ cần vài giây tập trung.</p>
                 </div>
               </div>
 

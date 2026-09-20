@@ -15,7 +15,7 @@ export default function RefundPage() {
         Liên hệ hỗ trợ qua trang Liên hệ kèm mã đơn hàng. Bản demo hiện tại không phát sinh giao
         dịch nên không có hoàn tiền.
       </p>
-      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05 · Bản stub.</p>
+      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05.</p>
     </LegalLayout>
   );
 }

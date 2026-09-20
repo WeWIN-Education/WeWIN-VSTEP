@@ -23,7 +23,7 @@ export default function HomePage() {
       <PageHero
         eyebrow="WEWIN EDUCATION · DÀNH CHO GIÁO VIÊN"
         title="Tiếng Anh tự tin hơn trong mỗi giờ dạy"
-        description="Một không gian học tập tập trung vào VSTEP và những câu tiếng Anh dùng trong lớp học. Khách có thể luyện trọn vẹn các đề VSTEP học thử; tài khoản WEWIN giúp lưu toàn bộ tiến độ."
+        description="Luyện VSTEP và Classroom English theo lộ trình rõ ràng. Đăng nhập để lưu tiến độ."
         aside={<div className="hidden min-w-[210px] items-center justify-center rounded-3xl bg-white/60 p-5 md:flex"><Image src="/brand/mascot-right-clear.png" alt="" width={144} height={144} className="h-36 w-36 object-contain" /></div>}
       />
 

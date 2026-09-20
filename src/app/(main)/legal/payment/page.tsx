@@ -14,7 +14,7 @@ export default function PaymentPage() {
       <p>
         Hiện sản phẩm đang ở giai đoạn demo và chưa thu phí trực tiếp trên môi trường này.
       </p>
-      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05 · Bản stub.</p>
+      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05.</p>
     </LegalLayout>
   );
 }

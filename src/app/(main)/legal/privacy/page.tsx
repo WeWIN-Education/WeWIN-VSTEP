@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         Bạn có thể yêu cầu chỉnh sửa hoặc xoá tài khoản qua trang Liên hệ. Chính sách đầy đủ sẽ
         được cập nhật trước khi ra mắt thương mại.
       </p>
-      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05 · Bản stub.</p>
+      <p className="text-[12px] text-ink-faint">Cập nhật gần nhất: 2026-09-05.</p>
     </LegalLayout>
   );
 }

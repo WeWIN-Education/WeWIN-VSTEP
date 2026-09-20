@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, CheckCircle2, LoaderCircle, Mic, Play, RotateCcw, Square, Timer } from "lucide-react";
+import { AlertCircle, CheckCircle2, LoaderCircle, Mic, Play, RotateCcw, Square } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type SpeakingPart = {
@@ -465,9 +465,6 @@ export function SpeakingSession({ unit, recording, onStart, onStop, onEnableMicr
         </div>
       ) : null}
 
-      {phase === "preparation" || phase === "recording" ? (
-        <p className="flex items-center gap-2 text-sm font-semibold text-ink-muted"><Timer className="size-4" aria-hidden="true" />Thời gian còn lại được cập nhật theo đồng hồ thực.</p>
-      ) : null}
     </section>
   );
 }

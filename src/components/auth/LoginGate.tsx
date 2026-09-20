@@ -29,9 +29,6 @@ export async function LoginGate({ title, description, children, callbackUrl }: L
           <Button>Đăng nhập</Button>
         </Link>
       </div>
-      <p className="mt-4 text-[12px] text-ink-faint">
-        Tài khoản được trung tâm WEWIN cấp sau khi đăng ký chương trình.
-      </p>
     </Card>
   );
 }

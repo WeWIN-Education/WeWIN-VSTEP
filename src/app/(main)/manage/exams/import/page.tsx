@@ -40,7 +40,7 @@ export default async function ExamImportPage() {
       <PageHero
         eyebrow="QUẢN LÝ NỘI DUNG"
         title="Nhập đề VSTEP từ DOCX"
-        description="Dùng một file DOCX theo mẫu và các file audio đi kèm để tạo đề bốn kỹ năng. Hệ thống đọc cấu trúc, đối chiếu audio và kiểm tra đủ nội dung trước khi xuất bản."
+        description="Nhập DOCX và audio để tạo đề bốn kỹ năng. Kiểm tra trước khi xuất bản."
         aside={
           <div className="flex flex-wrap gap-2 md:max-w-[210px] md:justify-end">
             <a href="/templates/WEWIN_VSTEP_Exam_Import_Template.docx" download className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-btn)] bg-brand px-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-brand-dark">

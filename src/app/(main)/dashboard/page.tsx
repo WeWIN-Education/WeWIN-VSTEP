@@ -41,7 +41,6 @@ export default async function DashboardPage() {
         <div>
           <p className="text-sm text-ink-muted">Không gian học tập · {user.role === "ADMIN" ? "Quản trị viên" : "Giáo viên"}</p>
           <h1 className="mt-1 font-[family-name:var(--font-jakarta)] text-3xl font-extrabold text-ink">Xin chào, {firstName}</h1>
-          <p className="mt-1 text-sm text-ink-muted">Các số liệu dưới đây lấy từ bài làm và sổ tay của tài khoản này.</p>
         </div>
         {user.role === "ADMIN" ? <Link href="/manage/users" className="hidden items-center gap-2 rounded-full bg-brand-soft px-3 py-2 text-xs font-extrabold text-brand sm:inline-flex"><ShieldCheck className="size-4" aria-hidden="true" />Khu quản trị</Link> : null}
       </div>
@@ -54,10 +53,10 @@ export default async function DashboardPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat icon={<Clock3 />} label="Bài đang làm" value={String(attempts.filter((attempt) => attempt.status === "IN_PROGRESS").length)} detail="được lưu tự động" />
-        <Stat icon={<CheckCircle2 />} label="Bài đã nộp" value={String(submitted)} detail="trong tất cả chương trình" tone="green" />
-        <Stat icon={<FileText />} label="Tiến độ đề" value={`${progress}%`} detail={publishedPapers ? `${publishedPapers} đề VSTEP đã xuất bản` : "Chưa có đề xuất bản"} tone="gold" />
-        <Stat icon={<PenLine />} label="Từ vựng cần ôn" value={String(vocabularyDue)} detail="mục NEW hoặc LEARNING" tone="orange" />
+        <Stat icon={<Clock3 />} label="Bài đang làm" value={String(attempts.filter((attempt) => attempt.status === "IN_PROGRESS").length)} />
+        <Stat icon={<CheckCircle2 />} label="Bài đã nộp" value={String(submitted)} tone="green" />
+        <Stat icon={<FileText />} label="Tiến độ đề" value={`${progress}%`} detail={publishedPapers ? `${publishedPapers} đề VSTEP đã mở` : "Chưa có đề"} tone="gold" />
+        <Stat icon={<PenLine />} label="Từ vựng cần ôn" value={String(vocabularyDue)} detail="Từ mới và đang học" tone="orange" />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
@@ -70,7 +69,6 @@ export default async function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-[family-name:var(--font-jakarta)] text-xl font-extrabold text-ink">Hoạt động gần đây</h2>
-              <p className="mt-1 text-sm text-ink-muted">Các lượt thi của tài khoản này</p>
             </div>
             <Link href="/history" className="text-xs font-bold text-brand">Mở danh sách →</Link>
           </div>
@@ -89,9 +87,9 @@ export default async function DashboardPage() {
   );
 }
 
-function Stat({ icon, label, value, detail, tone = "blue" }: { icon: ReactNode; label: string; value: string; detail: string; tone?: "blue" | "green" | "gold" | "orange" }) {
+function Stat({ icon, label, value, detail, tone = "blue" }: { icon: ReactNode; label: string; value: string; detail?: string; tone?: "blue" | "green" | "gold" | "orange" }) {
   const colors = { blue: "bg-brand-soft text-brand", green: "bg-[#ECFBF3] text-[#1F7A4D]", gold: "bg-[#FDF3E3] text-[#9A6B2F]", orange: "bg-[#FFF0EF] text-[#B42318]" };
-  return <Card className="p-4"><span className={`flex size-10 items-center justify-center rounded-xl ${colors[tone]}`}>{icon}</span><p className="mt-4 text-2xl font-extrabold text-ink">{value}</p><p className="mt-1 text-sm font-semibold text-ink">{label}</p><p className="text-xs text-ink-muted">{detail}</p></Card>;
+  return <Card className="p-4"><span className={`flex size-10 items-center justify-center rounded-xl ${colors[tone]}`}>{icon}</span><p className="mt-4 text-2xl font-extrabold text-ink">{value}</p><p className="mt-1 text-sm font-semibold text-ink">{label}</p>{detail ? <p className="text-xs text-ink-muted">{detail}</p> : null}</Card>;
 }
 
 function Task({ href, icon, title, detail }: { href: string; icon: ReactNode; title: string; detail: string }) {

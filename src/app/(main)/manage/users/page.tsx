@@ -33,5 +33,5 @@ export default async function ManageUsersPage({ searchParams }: Props) {
     prisma.user.count({ where: { role: "LEARNER", isActive: false } }),
   ]);
 
-  return <div className="mx-auto w-full max-w-[1120px] space-y-6"><PageHero eyebrow="QUẢN TRỊ TÀI KHOẢN" title="Quản lý học viên" description="Tạo và duy trì tài khoản do trung tâm cấp. Mọi thay đổi trạng thái đều có hiệu lực ngay với phiên đăng nhập." stats={[{ label: "Tổng học viên", value: String(total) }, { label: "Đang hoạt động", value: String(active) }, { label: "Đã khóa", value: String(inactive) }]} /><UserManagementPanel initialUsers={users.map((user) => ({ ...user, createdAt: user.createdAt.toISOString(), updatedAt: user.updatedAt.toISOString() }))} initialQuery={query} /></div>;
+  return <div className="mx-auto w-full max-w-[1120px] space-y-6"><PageHero eyebrow="QUẢN TRỊ TÀI KHOẢN" title="Quản lý học viên" description="Tạo, sửa, khóa hoặc xóa tài khoản học viên." stats={[{ label: "Tổng học viên", value: String(total) }, { label: "Đang hoạt động", value: String(active) }, { label: "Đã khóa", value: String(inactive) }]} /><UserManagementPanel initialUsers={users.map((user) => ({ ...user, createdAt: user.createdAt.toISOString(), updatedAt: user.updatedAt.toISOString() }))} initialQuery={query} /></div>;
 }

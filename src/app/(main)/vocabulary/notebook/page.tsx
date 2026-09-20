@@ -27,7 +27,7 @@ export default async function VocabularyNotebookPage() {
       <PageHero
         eyebrow="TỪ VỰNG · CÁ NHÂN"
         title="Sổ tay từ vựng"
-        description="Gom những từ và cụm từ bạn muốn gặp lại. Lật flashcard, nghe phát âm và cập nhật mức độ nhớ sau mỗi phiên."
+        description="Lật flashcard, nghe phát âm và cập nhật mức nhớ."
         stats={[{ label: "Đang lưu", value: `${progress.length}` }, { label: "Đã nhớ", value: `${progress.filter((item) => item.status === "MASTERED").length}` }, { label: "Đang học", value: `${progress.filter((item) => item.status === "LEARNING").length}` }]}
         aside={<div className="hidden items-center gap-3 md:flex"><PersonalVocabularyModal /><Mascot state="focused" size={112} /></div>}
       />
