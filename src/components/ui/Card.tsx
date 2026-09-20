@@ -23,7 +23,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "min-w-0 rounded-[var(--radius-card)] border border-border/80 shadow-[0_1px_2px_rgba(16,24,40,0.04)]",
+        "min-w-0 rounded-[var(--radius-card)] border border-border shadow-[var(--shadow-panel)]",
         !hasCustomBackground && "bg-surface-card",
         paddings[padding],
         className,

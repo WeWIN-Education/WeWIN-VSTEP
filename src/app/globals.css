@@ -17,6 +17,8 @@
   --ink-muted: #6b7280;
   --ink-faint: #9ca3af;
   --border: #e5e7eb;
+  --border-width-panel: 2px;
+  --shadow-panel: 0 4px 0 var(--border);
   --sidebar-width: 256px;
   --header-height: 80px;
   --radius-card: 24px;
@@ -92,6 +94,13 @@ body {
   h2, h3 { font-weight: 600; line-height: 1.4; }
 }
 
+/* Thicken enclosed surfaces without changing dividers, focus rings or borderless controls. */
+@layer utilities {
+  .border {
+    border-width: var(--border-width-panel);
+  }
+}
+
 button:not(:disabled),
 select,
 a {
@@ -143,9 +152,9 @@ select:not([multiple]):not([size]) {
   cursor: pointer;
 }
 select:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 30%, transparent); }
-.admin-input { display: block; width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; background-color: var(--surface); font-size: 14px; font-weight: 500; }
+.admin-input { display: block; width: 100%; min-height: 44px; border: var(--border-width-panel) solid var(--border); border-radius: 12px; padding: 10px 14px; background-color: var(--surface); font-size: 14px; font-weight: 500; }
 .admin-input:focus { border-color: var(--brand); }
-.admin-action { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.admin-action { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; border: var(--border-width-panel) solid var(--border); border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; }
 .admin-action:disabled { cursor: wait; opacity: .55; }
 
 @keyframes mascot-welcome {

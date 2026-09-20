@@ -24,7 +24,7 @@ export function PageHero({
   return (
     <section
       className={cn(
-        "w-full min-w-0 max-w-full overflow-hidden rounded-[20px] border border-[#C5D4EE] bg-gradient-to-br from-[#EEF3FC] to-[#DDE7F8] p-5 md:p-7",
+        "w-full min-w-0 max-w-full overflow-hidden rounded-[20px] border border-[#C5D4EE] bg-gradient-to-br from-[#EEF3FC] to-[#DDE7F8] p-5 shadow-[var(--shadow-panel)] md:p-7",
         className,
       )}
       style={backgroundSrc ? { backgroundImage: `linear-gradient(90deg, rgba(255, 249, 236, 0.96) 0%, rgba(255, 249, 236, 0.84) 42%, rgba(255, 249, 236, 0.2) 76%, rgba(255, 249, 236, 0.04) 100%), url('${backgroundSrc}')` } : undefined}
