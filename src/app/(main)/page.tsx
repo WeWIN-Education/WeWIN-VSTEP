@@ -6,6 +6,7 @@ import { ArrowRight, BookOpen, PlayCircle } from "lucide-react";
 import { SkillMascot } from "@/components/ui/SkillMascot";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getCurrentUser } from "@/lib/access";
 
 export const metadata: Metadata = {
   title: "WEWIN Education | English LMS for Teachers",
@@ -17,7 +18,8 @@ const programmes = [
   { href: "/video", label: "CLASSROOM ENGLISH", title: "Học tiếng Anh qua video", text: "Nghe và luyện lại những câu giáo viên có thể dùng trong lớp học ngay ngày mai.", tone: "bg-[#EEF4FF] text-brand" },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const user = await getCurrentUser();
   return (
     <div className="mx-auto w-full min-w-0 max-w-[1180px] space-y-6">
       <PageHero
@@ -41,7 +43,7 @@ export default function HomePage() {
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.35fr_.65fr]">
+      <div className={`grid gap-4 ${user ? "" : "lg:grid-cols-[1.35fr_.65fr]"}`}>
         <Card padding="lg">
           <div className="flex items-center justify-between gap-4"><div><p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-brand">BẮT ĐẦU NHANH</p><h2 className="mt-2 font-[family-name:var(--font-jakarta)] text-xl font-extrabold text-ink">Chọn đúng kỹ năng cho tuần này</h2><p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-muted">Bạn có thể học từng kỹ năng riêng, làm bài tập ngắn hoặc mở một đề mẫu hoàn chỉnh.</p></div><BookOpen className="hidden size-12 text-brand/25 sm:block" strokeWidth={1.25} /></div>
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -57,7 +59,7 @@ export default function HomePage() {
           </div>
         </Card>
 
-        <Card padding="lg" className="bg-brand text-white"><PlayCircle className="size-9 text-white/80" strokeWidth={1.5} /><h2 className="mt-4 font-[family-name:var(--font-jakarta)] text-xl font-extrabold">Bắt đầu theo cách của bạn</h2><p className="mt-2 text-sm leading-relaxed text-blue-100">Luyện thử VSTEP Test 1–2 ngay hoặc đăng nhập để lưu tiến độ học tập.</p><div className="mt-5 grid gap-2"><Link href="/exam/vstep" className="block"><Button className="w-full border-white bg-white text-brand hover:bg-blue-50">Học thử VSTEP</Button></Link><Link href="/login" className="block"><span className="flex min-h-10 items-center justify-center rounded-[var(--radius-btn)] border border-white/60 px-4 text-sm font-bold text-white hover:bg-white/10">Đăng nhập tài khoản</span></Link></div></Card>
+        {!user && <Card padding="lg" className="bg-brand text-white"><PlayCircle className="size-9 text-white/80" strokeWidth={1.5} /><h2 className="mt-4 font-[family-name:var(--font-jakarta)] text-xl font-extrabold">Bắt đầu theo cách của bạn</h2><p className="mt-2 text-sm leading-relaxed text-blue-100">Luyện thử VSTEP Test 1–2 ngay hoặc đăng nhập để lưu tiến độ học tập.</p><div className="mt-5 grid gap-2"><Link href="/exam/vstep" className="block"><Button className="w-full border-white bg-white text-brand hover:bg-blue-50">Học thử VSTEP</Button></Link><Link href="/login" className="block"><span className="flex min-h-10 items-center justify-center rounded-[var(--radius-btn)] border border-white/60 px-4 text-sm font-bold text-white hover:bg-white/10">Đăng nhập tài khoản</span></Link></div></Card>}
       </div>
 
       <SiteFooter />
