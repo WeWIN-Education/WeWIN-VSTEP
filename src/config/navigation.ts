@@ -1,16 +1,18 @@
 import type { LucideIcon } from "lucide-react";
 import {
-  FileText,
+  BookMarked,
+  Dumbbell,
   GraduationCap,
   Headphones,
-  LayoutGrid,
+  History,
   Library,
-  ListChecks,
   Newspaper,
   PenLine,
-  BookOpen,
+  LayoutDashboard,
   Settings,
   ShieldCheck,
+  Users,
+  Wrench,
 } from "lucide-react";
 
 export type NavRole = "LEARNER" | "ADMIN";
@@ -47,7 +49,7 @@ export const NAV_GROUPS: NavGroup[] = [
         authenticatedLabel: "Tổng quan",
         href: "/",
         authenticatedHref: "/dashboard",
-        icon: LayoutGrid,
+        icon: LayoutDashboard,
       },
     ],
   },
@@ -72,11 +74,11 @@ export const NAV_GROUPS: NavGroup[] = [
     id: "on-luyen",
     label: "HỌC LIỆU & ÔN LUYỆN",
     items: [
-      { label: "Luyện tập tổng hợp", href: "/review", icon: ListChecks },
-      { label: "Cộng đồng", href: "/feed", icon: Newspaper },
-      { label: "Lịch sử bài làm", href: "/history", icon: ListChecks, roles: ["LEARNER", "ADMIN"] },
+      { label: "Luyện tập tổng hợp", href: "/review", icon: Dumbbell },
+      { label: "Cộng đồng", href: "/feed", icon: Users },
+      { label: "Lịch sử bài làm", href: "/history", icon: History, roles: ["LEARNER", "ADMIN"] },
       { label: "Tài liệu học tập", href: "/materials", icon: Library },
-      { label: "Công cụ", href: "/tools", icon: FileText },
+      { label: "Công cụ", href: "/tools", icon: Wrench },
       { label: "Bài viết", href: "/blog", icon: Newspaper },
       { label: "Cài đặt", href: "/profile/settings", icon: Settings, roles: ["LEARNER", "ADMIN"] },
     ],
@@ -87,7 +89,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       {
         label: "Từ vựng",
-        icon: BookOpen,
+        icon: BookMarked,
         children: [
           { label: "Sổ tay từ vựng", href: "/vocabulary/notebook", roles: ["LEARNER", "ADMIN"] },
           { label: "Từ vựng theo chủ đề", href: "/vocabulary/topics" },
