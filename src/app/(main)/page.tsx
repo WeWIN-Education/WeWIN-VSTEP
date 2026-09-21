@@ -31,17 +31,22 @@ export default async function HomePage() {
         className="min-h-[220px] bg-cover bg-left md:bg-center"
       />
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        {programmes.map((programme) => (
-          <Link key={programme.href} href={programme.href} className="block min-w-0">
-            <Card className="group h-full p-5 transition hover:-translate-y-0.5 hover:border-brand/40">
-              <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-extrabold ${programme.tone}`}>{programme.label}</span>
-              <h2 className="mt-4 font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">{programme.title}</h2>
-              <p className="mt-2 min-h-12 text-sm leading-relaxed text-ink-muted">{programme.text}</p>
-              <span className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-brand">Mở chương trình <ArrowRight className="size-4 transition group-hover:translate-x-1" /></span>
-            </Card>
-          </Link>
-        ))}
+      <div className="grid items-start gap-4 lg:grid-cols-[1.35fr_.65fr]">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {programmes.map((programme) => (
+            <Link key={programme.href} href={programme.href} className="block min-w-0">
+              <Card className="group h-full p-5 transition hover:-translate-y-0.5 hover:border-brand/40">
+                <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-extrabold ${programme.tone}`}>{programme.label}</span>
+                <h2 className="mt-4 font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">{programme.title}</h2>
+                <p className="mt-2 min-h-12 text-sm leading-relaxed text-ink-muted">{programme.text}</p>
+                <span className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-brand">Mở chương trình <ArrowRight className="size-4 transition group-hover:translate-x-1" /></span>
+              </Card>
+            </Link>
+          ))}
+        </div>
+
+        {!user && <Card padding="lg" className="bg-brand text-white"><PlayCircle className="size-9 text-white/80" strokeWidth={1.5} /><h2 className="mt-4 font-[family-name:var(--font-jakarta)] text-xl font-extrabold">Bắt đầu theo cách của bạn</h2><p className="mt-2 text-sm leading-relaxed text-blue-100">Luyện thử VSTEP Test 1–2 ngay hoặc đăng nhập để lưu tiến độ học tập.</p><div className="mt-5 grid gap-2"><Link href="/exam/vstep" className="block"><Button className="w-full border-white bg-white text-brand hover:bg-blue-50">Học thử VSTEP</Button></Link><Link href="/login" className="block"><span className="flex min-h-10 items-center justify-center rounded-[var(--radius-btn)] border border-white/60 px-4 text-sm font-bold text-white hover:bg-white/10">Đăng nhập tài khoản</span></Link></div></Card>}
+        {user && <DailyChallenges key={user.id} />}
       </div>
 
       <div className="grid items-start gap-4 lg:grid-cols-[1.35fr_.65fr]">
@@ -59,9 +64,6 @@ export default async function HomePage() {
             ))}
           </div>
         </Card>
-
-        {!user && <Card padding="lg" className="bg-brand text-white"><PlayCircle className="size-9 text-white/80" strokeWidth={1.5} /><h2 className="mt-4 font-[family-name:var(--font-jakarta)] text-xl font-extrabold">Bắt đầu theo cách của bạn</h2><p className="mt-2 text-sm leading-relaxed text-blue-100">Luyện thử VSTEP Test 1–2 ngay hoặc đăng nhập để lưu tiến độ học tập.</p><div className="mt-5 grid gap-2"><Link href="/exam/vstep" className="block"><Button className="w-full border-white bg-white text-brand hover:bg-blue-50">Học thử VSTEP</Button></Link><Link href="/login" className="block"><span className="flex min-h-10 items-center justify-center rounded-[var(--radius-btn)] border border-white/60 px-4 text-sm font-bold text-white hover:bg-white/10">Đăng nhập tài khoản</span></Link></div></Card>}
-        {user && <DailyChallenges key={user.id} />}
       </div>
 
       <SiteFooter />

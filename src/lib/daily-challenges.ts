@@ -5,12 +5,12 @@ import { DAILY_CHALLENGE_REWARD, dailyChallengeTasks, vietnamDay, type DailyChal
 
 async function summary(db: Pick<Prisma.TransactionClient, "vocabularyProgress" | "xpAward" | "dailyChallengeReward">, userId: string, now: Date): Promise<DailyChallengeSummary> {
   const { key, day, start, end } = vietnamDay(now);
-  const [words, xp, reward] = await Promise.all([
+  const [words, awards, reward] = await Promise.all([
     db.vocabularyProgress.count({ where: { userId, lastReviewedAt: { gte: start, lt: end } } }),
-    db.xpAward.aggregate({ where: { userId, createdAt: { gte: start, lt: end } }, _sum: { amount: true } }),
+    db.xpAward.groupBy({ by: ["catalog"], where: { userId, createdAt: { gte: start, lt: end } }, _sum: { amount: true } }),
     db.dailyChallengeReward.findUnique({ where: { userId_day: { userId, day } } }),
   ]);
-  return { day: key, resetsAt: end.toISOString(), serverNow: now.toISOString(), claimed: Boolean(reward), reward: DAILY_CHALLENGE_REWARD, tasks: dailyChallengeTasks(words, xp._sum.amount ?? 0) };
+  return { day: key, resetsAt: end.toISOString(), serverNow: now.toISOString(), claimed: Boolean(reward), reward: DAILY_CHALLENGE_REWARD, tasks: dailyChallengeTasks(words, awards.reduce((sum, award) => sum + (award._sum.amount ?? 0), 0), key, awards.map(award => award.catalog)) };
 }
 export function getDailyChallenges(userId: string, now = new Date()) { return summary(prisma, userId, now); }
 

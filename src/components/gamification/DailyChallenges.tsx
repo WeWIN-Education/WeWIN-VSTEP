@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { BookOpen, Check, Flame, Gift, RefreshCw, Zap } from "lucide-react";
+import { BookOpen, Check, Flame, Gift, Zap } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import type { DailyChallengeSummary } from "@/lib/daily-challenge-rules";
+import { LEARNING_ACTIVITY_EVENT, LEARNING_ACTIVITY_STORAGE_KEY } from "@/lib/learning-activity-events";
 
 export function DailyChallenges() {
   const [state, setState] = useState<DailyChallengeSummary | null>(null);
@@ -41,6 +42,10 @@ export function DailyChallenges() {
     active.current = true;
     void refresh();
     const visible = () => { if (document.visibilityState === "visible") void refresh(); };
+    const activitySaved = () => { if (document.visibilityState === "visible") void refresh(); };
+    const activityFromAnotherTab = (event: StorageEvent) => {
+      if (event.key === LEARNING_ACTIVITY_STORAGE_KEY) activitySaved();
+    };
     const polling = setInterval(visible, 30000);
     const timer = setInterval(() => {
       if (!clock.current.receivedAt) return;
@@ -51,8 +56,20 @@ export function DailyChallenges() {
         void refresh();
       }
     }, 1000);
-    window.addEventListener("focus", visible); document.addEventListener("visibilitychange", visible);
-    return () => { active.current = false; controller.current?.abort(); clearInterval(polling); clearInterval(timer); window.removeEventListener("focus", visible); document.removeEventListener("visibilitychange", visible); };
+    window.addEventListener("focus", visible);
+    window.addEventListener("storage", activityFromAnotherTab);
+    window.addEventListener(LEARNING_ACTIVITY_EVENT, activitySaved);
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      active.current = false;
+      controller.current?.abort();
+      clearInterval(polling);
+      clearInterval(timer);
+      window.removeEventListener("focus", visible);
+      window.removeEventListener("storage", activityFromAnotherTab);
+      window.removeEventListener(LEARNING_ACTIVITY_EVENT, activitySaved);
+      document.removeEventListener("visibilitychange", visible);
+    };
   }, [refresh]);
   const complete = state?.tasks.every(task => task.value >= task.goal);
   const time = [Math.floor(remaining / 3600), Math.floor(remaining / 60) % 60, remaining % 60].map(n => String(n).padStart(2, "0")).join(":");
@@ -76,9 +93,9 @@ export function DailyChallenges() {
         <p className="text-sm font-semibold text-ink">{state.claimed ? `Đã nhận ${state.reward} XP hôm nay` : `Hoàn thành cả ba để nhận ${state.reward} XP`}</p>
         {!state.claimed && <button type="button" disabled={!complete || busy || remaining === 0 || Boolean(error)} onClick={() => void refresh(true, state.day)} className="mt-3 min-h-11 w-full rounded-xl bg-brand px-4 text-sm font-bold text-white transition-colors hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:bg-brand-soft disabled:text-brand">{busy ? "Đang cập nhật…" : complete ? "Nhận thưởng" : "Tiếp tục học để mở thưởng"}</button>}
       </div>
-      <details className="mt-3 text-xs leading-5 text-ink-muted"><summary className="cursor-pointer py-2">Cách tính nhiệm vụ</summary>Ôn 30 từ khác nhau trong kho từ vựng chung bằng cách đánh dấu mức nhớ. XP nhiệm vụ chỉ tính từ bài VSTEP đã nộp trong ngày, không gồm XP thưởng. Đặt lại lúc 00:00 giờ Việt Nam; phần thưởng cần nhận trước giờ này.</details>
+      {busy && <p role="status" aria-live="polite" className="mt-3 text-xs text-ink-muted">Đang đồng bộ tiến độ…</p>}
+      <details className="mt-3 text-xs leading-5 text-ink-muted"><summary className="cursor-pointer py-2">Cách tính nhiệm vụ</summary>Tiến độ được cập nhật tự động sau khi bạn ôn từ hoặc nộp bài. Mỗi ngày có mục tiêu khác nhau; XP nhiệm vụ chỉ tính từ bài VSTEP đã nộp trong ngày, không gồm XP thưởng. Đặt lại lúc 00:00 giờ Việt Nam; phần thưởng cần nhận trước giờ này.</details>
     </>}
     {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
-    <button type="button" disabled={busy} onClick={() => void refresh()} className="mt-2 inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-brand disabled:opacity-50"><RefreshCw className="size-3.5" aria-hidden="true" />Cập nhật tiến độ</button>
   </Card>;
 }

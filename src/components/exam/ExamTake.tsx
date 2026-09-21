@@ -1,4 +1,5 @@
 "use client";
+import { notifyLearningActivity } from "@/lib/learning-activity-events";
 
 import { upload as uploadBlob } from "@vercel/blob/client";
 import { openMicrophone } from "@/lib/microphone";
@@ -639,6 +640,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
         throw new Error(data.error || "Không thể nộp bài.");
       }
       const result = (await response.json()) as SubmitResult;
+      notifyLearningActivity();
 
       setSubmittedResult({ ...result, id: result.id ?? result.attemptId ?? id, attemptId: id });
       const query = new URLSearchParams(window.location.search);

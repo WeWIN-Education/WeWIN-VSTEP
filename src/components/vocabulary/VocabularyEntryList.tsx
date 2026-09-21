@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { notifyLearningActivity } from "@/lib/learning-activity-events";
 
 export type VocabularyListEntry = { id: string; term: string; meaningVi: string; partOfSpeech: string | null; ipa: string | null; exampleEn: string | null; exampleVi: string | null; status?: "NEW" | "LEARNING" | "MASTERED" };
 
@@ -16,6 +17,7 @@ export function VocabularyEntryList({ entries }: { entries: VocabularyListEntry[
     try {
       const response = await fetch("/api/vocabulary/progress", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ entryId: id, status }) });
       if (!response.ok) return;
+      notifyLearningActivity();
       setItems((current) => current.map((entry) => entry.id === id ? { ...entry, status } : entry));
     } finally {
       setSaving(null);

@@ -1,4 +1,5 @@
 "use client";
+import { notifyLearningActivity } from "@/lib/learning-activity-events";
 
 import { Card } from "@/components/ui/Card";
 import { Mascot, type MascotState } from "@/components/ui/Mascot";
@@ -230,6 +231,7 @@ export function VocabularyFlashcards({
           return false;
         }
         setItems((currentItems) => currentItems.map((entry) => (entry.id === id ? { ...entry, status } : entry)));
+        notifyLearningActivity();
         onStatusChange?.(id, status);
         return true;
       } catch {
@@ -257,6 +259,7 @@ export function VocabularyFlashcards({
           return false;
         }
         setItems((currentItems) => currentItems.map((entry) => (entry.id === id ? { ...entry, status: undefined } : entry)));
+        notifyLearningActivity();
         onRemove?.(id);
         return true;
       } catch {
