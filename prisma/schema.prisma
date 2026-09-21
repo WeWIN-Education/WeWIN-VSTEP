@@ -91,6 +91,7 @@ model User {
   attempts           ExamAttempt[]
   xpAwards           XpAward[]
   dailyActivities    DailyActivity[]
+  dailyChallengeRewards DailyChallengeReward[]
   vocabularyProgress VocabularyProgress[]
   personalVocabulary PersonalVocabulary[]
   vocabularyImports  VocabularyImport[]
@@ -270,6 +271,17 @@ model DailyActivity {
 
   @@unique([userId, activityDate])
   @@index([userId, activityDate])
+}
+
+model DailyChallengeReward {
+  id        String   @id @default(cuid())
+  userId    String
+  day       DateTime @db.Date
+  amount    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, day])
 }
 
 model ExamPaperPart {
@@ -564,6 +576,7 @@ model VocabularyProgress {
 
   @@unique([userId, entryId])
   @@index([userId, status])
+  @@index([userId, lastReviewedAt])
 }
 
 model PersonalVocabulary {

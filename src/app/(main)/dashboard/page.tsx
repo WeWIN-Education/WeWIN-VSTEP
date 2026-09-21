@@ -1,4 +1,5 @@
 import { LeaderboardCard } from "@/components/gamification/LeaderboardCard";
+import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 import { VstepProgressCard } from "@/components/gamification/VstepProgressCard";
 import { Card } from "@/components/ui/Card";
 import { PageHero } from "@/components/ui/PageHero";
@@ -61,8 +62,9 @@ export default async function DashboardPage() {
 
       <div className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
         <VstepProgressCard summary={gamification} />
-        <LeaderboardCard data={leaderboard} />
+        <DailyChallenges key={user.id} />
       </div>
+      <LeaderboardCard data={leaderboard} />
 
       <div className="grid gap-5 lg:grid-cols-[1.25fr_.75fr]">
         <Card padding="lg">
