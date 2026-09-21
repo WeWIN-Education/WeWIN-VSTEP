@@ -345,6 +345,22 @@ model QuestionBookmark {
   @@index([userId, catalog, createdAt])
 }
 
+model LearningContent {
+  id        String   @id @default(cuid())
+  kind      String
+  code      String
+  title     String
+  skill     String
+  level     String
+  body      String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, code])
+  @@index([kind, published, skill, createdAt])
+}
+
 model PracticeItem {
   id          String       @id @default(cuid())
   programme   Programme?

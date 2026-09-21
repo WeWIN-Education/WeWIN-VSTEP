@@ -64,7 +64,7 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Học qua video", href: "/video" },
         ],
       },
-      { label: "Kỹ năng", href: "/coming-soon/skills", icon: Headphones },
+      { label: "Kỹ năng", href: "/training", icon: Headphones },
       { label: "Luyện tập", href: "/coming-soon/practice", icon: PenLine },
     ],
   },
@@ -108,6 +108,8 @@ export const NAV_GROUPS: NavGroup[] = [
         children: [
           { label: "Tài khoản", href: "/manage/users", roles: ["ADMIN"] },
           { label: "Đề thi", href: "/manage/exams", roles: ["ADMIN"] },
+          { label: "Kỹ năng", href: "/manage/skills", roles: ["ADMIN"] },
+          { label: "Bài tập", href: "/manage/practice", roles: ["ADMIN"] },
           { label: "Duyệt bài viết", href: "/manage/posts", roles: ["ADMIN"] },
           { label: "Nhập từ vựng", href: "/manage/vocabulary/import", roles: ["ADMIN"] },
           { label: "Nhập collocations", href: "/manage/collocations/import", roles: ["ADMIN"] },
