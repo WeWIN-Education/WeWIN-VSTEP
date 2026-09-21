@@ -18,7 +18,7 @@ export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?callbackUrl=/dashboard");
 
-  const [attempts, submitted, publishedPapers, vocabularyDue, gamification, leaderboard] = await Promise.all([
+  const [attempts, submitted, publishedPapers, vocabularyDue, gamification, leaderboard, inProgress, completedPapers, latestInProgress] = await Promise.all([
     prisma.examAttempt.findMany({
       where: { userId: user.id },
       include: { examPaper: { select: { title: true, slug: true, programme: true } } },
@@ -30,11 +30,18 @@ export default async function DashboardPage() {
     prisma.vocabularyProgress.count({ where: { userId: user.id, status: { in: ["NEW", "LEARNING"] } } }),
     getGamificationSummary(user.id),
     getLeaderboard(user.id),
+    prisma.examAttempt.count({ where: { userId: user.id, status: "IN_PROGRESS" } }),
+    prisma.examPaper.count({ where: { programme: "VSTEP", status: "PUBLISHED", attempts: { some: { userId: user.id, status: "SUBMITTED", catalog: "FULL" } } } }),
+    prisma.examAttempt.findFirst({
+      where: { userId: user.id, status: "IN_PROGRESS" },
+      orderBy: { updatedAt: "desc" },
+      include: { examPaper: { select: { title: true, slug: true, programme: true } } },
+    }),
   ]);
-  const submittedInProgress = attempts.find((attempt) => attempt.status === "IN_PROGRESS");
-  const progress = publishedPapers ? Math.min(100, Math.round((submitted / publishedPapers) * 100)) : 0;
+  const submittedInProgress = latestInProgress;
+  const progress = publishedPapers ? Math.round((completedPapers / publishedPapers) * 100) : 0;
   const firstName = user.name?.trim().split(/\s+/).at(-1) || "bạn";
-  const nextHref = submittedInProgress ? `/exam/${submittedInProgress.examPaper.programme.toLowerCase()}/${submittedInProgress.examPaper.slug}` : "/exam/vstep";
+  const nextHref = submittedInProgress ? `/exam/${submittedInProgress.examPaper.programme.toLowerCase()}/${submittedInProgress.examPaper.slug}?catalog=${submittedInProgress.catalog}&attempt=${submittedInProgress.id}` : "/exam/vstep";
 
   return (
     <div className="mx-auto max-w-[1180px] space-y-6">
@@ -54,9 +61,9 @@ export default async function DashboardPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat icon={<Clock3 />} label="Bài đang làm" value={String(attempts.filter((attempt) => attempt.status === "IN_PROGRESS").length)} />
+        <Stat icon={<Clock3 />} label="Bài đang làm" value={String(inProgress)} />
         <Stat icon={<CheckCircle2 />} label="Bài đã nộp" value={String(submitted)} tone="green" />
-        <Stat icon={<FileText />} label="Tiến độ đề" value={`${progress}%`} detail={publishedPapers ? `${publishedPapers} đề VSTEP đã mở` : "Chưa có đề"} tone="gold" />
+        <Stat icon={<FileText />} label="Tiến độ đề đầy đủ" value={`${progress}%`} detail={publishedPapers ? `${completedPapers}/${publishedPapers} đề khác nhau đã nộp đủ bài` : "Chưa có đề"} tone="gold" />
         <Stat icon={<PenLine />} label="Từ vựng cần ôn" value={String(vocabularyDue)} detail="Từ mới và đang học" tone="orange" />
       </div>
 

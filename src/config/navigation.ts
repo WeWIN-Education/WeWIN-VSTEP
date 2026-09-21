@@ -7,7 +7,6 @@ import {
   History,
   Library,
   Newspaper,
-  PenLine,
   LayoutDashboard,
   Settings,
   ShieldCheck,
@@ -67,7 +66,6 @@ export const NAV_GROUPS: NavGroup[] = [
         ],
       },
       { label: "Kỹ năng", href: "/training", icon: Headphones },
-      { label: "Luyện tập", href: "/coming-soon/practice", icon: PenLine },
     ],
   },
   {
