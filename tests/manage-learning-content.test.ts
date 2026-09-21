@@ -1,7 +1,8 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { Prisma } from "@prisma/client";
 import { contentTemplate, parseContentFile } from "../src/lib/learning-content";
-const mocks = vi.hoisted(() => ({ actor: vi.fn(), findMany: vi.fn(), create: vi.fn(), createMany: vi.fn(), updateMany: vi.fn(), deleteMany: vi.fn() }));
+const mocks = vi.hoisted(() => ({ actor: vi.fn(), findUnique: vi.fn(), findMany: vi.fn(), create: vi.fn(), createMany: vi.fn(), updateMany: vi.fn(), deleteMany: vi.fn(), deleteObject: vi.fn() }));
+vi.mock("@/lib/storage", () => ({ deleteObject: mocks.deleteObject }));
 vi.mock("@/lib/access", () => ({ getCurrentUser: mocks.actor }));
 vi.mock("@/lib/prisma", () => ({ prisma: { learningContent: mocks } }));
 import { GET, POST, PUT, DELETE } from "../src/app/api/manage/learning-content/route";
@@ -38,7 +39,9 @@ it("checks optimistic versions for edits and permanent deletion", async () => {
   mocks.updateMany.mockResolvedValue({ count: 1 });
   expect((await PUT(request("PUT", input))).status).toBe(200);
   mocks.deleteMany.mockResolvedValue({ count: 1 });
+  mocks.findUnique.mockResolvedValue({ audioKey: "learning-audio/lesson/audio.mp3" });
   expect((await DELETE(request("DELETE", input))).status).toBe(200);
+  expect(mocks.deleteObject).toHaveBeenCalledWith("learning-audio/lesson/audio.mp3");
   expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { id: "lesson", kind: "SKILL", updatedAt: new Date(input.updatedAt) } });
 });
 it("returns bounded uncached pages and a stable cursor", async () => {

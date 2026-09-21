@@ -5,7 +5,7 @@ export const CONTENT_LEVELS = ["B1", "B2", "B1-B2", "C1"] as const;
 export type ContentInput = {
   kind: ContentKind; code: string; title: string; skill: string; level: string; body: string; published: boolean;
 };
-export type ContentRecord = ContentInput & { id: string; updatedAt: string };
+export type ContentRecord = ContentInput & { id: string; updatedAt: string; audioKey?: string | null; audioName?: string | null };
 export const MAX_CONTENT_BYTES = 2 * 1024 * 1024;
 
 export function validateContent(value: unknown): ContentInput {

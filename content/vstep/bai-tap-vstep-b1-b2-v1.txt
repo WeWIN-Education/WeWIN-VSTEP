@@ -1,0 +1,1209 @@
+# BỘ BÀI TẬP VSTEP B1-B2 — BẢN CHÍNH THỨC WEWIN V1.0
+
+## Thông tin phát hành
+
+- Phiên bản: 1.0
+- Phạm vi: 12 phiên chính thức, gồm 3 Listening, 3 Reading, 3 Writing và 3 Speaking.
+- Tính chất nguồn: WEWIN_ORIGINAL; toàn bộ ngữ liệu, câu hỏi, đáp án, lời giải, model và checklist do WEWIN tự biên soạn.
+- Phân loại: `LUYỆN DẠNG THI` giữ cấu trúc nhiệm vụ VSTEP; `BÀI BỔ TRỢ` chỉ luyện một tiểu kỹ năng và không được gọi là đề VSTEP.
+- Listening: các phiên gắn nhãn LUYỆN DẠNG THI dùng điều kiện nghe một lần sau khi audio được nạp.
+- Reading: đáp án luôn kèm bằng chứng trong đoạn và lý do các phương án sai.
+- Writing/Speaking: tự đối chiếu, sửa hoặc ghi âm lại; không dùng AI để cấp điểm VSTEP hoặc kết luận B1/B2.
+- Audio: danh sách file cần tạo nằm trong `content/vstep/audio-manifest-v1.txt`; transcript đã có trong từng bộ.
+- Trạng thái phát hành: CHÍNH THỨC V1.0 — chờ QTV/giáo viên xác nhận cuối trước khi bật công khai trên website.
+- Yêu cầu QA: kiểm tra đáp án, bằng chứng, level, audio–transcript và quyền sử dụng trước khi chuyển sang CMS.
+
+---
+
+# P_L001 — GIST & DETAIL SPRINT
+
+## A. Thông tin bộ
+
+- Mã bộ: P_L001
+- Tên bộ: Listening — Gist & Detail Sprint
+- Kỹ năng: LISTENING
+- Phần thi liên quan: Part 1
+- Mức độ hướng tới: B1
+- Chủ đề: Thông báo hoạt động học tập
+- Mục tiêu luyện tập: Xác định ý chính, thời gian, địa điểm và vật dụng cần chuẩn bị.
+- Thời lượng dự kiến: 8 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: AUDIO_L001
+- Đoạn văn / tình huống:
+“Attention, students. The photography club will meet this Wednesday at four o’clock in Room 105. The meeting was originally planned for Tuesday, but it has been moved because the room is being used for an exam. Please bring your phone or camera and one photo that you took yourself. The club will discuss basic composition and choose photographs for the school website.”
+- File audio: audio/practice/P_L001_AUDIO_L001.mp3 (nạp theo audio-manifest-v1.txt)
+- Transcript: Đoạn tiếng Anh ở trên.
+- Nguồn và quyền sử dụng: Tự biên soạn bởi WEWIN; không sử dụng nguồn bên ngoài.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: AUDIO_L001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is the announcement mainly about?
+
+A. A photography competition
+B. A change to a club meeting
+C. A new school examination
+D. A website design class
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Toàn bộ thông báo tập trung vào thời gian, địa điểm và nội dung của buổi họp câu lạc bộ đã được thay đổi.
+Bằng chứng trong audio: “The photography club will meet this Wednesday...” và “it has been moved...”
+Vì sao các phương án khác sai: A chỉ là hoạt động liên quan; C và D không phải mục đích chính của thông báo.
+
+### Q002
+
+- Thứ tự: 2
+- Mã ngữ liệu liên quan: AUDIO_L001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: When will the meeting take place?
+
+A. Tuesday at 4:00
+B. Wednesday at 4:00
+C. Wednesday at 5:00
+D. Friday at 4:00
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Thông báo nói rõ buổi họp chuyển sang Wednesday at four o’clock.
+Bằng chứng trong audio: “this Wednesday at four o’clock”.
+Vì sao các phương án khác sai: Tuesday là lịch cũ; 5:00 và Friday không xuất hiện trong thông báo.
+
+### Q003
+
+- Thứ tự: 3
+- Mã ngữ liệu liên quan: AUDIO_L001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Why was the meeting moved?
+
+A. The club leader was absent.
+B. The students requested a later date.
+C. The room will be used for an exam.
+D. The website needs new photographs.
+
+Đáp án đúng: C
+Giải thích tiếng Việt: Địa điểm bị sử dụng cho một kỳ thi nên lịch họp được đổi.
+Bằng chứng trong audio: “because the room is being used for an exam”.
+Vì sao các phương án khác sai: Không có thông tin nói người phụ trách vắng mặt hoặc học sinh yêu cầu đổi lịch.
+
+### Q004
+
+- Thứ tự: 4
+- Mã ngữ liệu liên quan: AUDIO_L001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What should students bring?
+
+A. An exam paper and a laptop
+B. A phone or camera and one personal photo
+C. A school website account
+D. A composition textbook
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Người tham dự cần mang thiết bị chụp ảnh và một ảnh do chính mình chụp.
+Bằng chứng trong audio: “Please bring your phone or camera and one photo that you took yourself.”
+Vì sao các phương án khác sai: Các vật dụng còn lại không được yêu cầu.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng nội bộ và xuất bản trên sản phẩm WEWIN sau khi duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ; audio phải lưu cùng mã AUDIO_L001.
+
+---
+
+# P_L002 — ATTITUDE DETECTIVE
+
+## A. Thông tin bộ
+
+- Mã bộ: P_L002
+- Tên bộ: Listening — Attitude Detective
+- Kỹ năng: LISTENING
+- Phần thi liên quan: Part 2
+- Mức độ hướng tới: B2
+- Chủ đề: Tham gia khóa học trực tuyến
+- Mục tiêu luyện tập: Nhận biết sự do dự, thay đổi ý kiến và mục đích hỏi trong hội thoại.
+- Thời lượng dự kiến: 10 phút
+- Phân loại: BÀI BỔ TRỢ
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: AUDIO_L002
+- Đoạn văn / tình huống:
+“Mai: Are you going to register for the evening writing course?
+Nam: I was planning to, but the schedule is not very convenient. It finishes at nine, and I have to travel quite far.
+Mai: The centre has just added a recorded version of each lesson. You can watch it the next morning if you miss the live class.
+Nam: That changes things. I think I’ll register and attend the live classes whenever I can.”
+- File audio: audio/practice/P_L002_AUDIO_L002.mp3 (nạp theo audio-manifest-v1.txt)
+- Transcript: Đoạn hội thoại ở trên.
+- Nguồn và quyền sử dụng: Tự biên soạn bởi WEWIN; không sử dụng nguồn bên ngoài.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: AUDIO_L002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is Nam’s initial attitude towards the course?
+
+A. He is completely enthusiastic.
+B. He is uncertain because of the schedule.
+C. He has already completed it.
+D. He thinks it is too expensive.
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Nam muốn học nhưng lo lịch học và quãng đường đi lại không thuận tiện.
+Bằng chứng trong audio: “I was planning to, but the schedule is not very convenient.”
+Vì sao các phương án khác sai: Nam chưa hoàn toàn hào hứng; không nói về giá và cũng chưa học xong.
+
+### Q002
+
+- Thứ tự: 2
+- Mã ngữ liệu liên quan: AUDIO_L002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Why does Mai mention the recorded lessons?
+
+A. To explain why the course is cancelled
+B. To suggest a solution to Nam’s problem
+C. To ask Nam to become a teacher
+D. To compare two writing books
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Mai đưa ra lựa chọn xem bài ghi hình để giải quyết vấn đề về lịch học.
+Bằng chứng trong audio: “You can watch it the next morning if you miss the live class.”
+Vì sao các phương án khác sai: Không có thông tin về hủy khóa học, công việc giảng dạy hay sách.
+
+### Q003
+
+- Thứ tự: 3
+- Mã ngữ liệu liên quan: AUDIO_L002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What can be inferred about Nam at the end?
+
+A. He has decided not to study writing.
+B. He will register, although he may not attend every live class.
+C. He will move closer to the centre.
+D. He wants Mai to register for him.
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Nam thay đổi quyết định sau khi biết có bài ghi hình; anh vẫn muốn tham gia nhưng không chắc đi được mọi buổi.
+Bằng chứng trong audio: “I think I’ll register and attend the live classes whenever I can.”
+Vì sao các phương án khác sai: Không có thông tin về chuyển nhà, nhờ đăng ký hoặc bỏ học.
+
+### Q004
+
+- Thứ tự: 4
+- Mã ngữ liệu liên quan: AUDIO_L002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Which phrase signals a change in Nam’s opinion?
+
+A. “I was planning to”
+B. “quite far”
+C. “That changes things”
+D. “whenever I can”
+
+Đáp án đúng: C
+Giải thích tiếng Việt: Cụm này báo hiệu thông tin mới đã làm thay đổi suy nghĩ của Nam.
+Bằng chứng trong audio: Câu này đứng ngay trước quyết định đăng ký.
+Vì sao các phương án khác sai: A, B và D mô tả kế hoạch hoặc điều kiện nhưng không trực tiếp báo hiệu thay đổi ý kiến.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi giáo viên duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ; audio phải khớp AUDIO_L002.
+
+---
+
+# P_L003 — ONE-LISTEN PART 3 MINI SET
+
+## A. Thông tin bộ
+
+- Mã bộ: P_L003
+- Tên bộ: Listening — One-listen Part 3 Mini Set
+- Kỹ năng: LISTENING
+- Phần thi liên quan: Part 3
+- Mức độ hướng tới: B2
+- Chủ đề: Giao thông công cộng và thành phố
+- Mục tiêu luyện tập: Theo dõi bài nói dài, nhận biết nguyên nhân, ví dụ, thái độ và kết luận.
+- Thời lượng dự kiến: 15 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: AUDIO_L003
+- Đoạn văn / tình huống:
+“Many cities are trying to encourage people to use public transport. One reason is that buses and trains can carry more passengers than private cars, so they may reduce traffic congestion. Public transport can also be cheaper for people who travel every day. However, simply adding more buses is not enough. Services must be reliable, clean and easy to understand. In some cities, passengers can use one card for buses, trains and bicycles. This makes public transport more convenient and encourages people to leave their cars at home.”
+- File audio: audio/practice/P_L003_AUDIO_L003.mp3 (nạp theo audio-manifest-v1.txt)
+- Transcript: Đoạn nói ở trên.
+- Nguồn và quyền sử dụng: Tự biên soạn bởi WEWIN.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: AUDIO_L003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is the main topic of the talk?
+
+A. How to buy a private car
+B. Ways to make public transport more attractive
+C. The history of city bicycles
+D. The cost of building train stations
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Bài nói nêu lợi ích và điều kiện để người dân muốn sử dụng giao thông công cộng.
+Bằng chứng trong audio: Câu mở đầu nói các thành phố đang khuyến khích người dân dùng public transport; phần sau giải thích cách làm.
+Vì sao các phương án khác sai: Các phương án còn lại chỉ là chi tiết không được phát triển.
+
+### Q002
+
+- Thứ tự: 2
+- Mã ngữ liệu liên quan: AUDIO_L003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is one possible benefit of buses and trains?
+
+A. They can reduce traffic congestion.
+B. They never need maintenance.
+C. They are always faster than cars.
+D. They require passengers to use several cards.
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Một phương tiện có thể chở nhiều người hơn nên có khả năng giảm ùn tắc.
+Bằng chứng trong audio: “they may reduce traffic congestion”.
+Vì sao các phương án khác sai: B và C tuyệt đối hóa thông tin; D trái với ví dụ dùng một thẻ.
+
+### Q003
+
+- Thứ tự: 3
+- Mã ngữ liệu liên quan: AUDIO_L003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What does “reliable” most nearly mean in the talk?
+
+A. Available and on time as expected
+B. Expensive to use
+C. Difficult to repair
+D. Popular with tourists only
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Trong ngữ cảnh dịch vụ, reliable nghĩa là đáng tin cậy, hoạt động ổn định và đúng như dự kiến.
+Bằng chứng trong audio: “Services must be reliable, clean and easy to understand.”
+Vì sao các phương án khác sai: Không phù hợp với ý nói về chất lượng dịch vụ.
+
+### Q004
+
+- Thứ tự: 4
+- Mã ngữ liệu liên quan: AUDIO_L003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Why is one travel card mentioned?
+
+A. To show that public transport can be more convenient
+B. To explain how to design a card
+C. To prove that trains are cheaper than buses
+D. To describe a problem with bicycles
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Một thẻ dùng cho nhiều phương tiện làm việc di chuyển đơn giản hơn.
+Bằng chứng trong audio: “This makes public transport more convenient”.
+Vì sao các phương án khác sai: B, C và D không phải mục đích của ví dụ.
+
+### Q005
+
+- Thứ tự: 5
+- Mã ngữ liệu liên quan: AUDIO_L003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is the speaker’s conclusion?
+
+A. People should never travel by car.
+B. More buses alone will solve every city problem.
+C. Good quality and simple services may encourage people to use public transport.
+D. Only tourists benefit from public transport.
+
+Đáp án đúng: C
+Giải thích tiếng Việt: Kết luận kết hợp hai ý: cần dịch vụ tốt và dễ sử dụng để thay đổi hành vi.
+Bằng chứng trong audio: đoạn cuối nói việc dùng một thẻ làm giao thông công cộng thuận tiện và khuyến khích người dân bỏ xe ở nhà.
+Vì sao các phương án khác sai: A và D quá cực đoan; B bị phủ định ở câu “simply adding more buses is not enough”.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ; audio chỉ phát hành cùng AUDIO_L003.
+
+---
+
+# P_R001 — FIND THE EVIDENCE
+
+## A. Thông tin bộ
+
+- Mã bộ: P_R001
+- Tên bộ: Reading — Find the Evidence
+- Kỹ năng: READING
+- Phần thi liên quan: Reading Part 1–2
+- Mức độ hướng tới: B1
+- Chủ đề: Vườn rau trong trường học
+- Mục tiêu luyện tập: Tìm ý chính, thông tin chi tiết, từ quy chiếu và bằng chứng trong đoạn.
+- Thời lượng dự kiến: 10 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: TEXT_R001
+- Đoạn văn / tình huống:
+“Last year, Green Valley School turned an unused piece of land into a small garden. Students planted vegetables, measured the growth of different plants and recorded the amount of water they used. The project was not designed to produce food for the whole school. Instead, it helped students understand how science is connected to everyday life. Teachers also noticed that students became more willing to work in groups because the plants needed regular care. This experience encouraged the school to include more outdoor activities in its science classes.”
+- File audio: Không áp dụng.
+- Transcript: Không áp dụng.
+- Nguồn và quyền sử dụng: Tự biên soạn bởi WEWIN.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: TEXT_R001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is the main purpose of the garden project?
+
+A. To provide all the school’s vegetables
+B. To teach students through practical science activities
+C. To replace science lessons with outdoor work
+D. To sell vegetables to local families
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Dự án giúp học sinh hiểu khoa học gắn với đời sống thông qua hoạt động thực tế.
+Bằng chứng trong bài đọc: “it helped students understand how science is connected to everyday life.”
+Vì sao các phương án khác sai: A bị phủ định; C và D không được nêu.
+
+### Q002
+
+- Thứ tự: 2
+- Mã ngữ liệu liên quan: TEXT_R001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What did the students record?
+
+A. The price of vegetables
+B. The amount of water they used
+C. The number of teachers in the school
+D. The weather every weekend
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Đây là chi tiết được nêu trực tiếp trong câu thứ hai.
+Bằng chứng trong bài đọc: “recorded the amount of water they used.”
+Vì sao các phương án khác sai: Không xuất hiện trong đoạn.
+
+### Q003
+
+- Thứ tự: 3
+- Mã ngữ liệu liên quan: TEXT_R001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: The word “it” in “it helped students” refers to...
+
+A. the school
+B. the garden project
+C. everyday life
+D. the amount of water
+
+Đáp án đúng: B
+Giải thích tiếng Việt: “It” thay cho chủ thể gần nhất và phù hợp nghĩa là “the project”.
+Bằng chứng trong bài đọc: Câu trước nói “The project was not designed...” rồi câu sau giải thích tác dụng của dự án.
+Vì sao các phương án khác sai: Các đáp án còn lại không thể là chủ thể giúp học sinh hiểu khoa học.
+
+### Q004
+
+- Thứ tự: 4
+- Mã ngữ liệu liên quan: TEXT_R001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What did teachers notice?
+
+A. Students stopped attending science classes.
+B. Students became more willing to work in groups.
+C. Students used less water at home.
+D. Students preferred indoor activities.
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Giáo viên nhận thấy học sinh hợp tác nhóm tích cực hơn.
+Bằng chứng trong bài đọc: “students became more willing to work in groups”.
+Vì sao các phương án khác sai: Không được nêu hoặc trái với nội dung bài.
+
+### Q005
+
+- Thứ tự: 5
+- Mã ngữ liệu liên quan: TEXT_R001
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What did the experience lead the school to do?
+
+A. Include more outdoor activities in science classes
+B. Close the school garden
+C. Remove group work from lessons
+D. Build a larger school hall
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Kinh nghiệm từ dự án khuyến khích trường đưa thêm hoạt động ngoài trời vào môn khoa học.
+Bằng chứng trong bài đọc: “This experience encouraged the school to include more outdoor activities...”
+Vì sao các phương án khác sai: Không có thông tin hỗ trợ.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi giáo viên duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ.
+
+---
+
+# P_R002 — MEANING FROM CONTEXT
+
+## A. Thông tin bộ
+
+- Mã bộ: P_R002
+- Tên bộ: Reading — Meaning from Context
+- Kỹ năng: READING
+- Phần thi liên quan: Reading Part 2–4
+- Mức độ hướng tới: B2
+- Chủ đề: Thư viện cộng đồng
+- Mục tiêu luyện tập: Suy luận và đoán nghĩa từ dựa vào câu xung quanh.
+- Thời lượng dự kiến: 12 phút
+- Phân loại: BÀI BỔ TRỢ
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: TEXT_R002
+- Đoạn văn / tình huống:
+“For many years, the Riverside Library was mainly a quiet place where people borrowed books. Recently, however, fewer residents visited it regularly. The library responded by adding conversation clubs, homework support and short courses on digital skills. These activities attracted people who did not usually borrow books. Some of them later began using the library’s reading room and online catalogue. The change suggests that a library can remain useful even when people obtain much of their information from the internet.”
+- File audio: Không áp dụng.
+- Transcript: Không áp dụng.
+- Nguồn và quyền sử dụng: Tự biên soạn bởi WEWIN.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: TEXT_R002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Why did the library add new activities?
+
+A. To attract residents who visited less often
+B. To stop people borrowing books
+C. To replace the reading room with classrooms
+D. To teach only digital skills
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Số người đến thư viện thường xuyên giảm nên thư viện mở thêm hoạt động.
+Bằng chứng trong bài đọc: “fewer residents visited it regularly” và “The library responded by adding...”
+Vì sao các phương án khác sai: B, C và D diễn giải sai phạm vi của thay đổi.
+
+### Q002
+
+- Thứ tự: 2
+- Mã ngữ liệu liên quan: TEXT_R002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: The word “attracted” most nearly means...
+
+A. made people interested in coming
+B. forced people to leave
+C. made the library quieter
+D. prevented people from borrowing books
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Các hoạt động mới khiến những người trước đây ít đến thư viện bắt đầu quan tâm và tham gia.
+Bằng chứng trong bài đọc: Ngay sau “attracted” là “people who did not usually borrow books”.
+Vì sao các phương án khác sai: Không phù hợp với kết quả người dân quay lại sử dụng thư viện.
+
+### Q003
+
+- Thứ tự: 3
+- Mã ngữ liệu liên quan: TEXT_R002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What can be inferred about the new visitors?
+
+A. They only wanted to borrow printed books.
+B. They came for new services and later used other library facilities.
+C. They were all professional librarians.
+D. They stopped using the internet.
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Họ đến vì hoạt động mới, sau đó bắt đầu dùng phòng đọc và danh mục trực tuyến.
+Bằng chứng trong bài đọc: “Some of them later began using the library’s reading room and online catalogue.”
+Vì sao các phương án khác sai: A và D trái nội dung; C không được nêu.
+
+### Q004
+
+- Thứ tự: 4
+- Mã ngữ liệu liên quan: TEXT_R002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What does “The change” refer to?
+
+A. People obtaining information from the internet
+B. The library adding new activities and attracting different users
+C. The removal of the online catalogue
+D. The reduction in the number of books
+
+Đáp án đúng: B
+Giải thích tiếng Việt: “The change” tổng kết việc thư viện thay đổi dịch vụ và thu hút người dùng mới.
+Bằng chứng trong bài đọc: Hai câu trước mô tả hoạt động mới và người dùng bắt đầu quay lại.
+Vì sao các phương án khác sai: A là bối cảnh; C và D không xuất hiện.
+
+### Q005
+
+- Thứ tự: 5
+- Mã ngữ liệu liên quan: TEXT_R002
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is the writer’s main conclusion?
+
+A. Libraries are no longer useful.
+B. Libraries can stay useful by responding to changing needs.
+C. Libraries should provide only online information.
+D. Libraries should stop offering quiet spaces.
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Đoạn kết cho thấy thư viện vẫn hữu ích nếu thích ứng với cách người dân tiếp nhận thông tin.
+Bằng chứng trong bài đọc: “a library can remain useful even when...”
+Vì sao các phương án khác sai: Đều cực đoan hoặc trái với nội dung bài.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi giáo viên duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ.
+
+---
+
+# P_R003 — ONE PASSAGE, TEN QUESTIONS
+
+## A. Thông tin bộ
+
+- Mã bộ: P_R003
+- Tên bộ: Reading — One Passage, Ten Questions
+- Kỹ năng: READING
+- Phần thi liên quan: Một mini set mô phỏng 1/4 bài Reading
+- Mức độ hướng tới: B2
+- Chủ đề: Làm việc từ xa và không gian đô thị
+- Mục tiêu luyện tập: Kết hợp main idea, detail, reference, vocabulary, purpose và inference.
+- Thời lượng dự kiến: 15 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: TEXT_R003
+- Đoạn văn / tình huống:
+“Remote work has changed the way many people use city spaces. Before the pandemic, office workers often spent most of the day in large business districts. Now, some employees work from home several days a week and visit local cafés, libraries or shared workspaces instead. This change can support small businesses in residential areas, but it may also reduce activity in traditional office centres. City planners are therefore considering how to make these centres attractive at different times of the day. More public events, housing and cultural facilities could help. The aim is not to remove offices, but to create neighbourhoods that remain active after working hours.
+
+The effects of remote work are not the same everywhere. In cities with reliable internet and affordable housing, employees may enjoy greater flexibility. In other places, crowded homes or weak connections make home working difficult. For this reason, employers often need to offer a mixture of remote and office-based work rather than one solution for every employee.”
+- File audio: Không áp dụng.
+- Transcript: Không áp dụng.
+- Nguồn và quyền sử dụng: Tự biên soạn bởi WEWIN.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is the passage mainly about?
+
+A. Why all offices should close
+B. How remote work affects people and city spaces
+C. The history of internet connections
+D. How to build cheaper houses
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Hai đoạn cùng phân tích tác động của làm việc từ xa lên không gian đô thị và người lao động.
+Bằng chứng trong bài đọc: Đoạn đầu nói về city spaces; đoạn sau nói điều kiện và giới hạn của remote work.
+Vì sao các phương án khác sai: Chỉ là chủ đề phụ hoặc không xuất hiện.
+
+### Q002
+
+- Thứ tự: 2
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What did office workers often do before the pandemic?
+
+A. Work mainly in residential cafés
+B. Spend most of the day in business districts
+C. Work only from home
+D. Attend public events every evening
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Đây là chi tiết trực tiếp ở câu thứ hai.
+Bằng chứng trong bài đọc: “often spent most of the day in large business districts.”
+Vì sao các phương án khác sai: Không phù hợp với mô tả trước đại dịch.
+
+### Q003
+
+- Thứ tự: 3
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is one possible benefit for residential areas?
+
+A. More support for small businesses
+B. Fewer cultural facilities
+C. Less reliable internet
+D. More empty cafés
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Người làm việc ở nhà sử dụng các dịch vụ gần nơi ở, có thể hỗ trợ doanh nghiệp nhỏ.
+Bằng chứng trong bài đọc: “This change can support small businesses in residential areas.”
+Vì sao các phương án khác sai: Không được nêu như lợi ích.
+
+### Q004
+
+- Thứ tự: 4
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: The word “these centres” refers to...
+
+A. local cafés
+B. residential areas
+C. traditional office centres
+D. cultural facilities
+
+Đáp án đúng: C
+Giải thích tiếng Việt: Cụm này xuất hiện ngay sau câu nói các trung tâm văn phòng truyền thống có thể giảm hoạt động.
+Bằng chứng trong bài đọc: “it may also reduce activity in traditional office centres. City planners...”
+Vì sao các phương án khác sai: Không khớp với chủ thể được quy hoạch làm cho hấp dẫn hơn.
+
+### Q005
+
+- Thứ tự: 5
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Why are city planners considering public events and housing?
+
+A. To make office centres active at different times
+B. To prevent people working from home
+C. To remove all offices
+D. To reduce access to libraries
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Các tiện ích mới giúp khu trung tâm hoạt động cả sau giờ làm việc.
+Bằng chứng trong bài đọc: “make these centres attractive at different times of the day” và “remain active after working hours.”
+Vì sao các phương án khác sai: A là mục tiêu được nêu; B, C và D trái với bài.
+
+### Q006
+
+- Thứ tự: 6
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What does “The aim is not to remove offices” suggest?
+
+A. The writer supports closing business districts.
+B. The writer supports a balanced change rather than total replacement.
+C. The writer thinks offices are unnecessary.
+D. The writer has no opinion.
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Câu này phủ định việc loại bỏ văn phòng hoàn toàn và hướng đến khu phố đa chức năng.
+Bằng chứng trong bài đọc: “but to create neighbourhoods that remain active after working hours.”
+Vì sao các phương án khác sai: Không đúng với cấu trúc “not... but...”.
+
+### Q007
+
+- Thứ tự: 7
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: In the passage, “flexibility” is closest in meaning to...
+
+A. the ability to adjust when and where to work
+B. a fixed daily schedule
+C. a lack of internet access
+D. a need to work longer hours
+
+Đáp án đúng: A
+Giải thích tiếng Việt: Ngữ cảnh nói nhân viên được làm việc ở nhà một số ngày, nên flexibility là khả năng linh hoạt về thời gian/nơi làm việc.
+Bằng chứng trong bài đọc: “employees may enjoy greater flexibility” sau phần mô tả remote work.
+Vì sao các phương án khác sai: Không phù hợp với nghĩa trong ngữ cảnh.
+
+### Q008
+
+- Thứ tự: 8
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Which problem can make home working difficult?
+
+A. Too many cultural facilities
+B. Crowded homes or weak internet connections
+C. Too many local cafés
+D. Shorter working hours
+
+Đáp án đúng: B
+Giải thích tiếng Việt: Đoạn hai nêu hai trở ngại trực tiếp.
+Bằng chứng trong bài đọc: “crowded homes or weak connections make home working difficult.”
+Vì sao các phương án khác sai: Không được nêu là trở ngại.
+
+### Q009
+
+- Thứ tự: 9
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: Why might employers offer a mixture of remote and office-based work?
+
+A. Employees have identical needs.
+B. Remote work has exactly the same effect everywhere.
+C. Conditions and employee preferences differ.
+D. Offices are always empty.
+
+Đáp án đúng: C
+Giải thích tiếng Việt: Vì điều kiện nhà ở, internet và nhu cầu của nhân viên khác nhau nên một mô hình duy nhất không phù hợp.
+Bằng chứng trong bài đọc: “The effects ... are not the same everywhere” và “rather than one solution for every employee.”
+Vì sao các phương án khác sai: A, B và D trái hoặc không được nêu.
+
+### Q010
+
+- Thứ tự: 10
+- Mã ngữ liệu liên quan: TEXT_R003
+- Dạng: SINGLE_CHOICE
+- Yêu cầu hiển thị: What is the writer’s attitude towards remote work?
+
+A. Completely positive
+B. Completely negative
+C. Balanced and conditional
+D. Uninterested
+
+Đáp án đúng: C
+Giải thích tiếng Việt: Tác giả nêu lợi ích, tác động tiêu cực và điều kiện để làm việc từ xa hiệu quả.
+Bằng chứng trong bài đọc: “can support” nhưng “may also reduce”; đoạn cuối nêu cả thuận lợi và khó khăn.
+Vì sao các phương án khác sai: Bài không ủng hộ hoặc phản đối tuyệt đối.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi giáo viên duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ.
+
+---
+
+# P_W001 — TASK 1 EMAIL PLAN & WRITE
+
+## A. Thông tin bộ
+
+- Mã bộ: P_W001
+- Tên bộ: Writing — Task 1 Email Plan & Write
+- Kỹ năng: WRITING
+- Phần thi liên quan: Task 1 — email/thư
+- Mức độ hướng tới: B1
+- Chủ đề: Xin đổi lịch tham gia hoạt động
+- Mục tiêu luyện tập: Lập ý, dùng văn phong phù hợp và trả lời đủ gạch đầu dòng.
+- Thời lượng dự kiến: 15 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: PROMPT_W001
+- Đoạn văn / tình huống:
+You cannot attend an English Club meeting this Friday. Write an email to the club leader. In your email, explain why you cannot attend, suggest another time and ask what preparation is needed. Write at least 120 words.
+- File audio: Không áp dụng.
+- Transcript: Không áp dụng.
+- Nguồn và quyền sử dụng: Prompt và model do WEWIN tự biên soạn.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: PROMPT_W001
+- Dạng: WRITING_SELF_REVIEW
+- Yêu cầu hiển thị: Viết email 120–150 từ theo đề, sau đó tự đối chiếu.
+
+Đề viết: Sử dụng prompt ở trên.
+Số từ hướng dẫn: 120–150 từ trong phiên luyện; người học vẫn cần đọc yêu cầu tối thiểu của đề.
+Các ý cần đáp ứng:
+1. Nêu lý do không thể tham dự.
+2. Đề xuất thời gian khác.
+3. Hỏi cần chuẩn bị gì.
+4. Có lời chào, lời kết và văn phong phù hợp.
+
+Bài mẫu:
+“Dear Ms Lan,
+
+I am writing to let you know that I cannot attend the English Club meeting this Friday because I have to take my younger brother to a medical appointment. I am sorry for the inconvenience.
+
+Could we meet next Monday afternoon instead? I would also like to know whether I should prepare a short presentation for the next activity. If there are any materials that I need to read before the meeting, please send them to me.
+
+Thank you for your understanding. I look forward to hearing from you.
+
+Best regards,
+Minh”
+
+Phân tích bài mẫu bằng tiếng Việt: Bài mở đầu nêu mục đích, thân bài trả lời đủ ba ý và kết bài lịch sự. Câu hỏi “Could we...” phù hợp khi đề xuất thay đổi lịch.
+
+Checklist tự đánh giá:
+- [ ] Tôi đã trả lời đủ ba yêu cầu trong đề.
+- [ ] Email có đoạn mở đầu, thân bài và kết thúc rõ.
+- [ ] Tôi đã kiểm tra thì, đại từ, liên từ và số từ.
+- [ ] Tôi đã sửa ít nhất một câu sau khi đối chiếu bài mẫu.
+
+Yêu cầu sửa và viết lại: Chọn một câu chưa rõ hoặc một ý còn thiếu, sửa lại và viết lại toàn bộ email trong phiên bản thứ hai.
+
+Không cấp điểm VSTEP tự động.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi giáo viên duyệt.
+- Bằng chứng: Prompt, model và checklist lưu trong hồ sơ nội bộ WEWIN.
+
+---
+
+# P_W002 — FIX THE PARAGRAPH
+
+## A. Thông tin bộ
+
+- Mã bộ: P_W002
+- Tên bộ: Writing — Fix the Paragraph
+- Kỹ năng: WRITING
+- Phần thi liên quan: Task 1–2; bổ trợ sửa câu và liên kết ý
+- Mức độ hướng tới: B1-B2
+- Chủ đề: Lợi ích của hoạt động thể thao
+- Mục tiêu luyện tập: Nhận ra lỗi liên kết, lựa chọn từ và phát triển câu.
+- Thời lượng dự kiến: 10 phút
+- Phân loại: BÀI BỔ TRỢ
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: TEXT_W002
+- Đoạn văn / tình huống:
+Đoạn cần sửa: “Playing sport is good for students. Firstly, it makes them healthy. Also, students can learn teamwork. However, sport is healthy, so schools should give students more time to practise. For example, students can play basketball together.”
+- File audio: Không áp dụng.
+- Transcript: Không áp dụng.
+- Nguồn và quyền sử dụng: Tự biên soạn bởi WEWIN.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: TEXT_W002
+- Dạng: WRITING_SELF_REVIEW
+- Yêu cầu hiển thị: Viết lại đoạn văn để tránh lặp ý và dùng từ nối chính xác.
+
+Đề viết: Giữ nguyên hai ý chính về sức khỏe và kỹ năng làm việc nhóm; sửa câu chuyển ý và thêm một câu giải thích.
+Số từ hướng dẫn: 60–80 từ.
+Các ý cần đáp ứng:
+1. Có câu chủ đề.
+2. Phát triển hai lợi ích khác nhau.
+3. Không dùng “healthy” như một câu chuyển ý sai nghĩa.
+4. Dùng từ nối phù hợp.
+
+Bài mẫu:
+“Playing sport is beneficial for students in several ways. Firstly, regular exercise helps them stay healthy and improves their energy. In addition, team sports teach students how to cooperate and communicate with others. For example, basketball players must share the ball and support their teammates. Therefore, schools should provide students with enough time and space to take part in sports.”
+
+Phân tích bài mẫu bằng tiếng Việt: “In addition” thêm lợi ích mới; “For example” đưa dẫn chứng; “Therefore” kết luận từ các lý do trước đó. Câu mẫu không lặp “healthy” như bản ban đầu.
+
+Checklist tự đánh giá:
+- [ ] Tôi có một câu chủ đề rõ.
+- [ ] Mỗi lợi ích có giải thích hoặc ví dụ.
+- [ ] Từ nối thể hiện đúng quan hệ giữa các câu.
+- [ ] Tôi đã viết lại ít nhất một câu thay vì chỉ thay một từ.
+
+Yêu cầu sửa và viết lại: Gạch chân các từ nối trong phiên bản mới và giải thích ngắn chức năng của từng từ.
+
+Không cấp điểm VSTEP tự động.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi giáo viên duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ.
+
+---
+
+# P_W003 — TASK 2 ARGUMENT BUILDER
+
+## A. Thông tin bộ
+
+- Mã bộ: P_W003
+- Tên bộ: Writing — Task 2 Argument Builder
+- Kỹ năng: WRITING
+- Phần thi liên quan: Task 2 — essay
+- Mức độ hướng tới: B2
+- Chủ đề: Sinh viên làm thêm
+- Mục tiêu luyện tập: Xây dựng một đoạn theo claim → reason → explanation → example.
+- Thời lượng dự kiến: 15 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: PROMPT_W003
+- Đoạn văn / tình huống:
+Some people think university students should work part-time while studying. Others believe students should focus only on their studies. Discuss both views and give your opinion.
+- File audio: Không áp dụng.
+- Transcript: Không áp dụng.
+- Nguồn và quyền sử dụng: Prompt, outline và model do WEWIN tự biên soạn.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: PROMPT_W003
+- Dạng: WRITING_SELF_REVIEW
+- Yêu cầu hiển thị: Lập dàn ý hai phía và viết một đoạn thân bài 80–100 từ.
+
+Đề viết: Chọn một lợi ích của việc làm thêm và phát triển thành một đoạn.
+Số từ hướng dẫn: 80–100 từ.
+Các ý cần đáp ứng:
+1. Claim rõ.
+2. Lý do giải thích claim.
+3. Ví dụ cụ thể.
+4. Câu kết nối với chủ đề.
+
+Bài mẫu:
+“Part-time work can help students develop practical skills. For example, a student who works in a shop may learn how to communicate with customers, manage time and solve simple problems. These skills can be useful when the student applies for a full-time job after graduation. However, part-time work should not take so much time that it affects academic performance.”
+
+Phân tích bài mẫu bằng tiếng Việt: Câu đầu là claim. Hai câu giữa giải thích và đưa ví dụ. Câu cuối thêm điều kiện để lập luận không cực đoan.
+
+Checklist tự đánh giá:
+- [ ] Đoạn có một ý trung tâm, không liệt kê quá nhiều ý.
+- [ ] Tôi giải thích vì sao claim đúng.
+- [ ] Ví dụ cụ thể và liên quan đến claim.
+- [ ] Câu cuối không mở thêm một chủ đề mới.
+
+Yêu cầu sửa và viết lại: Viết lại đoạn sau khi thay ví dụ chung chung bằng một ví dụ cụ thể hơn.
+
+Không cấp điểm VSTEP tự động.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sử dụng sau khi giáo viên duyệt.
+- Bằng chứng: Hồ sơ biên soạn nội bộ.
+
+---
+
+# P_S001 — PART 1 RECORD, REVIEW, REPEAT
+
+## A. Thông tin bộ
+
+- Mã bộ: P_S001
+- Tên bộ: Speaking — Part 1 Record, Review, Repeat
+- Kỹ năng: SPEAKING
+- Phần thi liên quan: Part 1 — social interaction
+- Mức độ hướng tới: B1
+- Chủ đề: Cuối tuần và hoạt động ngoài trời
+- Mục tiêu luyện tập: Trả lời trực tiếp, nêu lý do và thêm ví dụ ngắn.
+- Thời lượng dự kiến: 8 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: PROMPT_S001
+- Đoạn văn / tình huống:
+1. What do you usually do at weekends?
+2. Do you prefer indoor or outdoor activities? Why?
+3. How often do you meet your friends?
+- File audio: audio/practice/P_S001_model.mp3 (nạp theo audio-manifest-v1.txt)
+- Transcript: “At weekends, I usually meet my friends or go for a walk. I prefer outdoor activities because they help me relax after a busy week. For example, we sometimes walk around the lake near my house.”
+- Nguồn và quyền sử dụng: Prompt, model transcript và audio mẫu do WEWIN tạo.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: PROMPT_S001
+- Dạng: SPEAKING_SELF_REVIEW
+- Yêu cầu hiển thị: Ghi âm trả lời ba câu hỏi, nghe lại và ghi âm lần hai sau khi tự sửa.
+
+Câu hỏi / tình huống: Dùng ba câu hỏi trong ngữ liệu.
+Thời gian chuẩn bị: 15 giây cho mỗi câu.
+Thời gian nói mục tiêu: 20–30 giây cho mỗi câu.
+Gợi ý triển khai ý: Answer → Reason → Example.
+File audio mẫu: audio/practice/P_S001_model.mp3 (nạp theo audio-manifest-v1.txt).
+Transcript bài mẫu: Dùng transcript trong phần B.
+Phân tích bằng tiếng Việt: Câu trả lời mở đầu trực tiếp, có lý do và ví dụ. Người học không cần dùng từ vựng quá khó nhưng cần nói đủ ý.
+Checklist tự đánh giá:
+- [ ] Tôi trả lời đúng câu hỏi ngay từ câu đầu.
+- [ ] Tôi có ít nhất một lý do.
+- [ ] Tôi có ví dụ hoặc chi tiết cá nhân.
+- [ ] Tôi nghe lại và sửa một lỗi rõ ràng ở lần hai.
+
+Yêu cầu ghi âm lại: Ghi âm lần hai, cố gắng sửa đúng một mục trong checklist; không cố sửa mọi lỗi cùng lúc.
+
+Không cấp điểm phát âm hoặc trình độ tự động.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sau khi audio được thu và giáo viên duyệt.
+- Bằng chứng: Prompt, transcript và audio lưu cùng mã PROMPT_S001.
+
+---
+
+# P_S002 — CHOOSE ONE SOLUTION
+
+## A. Thông tin bộ
+
+- Mã bộ: P_S002
+- Tên bộ: Speaking — Choose One Solution
+- Kỹ năng: SPEAKING
+- Phần thi liên quan: Part 2 — solution discussion
+- Mức độ hướng tới: B2
+- Chủ đề: Chuyến đi học tập của lớp
+- Mục tiêu luyện tập: Nêu lựa chọn, hai lý do, so sánh phương án khác và kết luận.
+- Thời lượng dự kiến: 12 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: PROMPT_S002
+- Đoạn văn / tình huống:
+Your class wants to organize a study trip. Choose one: a museum visit, a countryside picnic or an online cultural tour. Explain your choice and say why you do not choose the other options.
+- File audio: audio/practice/P_S002_model.mp3 (nạp theo audio-manifest-v1.txt)
+- Transcript: “For the class trip, I would choose a museum visit. It would be educational and suitable for everyone, even if the weather is bad. A picnic could be enjoyable, but it depends on the weather and may require more preparation. An online tour is convenient, although it may be less memorable. Therefore, the museum is the most balanced choice.”
+- Nguồn và quyền sử dụng: Prompt, model transcript và audio mẫu do WEWIN tạo.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: PROMPT_S002
+- Dạng: SPEAKING_SELF_REVIEW
+- Yêu cầu hiển thị: Chuẩn bị, ghi âm câu trả lời, nghe lại và ghi âm lần hai.
+
+Câu hỏi / tình huống: Dùng tình huống trong ngữ liệu.
+Thời gian chuẩn bị: 60 giây.
+Thời gian nói mục tiêu: 90–120 giây.
+Gợi ý triển khai ý: Choice → Reason 1 → Reason 2 → Compare → Conclusion.
+File audio mẫu: audio/practice/P_S002_model.mp3 (nạp theo audio-manifest-v1.txt).
+Transcript bài mẫu: Dùng transcript trong phần B.
+Phân tích bằng tiếng Việt: Bài mẫu chọn rõ bảo tàng, nêu hai lý do, nhắc đến hai phương án còn lại và kết luận. Người học có thể dùng lý do khác nhưng phải giữ cấu trúc.
+Checklist tự đánh giá:
+- [ ] Tôi nêu lựa chọn trong 1–2 câu đầu.
+- [ ] Tôi có ít nhất hai lý do phát triển được.
+- [ ] Tôi nhắc đến cả hai phương án không chọn.
+- [ ] Tôi có câu kết luận rõ.
+
+Yêu cầu ghi âm lại: Nghe bản đầu, ghi ra một ý còn thiếu, sau đó ghi âm lần hai với ý đó được bổ sung.
+
+Không cấp điểm phát âm hoặc trình độ tự động.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sau khi audio được thu và giáo viên duyệt.
+- Bằng chứng: Prompt, transcript và audio lưu cùng mã PROMPT_S002.
+
+---
+
+# P_S003 — TOPIC DEVELOPMENT LOOP
+
+## A. Thông tin bộ
+
+- Mã bộ: P_S003
+- Tên bộ: Speaking — Topic Development Loop
+- Kỹ năng: SPEAKING
+- Phần thi liên quan: Part 3 — topic development
+- Mức độ hướng tới: B2
+- Chủ đề: Học trực tuyến
+- Mục tiêu luyện tập: Phát triển hai luận điểm và trả lời câu hỏi mở rộng bằng lý do, ví dụ.
+- Thời lượng dự kiến: 15 phút
+- Phân loại: LUYỆN DẠNG THI
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Ngữ liệu dùng chung
+
+- Mã ngữ liệu: PROMPT_S003
+- Đoạn văn / tình huống:
+Talk about the advantages of online learning. You should mention flexibility, access to materials and interaction with teachers.
+- File audio: audio/practice/P_S003_model.mp3 (nạp theo audio-manifest-v1.txt)
+- Transcript: “Online learning has become popular for several reasons. Firstly, it is flexible because students can study at a convenient time and place. This is especially useful for people who work full-time. Secondly, online courses usually provide digital materials that students can review many times. However, online learning may reduce direct interaction with teachers. For this reason, a good course should include live discussions and regular feedback. Overall, online learning is effective when students have enough support and manage their time well.”
+- Nguồn và quyền sử dụng: Prompt, model transcript và audio mẫu do WEWIN tạo.
+
+## C. Câu hỏi / hoạt động
+
+### Q001
+
+- Thứ tự: 1
+- Mã ngữ liệu liên quan: PROMPT_S003
+- Dạng: SPEAKING_SELF_REVIEW
+- Yêu cầu hiển thị: Chuẩn bị 60 giây, nói 2 phút, tự đánh giá, sau đó ghi âm lần hai.
+
+Câu hỏi / tình huống: Dùng topic trong ngữ liệu.
+Thời gian chuẩn bị: 60 giây.
+Thời gian nói mục tiêu: 120 giây.
+Gợi ý triển khai ý: Mở chủ đề → ý 1 và giải thích → ý 2 và ví dụ → hạn chế/giải pháp → kết luận.
+File audio mẫu: audio/practice/P_S003_model.mp3 (nạp theo audio-manifest-v1.txt).
+Transcript bài mẫu: Dùng transcript trong phần B.
+Phân tích bằng tiếng Việt: Bài mẫu không chỉ liệt kê lợi ích; mỗi ý có giải thích. Phần hạn chế được nối với giải pháp và kết thúc bằng điều kiện để kết luận cân bằng.
+Checklist tự đánh giá:
+- [ ] Tôi có ít nhất hai ý được phát triển.
+- [ ] Mỗi ý có giải thích hoặc ví dụ.
+- [ ] Tôi dùng từ nối để người nghe theo dõi được mạch nói.
+- [ ] Tôi có câu kết và đã ghi âm lại sau khi sửa.
+
+Yêu cầu ghi âm lại: Chọn một điểm cần sửa, ví dụ thiếu ví dụ hoặc kết luận quá ngắn, rồi ghi âm lần hai.
+
+Không cấp điểm phát âm hoặc trình độ tự động.
+
+## D. Nguồn và quyền sử dụng của bộ
+
+- Tên tài liệu / tác giả / đơn vị: Nội dung gốc WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang hoặc mục được sử dụng: Không áp dụng.
+- Quyền sử dụng và phân phối trên website: Được phép sau khi audio được thu và giáo viên duyệt.
+- Bằng chứng: Prompt, transcript và audio lưu cùng mã PROMPT_S003.

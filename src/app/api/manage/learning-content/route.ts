@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { getCurrentUser } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
+import { deleteObject } from "@/lib/storage";
 import { isSameOrigin } from "@/lib/request-security";
 import { CONTENT_KINDS, CONTENT_SKILLS, MAX_CONTENT_BYTES, parseContentFile, validateContent, type ContentKind } from "@/lib/learning-content";
 
@@ -91,8 +92,13 @@ export async function DELETE(request: Request) {
   try {
     const data = await readBody(request);
     if (typeof data.id !== "string" || !data.id || !CONTENT_KINDS.includes(data.kind) || typeof data.updatedAt !== "string" || !Number.isFinite(Date.parse(data.updatedAt))) throw new Error("Bài cần xóa không hợp lệ.");
+    const item = await prisma.learningContent.findUnique({ where: { id: data.id } });
     const result = await prisma.learningContent.deleteMany({ where: { id: data.id, kind: data.kind, updatedAt: new Date(data.updatedAt) } });
     if (!result.count) return reply({ error: "Bài đã thay đổi hoặc bị xóa. Hãy tải lại danh sách." }, 409);
+    if (item?.audioKey) {
+      try { await deleteObject(item.audioKey); }
+      catch { return reply({ success: true, warning: "Đã xóa bài nhưng chưa dọn được MP3 trong kho." }); }
+    }
     return reply({ success: true });
   } catch (error) { return failure(error); }
 }

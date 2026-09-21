@@ -354,11 +354,18 @@ model LearningContent {
   level     String
   body      String
   published Boolean  @default(false)
+  audioKey  String?  @unique
+  audioName String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([kind, code])
   @@index([kind, published, skill, createdAt])
+}
+
+model LearningContentImport {
+  id          String   @id
+  completedAt DateTime @default(now())
 }
 
 model PracticeItem {

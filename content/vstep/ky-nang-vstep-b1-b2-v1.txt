@@ -1,0 +1,598 @@
+# BỘ BÀI HỌC KỸ NĂNG VSTEP B1-B2 — BẢN CHÍNH THỨC WEWIN V1.0
+
+## Thông tin phát hành
+
+- Phiên bản: 1.0
+- Phạm vi: 8 bài chính thức, gồm 2 Listening, 2 Reading, 2 Writing và 2 Speaking.
+- Tính chất nguồn: WEWIN_ORIGINAL; toàn bộ đề, đoạn văn, câu trả lời mẫu, transcript và checklist do WEWIN tự biên soạn.
+- Quan hệ với VSTEP: bám cấu trúc và tiểu kỹ năng VSTEP.3–5 theo report nghiên cứu; không tự nhận là đề thi thật hoặc tài liệu do đơn vị tổ chức thi phát hành.
+- Phản hồi Writing/Speaking: tự đối chiếu theo bài mẫu và checklist, không dùng AI để cấp điểm VSTEP.
+- Audio: danh sách file cần tạo nằm trong `content/vstep/audio-manifest-v1.txt`; transcript đã có trong từng bài.
+- Trạng thái phát hành: CHÍNH THỨC V1.0 — chờ QTV/giáo viên xác nhận cuối trước khi bật công khai trên website.
+- Yêu cầu QA: kiểm tra ngôn ngữ, đáp án, mức B1/B2, audio–transcript và quyền sử dụng trước khi chuyển sang CMS.
+
+---
+
+# BÀI 1 — LISTENING: NGHE Ý CHÍNH TRƯỚC, BẮT CHI TIẾT SAU
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: L_GIST_DETAIL_001
+- Tên bài: Nghe ý chính trước, bắt chi tiết sau
+- Kỹ năng: LISTENING
+- Phần thi: Part 1 — thông báo và hội thoại ngắn
+- Mức độ hướng tới: B1
+- Chủ đề: Workshop tiếng Anh cuối tuần
+- Thứ tự bài học: 1
+- Thời lượng dự kiến: 20 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Nắm chủ đề và mục đích chính của một thông báo ngắn.
+2. Ghi lại đúng các chi tiết quan trọng như thời gian, địa điểm và việc cần chuẩn bị.
+
+## C. Hướng dẫn ngắn
+
+1. Đọc nhanh câu hỏi trước khi nghe để biết cần tìm thông tin gì.
+2. Lần nghe đầu tập trung vào người nói, chủ đề và mục đích.
+3. Lần nghe sau, nếu là bài bổ trợ, kiểm tra số, tên riêng và từ khóa. Với bài gắn nhãn LUYỆN DẠNG THI, chỉ nghe một lần.
+4. Không cố ghi lại từng từ. Chỉ ghi các từ giúp trả lời câu hỏi.
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+Bạn nghe thông báo của một trung tâm về workshop tiếng Anh.
+
+Đoạn nghe mẫu:
+“Good morning, everyone. The English Communication Workshop will take place this Saturday in Room 204, not in the main hall as announced earlier. The workshop starts at nine thirty and finishes at eleven. Please bring a notebook and your student card. You do not need to prepare a presentation. The first activity will be a short discussion about learning English through films.”
+
+File audio mẫu:
+[audio/skills/L_GIST_DETAIL_001_model.mp3 (nạp theo audio-manifest-v1.txt)]
+
+Transcript tương ứng:
+Đoạn nghe mẫu ở trên; người thu âm phải đọc đúng transcript, với tốc độ tự nhiên phù hợp B1.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: ý chính là thông báo thay đổi địa điểm và hướng dẫn tham dự workshop.
+- Vì sao cách làm này phù hợp: “Room 204, not in the main hall” là chi tiết sửa thông tin cũ; “nine thirty” là thời gian bắt đầu.
+- Lỗi thường gặp và cách sửa: chọn “main hall” vì nghe thấy từ này nhưng bỏ qua “not”; cần chú ý từ phủ định và thông tin được sửa lại.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: nghe một thông báo mới, trả lời 4 câu hỏi về ý chính, địa điểm, thời gian và vật dụng cần mang.
+
+Hình thức: CHỌN ĐÁP ÁN
+
+Mã bài tập liên kết: P_L001
+
+## F. Tự kiểm tra
+
+- [ ] Tôi xác định được ai đang nói và mục đích của thông báo.
+- [ ] Tôi phân biệt được thông tin cũ và thông tin đã được sửa.
+- [ ] Tôi đã xem transcript sau khi trả lời và làm lại câu sai.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN; lưu hồ sơ người biên soạn.
+- Nội dung còn cần kiểm chứng: Audio, đáp án của P_L001 và level B1 cần giáo viên duyệt.
+
+---
+
+# BÀI 2 — LISTENING: SUY LUẬN THÁI ĐỘ VÀ MỤC ĐÍCH
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: L_ATTITUDE_PURPOSE_001
+- Tên bài: Nhận biết thái độ, mục đích và ý định của người nói
+- Kỹ năng: LISTENING
+- Phần thi: Part 2 — hội thoại dài
+- Mức độ hướng tới: B2
+- Chủ đề: Khóa học trực tuyến
+- Thứ tự bài học: 2
+- Thời lượng dự kiến: 25 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Nhận ra thái độ đồng ý, do dự hoặc phản đối khi người nói không nói trực tiếp.
+2. Suy luận mục đích của một câu hỏi và ý định của người nói trong hội thoại.
+
+## C. Hướng dẫn ngắn
+
+Lắng nghe cả từ ngữ và cách diễn đạt. “That sounds useful, but…” thường cho thấy người nói chưa hoàn toàn đồng ý. Khi câu hỏi yêu cầu mục đích, hãy hỏi: người nói đang muốn thông báo, thuyết phục, phàn nàn hay đề nghị điều gì?
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+Hai đồng nghiệp trao đổi về một khóa học trực tuyến.
+
+Đoạn hội thoại mẫu:
+“A: Have you decided whether to join the online presentation course?
+B: I’m still thinking about it. The flexible schedule is attractive, especially because I have evening classes. However, I’m not sure I can learn presentation skills without practising with other people.
+A: The course includes weekly group sessions.
+B: Oh, I didn’t know that. In that case, it may be worth trying for one month.”
+
+File audio mẫu:
+[audio/skills/L_ATTITUDE_PURPOSE_001_model.mp3 (nạp theo audio-manifest-v1.txt)]
+
+Transcript tương ứng:
+Đoạn hội thoại mẫu ở trên; cần thu hai giọng khác nhau, tốc độ tự nhiên, không thêm câu ngoài transcript.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: người B ban đầu do dự, không phản đối hoàn toàn khóa học.
+- Vì sao cách làm này phù hợp: “I’m still thinking about it” và “I’m not sure” thể hiện sự chưa quyết định; sau khi biết có group sessions, người B thay đổi theo hướng tích cực.
+- Lỗi thường gặp và cách sửa: chọn “B chắc chắn tham gia” vì câu cuối tích cực; cần phân biệt “may be worth trying” với một quyết định chắc chắn.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: nghe hội thoại về một lựa chọn học tập, xác định thái độ của từng người và mục đích của một câu hỏi.
+
+Hình thức: CHỌN ĐÁP ÁN
+
+Mã bài tập liên kết: P_L002
+
+## F. Tự kiểm tra
+
+- [ ] Tôi nhận ra được từ/cụm từ thể hiện sự do dự.
+- [ ] Tôi không suy luận thái độ chỉ từ câu cuối cùng.
+- [ ] Tôi giải thích được bằng chứng trong transcript cho đáp án của mình.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN.
+- Nội dung còn cần kiểm chứng: Audio, câu hỏi P_L002 và mức B2 cần giáo viên duyệt.
+
+---
+
+# BÀI 3 — READING: MAIN IDEA, DETAIL VÀ REFERENCE
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: R_MAIN_DETAIL_REFERENCE_001
+- Tên bài: Tìm ý chính, chi tiết và từ quy chiếu
+- Kỹ năng: READING
+- Phần thi: Reading Part 1–2
+- Mức độ hướng tới: B1
+- Chủ đề: Vườn rau trong trường học
+- Thứ tự bài học: 3
+- Thời lượng dự kiến: 25 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Xác định ý chính của một đoạn văn mà không chọn chi tiết nhỏ làm đáp án.
+2. Tìm thông tin trực tiếp và xác định từ quy chiếu dựa vào ngữ cảnh.
+
+## C. Hướng dẫn ngắn
+
+Đọc tiêu đề và câu đầu của mỗi đoạn để dự đoán chủ đề. Sau đó đọc câu hỏi, gạch từ khóa và tìm cách diễn đạt tương đương trong bài. Với câu hỏi “this/they/it refers to”, đọc cả câu trước và câu chứa từ quy chiếu.
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+Đọc đoạn văn và trả lời: What is the main purpose of the school garden project?
+
+Đoạn đọc mẫu:
+“Last year, Green Valley School turned an unused piece of land into a small garden. Students planted vegetables, measured the growth of different plants and recorded the amount of water they used. The project was not designed to produce food for the whole school. Instead, it helped students understand how science is connected to everyday life. Teachers also noticed that students became more willing to work in groups because the plants needed regular care. This experience encouraged the school to include more outdoor activities in its science classes.”
+
+File audio mẫu, nếu có: Không áp dụng.
+
+Transcript tương ứng: Không áp dụng.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: ý chính nằm ở mục đích giáo dục của dự án, không phải việc sản xuất rau.
+- Vì sao cách làm này phù hợp: câu “Instead, it helped students…” nói trực tiếp mục đích; các câu khác là chi tiết hỗ trợ.
+- Lỗi thường gặp và cách sửa: chọn “produce food for the whole school” vì đó là thông tin cụ thể nhưng bài nói rõ dự án không có mục đích này.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: đọc một đoạn mới, trả lời câu hỏi main idea, detail và reference; với mỗi đáp án phải chỉ ra câu bằng chứng.
+
+Hình thức: CHỌN ĐÁP ÁN
+
+Mã bài tập liên kết: P_R001
+
+## F. Tự kiểm tra
+
+- [ ] Tôi phân biệt được ý chính và chi tiết minh họa.
+- [ ] Tôi tìm được câu bằng chứng trong đoạn.
+- [ ] Tôi giải thích được từ quy chiếu dựa vào ngữ cảnh.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN.
+- Nội dung còn cần kiểm chứng: Đáp án P_R001 và level B1 cần giáo viên duyệt.
+
+---
+
+# BÀI 4 — READING: INFERENCE VÀ VOCABULARY IN CONTEXT
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: R_INFERENCE_VOCAB_001
+- Tên bài: Suy luận và đoán nghĩa từ trong ngữ cảnh
+- Kỹ năng: READING
+- Phần thi: Reading Part 2–4
+- Mức độ hướng tới: B2
+- Chủ đề: Thư viện cộng đồng
+- Thứ tự bài học: 4
+- Thời lượng dự kiến: 30 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Suy luận kết luận hợp lý từ nhiều chi tiết trong đoạn.
+2. Đoán nghĩa của từ chưa biết bằng ví dụ, đối lập và quan hệ nguyên nhân-kết quả.
+
+## C. Hướng dẫn ngắn
+
+Không cố dịch mọi từ. Với từ chưa biết, đọc câu trước và sau, tìm dấu hiệu như “however”, “for example”, “as a result”. Sau đó thay một nghĩa dự đoán vào câu để kiểm tra xem ý có hợp lý không.
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+Đọc đoạn văn và suy luận vì sao thư viện thay đổi cách phục vụ.
+
+Đoạn đọc mẫu:
+“For many years, the Riverside Library was mainly a quiet place where people borrowed books. Recently, however, fewer residents visited it regularly. The library responded by adding conversation clubs, homework support and short courses on digital skills. These activities attracted people who did not usually borrow books. Some of them later began using the library’s reading room and online catalogue. The change suggests that a library can remain useful even when people obtain much of their information from the internet.”
+
+File audio mẫu, nếu có: Không áp dụng.
+
+Transcript tương ứng: Không áp dụng.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: thư viện mở rộng dịch vụ để đáp ứng nhu cầu mới, không bỏ vai trò đọc sách.
+- Vì sao cách làm này phù hợp: “These activities attracted…” và “later began using…” cho thấy hoạt động mới kéo người dùng trở lại.
+- Lỗi thường gặp và cách sửa: suy luận rằng thư viện không còn cần thiết; đoạn cuối đưa ra kết luận ngược lại.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: trả lời câu hỏi suy luận và đoán nghĩa của một từ được chọn trong đoạn; ghi lại hai dấu hiệu hỗ trợ đáp án.
+
+Hình thức: CHỌN ĐÁP ÁN
+
+Mã bài tập liên kết: P_R002
+
+## F. Tự kiểm tra
+
+- [ ] Tôi có ít nhất hai chi tiết làm bằng chứng cho câu suy luận.
+- [ ] Tôi đoán nghĩa từ dựa vào ngữ cảnh, không chỉ dựa vào hình thức của từ.
+- [ ] Tôi kiểm tra lại đáp án bằng cách đọc cả đoạn.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN.
+- Nội dung còn cần kiểm chứng: Đáp án P_R002 và level B2 cần giáo viên duyệt.
+
+---
+
+# BÀI 5 — WRITING: TASK 1 EMAIL, MỤC ĐÍCH VÀ VĂN PHONG
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: W_TASK1_EMAIL_001
+- Tên bài: Viết email đủ mục đích, đúng văn phong
+- Kỹ năng: WRITING
+- Phần thi: Task 1 — email/thư
+- Mức độ hướng tới: B1
+- Chủ đề: Thay đổi kế hoạch tham gia câu lạc bộ
+- Thứ tự bài học: 5
+- Thời lượng dự kiến: 25 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Trả lời đủ các ý bắt buộc trong đề email.
+2. Chọn lời chào, lời đề nghị và lời kết phù hợp với người nhận.
+
+## C. Hướng dẫn ngắn
+
+Trước khi viết, gạch chân người nhận, mục đích và từng ý cần trả lời. Viết thành 3 đoạn: mở email và nêu mục đích, phát triển các ý chính, đề nghị hoặc lời kết. Sau khi viết, kiểm tra thì, đại từ, liên từ và số từ.
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+You cannot attend an English club meeting on Friday. Write an email to the club leader. In your email, explain why you cannot attend, suggest another time and ask what preparation is needed.
+
+Đoạn bài viết mẫu:
+“Dear Ms Lan,
+
+I am writing to let you know that I cannot attend the English Club meeting this Friday because I have to take my younger brother to a medical appointment. I am sorry for the inconvenience.
+
+Could we meet next Monday afternoon instead? I would also like to know whether I should prepare a short presentation for the next activity. If there are any materials that I need to read before the meeting, please send them to me.
+
+Thank you for your understanding. I look forward to hearing from you.
+
+Best regards,
+Minh”
+
+File audio mẫu, nếu có: Không áp dụng.
+
+Transcript tương ứng: Không áp dụng.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: bài viết trả lời đủ ba yêu cầu: lý do, thời gian mới và việc cần chuẩn bị.
+- Vì sao cách làm này phù hợp: câu mở đầu nêu mục đích rõ; câu hỏi lịch sự dùng “Could we…” và “please send…”.
+- Lỗi thường gặp và cách sửa: viết lý do quá dài nhưng quên hỏi việc cần chuẩn bị; nên chuyển đề thành checklist trước khi viết.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: viết một email 120–150 từ theo đề tương tự, sau đó dùng checklist và viết lại đoạn có lỗi.
+
+Hình thức: VIẾT
+
+Mã bài tập liên kết: P_W001
+
+## F. Tự kiểm tra
+
+- [ ] Tôi đã trả lời đủ mọi gạch đầu dòng trong đề.
+- [ ] Tôi dùng văn phong phù hợp với người nhận.
+- [ ] Tôi đã kiểm tra lời chào, lời kết, thì và số từ.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN.
+- Nội dung còn cần kiểm chứng: Model answer và checklist cần giáo viên Writing duyệt.
+
+---
+
+# BÀI 6 — WRITING: TASK 2, XÂY DỰNG LUẬN ĐIỂM
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: W_TASK2_ARGUMENT_001
+- Tên bài: Từ ý kiến đến đoạn văn có lý do và ví dụ
+- Kỹ năng: WRITING
+- Phần thi: Task 2 — essay
+- Mức độ hướng tới: B2
+- Chủ đề: Việc làm thêm của sinh viên
+- Thứ tự bài học: 6
+- Thời lượng dự kiến: 30 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Viết một luận điểm rõ ràng thay vì chỉ liệt kê ý kiến.
+2. Phát triển luận điểm theo chuỗi claim → reason → explanation → example.
+
+## C. Hướng dẫn ngắn
+
+Mỗi đoạn thân bài nên có một ý trung tâm. Sau câu chủ đề, giải thích vì sao ý đó đúng và đưa ví dụ cụ thể. Nếu có thể, kết đoạn bằng câu liên kết lại với câu hỏi. Không cố đưa quá nhiều ý chưa được giải thích.
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+Some people think university students should work part-time while studying. Others believe students should focus only on their studies. Discuss both views and give your opinion.
+
+Đoạn bài viết mẫu:
+“Part-time work can help students develop practical skills. For example, a student who works in a shop may learn how to communicate with customers, manage time and solve simple problems. These skills can be useful when the student applies for a full-time job after graduation. However, part-time work should not take so much time that it affects academic performance.”
+
+File audio mẫu, nếu có: Không áp dụng.
+
+Transcript tương ứng: Không áp dụng.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: đoạn chỉ tập trung vào một luận điểm: việc làm thêm giúp phát triển kỹ năng thực tế.
+- Vì sao cách làm này phù hợp: câu thứ hai giải thích và đưa ví dụ; câu cuối thêm điều kiện để lập luận cân bằng.
+- Lỗi thường gặp và cách sửa: đưa bốn lợi ích trong một đoạn nhưng không giải thích lợi ích nào; hãy chọn một ý và phát triển đủ.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: lập dàn ý hai phía và viết một đoạn thân bài 80–100 từ theo công thức claim → reason → example → link.
+
+Hình thức: VIẾT
+
+Mã bài tập liên kết: P_W003
+
+## F. Tự kiểm tra
+
+- [ ] Đoạn văn có câu chủ đề rõ.
+- [ ] Tôi đã giải thích vì sao luận điểm đúng.
+- [ ] Tôi có ví dụ cụ thể và câu liên kết.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN.
+- Nội dung còn cần kiểm chứng: Model paragraph và level B2 cần giáo viên duyệt.
+
+---
+
+# BÀI 7 — SPEAKING: TRẢ LỜI TRỰC TIẾP VÀ GIẢI THÍCH LỰA CHỌN
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: S_PART1_PART2_001
+- Tên bài: Trả lời trực tiếp, nêu lý do và so sánh lựa chọn
+- Kỹ năng: SPEAKING
+- Phần thi: Part 1 — social interaction và Part 2 — solution discussion
+- Mức độ hướng tới: B1-B2
+- Chủ đề: Hoạt động cuối tuần và phương tiện đi lại
+- Thứ tự bài học: 7
+- Thời lượng dự kiến: 25 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Trả lời câu hỏi Part 1 bằng câu trả lời trực tiếp, lý do và ví dụ ngắn.
+2. Chọn một giải pháp ở Part 2, giải thích lựa chọn và nhắc đến phương án còn lại.
+
+## C. Hướng dẫn ngắn
+
+Với Part 1, dùng cấu trúc Answer → Reason → Example. Với Part 2, dùng cấu trúc Choice → Reason 1 → Reason 2 → Compare → Conclusion. Nói rõ ý trước, sau đó mới thêm chi tiết.
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+Part 1: What do you usually do at weekends?
+Part 2: Your class wants to organize a study trip. Choose one: a museum visit, a countryside picnic or an online cultural tour.
+
+Đoạn câu trả lời mẫu:
+“At weekends, I usually meet my friends or go for a walk. I prefer outdoor activities because they help me relax after a busy week. For example, we sometimes walk around the lake near my house.
+
+For the class trip, I would choose a museum visit. It would be educational and suitable for everyone, even if the weather is bad. A picnic could be enjoyable, but it depends on the weather and may require more preparation. An online tour is convenient, although it may be less memorable. Therefore, the museum is the most balanced choice.”
+
+File audio mẫu:
+[audio/skills/S_PART1_PART2_001_model.mp3 (nạp theo audio-manifest-v1.txt)]
+
+Transcript tương ứng:
+Đoạn câu trả lời mẫu ở trên; cần thu một bản tốc độ B1 và một bản tốc độ B2 sau khi giáo viên duyệt.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: câu trả lời luôn đi thẳng vào lựa chọn trước khi giải thích.
+- Vì sao cách làm này phù hợp: người nói đưa hai lý do, so sánh hai phương án còn lại và kết luận.
+- Lỗi thường gặp và cách sửa: kể quá nhiều chi tiết không liên quan; mỗi ý cần phục vụ trực tiếp cho câu hỏi.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: ghi âm Part 1 một lần, nghe lại theo checklist, sau đó ghi âm Part 2 và làm lại điểm còn yếu.
+
+Hình thức: GHI ÂM
+
+Mã bài tập liên kết: P_S001 và P_S002
+
+## F. Tự kiểm tra
+
+- [ ] Tôi trả lời trực tiếp trong câu đầu tiên.
+- [ ] Tôi có ít nhất hai lý do hoặc một lý do kèm ví dụ.
+- [ ] Tôi đã so sánh và kết luận rõ ở Part 2.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN.
+- Nội dung còn cần kiểm chứng: Audio mẫu, thời lượng nói và checklist cần giáo viên Speaking duyệt.
+
+---
+
+# BÀI 8 — SPEAKING: PHÁT TRIỂN CHỦ ĐỀ PART 3
+
+## A. Thông tin bài học
+
+- Mã bộ: VSTEP_SKILL_B1_B2
+- Mã bài: S_PART3_TOPIC_001
+- Tên bài: Phát triển chủ đề theo ý chính, lý do và ví dụ
+- Kỹ năng: SPEAKING
+- Phần thi: Part 3 — topic development
+- Mức độ hướng tới: B2
+- Chủ đề: Học trực tuyến và học trực tiếp
+- Thứ tự bài học: 8
+- Thời lượng dự kiến: 30 phút
+- Người biên soạn: WEWIN Education
+- Người duyệt: QTV/giáo viên WEWIN
+- Trạng thái: CHÍNH THỨC V1.0 — SẴN SÀNG NẠP AUDIO VÀ QA
+
+## B. Mục tiêu
+
+Sau bài này, người học có thể:
+1. Triển khai một chủ đề theo ít nhất hai luận điểm có liên kết.
+2. Trả lời câu hỏi mở rộng bằng lý do, ví dụ và kết luận ngắn.
+
+## C. Hướng dẫn ngắn
+
+Trong thời gian chuẩn bị, chọn hai ý mạnh nhất thay vì cố dùng mọi ý. Mỗi ý nói theo chuỗi Point → Explain → Example. Dùng từ nối đơn giản như firstly, moreover, however và therefore để người nghe theo dõi được mạch nói.
+
+## D. Ví dụ có phân tích
+
+Đề hoặc tình huống:
+Talk about the advantages of online learning. You should mention flexibility, access to materials and interaction with teachers.
+
+Đoạn câu trả lời mẫu:
+“Online learning has become popular for several reasons. Firstly, it is flexible because students can study at a convenient time and place. This is especially useful for people who work full-time. Secondly, online courses usually provide digital materials that students can review many times. However, online learning may reduce direct interaction with teachers. For this reason, a good course should include live discussions and regular feedback. Overall, online learning is effective when students have enough support and manage their time well.”
+
+File audio mẫu:
+[audio/skills/S_PART3_TOPIC_001_model.mp3 (nạp theo audio-manifest-v1.txt)]
+
+Transcript tương ứng:
+Đoạn câu trả lời mẫu ở trên; cần thu một bản mẫu rõ ràng, không quá nhanh, có khoảng nghỉ tự nhiên sau mỗi ý.
+
+Phân tích bằng tiếng Việt:
+- Điểm cần chú ý: bài nói có hai lợi ích, một hạn chế và kết luận.
+- Vì sao cách làm này phù hợp: mỗi lợi ích được giải thích bằng một câu tiếp theo; phần hạn chế được nối với giải pháp.
+- Lỗi thường gặp và cách sửa: liệt kê từ khóa nhưng không phát triển; mỗi ý nên có ít nhất một câu giải thích hoặc ví dụ.
+
+## E. Hoạt động áp dụng
+
+Yêu cầu người học: chuẩn bị 60 giây, ghi âm 2 phút, nghe lại theo checklist, lập kế hoạch sửa một điểm và ghi âm lần hai.
+
+Hình thức: GHI ÂM
+
+Mã bài tập liên kết: P_S003
+
+## F. Tự kiểm tra
+
+- [ ] Tôi có mở bài nêu rõ chủ đề.
+- [ ] Tôi đã phát triển ít nhất hai ý bằng lý do hoặc ví dụ.
+- [ ] Tôi có câu kết và đã ghi âm lại sau khi tự sửa.
+
+## G. Nguồn và quyền sử dụng
+
+- Tài liệu tự biên soạn hay trích từ nguồn khác: Tự biên soạn bởi WEWIN.
+- Tên tài liệu gốc: Không áp dụng.
+- Tác giả / đơn vị phát hành: WEWIN Education.
+- URL nguồn: Không áp dụng.
+- Trang / mục / mốc thời gian sử dụng: Không áp dụng.
+- Giấy phép hoặc bằng chứng được phép sử dụng: Tài sản nội bộ WEWIN.
+- Nội dung còn cần kiểm chứng: Audio mẫu, thời lượng Part 3 và checklist cần giáo viên Speaking duyệt.

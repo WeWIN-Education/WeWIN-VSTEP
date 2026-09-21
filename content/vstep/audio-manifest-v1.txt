@@ -1,0 +1,50 @@
+# DANH SÁCH AUDIO CẦN TẠO — WEWIN VSTEP V1.0
+
+## Quy ước tạo file
+
+- Tạo đúng tên và thư mục tương đối bên dưới; không đổi mã file.
+- Định dạng phát hành: MP3, 44.1 kHz, mono hoặc stereo, 128 kbps trở lên.
+- Không thêm nhạc nền, hiệu ứng hoặc câu ngoài transcript.
+- Transcript trong hai file nội dung là nguồn duy nhất để tạo giọng đọc.
+- Sau khi tạo, QTV phải nghe lại đầu file, giữa file và cuối file; xác nhận audio khớp transcript trước khi upload.
+- Listening có nhãn `LUYỆN DẠNG THI`: bản phát hành cho người học không cho nghe lại trong lượt làm bài đầu tiên.
+- Các bài `BÀI BỔ TRỢ` có thể cho nghe lại sau khi người học trả lời.
+
+## Danh sách file
+
+| STT | File cần tạo | Loại | Transcript lấy tại | Giọng đọc | Thời lượng mục tiêu |
+|---:|---|---|---|---|---:|
+| 1 | `audio/skills/L_GIST_DETAIL_001_model.mp3` | Bài Kỹ năng Listening 1 | `ky-nang-vstep-b1-b2-v1.txt`, Bài 1, mục D | Một giọng tiếng Anh rõ, tốc độ B1 | 35–45 giây |
+| 2 | `audio/skills/L_ATTITUDE_PURPOSE_001_model.mp3` | Bài Kỹ năng Listening 2 | `ky-nang-vstep-b1-b2-v1.txt`, Bài 2, mục D | Hai giọng khác nhau, hội thoại tự nhiên, tốc độ B2 | 25–35 giây |
+| 3 | `audio/skills/S_PART1_PART2_001_model.mp3` | Bài Kỹ năng Speaking 1 | `ky-nang-vstep-b1-b2-v1.txt`, Bài 7, mục D | Một giọng mẫu rõ, tốc độ B1–B2 | 45–60 giây |
+| 4 | `audio/skills/S_PART3_TOPIC_001_model.mp3` | Bài Kỹ năng Speaking 2 | `ky-nang-vstep-b1-b2-v1.txt`, Bài 8, mục D | Một giọng mẫu rõ, có khoảng nghỉ tự nhiên | 55–75 giây |
+| 5 | `audio/practice/P_L001_AUDIO_L001.mp3` | Bài tập Listening P_L001 | `bai-tap-vstep-b1-b2-v1.txt`, P_L001, mục B | Một giọng thông báo rõ, tốc độ B1 | 35–45 giây |
+| 6 | `audio/practice/P_L002_AUDIO_L002.mp3` | Bài tập Listening P_L002 | `bai-tap-vstep-b1-b2-v1.txt`, P_L002, mục B | Hai giọng hội thoại, thể hiện do dự rồi thay đổi ý kiến | 25–35 giây |
+| 7 | `audio/practice/P_L003_AUDIO_L003.mp3` | Bài tập Listening P_L003 | `bai-tap-vstep-b1-b2-v1.txt`, P_L003, mục B | Một giọng bài nói, tốc độ B2, ngắt câu rõ | 50–65 giây |
+| 8 | `audio/practice/P_S001_model.mp3` | Bài tập Speaking P_S001 | `bai-tap-vstep-b1-b2-v1.txt`, P_S001, mục B | Một giọng mẫu thân thiện, tốc độ B1 | 20–30 giây |
+| 9 | `audio/practice/P_S002_model.mp3` | Bài tập Speaking P_S002 | `bai-tap-vstep-b1-b2-v1.txt`, P_S002, mục B | Một giọng mẫu lập luận rõ, tốc độ B2 | 40–55 giây |
+| 10 | `audio/practice/P_S003_model.mp3` | Bài tập Speaking P_S003 | `bai-tap-vstep-b1-b2-v1.txt`, P_S003, mục B | Một giọng mẫu thuyết trình, tốc độ B2 | 55–75 giây |
+
+## Yêu cầu riêng cho từng loại
+
+### Listening một người đọc
+
+Áp dụng cho L_GIST_DETAIL_001, P_L001 và P_L003. Đọc tự nhiên, không đọc tiêu đề, không đọc dấu ngoặc kép. Với P_L001, giữ rõ các từ chỉ ngày, giờ và địa điểm. Với P_L003, ngắt nhẹ giữa các luận điểm.
+
+### Listening hội thoại hai người
+
+Áp dụng cho L_ATTITUDE_PURPOSE_001 và P_L002. Dùng hai giọng khác nhau nhưng đều dễ nghe. Không đọc tên “A”, “B”, “Mai” hoặc “Nam” nếu tên đó chỉ là nhãn transcript. Giữ một khoảng nghỉ ngắn giữa lượt nói.
+
+### Speaking model
+
+Áp dụng cho S_PART1_PART2_001, S_PART3_TOPIC_001, P_S001, P_S002 và P_S003. Đọc như một bài mẫu của người học B1/B2: rõ ràng, tự nhiên, không quá hoàn hảo như phát thanh viên. Không thêm nhận xét hoặc điểm số vào file audio.
+
+## Kiểm tra sau khi tạo
+
+- [ ] Tên file và thư mục khớp manifest.
+- [ ] Audio mở được và không bị cắt đầu/cuối.
+- [ ] Mọi từ trong audio khớp transcript.
+- [ ] Không có từ ngoài transcript do AI tự thêm.
+- [ ] Tốc độ phù hợp với level đã ghi.
+- [ ] Audio hội thoại phân biệt được người nói.
+- [ ] QTV đã ghi ngày kiểm tra, người kiểm tra và kết quả khớp transcript.

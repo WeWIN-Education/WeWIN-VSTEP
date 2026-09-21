@@ -17,6 +17,7 @@ export async function LearningContentDetail({ kind, id }: { kind: ContentKind; i
     <Link href={path} className="admin-action">← {kind === "SKILL" ? "Kỹ năng" : "Bài tập"}</Link>
     <h1 className="text-2xl font-bold">{item.title}</h1>
     <p className="text-sm text-ink-muted">{item.skill} · {item.level}{!item.published ? " · Bản xem trước, chưa mở cho học viên" : ""}</p>
+    {item.audioKey && <Card><h2 className="mb-3 font-semibold">{item.skill === "SPEAKING" ? "Nghe bài nói mẫu" : "Nghe bài học"}</h2><audio controls preload="metadata" className="w-full" aria-label={`Audio ${item.title}`} src={`/api/learning-content/${item.id}/audio`} /></Card>}
     {blocks.map((block, i) => {
       const answerIndex = block.search(/^(?:Đáp án đúng:|Bài mẫu:|Transcript bài mẫu:)/m);
       const content = answerIndex < 0 ? block : block.slice(0, answerIndex);
