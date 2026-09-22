@@ -24,6 +24,8 @@ export type MixedPracticeItem = {
     options: string[];
     passage?: string;
     audioUrl?: string;
+    groupId?: string;
+    groupQuestions?: Array<{ id: string; prompt: string; options: string[]; answer: string }>;
   };
   answer: string;
 };
@@ -40,18 +42,21 @@ function answerFor(question: VstepQuestion, answerKey: Record<string, { correctI
 }
 
 function listeningItems(sourceId: string, title: string, section: { parts?: VstepListeningPart[] } | undefined, answerKey: Record<string, { correctIndex: number }>): MixedPracticeItem[] {
-  return (section?.parts ?? []).flatMap((part) => part.questions.flatMap((question) => {
-    const answer = answerFor(question, answerKey);
-    if (!answer || !question.prompt || question.options.length < 2) return [];
-    return [{
+  return (section?.parts ?? []).flatMap((part) => {
+    const groupQuestions = part.questions.flatMap((question) => {
+      const answer = answerFor(question, answerKey);
+      if (!answer || !question.prompt || question.options.length < 2) return [];
+      return [{ id: question.id, prompt: question.prompt, options: question.options, answer }];
+    });
+    return groupQuestions.map((question) => ({
       id: `${sourceId}:listening:${question.id}`,
       type: "LISTENING_FILL" as const,
       prompt: question.prompt,
       instruction: `Listening · ${part.title || title}`,
-      payload: { options: question.options, audioUrl: part.audioUrl || undefined },
-      answer,
-    }];
-  }));
+      payload: { options: question.options, audioUrl: part.audioUrl || undefined, groupId: `${sourceId}:listening:${part.id}`, groupQuestions },
+      answer: question.answer,
+    }));
+  });
 }
 
 function readingItems(sourceId: string, section: { passages?: VstepReadingPassage[] } | undefined, answerKey: Record<string, { correctIndex: number }>): MixedPracticeItem[] {
