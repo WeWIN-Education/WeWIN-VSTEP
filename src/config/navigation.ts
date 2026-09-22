@@ -3,7 +3,6 @@ import {
   BookMarked,
   Dumbbell,
   GraduationCap,
-  Headphones,
   History,
   Library,
   Newspaper,
@@ -65,7 +64,16 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Học qua video", href: "/video" },
         ],
       },
-      { label: "Kỹ năng", href: "/training", icon: Headphones },
+      {
+        label: "Từ vựng",
+        icon: BookMarked,
+        children: [
+          { label: "Sổ tay từ vựng", href: "/vocabulary/notebook", roles: ["LEARNER", "ADMIN"] },
+          { label: "Từ vựng theo chủ đề", href: "/vocabulary/topics" },
+          { label: "Mẹo nhớ từ vựng", href: "/vocabulary/tips" },
+          { label: "Cụm từ & collocations", href: "/vocabulary/collocations" },
+        ],
+      },
     ],
   },
   {
@@ -79,22 +87,6 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "Công cụ", href: "/tools", icon: Wrench },
       { label: "Bài viết", href: "/blog", icon: Newspaper },
       { label: "Cài đặt", href: "/profile/settings", icon: Settings, roles: ["LEARNER", "ADMIN"] },
-    ],
-  },
-  {
-    id: "vocabulary",
-    label: "TỪ VỰNG",
-    items: [
-      {
-        label: "Từ vựng",
-        icon: BookMarked,
-        children: [
-          { label: "Sổ tay từ vựng", href: "/vocabulary/notebook", roles: ["LEARNER", "ADMIN"] },
-          { label: "Từ vựng theo chủ đề", href: "/vocabulary/topics" },
-          { label: "Mẹo nhớ từ vựng", href: "/vocabulary/tips" },
-          { label: "Cụm từ & collocations", href: "/vocabulary/collocations" },
-        ],
-      },
     ],
   },
   {
