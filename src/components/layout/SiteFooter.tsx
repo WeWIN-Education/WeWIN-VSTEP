@@ -1,6 +1,11 @@
 import { FOOTER_COLUMNS } from "@/config/navigation";
-import { ArrowUpRight, Clock3, Mail, MessageCircle } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, MessageCircle, PhoneCall } from "lucide-react";
 import Link from "next/link";
+
+const CONTACT_LOCATIONS = [
+  ["CS1", "292B Nơ Trang Long, Bình Thạnh, TP.HCM"],
+  ["CS2", "742 Xô Viết Nghệ Tĩnh, Thạnh Mỹ Tây, TP.HCM"],
+] as const;
 
 export function SiteFooter() {
   const [aboutColumn, legalColumn] = FOOTER_COLUMNS;
@@ -19,6 +24,24 @@ export function SiteFooter() {
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-[var(--footer-muted)]">
               Học đúng trọng tâm, luyện đủ bốn kỹ năng và theo dõi tiến bộ rõ ràng.
             </p>
+
+            <div className="mt-6 space-y-3">
+              <a
+                href="tel:+84345969388"
+                aria-label="Gọi hotline 034 596 9388 hoặc 037 866 9388"
+                className="flex min-h-11 w-fit max-w-full items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 text-sm font-extrabold text-white transition hover:bg-white/20 focus-visible:outline-white"
+              >
+                <PhoneCall className="size-4 shrink-0 text-[var(--footer-accent)]" aria-hidden="true" />
+                <span className="break-words">Hotline: 034 596 9388 – 037 866 9388</span>
+              </a>
+              <a
+                href="mailto:it@wewin.edu.vn"
+                className="flex min-h-11 w-fit max-w-full items-center gap-2 text-sm font-bold text-[var(--footer-muted)] transition hover:text-white focus-visible:outline-white"
+              >
+                <Mail className="size-4 shrink-0 text-[var(--footer-accent)]" aria-hidden="true" />
+                <span className="break-all">it@wewin.edu.vn</span>
+              </a>
+            </div>
           </div>
 
           <Link
@@ -33,51 +56,24 @@ export function SiteFooter() {
 
         <div>
           <h2 className="flex items-center gap-2 font-[family-name:var(--font-jakarta)] text-xl font-extrabold text-white">
-            <MessageCircle className="size-5 text-[var(--footer-accent)]" aria-hidden="true" />
-            Thông tin hỗ trợ
+            <MapPin className="size-5 text-[var(--footer-accent)]" aria-hidden="true" />
+            Thông tin liên hệ
           </h2>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <a
-              href="mailto:support@wewin.education"
-              className="group flex min-h-20 items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 transition hover:bg-white/15 focus-visible:outline-white"
-            >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-[var(--footer-accent)]">
-                <Mail className="size-5" aria-hidden="true" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-xs font-bold text-[var(--footer-muted)]">Email hỗ trợ</span>
-                <span className="mt-1 block break-all text-sm font-extrabold text-white">support@wewin.education</span>
-              </span>
-              <ArrowUpRight className="ml-auto size-4 shrink-0 text-white/60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
-            </a>
-
-            <div className="flex min-h-20 items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-[var(--footer-accent)]">
-                <Clock3 className="size-5" aria-hidden="true" />
-              </span>
-              <span>
-                <span className="block text-xs font-bold text-[var(--footer-muted)]">Thời gian phản hồi</span>
-                <span className="mt-1 block text-sm font-extrabold text-white">Thứ 2–Thứ 7, 9:00–18:00</span>
-              </span>
-            </div>
+          <div className="mt-5 flex min-h-14 items-start gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 py-3">
+            <MapPin className="mt-0.5 size-5 shrink-0 text-[var(--footer-accent)]" aria-hidden="true" />
+            <p className="min-w-0 break-words text-sm font-extrabold leading-relaxed text-white">
+              Địa chỉ: 292B Nơ Trang Long, Phường 12, Quận Bình Thạnh, TP HCM
+            </p>
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <Link
-              href={aboutColumn.links[0].href}
-              className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15 focus-visible:outline-white"
-            >
-              {aboutColumn.links[0].label}
-              <ArrowUpRight className="size-4 text-white/60" aria-hidden="true" />
-            </Link>
-            <Link
-              href={aboutColumn.links[1].href}
-              className="flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-white/20 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15 focus-visible:outline-white"
-            >
-              {aboutColumn.links[1].label}
-              <ArrowUpRight className="size-4 text-white/60" aria-hidden="true" />
-            </Link>
+            {CONTACT_LOCATIONS.map(([label, address]) => (
+              <div key={label} className="flex min-h-14 items-start gap-2 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm leading-relaxed text-[var(--footer-muted)]">
+                <span className="shrink-0 font-extrabold text-white">{label}:</span>
+                <span className="min-w-0 break-words">{address}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -85,8 +81,8 @@ export function SiteFooter() {
       <div className="border-t border-white/20 px-5 py-4 sm:px-8 lg:px-10">
         <div className="flex flex-col gap-3 text-xs text-[var(--footer-muted)] sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} WEWIN EDUCATION LUYỆN THI VSTEP.</p>
-          <nav aria-label="Liên kết pháp lý" className="flex flex-wrap gap-x-4 gap-y-2">
-            {legalColumn.links.map((link) => (
+          <nav aria-label="Liên kết website" className="flex flex-wrap gap-x-4 gap-y-2">
+            {[...aboutColumn.links, ...legalColumn.links].map((link) => (
               <Link key={link.href} href={link.href} className="transition hover:text-white focus-visible:outline-white">
                 {link.label}
               </Link>
