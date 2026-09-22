@@ -24,7 +24,7 @@ export default async function HomePage() {
   return (
     <div className="mx-auto w-full min-w-0 max-w-[1180px] space-y-6">
       <PageHero
-        eyebrow="WEWIN EDUCATION · DÀNH CHO GIÁO VIÊN"
+        eyebrow="WEWIN EDUCATION LUYỆN THI VSTEP"
         title="Tiếng Anh tự tin hơn trong mỗi giờ dạy"
         description="Luyện VSTEP và Classroom English theo lộ trình rõ ràng. Đăng nhập để lưu tiến độ."
         backgroundSrc="/brand/bg.png"

@@ -10,6 +10,10 @@
   --brand-soft: #E8F0FC;
   --brand-pink: #D6E2F5; /* keep var name for compatibility, but blue tint */
   --accent-orange: #D4A017; /* gold accent from WEWIN logo */
+  --footer-navy: #081f4f;
+  --footer-blue: #2b68c9;
+  --footer-accent: #f4c35e;
+  --footer-muted: #dceaff;
   --accent-green: #22c55e;
   --surface: #f8fafc;
   --surface-card: #ffffff;
