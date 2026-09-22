@@ -110,7 +110,7 @@ export function PracticePlayer({ type, items }: PracticePlayerProps) {
     {current?.kind !== "listening" && (effectiveType === "WORD_ORDER" || effectiveType === "LISTENING_ORDER") ? <OrderExercise key={item?.id} tokens={effectiveType === "LISTENING_ORDER" ? (item?.payload.turns ?? []) : (item?.payload.tokens ?? [])} answer={item?.answer as string[]} onSubmit={(ok) => finishCurrent(ok ? 1 : 0, 1)} /> : null}
     {current?.kind !== "listening" && (effectiveType === "FILL_BLANK" || effectiveType === "LISTENING_FILL") ? <ChoiceExercise key={item?.id} options={item?.payload.options ?? []} answer={String(item?.answer)} sentence={item?.payload.sentence} transcript={item?.payload.transcript} audioUrl={item?.payload.audioUrl} onSubmit={(ok) => finishCurrent(ok ? 1 : 0, 1)} /> : null}
     {current?.kind !== "listening" && effectiveType === "CLOZE_READING" ? <ClozeExercise key={item?.id} passage={item?.payload.passage ?? ""} options={item?.payload.options ?? []} answer={String(item?.answer)} onSubmit={(ok) => finishCurrent(ok ? 1 : 0, 1)} /> : null}
-    {feedback !== "idle" ? <p className={cn("mt-4 text-sm font-semibold", feedback === "correct" ? "text-accent-green" : "text-red-500")}>{feedback === "correct" ? "Chính xác!" : "Chưa đúng, thử xem lại phần giải thích."}</p> : null}</Card></div>;
+    {feedback === "correct" ? <p className="mt-4 text-sm font-semibold text-accent-green">Chính xác!</p> : null}</Card></div>;
 }
 
 function ListeningGroupExercise({ questions, audioUrl, onSubmit, onContinue }: { questions: readonly { id: string; prompt: string; options: readonly string[]; answer: string }[]; audioUrl?: string; onSubmit: (points: number) => void; onContinue: () => void }) {

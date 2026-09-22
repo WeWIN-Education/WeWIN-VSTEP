@@ -14,3 +14,18 @@ it("keeps answers separate without swallowing the following section", () => {
   expect(blocks[1].answer).not.toContain("Tự kiểm tra");
   expect(blocks[2].content).toContain("Tự sửa lỗi");
 });
+
+it("removes technical audio, transcript and source metadata from learner-facing text", () => {
+  const text = learningDisplaySource([
+    "## B. Ngữ liệu dùng chung",
+    "Nội dung luyện tập",
+    "- File audio: audio/practice/P_S003_model.mp3 (nạp theo audio-manifest-v1.txt)",
+    "- Transcript: “Online learning has become popular.”",
+    "- Nguồn và quyền sử dụng: Prompt do WEWIN tạo.",
+    "- URL nguồn: Không áp dụng.",
+    "- Bằng chứng: Hồ sơ nội bộ.",
+  ].join("\n"));
+  expect(text).toContain("Nội dung luyện tập");
+  expect(text).not.toMatch(/File audio|Transcript|audio-manifest|Nguồn và quyền sử dụng|URL nguồn|Bằng chứng/);
+  expect(text).not.toContain("Online learning has become popular");
+});

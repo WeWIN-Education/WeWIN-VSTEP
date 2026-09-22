@@ -16,14 +16,17 @@ function formatTime(seconds: number) {
   return `${String(minutes).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-function answerClass(question: LearningExerciseQuestion, selected: string | undefined, submitted: boolean) {
+function answerClass(question: LearningExerciseQuestion, selected: string | undefined, optionIndex: number, submitted: boolean) {
   if (!submitted) return "border-2 border-ink/15 bg-white";
   if (question.answerIndex === null) return "border-2 border-ink/15 bg-white";
-  const picked = selected === String(question.answerIndex);
-  const correct = selected === String(question.answerIndex);
-  if (correct) return "border-2 border-accent-green bg-green-50";
-  if (picked) return "border-2 border-red-300 bg-red-50";
+  if (optionIndex === question.answerIndex) return "border-2 border-accent-green bg-green-50 text-green-800";
+  if (selected === String(optionIndex)) return "border-2 border-red-300 bg-red-50 text-red-800";
   return "border-2 border-ink/15 bg-white";
+}
+
+function questionCardClass(question: LearningExerciseQuestion, selected: string | undefined, submitted: boolean) {
+  if (!submitted || question.answerIndex === null || selected === undefined) return "border-ink/20";
+  return selected === String(question.answerIndex) ? "border-accent-green" : "border-red-300";
 }
 
 export function LearningExercisePlayer({ exercise, audioSrc }: LearningExercisePlayerProps) {
@@ -191,7 +194,7 @@ function SourcePanel({ exercise, submitted, audioSrc }: { exercise: LearningExer
       {exercise.skill === "LISTENING" && audioSrc ? <audio className="mt-4 w-full" controls preload="metadata" src={audioSrc} aria-label="Audio bài luyện" /> : null}
       {exercise.sourceText && exercise.skill !== "LISTENING" && (exercise.skill !== "SPEAKING" || !exercise.speakingQuestions.length) ? <p className="mt-4 whitespace-pre-wrap text-[15px] leading-7 text-ink">{exercise.sourceText}</p> : null}
       {exercise.skill === "SPEAKING" && exercise.speakingQuestions.length ? <ol className="mt-4 list-decimal space-y-2 pl-5 text-[15px] leading-7 text-ink">{exercise.speakingQuestions.map((question) => <li key={question}>{question}</li>)}</ol> : null}
-      {exercise.skill === "LISTENING" && submitted && exercise.transcript ? <RevealBlock title="Transcript">{exercise.transcript}</RevealBlock> : null}
+      {exercise.skill === "LISTENING" && submitted && exercise.transcript ? <RevealBlock title="Lời thoại audio">{exercise.transcript}</RevealBlock> : null}
       {exercise.skill === "SPEAKING" && exercise.strategy ? <HintBlock title="Cách triển khai">{exercise.strategy}</HintBlock> : null}
       {exercise.vocabulary.length ? <div className="mt-5"><p className="text-sm font-extrabold text-ink">Từ và ý gợi ý</p><div className="mt-2 flex flex-wrap gap-2">{exercise.vocabulary.map((item) => <span key={item} className="rounded-lg border border-brand/25 bg-brand-soft px-2.5 py-1.5 text-xs font-semibold text-brand">{item}</span>)}</div></div> : null}
       {exercise.writingInstructions.length ? <div className="mt-5"><p className="text-sm font-extrabold text-ink">Các ý cần đáp ứng</p><ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-ink-muted">{exercise.writingInstructions.map((item) => <li key={item}>{item}</li>)}</ul></div> : null}
@@ -204,8 +207,8 @@ function QuestionPanel({ exercise, answers, submitted, onChoose, writing, setWri
   return (
     <div className="space-y-4">
       {exercise.questions.map((question) => (
-        <Card key={question.id} className={cn("border-2", submitted && question.answerIndex !== null && answers[question.id] === String(question.answerIndex) ? "border-accent-green" : "border-ink/20")} padding="lg">
-          <div className="flex items-start gap-3"><span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-ink text-sm font-extrabold text-white">{question.number}</span><div className="min-w-0 flex-1"><p className="font-extrabold leading-6 text-ink">{question.prompt}</p>{question.options.length ? <div className="mt-4 grid gap-2">{question.options.map((option, index) => { const selected = answers[question.id] === String(index); return <button key={`${question.id}-${option}`} type="button" disabled={submitted} onClick={() => onChoose(question.id, String(index))} className={cn("min-h-12 rounded-xl px-4 py-3 text-left text-sm font-semibold transition", answerClass(question, answers[question.id], submitted), selected && !submitted && "border-brand bg-brand-soft text-brand")}>{String.fromCharCode(65 + index)}. {option}{submitted && question.answerIndex === index ? <span className="ml-2 text-xs font-extrabold text-accent-green">Đáp án đúng</span> : null}</button>; })}</div> : null}{exercise.skill === "WRITING" ? <WritingBox value={writing} disabled={submitted} onChange={setWriting} /> : null}{submitted ? <AnswerReview question={question} selected={answers[question.id]} /> : null}</div></div>
+        <Card key={question.id} className={cn("border-2", questionCardClass(question, answers[question.id], submitted))} padding="lg">
+          <div className="flex items-start gap-3"><span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-ink text-sm font-extrabold text-white">{question.number}</span><div className="min-w-0 flex-1"><p className="font-extrabold leading-6 text-ink">{question.prompt}</p>{question.options.length ? <div className="mt-4 grid gap-2">{question.options.map((option, index) => { const selected = answers[question.id] === String(index); return <button key={`${question.id}-${option}`} type="button" disabled={submitted} aria-pressed={selected} onClick={() => onChoose(question.id, String(index))} className={cn("min-h-12 rounded-xl px-4 py-3 text-left text-sm font-semibold transition", answerClass(question, answers[question.id], index, submitted), selected && !submitted && "border-brand bg-brand-soft text-brand")}>{String.fromCharCode(65 + index)}. {option}{submitted && question.answerIndex === index ? <span className="ml-2 text-xs font-extrabold text-accent-green">Đáp án đúng</span> : null}</button>; })}</div> : null}{exercise.skill === "WRITING" ? <WritingBox value={writing} disabled={submitted} onChange={setWriting} /> : null}{submitted ? <AnswerReview question={question} selected={answers[question.id]} /> : null}</div></div>
         </Card>
       ))}
       {!exercise.questions.length ? <Card className="border-2 border-ink/15"><p className="text-sm text-ink-muted">Bộ bài chưa có câu hỏi hợp lệ để tương tác. Hãy kiểm tra lại mẫu nội dung trong trang quản trị.</p></Card> : null}
