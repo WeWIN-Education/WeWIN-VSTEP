@@ -35,3 +35,15 @@ it("reveals Writing and Speaking self-review material only through the parsed su
   expect(speaking?.speakingQuestions).toHaveLength(3);
   expect(speaking?.vocabulary).toEqual(expect.arrayContaining(["Answer", "Reason", "Example"]));
 });
+
+it("removes dashed audio and source metadata from the learner-facing Speaking prompt", () => {
+  const speaking = parseLearningExercise(bodyFor("P_S003"), "SPEAKING");
+  expect(speaking?.sourceText).toContain("Talk about the advantages of online learning.");
+  expect(speaking?.sourceText).not.toMatch(/File audio|Transcript|Nguồn và quyền sử dụng|audio-manifest/);
+  expect(speaking?.transcript).toContain("Online learning has become popular");
+});
+
+it("does not expose an empty distractor explanation", () => {
+  const reading = parseLearningExercise(bodyFor("P_R001"), "READING");
+  expect(reading?.questions[4]?.distractors).toBe("");
+});

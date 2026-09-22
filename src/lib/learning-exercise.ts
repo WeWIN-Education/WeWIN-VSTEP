@@ -54,9 +54,13 @@ function cleanQuoted(value: string) {
   return value.trim().replace(/^[“"]|[”"]$/g, "").trim();
 }
 
+function optionalDistractors(value: string) {
+  return /^không có thông tin hỗ trợ\.?$/i.test(value.trim()) ? "" : value;
+}
+
 function blockValue(source: string, label: string, nextLabels: string[]) {
   const next = nextLabels.map(escapeRegExp).join("|");
-  const match = new RegExp(`(?:^|\\n)\\s*-?\\s*${escapeRegExp(label)}:\\s*([\\s\\S]*?)(?=\\n\\s*(?:${next}):|\\n##|\\n###|$)`, "i").exec(source);
+  const match = new RegExp(`(?:^|\\n)\\s*-?\\s*${escapeRegExp(label)}:\\s*([\\s\\S]*?)(?=\\n\\s*-?\\s*(?:${next}):|\\n##|\\n###|$)`, "i").exec(source);
   return cleanQuoted(match?.[1] ?? "");
 }
 
@@ -108,7 +112,7 @@ function parseQuestion(body: string, number: number): LearningExerciseQuestion {
     explanation: untilNext(body, "Giải thích tiếng Việt", ["Bằng chứng trong audio", "Bằng chứng trong bài đọc", "Vì sao các phương án khác sai", "Checklist tự đánh giá", "Yêu cầu sửa và viết lại"]),
     evidence: untilNext(body, "Bằng chứng trong audio", ["Bằng chứng trong bài đọc", "Vì sao các phương án khác sai", "Checklist tự đánh giá"])
       || untilNext(body, "Bằng chứng trong bài đọc", ["Vì sao các phương án khác sai", "Checklist tự đánh giá"]),
-    distractors: untilNext(body, "Vì sao các phương án khác sai", ["Checklist tự đánh giá", "Yêu cầu sửa và viết lại"]),
+    distractors: optionalDistractors(untilNext(body, "Vì sao các phương án khác sai", ["Checklist tự đánh giá", "Yêu cầu sửa và viết lại"])),
   };
 }
 
