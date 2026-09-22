@@ -2,7 +2,8 @@
 
 import { upload as uploadBlob } from "@vercel/blob/client";
 import { AlertCircle, CheckCircle2, Download, FileText, Loader2, Upload } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { RecordActions } from "@/components/manage/RecordActions";
 import { fileExtension, formatFileSize, MATERIAL_FILE_TYPES, materialLevelLabel, materialSkillLabel, type MaterialLevel, type MaterialSkill } from "@/lib/learning-materials";
 
@@ -22,12 +23,60 @@ export type LearningMaterialSummary = {
 
 const acceptedFiles = Object.keys(MATERIAL_FILE_TYPES).join(",");
 
-export function LearningMaterialUploadForm({ initialMaterials }: { initialMaterials: LearningMaterialSummary[] }) {
+export function LearningMaterialUploadForm({ initialMaterials, initialCursor, initialTotal }: { initialMaterials: LearningMaterialSummary[]; initialCursor: string | null; initialTotal: number }) {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [materials, setMaterials] = useState(initialMaterials);
   const [query, setQuery] = useState("");
   const [filterSkill, setFilterSkill] = useState("ALL");
-  const visibleMaterials = materials.filter(item => (filterSkill === "ALL" || item.skill === filterSkill) && `${item.title} ${item.fileName}`.toLocaleLowerCase("vi").includes(query.toLocaleLowerCase("vi")));
+  const visibleMaterials = materials;
+  const [cursor, setCursor] = useState(initialCursor);
+  const [total, setTotal] = useState(initialTotal);
+  const [loading, setLoading] = useState(false);
+  const [listError, setListError] = useState("");
+  const [revision, setRevision] = useState(0);
+  const listRequest = useRef(0);
+  const controller = useRef<AbortController | null>(null);
+  const firstLoad = useRef(true);
+  const previousFilters = useRef({ query, filterSkill });
+  const refresh = () => { setRevision(n => n + 1); };
+
+  async function loadList(after?: string, visibleCount = 20) {
+    controller.current?.abort();
+    const abort = new AbortController(); controller.current = abort;
+    const version = ++listRequest.current;
+    setLoading(true); setListError("");
+    try {
+      let next = after;
+      let data: { items: LearningMaterialSummary[]; nextCursor: string | null; total: number };
+      const refreshed = new Map<string, LearningMaterialSummary>();
+      // Replay only the visible pages after a mutation, using fresh server cursors.
+      do {
+        const response = await fetch(`/api/manage/materials/list?${new URLSearchParams({ q: query, skill: filterSkill, ...(next ? { cursor: next } : {}) })}`, { signal: abort.signal, cache: "no-store" });
+        if (!response.ok) throw new Error("Không tải được danh sách tài liệu.");
+        data = await response.json();
+        if (version !== listRequest.current || abort.signal.aborted) return;
+        for (const row of data.items) refreshed.set(row.id, row);
+        next = data.nextCursor ?? undefined;
+      } while (!after && next && refreshed.size < visibleCount);
+      const rows = [...refreshed.values()];
+      setMaterials(old => after ? [...old, ...rows.filter(row => !old.some(item => item.id === row.id))] : rows);
+      setCursor(data.nextCursor); setTotal(data.total);
+    } catch { if (!abort.signal.aborted) setListError("Không tải được danh sách. Vui lòng thử lại."); }
+    finally { if (version === listRequest.current) setLoading(false); }
+  }
+  useEffect(() => {
+    if (firstLoad.current) { firstLoad.current = false; return; }
+    const changedFilters = previousFilters.current.query !== query || previousFilters.current.filterSkill !== filterSkill;
+    previousFilters.current = { query, filterSkill };
+    const visibleCount = changedFilters ? 20 : materials.length;
+    ++listRequest.current; controller.current?.abort(); setCursor(null); setLoading(true);
+    const timer = setTimeout(() => void loadList(undefined, visibleCount), 250);
+    return () => { clearTimeout(timer); controller.current?.abort(); };
+    // Filters reset the window; mutations refresh its current depth with the latest filters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, filterSkill, revision]);
+  useEffect(() => () => controller.current?.abort(), []);
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -97,7 +146,8 @@ export function LearningMaterialUploadForm({ initialMaterials }: { initialMateri
       }
       const data = await response.json() as { material?: LearningMaterialSummary; error?: string };
       if (!response.ok || !data.material) throw new Error(data.error || "Không thể tải tài liệu lên.");
-      setMaterials((current) => [data.material!, ...current]);
+      refresh();
+      router.refresh();
       setFile(null);
       setTitle("");
       setDescription("");
@@ -145,16 +195,19 @@ export function LearningMaterialUploadForm({ initialMaterials }: { initialMateri
         </div>
 
         <div className="rounded-[24px] border border-border bg-white p-5 shadow-sm sm:p-6">
-          <div className="flex items-end justify-between gap-3"><div><p className="text-xs font-extrabold uppercase tracking-wide text-brand">KHO ĐÃ TẢI</p><h2 className="mt-1 font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">Tài liệu gần đây</h2></div><span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-bold text-brand">{materials.length} file</span></div>
-          <div className="mt-5 grid gap-3 rounded-2xl bg-surface p-4 sm:grid-cols-[1fr_160px]"><label className="text-xs font-bold text-ink-muted">Tìm tài liệu<input type="search" className="admin-input mt-2 bg-white" placeholder="Tên tài liệu hoặc tên file…" value={query} onChange={event => setQuery(event.target.value)} /></label><label className="text-xs font-bold text-ink-muted">Kỹ năng<select className="admin-input mt-2 bg-white" value={filterSkill} onChange={event => setFilterSkill(event.target.value)}><option value="ALL">Tất cả kỹ năng</option>{["GENERAL", "LISTENING", "READING", "WRITING", "SPEAKING"].map(value => <option key={value} value={value}>{materialSkillLabel(value)}</option>)}</select></label></div><p role="status" className="mt-3 text-xs text-ink-muted">Hiển thị {visibleMaterials.length}/{materials.length} tài liệu đã tải</p>{visibleMaterials.length ? <div className="mt-4 space-y-3">{visibleMaterials.map((material) => <article key={material.id} className="flex flex-wrap items-start gap-3 rounded-2xl border border-border/80 p-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface text-brand"><FileText className="size-5" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-sm font-extrabold text-ink">{material.title}</h3><span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${material.published ? "bg-emerald-50 text-emerald-700" : "bg-surface text-ink-muted"}`}>{material.published ? "Đã mở" : "Đang ẩn"}</span></div><p className="mt-1 truncate text-xs text-ink-muted">{material.fileName}</p><p className="mt-1 text-[11px] text-ink-faint">{materialSkillLabel(material.skill)} · {materialLevelLabel(material.level)} · {formatFileSize(material.sizeBytes)}</p></div><a href={`/api/materials/${material.id}`} className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-xl border border-border text-brand transition hover:border-brand hover:bg-brand-soft" aria-label={`Tải ${material.title}`}><Download className="size-4" /></a><div className="w-full border-t border-border pt-3"><RecordActions endpoint={`/api/manage/materials/${material.id}`} title={material.title} deleteDescription="Xóa tài liệu khỏi database và dọn file lưu trữ. Học viên sẽ không tải được tài liệu này nữa." fields={[
+          <div className="flex items-end justify-between gap-3"><div><p className="text-xs font-extrabold uppercase tracking-wide text-brand">KHO ĐÃ TẢI</p><h2 className="mt-1 font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">Tài liệu gần đây</h2></div><span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-bold text-brand">{total} file</span></div>
+          <div className="mt-5 grid gap-3 rounded-2xl bg-surface p-4 sm:grid-cols-[1fr_160px]"><label className="text-xs font-bold text-ink-muted">Tìm tài liệu<input type="search" className="admin-input mt-2 bg-white" placeholder="Tên tài liệu hoặc tên file…" value={query} onChange={event => setQuery(event.target.value)} /></label><label className="text-xs font-bold text-ink-muted">Kỹ năng<select className="admin-input mt-2 bg-white" value={filterSkill} onChange={event => setFilterSkill(event.target.value)}><option value="ALL">Tất cả kỹ năng</option>{["GENERAL", "LISTENING", "READING", "WRITING", "SPEAKING"].map(value => <option key={value} value={value}>{materialSkillLabel(value)}</option>)}</select></label></div><p role="status" className="mt-3 text-xs text-ink-muted">Hiển thị {visibleMaterials.length}/{total} tài liệu đã tải</p>{visibleMaterials.length ? <div className="mt-4 space-y-3">{visibleMaterials.map((material) => <article key={material.id} className="flex flex-wrap items-start gap-3 rounded-2xl border border-border/80 p-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface text-brand"><FileText className="size-5" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate text-sm font-extrabold text-ink">{material.title}</h3><span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${material.published ? "bg-emerald-50 text-emerald-700" : "bg-surface text-ink-muted"}`}>{material.published ? "Đã mở" : "Đang ẩn"}</span></div><p className="mt-1 truncate text-xs text-ink-muted">{material.fileName}</p><p className="mt-1 text-[11px] text-ink-faint">{materialSkillLabel(material.skill)} · {materialLevelLabel(material.level)} · {formatFileSize(material.sizeBytes)}</p></div><a href={`/api/materials/${material.id}`} className="inline-flex min-h-9 min-w-9 items-center justify-center rounded-xl border border-border text-brand transition hover:border-brand hover:bg-brand-soft" aria-label={`Tải ${material.title}`}><Download className="size-4" /></a><div className="w-full border-t border-border pt-3"><RecordActions endpoint={`/api/manage/materials/${material.id}`} title={material.title} deleteDescription="Xóa tài liệu khỏi database và dọn file lưu trữ. Học viên sẽ không tải được tài liệu này nữa." fields={[
             { key: "title", label: "Tên tài liệu", value: material.title, maxLength: 160 },
             { key: "description", label: "Mô tả", value: material.description ?? "" },
             { key: "skill", label: "Kỹ năng", value: material.skill, options: ["GENERAL", "LISTENING", "READING", "WRITING", "SPEAKING"].map(value => ({ value, label: materialSkillLabel(value) })) },
             { key: "level", label: "Trình độ", value: material.level ?? "ALL", options: ["ALL", "B1", "B2", "C1"].map(value => ({ value, label: value === "ALL" ? "Mọi trình độ" : value })) },
             { key: "published", label: "Hiển thị", value: String(material.published), options: [{ value: "true", label: "Công khai" }, { value: "false", label: "Ẩn" }] },
-          ]} onSaved={values => setMaterials(current => current.map(row => row.id === material.id ? { ...row, ...values, level: values.level === "ALL" ? null : values.level, published: values.published === "true" } : row))} onDeleted={() => setMaterials(current => current.filter(row => row.id !== material.id))} /></div></article>)}</div> : <div className="mt-4 rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm text-ink-muted">Không có tài liệu phù hợp. Hãy đổi bộ lọc hoặc tải tài liệu mới.</div>}
+          ]} onSaved={refresh} onDeleted={refresh} /></div></article>)}</div> : <div className="mt-4 rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm text-ink-muted">Không có tài liệu phù hợp. Hãy đổi bộ lọc hoặc tải tài liệu mới.</div>}
         </div>
       </div>
+      {listError && <p role="alert">{listError}<button className="admin-action" onClick={refresh}>Thử lại</button></p>}
+      {loading && <p role="status">Đang tải danh sách…</p>}
+      {cursor && <button className="admin-action" disabled={loading} onClick={() => void loadList(cursor)}>Tải thêm</button>}
     </section>
   );
 }

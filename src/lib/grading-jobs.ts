@@ -5,6 +5,7 @@ import os from "node:os";
 import { list } from "@vercel/blob";
 
 import { prisma } from "./prisma";
+import { configuredMaxGradingAttempts } from "./grading-v2";
 
 export const CURRENT_PIPELINE_VERSION = "v2";
 export const LEGACY_PIPELINE_VERSION = "v1";
@@ -371,7 +372,7 @@ export async function ensureGradingJob(
     if (!job) throw new Error("Không thể đọc hàng đợi chấm điểm.");
   }
 
-  if (options.retryFailed !== false && job.status === "FAILED" && job.attempts < MAX_GRADING_ATTEMPTS && isTransientErrorCode(job.errorCode)) {
+  if (options.retryFailed !== false && job.status === "FAILED" && job.attempts < configuredMaxGradingAttempts() && isTransientErrorCode(job.errorCode)) {
     await db.examGradingJob.updateMany({
       where: { id: job.id, status: "FAILED", attempts: job.attempts, leaseToken: job.leaseToken },
       data: {
@@ -513,7 +514,7 @@ export async function failClaimedJob(
   // The grading engine already retries individual network calls. An exhausted
   // engine error must become terminal here instead of multiplying retries at
   // the job level (3 engine attempts x 3 worker attempts).
-  const retry = transient && !isAttemptExhausted(error) && job.attempts < MAX_GRADING_ATTEMPTS;
+  const retry = transient && !isAttemptExhausted(error) && job.attempts < configuredMaxGradingAttempts();
   // Keep exhausted engine retries terminal. Mapping them to a non-transient
   // code prevents POST from silently requeueing an already exhausted step.
   const code = isAttemptExhausted(error) ? "GRADING_RETRIES_EXHAUSTED" : causeCode;
@@ -767,7 +768,7 @@ export async function readGradingStatus(options: {
     grading,
     progress,
     workerAvailable: await workerAvailable({ db, now }),
-    retryable: Boolean(job && job.status === "FAILED" && job.attempts < MAX_GRADING_ATTEMPTS && isTransientErrorCode(job.errorCode)),
+    retryable: Boolean(job && job.status === "FAILED" && job.attempts < configuredMaxGradingAttempts() && isTransientErrorCode(job.errorCode)),
     updatedAt: updatedAt.toISOString(),
   };
 }

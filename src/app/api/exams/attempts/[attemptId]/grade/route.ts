@@ -69,14 +69,14 @@ function headers() {
 
 export async function GET(request: Request, { params }: { params: Promise<{ attemptId: string }> }) {
   const owner = await getAttemptOwner();
-  if (!owner || owner.kind === "invalid") return NextResponse.json({ error: "Phiên đăng nhập hoặc phiên học thử đã hết hạn." }, { status: 401 });
+  if (!owner || owner.kind === "invalid") return NextResponse.json({ error: "Phiên đăng nhập hoặc phiên học thử đã hết hạn." }, { status: 401, headers: headers() });
   if (owner.kind === "guest") {
     const rate = await consumeGuestRateLimit(request, "attempt-grade-status", 180, owner.guestSessionId);
     if (!rate.allowed) return NextResponse.json({ error: "Bạn thao tác quá nhanh. Hãy thử lại sau ít phút." }, { status: 429, headers: guestRateLimitResponse(rate) });
   }
   const { attemptId } = await params;
   const attempt = await loadOwnedAttempt(attemptId, owner);
-  if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404 });
+  if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404, headers: headers() });
   try {
     const snapshot = await statusFor(attempt);
     // The worker can finish between reading the attempt and reading its job.
@@ -93,14 +93,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ atte
 
 export async function POST(request: Request, { params }: { params: Promise<{ attemptId: string }> }) {
   const owner = await getAttemptOwner();
-  if (!owner || owner.kind === "invalid") return NextResponse.json({ error: "Phiên đăng nhập hoặc phiên học thử đã hết hạn." }, { status: 401 });
+  if (!owner || owner.kind === "invalid") return NextResponse.json({ error: "Phiên đăng nhập hoặc phiên học thử đã hết hạn." }, { status: 401, headers: headers() });
   if (owner.kind === "guest") {
     const rate = await consumeGuestRateLimit(request, "attempt-grade", 6, owner.guestSessionId);
     if (!rate.allowed) return NextResponse.json({ error: "Bạn thao tác quá nhanh. Hãy thử lại sau ít phút." }, { status: 429, headers: guestRateLimitResponse(rate) });
   }
   const { attemptId } = await params;
   const attempt = await loadOwnedAttempt(attemptId, owner);
-  if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404 });
+  if (!attempt) return NextResponse.json({ error: "Lượt thi chưa nộp hoặc không thuộc tài khoản này." }, { status: 404, headers: headers() });
 
   try {
     const current = await statusFor(attempt);

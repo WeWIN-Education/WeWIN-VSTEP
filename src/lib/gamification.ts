@@ -181,16 +181,26 @@ function rankEntries(users: Array<{ id: string; name: string | null; xp: number 
 }
 
 export async function getLeaderboard(currentUserId?: string): Promise<LeaderboardData> {
-  const users = await prisma.user.findMany({
-    where: { role: "LEARNER", isActive: true },
-    orderBy: [{ xp: "desc" }, { createdAt: "asc" }, { id: "asc" }],
-    select: { id: true, name: true, xp: true },
-  });
-  const ranked = rankEntries(users, currentUserId);
-  const currentUser = currentUserId ? ranked.find((entry) => entry.id === currentUserId) || null : null;
-  const topTen = ranked.slice(0, 10);
-  const entries = currentUser && !topTen.some((entry) => entry.id === currentUser.id) ? [...topTen, currentUser] : topTen;
-  return { entries, currentUser };
+  return prisma.$transaction(async transaction => {
+    const where = { role: "LEARNER" as const, isActive: true };
+    const select = { id: true, name: true, xp: true };
+    const users = await transaction.user.findMany({
+      where, select, take: 10,
+      orderBy: [{ xp: "desc" }, { createdAt: "asc" }, { id: "asc" }],
+    });
+    const entries = rankEntries(users, currentUserId);
+    let currentUser = entries.find(entry => entry.id === currentUserId) ?? null;
+    if (currentUserId && !currentUser) {
+      const user = await transaction.user.findFirst({ where: { ...where, id: currentUserId }, select });
+      if (user) {
+        // Competition rank ignores display tie-breakers: equal XP has equal rank.
+        const ahead = await transaction.user.count({ where: { ...where, xp: { gt: user.xp } } });
+        currentUser = { ...user, rank: ahead + 1, isCurrentUser: true };
+        entries.push(currentUser);
+      }
+    }
+    return { entries, currentUser };
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead });
 }
 
 function scoreBonusFor(catalog: ExamCatalog, listeningScore: number | null, readingScore: number | null) {

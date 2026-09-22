@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { PracticeType, Programme, ExamSkill } from "@prisma/client";
+import { Prisma, type PracticeType, type Programme, type ExamSkill } from "@prisma/client";
 import { readPrivateData, readStoredPaper } from "@/lib/vstep-paper";
 import type { VstepListeningPart, VstepQuestion, VstepReadingPassage } from "@/lib/vstep-test-1-public";
 
@@ -78,48 +78,68 @@ function shuffle<T>(items: T[]) {
   return result;
 }
 
-/** Builds an ephemeral mixed session from published VSTEP Listening/Reading banks. */
+function paperItems(paper: { id: string; slug: string; title: string; sections: unknown; questions: unknown; parts: Array<{ catalog: string; sections: unknown; questions: unknown }> }) {
+  const storedPaper = readStoredPaper(paper.sections);
+  const fallbackSections = sectionValue(storedPaper);
+  const fallbackAnswerKey = readPrivateData(paper.questions).answerKey;
+  const listeningPart = paper.parts.find((part) => part.catalog === "LISTENING");
+  const readingPart = paper.parts.find((part) => part.catalog === "READING");
+  const listeningSource = sectionValue(listeningPart?.sections)?.listening ?? fallbackSections?.listening;
+  const readingSource = sectionValue(readingPart?.sections)?.reading ?? fallbackSections?.reading;
+  const listeningPartAnswerKey = readPrivateData(listeningPart?.questions).answerKey;
+  const readingPartAnswerKey = readPrivateData(readingPart?.questions).answerKey;
+  const listeningAnswerKey = Object.keys(listeningPartAnswerKey).length ? listeningPartAnswerKey : fallbackAnswerKey;
+  const readingAnswerKey = Object.keys(readingPartAnswerKey).length ? readingPartAnswerKey : fallbackAnswerKey;
+  return [
+    ...listeningItems(`${paper.id}:${paper.slug}`, paper.title, listeningSource, listeningAnswerKey),
+    ...readingItems(`${paper.id}:${paper.slug}`, readingSource, readingAnswerKey),
+  ];
+}
+
+function sampleInto<T>(sample: T[], item: T, seen: number, size: number) {
+  if (sample.length < size) sample.push(item);
+  else {
+    const index = Math.floor(Math.random() * seen);
+    if (index < size) sample[index] = item;
+  }
+}
+
+/** Uniform skill anchors + a uniform remainder, without retaining the full bank. */
 export async function getMixedPracticeItems(limit = 10): Promise<MixedPracticeItem[]> {
-  const papers = await prisma.examPaper.findMany({
-    where: { programme: "VSTEP", status: "PUBLISHED" },
-    select: {
-      id: true,
-      slug: true,
-      title: true,
-      sections: true,
-      questions: true,
-      parts: {
-        where: { catalog: { in: ["LISTENING", "READING"] } },
-        select: { catalog: true, sections: true, questions: true },
-      },
-    },
-  });
-
-  const candidates = papers.flatMap((paper) => {
-    const storedPaper = readStoredPaper(paper.sections);
-    const fallbackSections = sectionValue(storedPaper);
-    const fallbackAnswerKey = readPrivateData(paper.questions).answerKey;
-    const listeningPart = paper.parts.find((part) => part.catalog === "LISTENING");
-    const readingPart = paper.parts.find((part) => part.catalog === "READING");
-    const listeningSource = sectionValue(listeningPart?.sections)?.listening ?? fallbackSections?.listening;
-    const readingSource = sectionValue(readingPart?.sections)?.reading ?? fallbackSections?.reading;
-    const listeningPartAnswerKey = readPrivateData(listeningPart?.questions).answerKey;
-    const readingPartAnswerKey = readPrivateData(readingPart?.questions).answerKey;
-    const listeningAnswerKey = Object.keys(listeningPartAnswerKey).length ? listeningPartAnswerKey : fallbackAnswerKey;
-    const readingAnswerKey = Object.keys(readingPartAnswerKey).length ? readingPartAnswerKey : fallbackAnswerKey;
-    return [
-      ...listeningItems(`${paper.id}:${paper.slug}`, paper.title, listeningSource, listeningAnswerKey),
-      ...readingItems(`${paper.id}:${paper.slug}`, readingSource, readingAnswerKey),
-    ];
-  });
-
-  const safeLimit = Math.max(0, limit);
-  if (safeLimit < 2) return shuffle(candidates).slice(0, safeLimit);
-  const listening = shuffle(candidates.filter((item) => item.type === "LISTENING_FILL"));
-  const reading = shuffle(candidates.filter((item) => item.type === "CLOZE_READING"));
-  const selected = [listening.shift(), reading.shift()].filter((item): item is MixedPracticeItem => Boolean(item));
-  const remaining = shuffle([...listening, ...reading]).slice(0, Math.max(0, safeLimit - selected.length));
-  return shuffle([...selected, ...remaining]);
+  const safeLimit = Math.max(0, Math.floor(limit));
+  if (!safeLimit) return [];
+  return prisma.$transaction(async transaction => {
+    const sample: MixedPracticeItem[] = [];
+    const listening: MixedPracticeItem[] = [];
+    const reading: MixedPracticeItem[] = [];
+    let total = 0, listeningCount = 0, readingCount = 0;
+    let after: string | undefined;
+    // ponytail: JSON banks still require a full scan. Normalize only after staging evidence.
+    while (true) {
+      const papers = await transaction.examPaper.findMany({
+        where: { programme: "VSTEP", status: "PUBLISHED", ...(after ? { id: { gt: after } } : {}) },
+        orderBy: { id: "asc" }, take: 20,
+        select: {
+          id: true, slug: true, title: true, sections: true, questions: true,
+          parts: { where: { catalog: { in: ["LISTENING", "READING"] } }, select: { catalog: true, sections: true, questions: true } },
+        },
+      });
+      for (const paper of papers) for (const item of paperItems(paper)) {
+        sampleInto(sample, item, ++total, safeLimit);
+        if (safeLimit >= 2) {
+          if (item.type === "LISTENING_FILL") sampleInto(listening, item, ++listeningCount, 1);
+          else sampleInto(reading, item, ++readingCount, 1);
+        }
+      }
+      if (papers.length < 20) break;
+      after = papers.at(-1)!.id;
+    }
+    // Independent reservoirs make the anchors uniform within each skill and the
+    // remainder uniform among non-anchors. At most two sample slots are excluded.
+    const anchors = [...listening, ...reading];
+    const remaining = shuffle(sample.filter(item => !anchors.includes(item))).slice(0, safeLimit - anchors.length);
+    return shuffle([...anchors, ...remaining]);
+  }, { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead, timeout: 30000 });
 }
 
 export async function getExamPapers(programme: Programme) {

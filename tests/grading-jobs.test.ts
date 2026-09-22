@@ -210,6 +210,25 @@ describe("grading job leases", () => {
     }));
   });
 
+  it("uses GRADING_MAX_RETRIES without allowing more than the safe default", async () => {
+    const jobs = db();
+    jobs.examGradingJob.updateMany.mockResolvedValue({ count: 1 });
+    vi.stubEnv("GRADING_MAX_RETRIES", "1");
+    try {
+      const terminal = await failClaimedJob(job(), { code: "RATE_LIMITED", retryable: true }, { db: jobs });
+      expect(terminal.retry).toBe(false);
+      expect((jobs.examGradingJob.updateMany.mock.calls[0][0] as { data: { status: string } }).data.status).toBe("FAILED");
+
+      jobs.examGradingJob.updateMany.mockClear();
+      vi.stubEnv("GRADING_MAX_RETRIES", "2");
+      const retry = await failClaimedJob(job(), { code: "RATE_LIMITED", retryable: true }, { db: jobs });
+      expect(retry.retry).toBe(true);
+      expect((jobs.examGradingJob.updateMany.mock.calls[0][0] as { data: { status: string } }).data.status).toBe("QUEUED");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it("requeues typed transient failures with backoff while attempts remain", async () => {
     const jobs = db();
     jobs.examGradingJob.updateMany.mockResolvedValue({ count: 1 });

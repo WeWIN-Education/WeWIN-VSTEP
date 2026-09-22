@@ -23,7 +23,7 @@ import {
   Volume2,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 export type FlashcardEntry = {
   id: string;
@@ -35,6 +35,7 @@ export type FlashcardEntry = {
   exampleVi: string | null;
   audioUrl?: string | null;
   status?: "NEW" | "LEARNING" | "MASTERED";
+  cursor?: string;
 };
 
 type VocabularyFlashcardsProps = {
@@ -45,10 +46,11 @@ type VocabularyFlashcardsProps = {
   emptyDescription?: string;
   onStatusChange?: (id: string, status: NonNullable<FlashcardEntry["status"]>) => void;
   onRemove?: (id: string) => void;
+  pagination?: { endpoint: string; sessionKey: string; nextCursor: string | null; previousCursor: string | null; notebook?: boolean; status?: string };
 };
 
 type StudyStatus = NonNullable<FlashcardEntry["status"]>;
-type StudyState = { index: number; flipped: boolean };
+type StudyState = { index: number; flipped: boolean; id?: string; cursor?: string };
 type SpeedOption = { seconds: number; label: string; description: string };
 
 const statusLabels: Record<StudyStatus, string> = {
@@ -91,7 +93,7 @@ function readStudyState(storageKey: string, length: number): StudyState | null {
     if (!saved) return null;
     const parsed = JSON.parse(saved) as Partial<StudyState>;
     if (typeof parsed.index !== "number" || !Number.isFinite(parsed.index)) return null;
-    return { index: normaliseIndex(parsed.index, length), flipped: parsed.flipped === true };
+    return { index: normaliseIndex(parsed.index, length), flipped: parsed.flipped === true, id: typeof parsed.id === "string" ? parsed.id : undefined, cursor: typeof parsed.cursor === "string" ? parsed.cursor : undefined };
   } catch {
     return null;
   }
@@ -142,6 +144,7 @@ export function VocabularyFlashcards({
   emptyDescription = "Thử đổi bộ lọc hoặc tìm kiếm bằng từ tiếng Anh hay nghĩa tiếng Việt.",
   onStatusChange,
   onRemove,
+  pagination,
 }: VocabularyFlashcardsProps) {
   const [items, setItems] = useState(entries);
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -153,13 +156,78 @@ export function VocabularyFlashcards({
   const [reducedMotion, setReducedMotion] = useState(false);
   const [resumeState, setResumeState] = useState<StudyState | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const restoreFocusRef = useRef<HTMLElement | null>(null);
-  const storageKey = useMemo(() => "wewin:vocabulary-study:" + title, [title]);
+  const sectionRef = useRef<HTMLElement>(null);
+  const storageKey = useMemo(() => "wewin:vocabulary-study:" + (pagination?.sessionKey ?? title), [pagination?.sessionKey, title]);
+  const [nextCursor, setNextCursor] = useState(pagination?.nextCursor ?? null);
+  const [previousCursor, setPreviousCursor] = useState(pagination?.previousCursor ?? null);
+  const [loading, setLoading] = useState(false);
+  const activeRequest = useRef<Promise<FlashcardEntry[] | null> | null>(null);
+  const controller = useRef<AbortController | null>(null);
+  const dataVersion = useRef(0);
+  const navigationVersion = useRef(0);
+  const initialNext = pagination?.nextCursor ?? null;
+  const initialPrevious = pagination?.previousCursor ?? null;
+  const [source, setSource] = useState({ entries, storageKey, initialNext, initialPrevious });
 
-  useEffect(() => {
+  // Reconcile before children/effects see a new page paired with an old cursor/index.
+  if (source.entries !== entries || source.storageKey !== storageKey || source.initialNext !== initialNext || source.initialPrevious !== initialPrevious) {
+    const sameScope = source.storageKey === storageKey;
+    const activeId = flashcardIndex === null ? null : items[flashcardIndex]?.id;
+    const index = sameScope && activeId ? entries.findIndex(entry => entry.id === activeId) : -1;
+    setSource({ entries, storageKey, initialNext, initialPrevious });
     setItems(entries);
-    if (!entries.length) setFlashcardIndex(null);
-  }, [entries]);
+    setNextCursor(initialNext);
+    setPreviousCursor(initialPrevious);
+    setFlashcardIndex(index < 0 ? null : index);
+    if (index < 0) { setFlipped(false); setAutoPlay(false); }
+    if (!sameScope) setResumeState(null);
+    setError(null);
+  }
+
+  useLayoutEffect(() => {
+    setLoading(false);
+    setSavingId(null);
+    return () => {
+      dataVersion.current += 1;
+      navigationVersion.current += 1;
+      controller.current?.abort();
+      activeRequest.current = null;
+    };
+  }, [entries, storageKey, initialNext, initialPrevious]);
+
+  const loadBatch = useCallback((cursor: string, mode: "next" | "prev" | "resume" | "last" = "next", anchor?: string) => {
+    if (activeRequest.current) return activeRequest.current;
+    if (!pagination) return Promise.resolve(null);
+    const abort = new AbortController(); controller.current = abort;
+    setLoading(true);
+    const request = (async () => {
+      try {
+        const response = await fetch(`${pagination.endpoint}&${new URLSearchParams({ cursor, direction: mode === "prev" || mode === "last" ? mode : "next", ...(mode === "resume" ? { resume: "1", ...(anchor ? { anchor } : {}) } : {}) })}`, { cache: "no-store", signal: abort.signal });
+        if (!response.ok) throw new Error("Không tải được mục từ. Vui lòng thử lại hoặc đăng nhập lại.");
+        const data = await response.json() as { items: FlashcardEntry[]; nextCursor: string | null; previousCursor: string | null };
+        if (abort.signal.aborted) return null;
+        if (mode === "resume" && !data.items.length) return [];
+        if (mode !== "prev") setNextCursor(data.nextCursor);
+        if (mode !== "next") setPreviousCursor(data.previousCursor);
+        if (mode === "resume" || mode === "last") setItems(data.items);
+        else setItems(old => {
+          const additions = data.items.filter(entry => !old.some(item => item.id === entry.id));
+          return mode === "prev" ? [...additions, ...old] : [...old, ...additions];
+        });
+        return data.items;
+      } catch {
+        if (!abort.signal.aborted) { setError("Không tải được mục từ. Hãy thử chuyển thẻ hoặc tải thêm lần nữa."); setAutoPlay(false); }
+        return null;
+      } finally {
+        if (controller.current === abort) {
+          activeRequest.current = null;
+          if (!abort.signal.aborted) setLoading(false);
+        }
+      }
+    })();
+    activeRequest.current = request;
+    return request;
+  }, [pagination]);
 
   useEffect(() => {
     if (!items.length || resumeState) return;
@@ -168,56 +236,108 @@ export function VocabularyFlashcards({
 
   useEffect(() => {
     if (flashcardIndex === null) return;
-    const state = { index: flashcardIndex, flipped };
+    const entry = items[flashcardIndex];
+    if (!entry || loading) return;
+    const state = { index: flashcardIndex, flipped, id: entry.id, cursor: entry.cursor };
     setResumeState(state);
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(state));
     } catch {
       // Study state is a convenience; it should never prevent learning.
     }
-  }, [flashcardIndex, flipped, storageKey]);
+  }, [flashcardIndex, flipped, storageKey, items, loading]);
 
   const current = useMemo(() => {
     if (flashcardIndex === null || !items.length) return null;
-    return items[normaliseIndex(flashcardIndex, items.length)];
+    return items[flashcardIndex] ?? null;
   }, [flashcardIndex, items]);
-  const studyOpen = flashcardIndex !== null;
+  const studyOpen = current !== null;
 
-  const nextCard = useCallback(() => {
+  useEffect(() => {
+    if (flashcardIndex !== null && flashcardIndex >= items.length - 3 && nextCursor && !loading && !error) void loadBatch(nextCursor);
+  }, [flashcardIndex, items.length, nextCursor, loading, error, loadBatch]);
+
+  const nextCard = useCallback(async () => {
     if (!items.length) return;
+    const version = ++navigationVersion.current;
+    if ((flashcardIndex ?? 0) >= items.length - 1 && !nextCursor && previousCursor) {
+      const batch = await loadBatch("", "resume");
+      if (version !== navigationVersion.current) return;
+      if (batch?.length) { setFlashcardIndex(0); setFlipped(false); }
+      return;
+    }
+    if ((flashcardIndex ?? 0) >= items.length - 1 && nextCursor) {
+      const batch = await loadBatch(nextCursor);
+      if (version !== navigationVersion.current) return;
+      if (!batch) return;
+      const additions = batch.filter(entry => !items.some(item => item.id === entry.id));
+      if (additions.length) { setFlashcardIndex(items.length); setFlipped(false); setError(null); }
+      return;
+    }
     setFlashcardIndex((index) => normaliseIndex((index ?? 0) + 1, items.length));
     setFlipped(false);
     setError(null);
-  }, [items.length]);
+  }, [items, flashcardIndex, nextCursor, previousCursor, loadBatch]);
 
-  const previousCard = useCallback(() => {
-    if (!items.length) return;
+  const previousCard = useCallback(async () => {
+    if (!items.length || loading) return;
+    const version = ++navigationVersion.current;
+    if ((flashcardIndex ?? 0) === 0 && previousCursor) {
+      const batch = await loadBatch(previousCursor, "prev");
+      if (version !== navigationVersion.current) return;
+      if (!batch) return;
+      const count = batch.filter(entry => !items.some(item => item.id === entry.id)).length;
+      if (count) { setFlashcardIndex(count - 1); setFlipped(false); setError(null); }
+      return;
+    }
+    if ((flashcardIndex ?? 0) === 0 && nextCursor) {
+      const batch = await loadBatch("", "last");
+      if (version !== navigationVersion.current) return;
+      if (batch?.length) { setFlashcardIndex(batch.length - 1); setFlipped(false); }
+      return;
+    }
     setFlashcardIndex((index) => normaliseIndex((index ?? 0) - 1, items.length));
     setFlipped(false);
     setError(null);
-  }, [items.length]);
+  }, [items, flashcardIndex, previousCursor, nextCursor, loadBatch, loading]);
 
   const openFlashcard = useCallback(
-    (index?: number) => {
-      if (!items.length) return;
-      const startingIndex = index === undefined ? resumeState?.index ?? 0 : index;
-      setFlashcardIndex(normaliseIndex(startingIndex, items.length));
+    async (index?: number) => {
+      if (!items.length || loading) return;
+      const version = ++navigationVersion.current;
+      let startingIndex = index ?? 0;
+      if (index === undefined && resumeState) {
+        startingIndex = resumeState.id ? items.findIndex(item => item.id === resumeState.id) : resumeState.index;
+        if (startingIndex < 0 && resumeState.cursor && pagination) {
+          const batch = await loadBatch(resumeState.cursor, "resume", resumeState.id);
+          if (version !== navigationVersion.current) return;
+          if (!batch) return;
+          startingIndex = Math.max(0, batch.findIndex(item => item.id === resumeState.id));
+        }
+      }
+      setFlashcardIndex(Math.max(0, startingIndex));
       setFlipped(index === undefined ? Boolean(resumeState?.flipped) : false);
       setAutoPlay(false);
       setError(null);
     },
-    [items.length, resumeState],
+    [items, resumeState, pagination, loadBatch, loading],
   );
 
   const closeFlashcard = useCallback(() => {
+    ++navigationVersion.current;
     setFlashcardIndex(null);
     setFlipped(false);
     setAutoPlay(false);
     setError(null);
   }, []);
 
+  useEffect(() => {
+    if (!items.length) closeFlashcard();
+  }, [items.length, closeFlashcard]);
+
   const updateStatus = useCallback(
     async (id: string, status: StudyStatus) => {
+      const version = dataVersion.current;
       setSavingId(id);
       setError(null);
       try {
@@ -226,26 +346,35 @@ export function VocabularyFlashcards({
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ entryId: id, status }),
         });
+        if (version !== dataVersion.current) return false;
         if (!response.ok) {
           setError(await responseMessage(response, "Không thể lưu tiến độ lúc này. Hãy kiểm tra kết nối rồi thử lại."));
           return false;
         }
-        setItems((currentItems) => currentItems.map((entry) => (entry.id === id ? { ...entry, status } : entry)));
+        const excluded = pagination?.notebook && pagination.status && pagination.status !== "ALL" && pagination.status !== status;
+        if (excluded) {
+          const index = items.findIndex(entry => entry.id === id);
+          setItems(old => old.filter(entry => entry.id !== id));
+          setFlashcardIndex(old => old === null || items.length <= 1 ? null : Math.max(0, old > index ? old - 1 : Math.min(old, items.length - 2)));
+          setFlipped(false);
+        } else setItems((currentItems) => currentItems.map((entry) => (entry.id === id ? { ...entry, status } : entry)));
         notifyLearningActivity();
         onStatusChange?.(id, status);
         return true;
       } catch {
+        if (version !== dataVersion.current) return false;
         setError("Không thể lưu tiến độ lúc này. Hãy kiểm tra kết nối rồi thử lại.");
         return false;
       } finally {
-        setSavingId(null);
+        if (version === dataVersion.current) setSavingId(null);
       }
     },
-    [onStatusChange],
+    [onStatusChange, pagination, items],
   );
 
   const removeFromNotebook = useCallback(
     async (id: string) => {
+      const version = dataVersion.current;
       setSavingId(id);
       setError(null);
       try {
@@ -254,22 +383,29 @@ export function VocabularyFlashcards({
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ entryId: id }),
         });
+        if (version !== dataVersion.current) return false;
         if (!response.ok) {
           setError(await responseMessage(response, "Không thể bỏ lưu từ này. Hãy kiểm tra kết nối rồi thử lại."));
           return false;
         }
-        setItems((currentItems) => currentItems.map((entry) => (entry.id === id ? { ...entry, status: undefined } : entry)));
+        if (pagination?.notebook) {
+          const index = items.findIndex(entry => entry.id === id);
+          setItems(old => old.filter(entry => entry.id !== id));
+          setFlashcardIndex(old => old === null || items.length <= 1 ? null : Math.max(0, old > index ? old - 1 : Math.min(old, items.length - 2)));
+          setFlipped(false);
+        } else setItems((currentItems) => currentItems.map((entry) => (entry.id === id ? { ...entry, status: undefined } : entry)));
         notifyLearningActivity();
         onRemove?.(id);
         return true;
       } catch {
+        if (version !== dataVersion.current) return false;
         setError("Không thể bỏ lưu từ này. Hãy kiểm tra kết nối rồi thử lại.");
         return false;
       } finally {
-        setSavingId(null);
+        if (version === dataVersion.current) setSavingId(null);
       }
     },
-    [onRemove],
+    [onRemove, pagination, items],
   );
 
   const toggleSaved = useCallback(
@@ -283,10 +419,12 @@ export function VocabularyFlashcards({
   const markAndContinue = useCallback(
     async (status: StudyStatus) => {
       if (!current) return;
+      const version = navigationVersion.current;
       const saved = await updateStatus(current.id, status);
-      if (saved) nextCard();
+      if (version !== navigationVersion.current) return;
+      if (saved && !(pagination?.notebook && pagination.status && pagination.status !== "ALL" && pagination.status !== status)) void nextCard();
     },
-    [current, nextCard, updateStatus],
+    [current, nextCard, updateStatus, pagination],
   );
 
   useEffect(() => {
@@ -310,28 +448,28 @@ export function VocabularyFlashcards({
   }, [reducedMotion]);
 
   useEffect(() => {
-    if (flashcardIndex === null || !autoPlay || reducedMotion || !current) return;
+    if (flashcardIndex === null || !autoPlay || reducedMotion || !current || loading) return;
     const timer = window.setTimeout(() => {
       if (flipped) nextCard();
       else setFlipped(true);
     }, speed * 1000);
     return () => window.clearTimeout(timer);
-  }, [autoPlay, current, flipped, flashcardIndex, nextCard, reducedMotion, speed]);
+  }, [autoPlay, current, flipped, flashcardIndex, nextCard, reducedMotion, speed, loading]);
 
   useEffect(() => {
     if (!studyOpen) {
-      restoreFocusRef.current?.focus();
-      restoreFocusRef.current = null;
       return;
     }
 
-    restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const section = sectionRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const focusTimer = window.setTimeout(() => dialogRef.current?.focus(), 0);
     return () => {
       window.clearTimeout(focusTimer);
       document.body.style.overflow = previousOverflow;
+      (previouslyFocused?.isConnected ? previouslyFocused : section?.isConnected ? section : null)?.focus();
     };
   }, [studyOpen]);
 
@@ -361,20 +499,22 @@ export function VocabularyFlashcards({
 
   if (!items.length) {
     return (
-      <Card padding="lg" className="text-center">
+      <section ref={sectionRef} tabIndex={-1} aria-label={title}><Card padding="lg" className="text-center">
         <CircleHelp className="mx-auto size-10 text-brand" aria-hidden="true" />
         <h2 className="mt-3 font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">{emptyTitle}</h2>
         <p className="mx-auto mt-1 max-w-md text-sm leading-relaxed text-ink-muted">{emptyDescription}</p>
-      </Card>
+        {error && <p role="alert">{error}</p>}
+        {nextCursor && <button className="admin-action mt-3" disabled={loading} onClick={() => void loadBatch(nextCursor)}>Tải thêm</button>}
+      </Card></section>
     );
   }
 
   const currentIndex = flashcardIndex === null ? 0 : normaliseIndex(flashcardIndex, items.length);
-  const progressPercent = Math.round(((currentIndex + 1) / items.length) * 100);
+  const progressPercent = nextCursor || previousCursor ? 0 : Math.round(((currentIndex + 1) / items.length) * 100);
   const currentMascot: MascotState = error ? "surprised" : current?.status === "MASTERED" ? "proud" : current?.status === "LEARNING" ? "determined" : flipped ? "focused" : "ready";
 
   return (
-    <section aria-label={title}>
+    <section ref={sectionRef} tabIndex={-1} aria-label={title}>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0">
           <h2 className="font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">{title}</h2>
@@ -438,6 +578,9 @@ export function VocabularyFlashcards({
         })}
       </div>
 
+      {nextCursor && <button className="admin-action mt-4" disabled={loading} onClick={() => void loadBatch(nextCursor)}>Tải thêm</button>}
+      {loading && <p role="status">Đang tải mục từ…</p>}
+      {(nextCursor || previousCursor) && <p className="mt-2 text-xs text-ink-muted">Đã tải {items.length} mục từ. Các thẻ tiếp theo được tải khi bạn học tiếp.</p>}
       {current ? (
         <div ref={dialogRef} className="fixed inset-0 z-[80] min-h-dvh overflow-y-auto bg-[#F8FAFC] text-ink" role="dialog" aria-modal="true" aria-labelledby="vocabulary-study-title" tabIndex={-1}>
           <header className="sticky top-0 z-10 border-b border-border bg-white/95 backdrop-blur">
@@ -448,9 +591,9 @@ export function VocabularyFlashcards({
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <h1 id="vocabulary-study-title" className="break-words text-sm font-extrabold text-ink sm:text-base">Học flashcard</h1>
-                  <span className="text-xs font-semibold tabular-nums text-ink-muted">{currentIndex + 1} / {items.length}</span>
+                  <span className="text-xs font-semibold tabular-nums text-ink-muted">{currentIndex + 1} / {items.length}{nextCursor || previousCursor ? "+ đã tải" : ""}{loading ? " · Đang tải…" : ""}</span>
                 </div>
-                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-brand-soft" role="progressbar" aria-label="Tiến độ bộ flashcard" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
+                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-brand-soft" role="progressbar" aria-label="Tiến độ bộ flashcard" aria-valuemin={0} aria-valuemax={100} aria-valuenow={nextCursor || previousCursor ? undefined : progressPercent}>
                   <div className="h-full rounded-full bg-brand" style={{ width: progressPercent + "%" }} />
                 </div>
               </div>

@@ -1,7 +1,6 @@
 "use client";
 import { notifyLearningActivity } from "@/lib/learning-activity-events";
 
-import { upload as uploadBlob } from "@vercel/blob/client";
 import { openMicrophone } from "@/lib/microphone";
 import { SpeakingSession } from "./SpeakingSession";
 import { PersonalVocabularyModal } from "@/components/vocabulary/PersonalVocabularyModal";
@@ -139,7 +138,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
   const [audioStarted, setAudioStarted] = useState(false);
   const [microphoneState, setMicrophoneState] = useState<PermissionState>("unknown");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(getDurationSeconds(exam, catalog));
+  const [deadline, setDeadline] = useState(0);
 
   const preflightAudioRef = useRef<HTMLAudioElement | null>(null);
   const microphoneStreamRef = useRef<MediaStream | null>(null);
@@ -210,12 +209,6 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
   useEffect(() => {
     recordingsRef.current = recordings;
   }, [recordings]);
-
-  useEffect(() => {
-    if (stage !== "exam") return;
-    const timer = window.setInterval(() => setTimeLeft((value) => Math.max(0, value - 1)), 1000);
-    return () => window.clearInterval(timer);
-  }, [stage]);
 
   const updateRecordings = useCallback((updater: (current: RecordingState) => RecordingState) => {
     const next = updater(recordingsRef.current);
@@ -338,6 +331,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
 
     let response: Response;
     if (capabilities.directUpload) {
+      const { upload: uploadBlob } = await import("@vercel/blob/client");
       const mimeType = (blob.type || "audio/webm").split(";", 1)[0];
       const pathname = `exam-recordings/${id}/${partId}-${crypto.randomUUID()}${recordingExtension(mimeType)}`;
       const uploaded = await uploadBlob(pathname, blob, {
@@ -584,11 +578,8 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
         return;
       }
       const expiresAt = data.expiresAt ?? restored.expiresAt;
-      if (expiresAt) {
-        const expiry = Date.parse(expiresAt);
-        const seconds = Math.floor((expiry - Date.now()) / 1000);
-        if (Number.isFinite(seconds)) setTimeLeft(Math.max(0,seconds));
-      }
+      const expiry = expiresAt ? Date.parse(expiresAt) : NaN;
+      setDeadline(Number.isFinite(expiry) ? expiry : Date.now() + getDurationSeconds(exam, catalog) * 1000);
       setStage("exam");
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Không thể bắt đầu lượt thi.");
@@ -599,7 +590,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
       startingRef.current = false;
       if (mountedRef.current) setStarting(false);
     }
-  }, [candidate?.role, catalog, catalogSkillIndex, exam.program, exam.slug]);
+  }, [candidate?.role, catalog, catalogSkillIndex, exam]);
 
   useEffect(() => {
     if (catalog === "FULL" || stage !== "preflight") return;
@@ -656,11 +647,6 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
       if (mountedRef.current) setSubmitting(false);
     }
   }, [saveProgress, stopRecording]);
-
-  useEffect(() => {
-    if (stage !== "exam" || timeLeft !== 0 || submittingRef.current) return;
-    void submitExam();
-  }, [stage, submitExam, timeLeft]);
 
   useEffect(() => {
     if (!attemptId || stage !== "exam") return;
@@ -755,7 +741,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
     <div className="fixed inset-0 z-50 flex min-h-screen flex-col bg-[#F8FAFC]">
       <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-white px-3 md:px-8">
         <div className="flex min-w-0 items-center gap-3"><Image src="/brand/mascot-right-clear.png" alt="Mascot WEWIN" width={34} height={34} className="size-9 shrink-0 object-contain" /><div className="min-w-0"><p className="truncate text-sm font-extrabold text-ink md:text-base">{displayName}</p><p className="hidden truncate text-[11px] text-ink-muted sm:block">{accountLabel}</p></div></div>
-        <div className="flex shrink-0 items-center gap-2 rounded-full bg-brand px-3 py-1.5 text-white md:px-5"><Timer className="size-4" aria-hidden="true" /><span className="font-mono text-base font-extrabold tracking-widest md:text-xl">{formatTime(timeLeft)}</span></div>
+        <ExamCountdown deadline={deadline} onExpire={submitExam} />
         <div className="flex items-center gap-2 md:gap-4"><span className="hidden text-xs text-ink-muted sm:inline">Đã trả lời: <b className="text-ink">{answeredCount}/{totalQuestions}</b></span><button type="button" onClick={() => setConfirmSubmit(true)} disabled={submitting} className="flex min-h-11 items-center gap-1.5 rounded-[var(--radius-btn)] bg-brand px-3 text-xs font-extrabold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50 md:px-4 md:text-sm">{submitting ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <Send className="size-3.5" aria-hidden="true" />}{submitting ? "Đang nộp" : "Nộp bài"}</button></div>
       </header>
       <main className="min-h-0 flex-1 overflow-auto px-3 py-5 md:px-8 md:py-6"><div className="mx-auto flex min-h-full max-w-[1260px] flex-col"><div className="mb-4 flex items-center justify-between gap-3"><div className="min-w-0"><p className="truncate text-xs font-extrabold uppercase tracking-[0.15em] text-brand">{exam.title} · {skillLabel}</p><p className="mt-1 text-sm text-ink-muted">{exam.subtitle}</p></div><span className="hidden shrink-0 text-xs text-ink-faint md:inline">{saving ? "Đang lưu…" : attemptId ? "Đã lưu tự động" : "Chưa có phiên thi"}</span></div>{errorMessage ? <div role="alert" className="mb-4 flex items-start gap-2 rounded-2xl border border-[#F0B7B0] bg-[#FFF7F5] px-4 py-3 text-sm text-[#9B2C20]"><AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" /><p>{errorMessage}</p></div> : null}{renderExamPart({ exam, content, skill, activeUnit, answers, writingAnswers, recordings, bookmarks, activeRecording, canAddToNotebook: candidate?.role !== "GUEST", audioRef: preflightAudioRef, setAudioStarted, onAnswer: handleAnswer, onBookmark: (questionId) => void toggleBookmark(questionId).catch((error) => setErrorMessage(error instanceof Error ? error.message : "Không thể cập nhật bookmark.")), onWriting: handleWriting, onStartRecording: beginRecording, onStopRecording: stopRecording, onEnableMicrophone: requestMicrophone, onRetryRecording: retryRecordingSave })}</div></main>
@@ -769,6 +755,31 @@ function getDurationSeconds(exam: ExamFixture, catalog: ExamCatalogCode) {
   const duration = catalog === "FULL" ? exam.duration : exam.parts.find((part) => part.skill === catalog.toLowerCase())?.duration ?? exam.duration;
   const match = duration.match(/(\d+)/);
   return (match ? Number(match[1]) : 60) * 60;
+}
+
+function ExamCountdown({ deadline, onExpire }: { deadline: number; onExpire: () => Promise<void> }) {
+  const [remaining, setRemaining] = useState(() => Math.max(0, Math.ceil((deadline - Date.now()) / 1000)));
+  const expired = useRef(false);
+  useEffect(() => {
+    const tick = () => {
+      const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      setRemaining(seconds);
+      if (seconds === 0 && !expired.current) {
+        expired.current = true;
+        void onExpire();
+      }
+    };
+    // Run after parent effects restore answer/stage refs, including an expired reload.
+    const firstTick = window.setTimeout(tick, 0);
+    const timer = window.setInterval(tick, 1000);
+    document.addEventListener("visibilitychange", tick);
+    return () => {
+      window.clearTimeout(firstTick);
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", tick);
+    };
+  }, [deadline, onExpire]);
+  return <div className="flex shrink-0 items-center gap-2 rounded-full bg-brand px-3 py-1.5 text-white md:px-5"><Timer className="size-4" aria-hidden="true" /><span className="font-mono text-base font-extrabold tracking-widest md:text-xl">{formatTime(remaining)}</span></div>;
 }
 
 function formatTime(value: number) {

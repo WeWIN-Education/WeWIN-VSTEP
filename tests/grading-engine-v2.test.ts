@@ -1,13 +1,27 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   aggregateSpeakingV2,
+  configuredMaxGradingAttempts,
+  configuredReviewThreshold,
   gradeSpeakingV2,
   gradeWritingV2,
+  isVietnameseFeedback,
   type PipelineState,
   type ValidatedAudio,
 } from "../src/lib/grading-v2";
 
 const writingReport = (confidence = 0.9, score = 7) => ({
+  scores: {
+    task_fulfillment: { score, evidence: "Bai viet dung tu 'answer' de tra loi cau hoi.", why_not_higher: "Can phat trien y ro hon." },
+    organization: { score, evidence: "Bai viet co bo cuc ro rang va lien ket 'answer' hop ly.", why_not_higher: "Mot so lien ket con don gian." },
+    vocabulary: { score, evidence: "Bai viet dung tu 'answer' va tu vung phu hop.", why_not_higher: "Can mo rong cach dung tu." },
+    grammar: { score, evidence: "Cau 'answer' co cau truc ro rang nhung con loi.", why_not_higher: "Can kiem soat cau phuc tap tot hon." },
+  },
+  confidence,
+  direct_feedback_vi: { summary: "Bai viet dap ung de va can phat trien y ro hon." },
+});
+
+const englishWritingReport = (confidence = 0.9, score = 7) => ({
   scores: {
     task_fulfillment: { score, evidence: "The answer addresses the question.", why_not_higher: "Development is limited." },
     organization: { score, evidence: "The answer uses a clear progression.", why_not_higher: "Some links are basic." },
@@ -15,10 +29,23 @@ const writingReport = (confidence = 0.9, score = 7) => ({
     grammar: { score, evidence: "The answer controls common clauses.", why_not_higher: "Complex control is uneven." },
   },
   confidence,
-  direct_feedback_vi: { biggest_score_killers: ["development"] },
+  direct_feedback_vi: { summary: "The response is clear but needs more development." },
 });
 
 const speakingReport = (confidence = 0.9, score = 7, quality = "good") => ({
+  audio: { quality },
+  scores: {
+    task_fulfillment: { score, evidence: "Phan tra loi dap ung cau hoi.", why_not_higher: "Vi du con ngan." },
+    fluency_coherence: { score, evidence: "Bai noi co mach noi ro rang.", why_not_higher: "Con mot so lan ngap ngung." },
+    vocabulary: { score, evidence: "Phan noi dung tu vung phu hop.", why_not_higher: "Can dung tu chinh xac hon." },
+    grammar: { score, evidence: "Bai noi dung cau truc co ban.", why_not_higher: "Cau phuc tap con chua deu." },
+    pronunciation: { score, evidence: "Phat am de hieu voi nguoi nghe.", why_not_higher: "Trong am can ro hon." },
+  },
+  confidence,
+  direct_feedback_vi: { summary: "Bai noi de hieu va can luyen do troi chay them." },
+});
+
+const englishSpeakingReport = (confidence = 0.9, score = 7, quality = "good") => ({
   audio: { quality },
   scores: {
     task_fulfillment: { score, evidence: "The response answers the task.", why_not_higher: "Examples are brief." },
@@ -28,6 +55,7 @@ const speakingReport = (confidence = 0.9, score = 7, quality = "good") => ({
     pronunciation: { score, evidence: "The audio is intelligible.", why_not_higher: "Stress can be clearer." },
   },
   confidence,
+  direct_feedback_vi: { summary: "The response is understandable but needs more fluency." },
 });
 
 function jsonResponse(value: unknown) {
@@ -55,6 +83,25 @@ const audio: ValidatedAudio = {
 };
 
 describe("grading engine v2", () => {
+  it("validates configured defaults and safe bounds", () => {
+    expect(configuredReviewThreshold({})).toBe(0.75);
+    expect(configuredReviewThreshold({ GRADING_REVIEW_CONFIDENCE: "0.78" })).toBe(0.78);
+    expect(configuredReviewThreshold({ GRADING_REVIEW_CONFIDENCE: "bad" })).toBe(0.75);
+    expect(configuredReviewThreshold({ GRADING_REVIEW_CONFIDENCE: " " })).toBe(0.75);
+    expect(configuredReviewThreshold({ GRADING_REVIEW_CONFIDENCE: "1.1" })).toBe(0.75);
+    expect(configuredMaxGradingAttempts({})).toBe(3);
+    expect(configuredMaxGradingAttempts({ GRADING_MAX_RETRIES: "2" })).toBe(2);
+    expect(configuredMaxGradingAttempts({ GRADING_MAX_RETRIES: "0" })).toBe(3);
+    expect(configuredMaxGradingAttempts({ GRADING_MAX_RETRIES: "4" })).toBe(3);
+    expect(configuredMaxGradingAttempts({ GRADING_MAX_RETRIES: "1.5" })).toBe(3);
+    expect(configuredMaxGradingAttempts({ GRADING_MAX_RETRIES: " " })).toBe(3);
+  });
+
+  it("accepts Vietnamese without requiring diacritics and keeps English examples", () => {
+    expect(isVietnameseFeedback("Bai viet co bo cuc ro rang va dung tu 'education'.")).toBe(true);
+    expect(isVietnameseFeedback("The answer is clear and organized.")).toBe(false);
+  });
+
   it("uses one Writing examiner call and computes a deterministic score", async () => {
     const mock = mockFetch([{ choices: [{ message: { content: JSON.stringify(writingReport()) } }], usage: { total_tokens: 42 } }]);
     const state: PipelineState = {};
@@ -86,6 +133,57 @@ describe("grading engine v2", () => {
     expect(result.reviewed).toBe(true);
     expect(result.task_score).toBe(5);
     expect(state.reviewer).toMatchObject({ decision: "revise" });
+  });
+
+  it("uses GRADING_REVIEW_CONFIDENCE for reviewer eligibility", async () => {
+    vi.stubEnv("GRADING_REVIEW_CONFIDENCE", "0.78");
+    try {
+      const mock = mockFetch([
+        { choices: [{ message: { content: JSON.stringify(writingReport(0.76)) } }] },
+        { choices: [{ message: { content: JSON.stringify({ decision: "keep", reason: "Ket qua co du bang chung." }) } }] },
+      ]);
+      const result = await gradeWritingV2("task2", "Explain a policy.", "The answer explains a policy.", {}, async () => undefined, { apiKey: "test", fetch: mock.fetcher });
+      expect(mock.calls).toHaveLength(2);
+      expect(result.reviewed).toBe(true);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("repairs English feedback once without changing scores", async () => {
+    const mock = mockFetch([
+      { choices: [{ message: { content: JSON.stringify(englishWritingReport(0.9, 7)) } }] },
+      { choices: [{ message: { content: JSON.stringify(writingReport(0.9, 7)) } }] },
+    ]);
+    const state: PipelineState = {};
+    const result = await gradeWritingV2("task1", "Discuss education.", "The answer addresses education clearly.", state, async () => undefined, { apiKey: "test", fetch: mock.fetcher });
+
+    expect(mock.calls).toHaveLength(2);
+    expect(result.task_score).toBe(7);
+    expect(result.direct_feedback_vi.summary).toContain("Bai viet");
+    expect(state.repairUsed).toBe(true);
+  });
+
+  it("fails instead of accepting English feedback after the single repair", async () => {
+    const mock = mockFetch([
+      { choices: [{ message: { content: JSON.stringify(englishWritingReport()) } }] },
+      { choices: [{ message: { content: JSON.stringify(englishWritingReport()) } }] },
+    ]);
+    await expect(gradeWritingV2("task1", "Discuss education.", "The answer addresses education clearly.", {}, async () => undefined, { apiKey: "test", fetch: mock.fetcher })).rejects.toMatchObject({ code: "MODEL_OUTPUT_INVALID", attemptsExhausted: true });
+    expect(mock.calls).toHaveLength(2);
+  });
+
+  it("repairs Speaking feedback without changing the examiner score", async () => {
+    const mock = mockFetch([
+      { text: "I jog every day." },
+      { choices: [{ message: { content: JSON.stringify(englishSpeakingReport(0.9, 6.5)) } }] },
+      { choices: [{ message: { content: JSON.stringify(speakingReport(0.9, 6.5)) } }] },
+    ]);
+    const result = await gradeSpeakingV2("part1", "Do you jog?", "test-audio", {}, async () => undefined, { apiKey: "test", fetch: mock.fetcher, audioValidator: async () => audio });
+
+    expect(mock.calls).toHaveLength(3);
+    expect(result.task_score).toBe(6.5);
+    expect(result.direct_feedback_vi.summary).toContain("Bai noi");
   });
 
   it("validates Speaking audio before transcription and sends original audio to examiner", async () => {
