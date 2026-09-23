@@ -17,9 +17,12 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ u
   const body = await request.json().catch(() => null);
   try {
     const outcome = await prisma.$transaction(async tx => {
+      // Serialize account removal with matchmaking and reward settlement.
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(9232601)`;
       const target = await tx.user.findUnique({ where: { id: userId }, select: { role: true, email: true } });
       if (!target || target.role !== "LEARNER") return { error: "Không tìm thấy tài khoản học viên.", status: 404 };
       if (body?.confirmation !== target.email) return { error: "Email xác nhận chưa đúng.", status: 400 };
+      await tx.battlePlayer.updateMany({ where: { userId }, data: { name: "Người dùng đã xóa" } });
       const recordings = await tx.examRecording.findMany({ where: { attempt: { userId } }, select: { storageKey: true } });
       const posts = await tx.userPost.findMany({ where: { authorId: userId }, select: { imageUrl: true } });
       const materials = await tx.learningMaterial.findMany({ where: { uploadedById: userId }, select: { storageName: true } });

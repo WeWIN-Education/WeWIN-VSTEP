@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
       { source: "/register", destination: "/login", permanent: false },
       { source: "/download", destination: "/", permanent: false },
       { source: "/stories/:path*", destination: "/video", permanent: false },
-      { source: "/game/:path*", destination: "/practice", permanent: false },
       { source: "/affiliate", destination: "/profile/settings", permanent: false },
       { source: "/partners", destination: "/about", permanent: false },
       { source: "/friends", destination: "/dashboard", permanent: false },

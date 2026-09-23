@@ -1,0 +1,170 @@
+[
+  {
+    "character": "hero",
+    "state": "idle",
+    "code": "HERO_01",
+    "source": "8cbfcf3a-315f-4c35-bfe7-71c9fb6acecf.png",
+    "src": "/battle/hero/idle.webp"
+  },
+  {
+    "character": "hero",
+    "state": "ready",
+    "code": "HERO_02",
+    "source": "e1dc8628-6dce-426f-898b-4441db94e0b7.png",
+    "src": "/battle/hero/ready.webp"
+  },
+  {
+    "character": "hero",
+    "state": "thinking",
+    "code": "HERO_03",
+    "source": "c898b134-e592-4f8f-a63d-6376b8764e09.png",
+    "src": "/battle/hero/thinking.webp"
+  },
+  {
+    "character": "hero",
+    "state": "answering",
+    "code": "HERO_04",
+    "source": "995f2f8a-237d-4a6c-b215-45f719a64f5c.png",
+    "src": "/battle/hero/answering.webp"
+  },
+  {
+    "character": "hero",
+    "state": "correct",
+    "code": "HERO_05",
+    "source": "e75904e2-9a6d-4feb-abc1-1f8e0f9b645d.png",
+    "src": "/battle/hero/correct.webp"
+  },
+  {
+    "character": "hero",
+    "state": "attack",
+    "code": "HERO_06",
+    "source": "03a44ec6-5898-4c06-aeed-251f61b12764.png",
+    "src": "/battle/hero/attack.webp"
+  },
+  {
+    "character": "hero",
+    "state": "wrong",
+    "code": "HERO_07",
+    "source": "a824faf4-a32f-47d2-9559-d0416a90ff4f.png",
+    "src": "/battle/hero/wrong.webp"
+  },
+  {
+    "character": "hero",
+    "state": "hit",
+    "code": "HERO_08",
+    "source": "b9a39c0b-8526-49bd-b68f-ae13fb7baa29.png",
+    "src": "/battle/hero/hit.webp"
+  },
+  {
+    "character": "hero",
+    "state": "defense",
+    "code": "HERO_09",
+    "source": "cbb6d846-d634-456f-8930-9cad1060d6e6.png",
+    "src": "/battle/hero/defense.webp"
+  },
+  {
+    "character": "hero",
+    "state": "victory",
+    "code": "HERO_10",
+    "source": "4b3ba01a-3ae3-4056-b131-0056a5855312.png",
+    "src": "/battle/hero/victory.webp"
+  },
+  {
+    "character": "hero",
+    "state": "defeat",
+    "code": "HERO_11",
+    "source": "694fedcf-a3ee-4492-9ed2-06612c72d46e.png",
+    "src": "/battle/hero/defeat.webp"
+  },
+  {
+    "character": "hero",
+    "state": "draw",
+    "code": "HERO_12",
+    "source": "cf7aa6d2-4b02-4a95-aa41-97f9643112ae.png",
+    "src": "/battle/hero/draw.webp"
+  },
+  {
+    "character": "rival",
+    "state": "idle",
+    "code": "RIVAL_01",
+    "source": "49ef6428-15dc-4a38-a6b1-e7bae6ce7c49.png",
+    "src": "/battle/rival/idle.webp"
+  },
+  {
+    "character": "rival",
+    "state": "ready",
+    "code": "RIVAL_02",
+    "source": "166fae60-f5bc-4539-89ac-4a21361ed321.png",
+    "src": "/battle/rival/ready.webp"
+  },
+  {
+    "character": "rival",
+    "state": "thinking",
+    "code": "RIVAL_03",
+    "source": "7e0f8d14-e952-45b9-b4cf-353d642cec61.png",
+    "src": "/battle/rival/thinking.webp"
+  },
+  {
+    "character": "rival",
+    "state": "answering",
+    "code": "RIVAL_04",
+    "source": "da9b7c58-01a1-45a7-8f64-8d7dab47d149.png",
+    "src": "/battle/rival/answering.webp"
+  },
+  {
+    "character": "rival",
+    "state": "correct",
+    "code": "RIVAL_05",
+    "source": "de404a83-c722-4ff4-9d54-05ad7c0376b3.png",
+    "src": "/battle/rival/correct.webp"
+  },
+  {
+    "character": "rival",
+    "state": "attack",
+    "code": "RIVAL_06",
+    "source": "24ded5a7-7823-4187-9a3b-6b6d67a3fce8.png",
+    "src": "/battle/rival/attack.webp"
+  },
+  {
+    "character": "rival",
+    "state": "wrong",
+    "code": "RIVAL_07",
+    "source": "6c800a03-c2a3-4bb8-a06e-679e2d8ae978.png",
+    "src": "/battle/rival/wrong.webp"
+  },
+  {
+    "character": "rival",
+    "state": "hit",
+    "code": "RIVAL_08",
+    "source": "78eb0d0f-bfde-4146-a9eb-1cd632ebb5a8.png",
+    "src": "/battle/rival/hit.webp"
+  },
+  {
+    "character": "rival",
+    "state": "defense",
+    "code": "RIVAL_09",
+    "source": "0a5c9693-518b-4658-a54a-76895e414a7a.png",
+    "src": "/battle/rival/defense.webp"
+  },
+  {
+    "character": "rival",
+    "state": "victory",
+    "code": "RIVAL_10",
+    "source": "9aa3a364-d18b-40ff-9310-5100bd73c2d8.png",
+    "src": "/battle/rival/victory.webp"
+  },
+  {
+    "character": "rival",
+    "state": "defeat",
+    "code": "RIVAL_11",
+    "source": "37c2c14c-ef82-4ad4-a146-6c553330f0b3.png",
+    "src": "/battle/rival/defeat.webp"
+  },
+  {
+    "character": "rival",
+    "state": "draw",
+    "code": "RIVAL_12",
+    "source": "adb66092-7f93-46b1-b026-593b372aed11.png",
+    "src": "/battle/rival/draw.webp"
+  }
+]

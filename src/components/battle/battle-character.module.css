@@ -1,0 +1,108 @@
+.character {
+  --energy: #62d9ff;
+  --gold: #ffd36b;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 1;
+  contain: layout;
+  pointer-events: none;
+}
+.character[data-variant="rival"] { --energy: #c395ff; --gold: #e2baff; }
+.action, .art, .canvas, .fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
+.action { transform-origin: 50% 85%; }
+.art { z-index: 2; }
+.fallback { object-fit: contain; padding: 5%; }
+.canvas { opacity: 0; }
+.character[data-ready="true"] .canvas { opacity: 1; }
+.character[data-ready="true"] .fallback { opacity: 0; }
+.shadow {
+  position: absolute; bottom: 4%; left: 24%; width: 52%; height: 7%;
+  background: radial-gradient(ellipse, #020617a6, transparent 70%);
+}
+.aura {
+  position: absolute; inset: 23% 14% 5%; border-radius: 50%; opacity: .6;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--energy) 22%, transparent), transparent 68%);
+  animation: aura 3s ease-in-out infinite;
+}
+.shield, .impact, .sparkles { display: none; }
+.character[data-state="idle"] .action { animation: idle 3.6s ease-in-out infinite; }
+.character[data-state="ready"] .action { animation: ready 1.8s ease-in-out infinite; }
+.character[data-state="thinking"] .action { animation: thinking 4s ease-in-out infinite; }
+.character[data-state="answering"] .action { animation: answering .9s cubic-bezier(.2,.7,.2,1) both; }
+.character[data-state="correct"] .action { animation: correct 1.2s cubic-bezier(.2,.7,.2,1) both; }
+.character[data-state="attack"] .action { animation: attack 1s cubic-bezier(.2,.65,.25,1) both; z-index: 5; }
+.character[data-state="wrong"] .action { animation: wrong .9s ease-out both; }
+.character[data-state="hit"] .action { animation: hit .9s ease-out both; }
+.character[data-state="defense"] .action { animation: defend 1.4s ease-out both; }
+.character[data-state="victory"] .action { animation: victory 2s ease-in-out both; }
+.character[data-state="defeat"] .action { animation: defeat 1.6s ease-out both; }
+.character[data-state="draw"] .action { animation: greeting 1.4s ease-in-out both; }
+.character[data-state="defense"] .shield {
+  display: block; position: absolute; z-index: 3; inset: 14% 11% 9%; border-radius: 50%;
+  border: 2px solid var(--energy);
+  background: radial-gradient(ellipse at 30% 30%, #ffffff20, transparent 60%);
+  box-shadow: inset 0 0 30px color-mix(in srgb, var(--energy) 28%, transparent), 0 0 20px color-mix(in srgb, var(--energy) 35%, transparent);
+  animation: shield 1.4s ease-out both;
+}
+.character[data-state="attack"] .impact, .character[data-state="hit"] .impact {
+  display: block; position: absolute; z-index: 3; top: 40%; left: 47%; width: 45%; height: 45%;
+  border: 3px solid var(--gold); border-radius: 50%;
+  background: radial-gradient(circle, #fff9, color-mix(in srgb, var(--energy) 22%, transparent) 25%, transparent 65%);
+  animation: impact 1s ease-out both;
+}
+.character[data-state="hit"] .impact { left: 23%; top: 35%; animation-duration: .7s; }
+.character[data-state="correct"] .sparkles, .character[data-state="victory"] .sparkles { display: block; }
+.sparkles i {
+  position: absolute; left: 50%; top: 45%; z-index: 4; width: 7px; height: 15px;
+  background: var(--gold); border-radius: 2px;
+  animation: spark 1.4s ease-out both;
+}
+.character[data-state="victory"] .sparkles i { animation-duration: 2s; }
+.sparkles i:nth-child(even) { background: var(--energy); }
+.character[data-rank="0"] .aura { display: none; }
+.character[data-rank="0"] .sparkles, .character[data-rank="1"] .sparkles { display: none; }
+.character[data-rank="0"] .impact, .character[data-rank="1"] .impact { border-width: 1px; background: none; }
+.character[data-rank="2"] .sparkles i:nth-child(n+4), .character[data-rank="3"] .sparkles i:nth-child(n+6) { display: none; }
+.character[data-still="true"] *, .character[data-paused="true"] * { animation-play-state: paused !important; }
+.character[data-reduced="true"] .canvas { opacity: 0; }
+.character[data-reduced="true"] .fallback { opacity: 1; }
+.character[data-reduced="true"] * { animation: none !important; }
+.character[data-reduced="true"] .impact, .character[data-reduced="true"] .sparkles { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .character * { animation: none !important; }
+  .character .canvas { opacity: 0; }
+  .character .fallback { opacity: 1; }
+  .impact, .sparkles { display: none !important; }
+}
+@media (max-width: 600px) { .sparkles i:nth-child(n+5) { display: none; } }
+@keyframes idle { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.8%); } }
+@keyframes ready { 0%,100% { transform: scale(1); } 50% { transform: translateY(.7%) scale(1.012,.99); } }
+@keyframes thinking { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-1deg); } }
+@keyframes answering { 0% { transform: scale(.97); } 45% { transform: translateX(calc(var(--direction) * 3%)) scale(1.03); } 100% { transform: none; } }
+@keyframes correct { 0%,100% { transform: none; } 15% { transform: scale(1.03,.94); } 42% { transform: translateY(-10%) rotate(-3deg); } 72% { transform: scale(1.03,.97); } }
+@keyframes attack {
+  0% { transform: none; }
+  22% { transform: translateX(calc(var(--direction) * -6%)) scale(.95) rotate(calc(var(--direction) * -4deg)); }
+  48%,57% { transform: translate(calc(var(--direction) * 24%), -5%) scale(1.08) rotate(calc(var(--direction) * 7deg)); }
+  100% { transform: none; }
+}
+@keyframes wrong { 0%,100% { transform: none; } 20%,55% { transform: rotate(-3deg); } 37%,70% { transform: rotate(2deg); } }
+@keyframes hit {
+  0% { transform: none; }
+  22% { transform: translate(calc(var(--direction) * -12%), 2%) rotate(calc(var(--direction) * -9deg)); }
+  40% { transform: translateX(calc(var(--direction) * -9%)) rotate(calc(var(--direction) * -5deg)); }
+  100% { transform: none; }
+}
+@keyframes defend { 0% { transform: scale(.96); } 30% { transform: translateX(calc(var(--direction) * -2%)) scale(1.02); } 100% { transform: none; } }
+@keyframes victory { 0%,100% { transform: none; } 25% { transform: translateY(-10%) rotate(-3deg); } 45% { transform: scale(1.02,.96); } 65% { transform: translateY(-6%) rotate(3deg); } }
+@keyframes defeat { 0% { transform: translateY(-3%); } 60% { transform: translateY(2%) scale(1,.97); } 100% { transform: translateY(1%); } }
+@keyframes greeting { 0%,100% { transform: none; } 30% { transform: rotate(-3deg) translateY(-2%); } 65% { transform: rotate(2deg); } }
+@keyframes aura { 0%,100% { opacity: .4; transform: scale(.95); } 50% { opacity: .75; transform: scale(1.05); } }
+@keyframes shield { 0% { opacity: 0; transform: scale(.55); } 25% { opacity: .9; transform: scale(1.04); } 100% { opacity: .45; transform: scale(1); } }
+@keyframes impact { 0%,30% { opacity: 0; transform: scale(.1); } 48% { opacity: .85; } 85%,100% { opacity: 0; transform: scale(1.6); } }
+@keyframes spark {
+  0%,15% { opacity: 0; transform: rotate(calc(var(--i) * 45deg)) translateY(-25px) scale(.4); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(calc(var(--i) * 45deg)) translateY(-150px) rotate(100deg) scale(.6); }
+}

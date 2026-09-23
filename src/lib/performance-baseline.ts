@@ -1,4 +1,5 @@
 const METRICS = new Set([
+  "battle.command", "battle.queue_wait",
   "db.query", "grading.examiner", "grading.reviewer", "grading.repair", "grading.transcription",
 ]);
 

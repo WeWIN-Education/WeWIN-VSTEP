@@ -5,7 +5,7 @@ vi.mock("@/lib/access", () => ({ getCurrentUser: mock.actor }));
 vi.mock("@/lib/request-security", () => ({ isSameOrigin: mock.sameOrigin }));
 vi.mock("@/lib/storage", () => ({ deleteObject: mock.storage }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
-vi.mock("@/lib/prisma", () => ({ prisma: { $transaction: async (fn: (tx: unknown) => Promise<unknown>) => fn({ user: { findUnique: mock.target, deleteMany: mock.remove }, blogPost: { deleteMany: mock.blogs }, examRecording: { findMany: mock.recordings }, userPost: { findMany: mock.posts }, learningMaterial: { findMany: mock.materials } }) } }));
+vi.mock("@/lib/prisma", () => ({ prisma: { $transaction: async (fn: (tx: unknown) => Promise<unknown>) => fn({ $executeRaw: vi.fn(), battlePlayer: { updateMany: vi.fn() }, user: { findUnique: mock.target, deleteMany: mock.remove }, blogPost: { deleteMany: mock.blogs }, examRecording: { findMany: mock.recordings }, userPost: { findMany: mock.posts }, learningMaterial: { findMany: mock.materials } }) } }));
 import { DELETE } from "../src/app/api/manage/users/[userId]/route";
 const request = (confirmation = "learner@example.com") => new Request("http://localhost/api/manage/users/student", { method: "DELETE", body: JSON.stringify({ confirmation }) });
 const context = { params: Promise.resolve({ userId: "student" }) };

@@ -1,0 +1,89 @@
+.page {
+  --stage-navy: #081a35;
+  --stage-muted: #b5c8df;
+  --stage-gold: #f5cb79;
+  min-height: 100dvh; padding: 24px clamp(16px,4vw,64px) 32px;
+  color: var(--ink); background: radial-gradient(ellipse at 80% 5%, #e2ebfb, transparent 55%), #f8fafc;
+}
+:global(html):has(.page), :global(body):has(.page) { height: auto; min-height: 100%; overflow-x: clip; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 1440px; margin: auto; padding-bottom: 22px; border-bottom: 1px solid #d4deec; }
+.back { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--brand); font-weight: 700; font-size: 14px; }
+.eyebrow { font-size: 11px; letter-spacing: .16em; font-weight: 600; color: #49627d; }
+.previewBadge { font-size: 12px; border: 1px solid #bbcde5; border-radius: 8px; padding: 9px 12px; color: #234267; }
+.heading { max-width: 1440px; margin: 32px auto 28px; display: flex; align-items: end; justify-content: space-between; gap: 30px; }
+.heading h1 { margin: 8px 0 0; font-size: clamp(28px,3.2vw,48px); letter-spacing: -.045em; line-height: 1.2; color: #0b2851; font-weight: 700; }
+.heading > p { max-width: 390px; font-size: 14px; line-height: 1.8; color: #526479; }
+.layout { max-width: 1440px; margin: auto; display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 24px; align-items: start; }
+.stagePanel { min-width: 0; background: var(--stage-navy); border: 2px solid #243e61; border-radius: 24px; overflow: hidden; color: white; box-shadow: 0 14px 35px #15376116; }
+.stageToolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 1px solid #ffffff16; }
+.liveLabel { color: var(--stage-gold); font-size: 12px; letter-spacing: .2em; font-weight: 600; }
+.page button { min-height: 44px; border-radius: 10px; }
+.stageToolbar button, .playback button { border: 1px solid #ffffff38; padding: 8px 12px; font-size: 12px; color: #e1eafd; background: #ffffff07; }
+.stageToolbar button:hover, .playback button:hover { background: #ffffff16; }
+.arena { display: grid; grid-template-columns: 1fr 1fr; position: relative; isolation: isolate; padding: 26px 8px 22px; gap: 0; overflow: hidden; background: radial-gradient(ellipse at 20% 65%, #115bab55, transparent 53%), radial-gradient(ellipse at 88% 60%, #694aa82c, transparent 48%), linear-gradient(#081a35,#0b2345); }
+.grid { position: absolute; z-index: -1; inset: 40% -20% -65%; transform: perspective(420px) rotateX(60deg); background-image: linear-gradient(#79baff12 1px,transparent 1px),linear-gradient(90deg,#79baff12 1px,transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(transparent,#000); }
+.fighter { position: relative; min-width: 0; text-align: center; }
+.name { position: relative; z-index: 3; display: grid; gap: 5px; margin-bottom: 12px; }
+.name span { color: #87bded; font-size: 10px; font-weight: 600; letter-spacing: .14em; }
+.name strong { font-size: clamp(14px,1.4vw,20px); font-weight: 600; }
+.fighter[data-rival="true"] .name span { color: #ccaff0; }
+.fighter > [role="img"] { z-index: 2; }
+.platform { position: absolute; bottom: 52px; left: 12%; width: 76%; height: 14%; border: 1px solid #60caff55; border-radius: 50%; background: radial-gradient(ellipse, #419dff20, #419dff06 70%); box-shadow: 0 10px 0 -3px #050f20,0 11px 0 -3px #5aa4ea4d; }
+.fighter[data-rival="true"] .platform { border-color: #bd8dff55; }
+.poseLabel { position: relative; z-index: 3; display: inline-flex; justify-content: center; min-width: 100px; margin-top: 8px; padding: 7px 14px; font-size: 12px; color: #d2e6ff; border-radius: 8px; background: #ffffff0b; border: 1px solid #ffffff15; }
+.versus { position: absolute; z-index: 4; left: 50%; top: 47%; transform: translate(-50%,-50%) skew(-8deg); color: var(--stage-gold); font-family: var(--font-inter),sans-serif; font-size: clamp(20px,3vw,42px); font-weight: 800; text-shadow: 0 3px #05152b; }
+.arena[data-light="true"] { background: radial-gradient(ellipse at 40% 35%,white,#d8e8fa); color: #16345a; }
+.arena[data-light="true"] .name span { color: #285d98; }
+.arena[data-light="true"] .fighter[data-rival="true"] .name span { color: #71549e; }
+.arena[data-light="true"] .poseLabel { color: #12335a; background: #ffffffa6; border-color: #53729938; }
+.arena[data-light="true"] .versus { color: #9a6817; text-shadow: none; }
+.playback { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-top: 1px solid #ffffff16; }
+.playback p { flex: 1 1 220px; color: var(--stage-muted); font-size: 13px; line-height: 1.6; }
+.playbackButtons { display: flex; gap: 8px; }
+.playback button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+.controls { padding: 20px; background: white; border: 2px solid #d8e2ef; border-radius: 22px; }
+.controlHeading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.controlHeading h2 { font-size: 17px; color: #15375d; }
+.controlHeading > span { font-size: 11px; color: #63758b; }
+.stateGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stateButton { text-align: left; padding: 10px 10px 9px; border: 1px solid #dbe4ef; background: #f8fafd; display: grid; grid-template-columns: 22px 1fr; gap: 2px 4px; align-content: center; transition: border-color .15s,background .15s; }
+.stateButton > span { grid-row: span 2; color: #8294a9; font-size: 11px; padding-top: 2px; font-family: var(--font-inter),sans-serif; }
+.stateButton strong { font-size: 11px; font-weight: 600; color: #24405e; }
+.stateButton small { font-size: 10px; color: #61748c; text-transform: capitalize; }
+.stateButton:hover { border-color: #90b5e8; background: #eff5ff; }
+.stateButton[aria-pressed="true"] { border-color: var(--brand); background: #eaf2ff; box-shadow: inset 3px 0 var(--brand); }
+.stateButton[aria-pressed="true"] strong, .stateButton[aria-pressed="true"] > span { color: var(--brand); }
+.demoButton { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; padding: 12px; border: 1px solid var(--brand); background: var(--brand); color: white; font-size: 13px; font-weight: 600; }
+.demoButton:hover { background: var(--brand-dark); }
+.demoButton:disabled { opacity: .55; cursor: not-allowed; }
+.note { margin-top: 14px; color: #66758a; font-size: 11px; line-height: 1.7; }
+.footer { max-width: 1440px; margin: 24px auto 0; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; color: #607289; font-size: 11px; }
+.page :focus-visible { outline: 3px solid #438ffc; outline-offset: 4px; }
+.stagePanel :focus-visible { outline-color: var(--stage-gold); }
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: minmax(0,1fr); }
+  .stateGrid { grid-template-columns: repeat(4,1fr); }
+  .demoButton { max-width: 320px; }
+}
+@media (max-width: 640px) {
+  .page { padding-top: 12px; }
+  .header { gap: 8px; padding-bottom: 12px; }
+  .header > .eyebrow { display: none; }
+  .previewBadge { font-size: 10px; padding: 6px 8px; }
+  .heading { display: block; margin: 24px auto 20px; }
+  .heading > p { margin-top: 12px; font-size: 13px; }
+  .heading .eyebrow { font-size: 9px; }
+  .stageToolbar { padding: 10px 14px; }
+  .arena { padding: 20px 2px 14px; }
+  .name span { font-size: 8px; letter-spacing: .08em; }
+  .name strong { font-size: 13px; }
+  .platform { bottom: 42px; height: 10%; }
+  .poseLabel { font-size: 10px; min-width: 85px; padding: 6px 8px; }
+  .playback { padding: 14px; }
+  .playback p { flex-basis: 100%; min-height: 42px; }
+  .controls { padding: 16px; }
+  .stateGrid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .stateButton { grid-template-columns: 1fr; gap: 3px; }
+  .stateButton > span { grid-row: auto; }
+  .stateButton strong { font-size: 10px; }
+}

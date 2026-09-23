@@ -3,6 +3,7 @@ import {
   BookMarked,
   Dumbbell,
   GraduationCap,
+  Gamepad2,
   History,
   Library,
   Newspaper,
@@ -81,6 +82,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "HỌC LIỆU & ÔN LUYỆN",
     items: [
       { label: "Luyện tập tổng hợp", href: "/review", icon: Dumbbell },
+      { label: "Trò chơi", href: "/game", icon: Gamepad2 },
       { label: "Cộng đồng", href: "/feed", icon: Users },
       { label: "Lịch sử bài làm", href: "/history", icon: History, roles: ["LEARNER", "ADMIN"] },
       { label: "Tài liệu học tập", href: "/materials", icon: Library },
@@ -102,6 +104,7 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Đề thi", href: "/manage/exams", roles: ["ADMIN"] },
           { label: "Kỹ năng", href: "/manage/skills", roles: ["ADMIN"] },
           { label: "Bài tập", href: "/manage/practice", roles: ["ADMIN"] },
+          { label: "Câu hỏi Quick Battle", href: "/manage/battle", roles: ["ADMIN"] },
           { label: "Duyệt bài viết", href: "/manage/posts", roles: ["ADMIN"] },
           { label: "Nhập từ vựng", href: "/manage/vocabulary/import", roles: ["ADMIN"] },
           { label: "Nhập collocations", href: "/manage/collocations/import", roles: ["ADMIN"] },

@@ -90,6 +90,10 @@ model User {
   enrollments        ProgrammeEnrollment[]
   attempts           ExamAttempt[]
   xpAwards           XpAward[]
+  battleSession      BattleSession?
+  battlePlayers      BattlePlayer[]
+  battleAnswers      BattleAnswer[]
+  battleRewards      BattleReward[]
   dailyActivities    DailyActivity[]
   dailyChallengeRewards DailyChallengeReward[]
   vocabularyProgress VocabularyProgress[]
@@ -631,4 +635,105 @@ model VideoProgress {
 
   @@unique([userId, videoSlug])
   @@index([userId, completed])
+}
+
+model BattleQuestion {
+  id          String   @id @default(cuid())
+  sourceKey   String?  @unique
+  type        String
+  difficulty  Int
+  prompt      String
+  options     String[]
+  correct     Int
+  explanation String
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([published, type, difficulty])
+}
+
+// A single durable slot per account prevents overlapping queues/matches across tabs.
+model BattleSession {
+  userId      String   @id
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  queuedAt    DateTime?
+  lastSeenAt  DateTime @default(now())
+  matchId     String?
+  match       BattleMatch? @relation(fields: [matchId], references: [id], onDelete: SetNull)
+  windowAt    DateTime @default(now())
+  requests    Int      @default(0)
+  @@index([matchId, queuedAt])
+}
+
+model BattleMatch {
+  id          String   @id @default(cuid())
+  startsAt    DateTime
+  finishedAt  DateTime?
+  status      String   @default("ACTIVE")
+  reason      String?
+  winnerSlot  Int?
+  players     BattlePlayer[]
+  turns       BattleTurn[]
+  sessions    BattleSession[]
+}
+
+model BattlePlayer {
+  id          String   @id @default(cuid())
+  matchId     String
+  match       BattleMatch @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  slot        Int
+  isBot       Boolean @default(false)
+  name        String
+  rank        Int
+  score       Int     @default(0)
+  correct     Int     @default(0)
+  answered    Int     @default(0)
+  lastSeenAt  DateTime
+  reward      BattleReward?
+  @@unique([matchId, slot])
+  @@unique([matchId, userId])
+  @@index([userId, matchId])
+}
+
+model BattleTurn {
+  id          String   @id @default(cuid())
+  matchId     String
+  match       BattleMatch @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  number      Int
+  slot        Int
+  type        String
+  difficulty  Int
+  prompt      String
+  options     String[]
+  correct     Int
+  explanation String
+  botChoice   Int?
+  botDelay    Int?
+  answer      BattleAnswer?
+  @@unique([matchId, number])
+}
+
+model BattleAnswer {
+  id          String   @id @default(cuid())
+  turnId      String   @unique
+  turn        BattleTurn @relation(fields: [turnId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  choice      Int?
+  points      Int
+  createdAt   DateTime
+}
+
+model BattleReward {
+  id          String   @id @default(cuid())
+  playerId    String   @unique
+  player      BattlePlayer @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  day         String
+  xp          Int
+  createdAt   DateTime @default(now())
+  @@index([userId, day, xp])
 }
