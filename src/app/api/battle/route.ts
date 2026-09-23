@@ -38,7 +38,7 @@ export async function GET(request: Request) {
   const where = { userId: user.id, match: { status: { not: "ACTIVE" } } };
   const [total, items, profile] = await Promise.all([
     prisma.battlePlayer.count({ where }),
-    prisma.battlePlayer.findMany({ where, skip: (page - 1) * 10, take: 10, orderBy: [{ match: { finishedAt: "desc" } }, { id: "desc" }], select: { slot: true, score: true, correct: true, reward: { select: { xp: true } }, match: { select: { id: true, status: true, reason: true, winnerSlot: true, finishedAt: true } } } }),
+    prisma.battlePlayer.findMany({ where, skip: (page - 1) * 10, take: 10, orderBy: [{ match: { finishedAt: "desc" } }, { id: "desc" }], select: { slot: true, match: { select: { id: true, status: true, winnerSlot: true, finishedAt: true } } } }),
     prisma.user.findUnique({ where: { id: user.id }, select: { xp: true } }),
   ]);
   return json({ page, total, items, xp: profile?.xp ?? 0 });

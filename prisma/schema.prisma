@@ -667,6 +667,7 @@ model BattleSession {
 
 model BattleMatch {
   id          String   @id @default(cuid())
+  runtime     Json?
   startsAt    DateTime
   finishedAt  DateTime?
   status      String   @default("ACTIVE")

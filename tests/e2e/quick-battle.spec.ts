@@ -1,5 +1,6 @@
 import { expect, test, type BrowserContext } from "@playwright/test";
 import { PrismaClient } from "@prisma/client";
+import type { BattleRuntime } from "../../src/lib/battle-runtime";
 import bcrypt from "bcryptjs";
 
 const safe = process.env.BATTLE_INTEGRATION === "true" && /^postgresql:\/\/battle_qa:[^@]+@127\.0\.0\.1:55439\/battle_test(?:\?|$)/.test(process.env.DATABASE_URL ?? "");
@@ -24,7 +25,7 @@ test.afterAll(async () => {
   }
   await db.$disconnect();
 });
-test("guest introduction and responsive lobby; two humans pair, answer, reload and review", async ({ browser, page }) => {
+test("guest introduction and responsive lobby; two humans pair, answer and reload", async ({ browser, page }) => {
   test.setTimeout(120_000);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/game");
@@ -44,41 +45,48 @@ test("guest introduction and responsive lobby; two humans pair, answer, reload a
   await expect(a.getByRole("button", { name: "Tìm trận ngay" })).toBeEnabled();
   await a.screenshot({ path: ".qa/quick-battle-lobby-desktop.png", fullPage: true });
   await b.screenshot({ path: ".qa/quick-battle-lobby-mobile.png", fullPage: true });
+  let openArena!: () => void;
+  const navigationReady = new Promise<void>(resolve => { openArena = resolve; });
+  await a.route("**/battle/*", async route => { await navigationReady; await route.continue(); });
   await a.getByRole("button", { name: "Tìm trận ngay" }).click();
   await expect(a.getByRole("button", { name: "Hủy tìm trận" })).toBeVisible();
   await expect(a.getByText(/Sau 30 giây|Máy luyện tập/)).toHaveCount(0);
   await b.getByRole("button", { name: "Tìm trận ngay" }).click();
+  await expect(a.getByRole("heading", { name: "Đang vào trận đấu…" })).toBeVisible();
+  await a.screenshot({ path: ".qa/quick-battle-entering.png", fullPage: true });
+  openArena();
   await expect(a).toHaveURL(/\/battle\//); await expect(b).toHaveURL(/\/battle\//);
   const id = a.url().split("/").pop()!; matches.add(id);
   expect(b.url()).toContain(id);
   await expect(a.getByText("Chọn một đáp án", { exact: true }).or(a.getByText("Lượt của đối thủ · Bạn đang theo dõi", { exact: true }))).toBeVisible();
-  const stored = await db.battleMatch.findUniqueOrThrow({ where: { id }, include: { turns: { orderBy: { number: "asc" } }, players: { orderBy: { slot: "asc" } } } });
+  const stored = await db.battleMatch.findUniqueOrThrow({ where: { id }, include: { players: { orderBy: { slot: "asc" } } } });
+  const first = (stored.runtime as unknown as BattleRuntime).questions[0];
   const active = stored.players[0].userId === `${prefix}-a` ? a : b;
-  const first = stored.turns[0];
   const answer = active.locator('button[data-selected]').nth(first.correct);
   await expect(answer).toBeEnabled();
   await answer.focus(); await answer.press("Enter");
-  await expect(active.getByText(first.explanation, { exact: true })).toBeVisible();
   await expect(active.getByText("Đã ghi nhận đáp án", { exact: true })).toBeVisible();
-  await expect(a.getByRole("heading", { name: stored.turns[1].prompt, exact: true })).toBeVisible({ timeout: 6000 });
-  await expect(b.getByRole("heading", { name: stored.turns[1].prompt, exact: true })).toBeVisible();
+  await expect(active.getByRole("heading", { name: (stored.runtime as unknown as BattleRuntime).questions[1].prompt, exact: true })).toBeVisible({ timeout: 5000 });
   await active.reload();
-  await expect(active.getByRole("heading", { name: stored.turns[1].prompt, exact: true })).toBeVisible();
+  await expect(active.getByText(/Đến lượt bạn|Lượt của đối thủ/)).toBeVisible();
   await expect(active.getByRole("button", { name: /chuyển động/ })).toHaveCount(0);
   await a.screenshot({ path: ".qa/quick-battle-arena-desktop.png", fullPage: true });
   await b.screenshot({ path: ".qa/quick-battle-arena-mobile.png", fullPage: true });
   expect(await b.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  expect(await db.battleAnswer.count({ where: { turnId: first.id } })).toBe(1);
   // Only the isolated fixture clock is advanced, allowing end-state UI coverage without an 8.5 minute wait.
-  const past = Date.now() - 511000;
-  await db.$transaction([
-    db.battleMatch.update({ where: { id }, data: { startsAt: new Date(past) } }),
-    db.battleAnswer.updateMany({ where: { turn: { matchId: id } }, data: { createdAt: new Date(past + 5000) } }),
-  ]);
-  await expect(a.getByRole("heading", { name: "Ôn lại trận đấu" })).toBeVisible({ timeout: 15000 });
-  await expect(b.getByRole("heading", { name: "Ôn lại trận đấu" })).toBeVisible();
+  const done = (await db.battleMatch.findUniqueOrThrow({ where: { id } })).runtime as unknown as BattleRuntime;
+  done.index = 30; done.start = Date.now(); done.lastSeen = [Date.now(), Date.now()];
+  await db.battleMatch.update({ where: { id }, data: { runtime: JSON.parse(JSON.stringify(done)) } });
+  await expect(a.getByRole("heading", { name: /Chiến thắng|Hòa|Chưa thắng/ })).toBeVisible({ timeout: 15000 });
+  await expect(b.getByRole("heading", { name: /Chiến thắng|Hòa|Chưa thắng/ })).toBeVisible();
   expect(await db.battleReward.count({ where: { player: { matchId: id } } })).toBe(2);
   await a.screenshot({ path: ".qa/quick-battle-results.png", fullPage: true });
+  expect((await db.battleMatch.findUniqueOrThrow({ where: { id } })).runtime).toBeNull();
+  await a.getByRole("link", { name: "Về sảnh và xem rank mới" }).click();
+  await expect(a.getByRole("heading", { name: "Lịch sử trận đấu" })).toBeVisible();
+  await expect(a.getByText(/Ôn lại 30 câu/)).toHaveCount(0);
+  const history = await (await ca.request.get("/api/battle")).json();
+  expect(history.items[0]).toEqual({ slot: stored.players.find(p => p.userId === `${prefix}-a`)!.slot, match: { id, status: "FINISHED", winnerSlot: 0, finishedAt: expect.any(String) } });
   expect(errors).toEqual([]);
   await ca.close(); await cb.close();
 });

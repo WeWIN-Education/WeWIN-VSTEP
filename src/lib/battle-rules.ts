@@ -2,8 +2,8 @@ export const BATTLE_TYPES = ["VOCABULARY", "GRAMMAR", "PHRASES"] as const;
 export type BattleType = typeof BATTLE_TYPES[number];
 export const TYPE_LABELS: Record<BattleType, string> = { VOCABULARY: "Từ vựng", GRAMMAR: "Ngữ pháp", PHRASES: "Cụm từ" };
 export const ANSWER_MS = 15_000;
-export const RESULT_MS = 2_000;
-export const QUEUE_MS = 30_000;
+export const RESULT_MS = 1_000;
+export const QUEUE_MS = 5_000;
 export const DISCONNECT_MS = 30_000;
 export const RANKS = [
   { name: "Đồng", min: 0, badge: "/battle/ranks/bronze.png" }, { name: "Bạc", min: 500, badge: "/battle/ranks/silver.png" }, { name: "Vàng", min: 1500, badge: "/battle/ranks/gold.png" },

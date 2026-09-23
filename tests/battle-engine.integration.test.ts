@@ -1,10 +1,13 @@
 import { afterAll, beforeAll, expect, it, vi } from "vitest";
 import { mkdirSync, writeFileSync } from "node:fs";
 vi.mock("server-only", () => ({}));
+import { Prisma } from "@prisma/client";
 import { prisma } from "../src/lib/prisma";
 import { battleCommand, type BattleView } from "../src/lib/battle-engine";
 import { BATTLE_STARTER } from "../src/lib/battle-starter";
 import { BATTLE_BOT_NAMES } from "../src/lib/battle-bot-names";
+import { ANSWER_MS, RESULT_MS, QUEUE_MS } from "../src/lib/battle-rules";
+import type { BattleRuntime } from "../src/lib/battle-runtime";
 import { summarizeBaseline } from "../src/lib/performance-baseline";
 
 // Explicitly isolated local database only; never run these writes against an application database.
@@ -40,6 +43,13 @@ async function pair() {
   const match = state as BattleView; matches.add(match.id);
   return { a, b, match, time, clock };
 }
+async function runtime(id: string) {
+  const match = await prisma.battleMatch.findUniqueOrThrow({ where: { id } });
+  return match.runtime as unknown as BattleRuntime;
+}
+async function saveRuntime(id: string, state: BattleRuntime) {
+  await prisma.battleMatch.update({ where: { id }, data: { runtime: JSON.parse(JSON.stringify(state)) } });
+}
 test("concurrent joins across tabs allocate exactly one match and snapshots hide answers", async () => {
   const a = await user(), b = await user();
   const now = new Date();
@@ -48,9 +58,9 @@ test("concurrent joins across tabs allocate exactly one match and snapshots hide
   expect(new Set(ids).size).toBe(1); ids.forEach(id => matches.add(id));
   const id = ids[0];
   const db = await prisma.battleMatch.findUniqueOrThrow({ where: { id }, include: { turns: true, players: true } });
-  expect(db.turns).toHaveLength(30); expect(db.players).toHaveLength(2);
+  expect(db.turns).toHaveLength(0); expect((await runtime(id)).questions).toHaveLength(30); expect(db.players).toHaveLength(2);
   const state = await battleCommand(a, { action: "state", matchId: id, heartbeat: true }, () => new Date(db.startsAt.getTime() + 1)) as BattleView;
-  expect(state.current).not.toHaveProperty("correct"); expect(state.current).not.toHaveProperty("explanation"); expect(state.review).toEqual([]);
+  expect(state.current).not.toHaveProperty("correct"); expect(state.current).not.toHaveProperty("explanation"); expect(state).not.toHaveProperty("review");
   expect(JSON.stringify(state)).not.toContain("@example.invalid");
   expect(JSON.stringify(state)).not.toContain("botChoice");
   await battleCommand(a, { action: "leave", matchId: id }, () => new Date(db.startsAt.getTime() + 100));
@@ -60,30 +70,30 @@ test("answers enforce ownership, timing, immutable selection and idempotence", a
   const db = await prisma.battleMatch.findUniqueOrThrow({ where: { id: match.id }, include: { turns: { orderBy: { number: "asc" } }, players: true } });
   const owner = db.players.find(p => p.slot === 0)!.userId === a.id ? a : b;
   const other = owner.id === a.id ? b : a;
-  const turn = db.turns[0];
+  const turn = (await runtime(match.id)).questions[0];
   await expect(battleCommand(owner, { action: "answer", matchId: match.id, turn: 0, choice: turn.correct }, clock)).rejects.toThrow("chưa bắt đầu");
   time.value = db.startsAt.getTime() + 5000;
   await expect(battleCommand(other, { action: "answer", matchId: match.id, turn: 0, choice: turn.correct }, clock)).rejects.toThrow("Không phải lượt");
   const cmd = { action: "answer" as const, matchId: match.id, turn: 0, choice: turn.correct };
   const first = await battleCommand(owner, cmd, clock) as BattleView;
-  const repeated = await battleCommand(owner, cmd, clock) as BattleView;
+  const [repeated] = await Promise.all(Array.from({ length: 5 }, () => battleCommand(owner, cmd, clock))) as BattleView[];
   expect(first.players[0].score).toBe(133); expect(repeated.players[0].score).toBe(133);
-  expect(first.current).toMatchObject({ number: 0, answered: true, correct: turn.correct, nextAt: time.value + 2000 });
+  expect(first.current).toMatchObject({ number: 0, answered: true, correct: turn.correct, nextAt: time.value + RESULT_MS });
   await expect(battleCommand(other, { ...cmd, turn: 1 }, clock)).rejects.toThrow("chưa bắt đầu");
   await expect(battleCommand(owner, { ...cmd, choice: (turn.correct + 1) % 4 }, clock)).rejects.toThrow("không thể sửa");
-  time.value += 1999;
+  time.value += RESULT_MS - 1;
   expect((await battleCommand(other, { action: "state", matchId: match.id }, clock) as BattleView).current?.number).toBe(0);
   time.value++;
   const next = await battleCommand(other, { action: "state", matchId: match.id }, clock) as BattleView;
   expect(next.current).toMatchObject({ number: 1, answered: false, deadline: time.value + 15000 });
   expect(next.current).not.toHaveProperty("correct");
   await battleCommand(owner, cmd, clock);
-  expect(await prisma.battleAnswer.count({ where: { turnId: turn.id } })).toBe(1);
+  expect(await prisma.battleAnswer.count({ where: { turn: { matchId: match.id } } })).toBe(0);
   time.value += 15000;
   // Keep the other player connected so deadline validation is reached.
-  await prisma.battlePlayer.updateMany({ where: { matchId: match.id }, data: { lastSeenAt: clock() } });
+  const connected = await runtime(match.id); connected.lastSeen = [time.value, time.value]; await saveRuntime(match.id, connected);
   await expect(battleCommand(other, { ...cmd, turn: 1 }, clock)).rejects.toThrow();
-  expect(await prisma.battleAnswer.count({ where: { turn: { matchId: match.id, number: 1 }, choice: null } })).toBe(1);
+  expect((await runtime(match.id)).answer).toMatchObject({ choice: null, points: 0 });
   const stranger = await user();
   await expect(battleCommand(stranger, { action: "state", matchId: match.id }, clock)).rejects.toThrow("không tham gia");
   await battleCommand(owner, { action: "leave", matchId: match.id }, clock);
@@ -91,7 +101,7 @@ test("answers enforce ownership, timing, immutable selection and idempotence", a
 test("bot threshold, cancel and real-player versus bot races do not overlap matches", async () => {
   const a = await user(), b = await user(); let now = Date.now(); const clock = () => new Date(now);
   await battleCommand(a, { action: "join", heartbeat: true }, clock);
-  now += 29999;
+  now += QUEUE_MS - 1;
   expect((await battleCommand(a, { action: "state", heartbeat: true }, clock)).kind).toBe("queue");
   now++;
   const results = await Promise.all([battleCommand(a, { action: "state", heartbeat: true }, clock), battleCommand(b, { action: "join", heartbeat: true }, clock)]);
@@ -101,37 +111,39 @@ test("bot threshold, cancel and real-player versus bot races do not overlap matc
   await battleCommand(a, { action: "leave", matchId: state.id }, clock);
   await battleCommand(b, { action: "cancel" }, clock);
   const c = await user(); await battleCommand(c, { action: "join", heartbeat: true }, clock);
-  await battleCommand(c, { action: "cancel" }, clock); now += 30001;
+  await battleCommand(c, { action: "cancel" }, clock); now += QUEUE_MS + 1;
   expect((await battleCommand(c, { action: "state", heartbeat: true }, clock)).kind).toBe("idle");
 });
 test("30 turns complete with once-only rewards and a five-reward Vietnam-day cap", async () => {
   const { a, b, match, time, clock } = await pair();
   const db = await prisma.battleMatch.findUniqueOrThrow({ where: { id: match.id }, include: { turns: { orderBy: { number: "asc" } }, players: { orderBy: { slot: "asc" } } } });
+  const questions = (await runtime(match.id)).questions;
   for (let i = 0; i < 30; i++) {
-    time.value = db.startsAt.getTime() + i * 7000 + 5000;
+    time.value = db.startsAt.getTime() + i * (5000 + RESULT_MS) + 5000;
     await battleCommand(a, { action: "state", matchId: match.id, heartbeat: true }, clock);
     await battleCommand(b, { action: "state", matchId: match.id, heartbeat: true }, clock);
     const owner = db.players[i % 2].userId === a.id ? a : b;
-    await battleCommand(owner, { action: "answer", matchId: match.id, turn: i, choice: db.turns[i].correct }, clock);
+    await battleCommand(owner, { action: "answer", matchId: match.id, turn: i, choice: i % 2 === 0 ? questions[i].correct : (questions[i].correct + 1) % 4 }, clock);
   }
-  time.value = db.startsAt.getTime() + 30 * 7000;
+  time.value = db.startsAt.getTime() + 30 * (5000 + RESULT_MS);
   const result = await battleCommand(a, { action: "state", matchId: match.id, heartbeat: true }, clock) as BattleView;
-  expect(result.status).toBe("FINISHED"); expect(result.winnerSlot).toBe(null); expect(result.players.map(p => p.correct)).toEqual([15, 15]);
-  expect(result.players.map(p => p.xp)).toEqual([25, 25]); expect(result.review).toHaveLength(30);
+  expect(result.status).toBe("FINISHED"); expect(result.winnerSlot).toBe(0); expect((await prisma.battleMatch.findUniqueOrThrow({ where: { id: match.id } })).runtime).toBeNull();
+  expect(result.players.map(p => p.xp)).toEqual([60, 10]); expect(result).not.toHaveProperty("review");
+  expect(await prisma.battleTurn.count({ where: { matchId: match.id } })).toBe(0);
   await Promise.all(Array.from({ length: 5 }, () => battleCommand(a, { action: "state", matchId: match.id }, clock)));
-  expect((await prisma.user.findUniqueOrThrow({ where: { id: a.id } })).xp).toBe(25);
+  expect((await prisma.user.findUniqueOrThrow({ where: { id: a.id } })).xp).toBe(result.players[result.mySlot].xp);
   expect(await prisma.battleReward.count({ where: { userId: a.id } })).toBe(1);
   // Five additional completed fixtures exercise reward settlement through the real transaction path.
   for (let j = 0; j < 5; j++) {
     time.value += 10000;
     await battleCommand(a, { action: "join", heartbeat: true }, clock);
     const s = await battleCommand(b, { action: "join", heartbeat: true }, clock) as BattleView; matches.add(s.id);
-    const start = s.startsAt; time.value = start + 30 * 17000;
-    await prisma.battlePlayer.updateMany({ where: { matchId: s.id }, data: { lastSeenAt: clock() } });
+    const start = s.startsAt; time.value = start + 30 * (ANSWER_MS + RESULT_MS);
+    const connected = await runtime(s.id); connected.lastSeen = [time.value, time.value]; await saveRuntime(s.id, connected);
     await battleCommand(a, { action: "state", matchId: s.id }, clock);
   }
   expect(await prisma.battleReward.count({ where: { userId: a.id, xp: { gt: 0 } } })).toBe(5);
-  expect((await prisma.user.findUniqueOrThrow({ where: { id: a.id } })).xp).toBe(125);
+  expect((await prisma.user.findUniqueOrThrow({ where: { id: a.id } })).xp).toBe(result.players[result.mySlot].xp + 100);
 }, 30000);
 test("reconnect expiry, double disconnect and deleted account privacy", async () => {
   const p = await pair();
@@ -151,15 +163,16 @@ test("reconnect expiry, double disconnect and deleted account privacy", async ()
 });
 test("bot uses saved independent choices and delayed actions; snapshots survive content edits", async () => {
   const a = await user(); let now = Date.now(); const clock = () => new Date(now);
-  await battleCommand(a, { action: "join", heartbeat: true }, clock); now += 30000;
+  await battleCommand(a, { action: "join", heartbeat: true }, clock); now += QUEUE_MS;
   const state = await battleCommand(a, { action: "state", heartbeat: true }, clock) as BattleView; matches.add(state.id);
   const match = await prisma.battleMatch.findUniqueOrThrow({ where: { id: state.id }, include: { turns: { orderBy: { number: "asc" } }, players: true } });
   const bot = match.players.find(p => p.isBot)!;
   expect(BATTLE_BOT_NAMES).toContain(bot.name);
   expect(state.players[bot.slot]).not.toHaveProperty("isBot");
-  const firstBot = match.turns.find(t => t.slot === bot.slot)!;
-  now = match.startsAt.getTime() + firstBot.number * 17000 + firstBot.botDelay! - 1;
-  await prisma.battlePlayer.updateMany({ where: { matchId: match.id, userId: a.id }, data: { lastSeenAt: clock() } });
+  const questions = (await runtime(match.id)).questions;
+  const firstBot = { ...questions[bot.slot], number: bot.slot };
+  now = match.startsAt.getTime() + firstBot.number * (ANSWER_MS + RESULT_MS) + firstBot.botDelay! - 1;
+  const connected = await runtime(match.id); connected.lastSeen = [now, now]; await saveRuntime(match.id, connected);
   const before = await battleCommand(a, { action: "state", heartbeat: true }, clock) as BattleView;
   expect(before.current).not.toHaveProperty("correct");
   now++;
@@ -174,16 +187,16 @@ test("bot uses saved independent choices and delayed actions; snapshots survive 
   now++;
   const next = await battleCommand(a, { action: "state", matchId: match.id, heartbeat: true }, clock) as BattleView;
   expect(next.current).toMatchObject({ number: firstBot.number + 1, answered: false, deadline: nextAt + 15000 });
-  const nextQuestion = match.turns[firstBot.number + 1];
+  const nextQuestion = { ...questions[firstBot.number + 1], number: firstBot.number + 1 };
   now += 1000;
   const wrong = await battleCommand(a, { action: "answer", matchId: match.id, turn: nextQuestion.number, choice: (nextQuestion.correct + 1) % 4 }, clock) as BattleView;
-  expect(wrong.current).toMatchObject({ answered: true, points: 0, correct: nextQuestion.correct, nextAt: now + 2000 });
-  now += 2000;
+  expect(wrong.current).toMatchObject({ answered: true, points: 0, correct: nextQuestion.correct, nextAt: now + RESULT_MS });
+  now += RESULT_MS;
   expect((await battleCommand(a, { action: "state", matchId: match.id, heartbeat: true }, clock) as BattleView).current?.number).toBe(firstBot.number + 2);
-  expect(await prisma.battleAnswer.count({ where: { turnId: firstBot.id } })).toBe(1);
+  expect(await prisma.battleAnswer.count({ where: { turn: { matchId: match.id } } })).toBe(0);
   const source = await prisma.battleQuestion.findFirstOrThrow({ where: { prompt: firstBot.prompt } });
   await prisma.battleQuestion.update({ where: { id: source.id }, data: { prompt: "Temporary QA edit" } });
-  expect((await prisma.battleTurn.findUniqueOrThrow({ where: { id: firstBot.id } })).prompt).toBe(firstBot.prompt);
+  expect((await runtime(match.id)).questions[firstBot.number].prompt).toBe(firstBot.prompt);
   await prisma.battleQuestion.update({ where: { id: source.id }, data: { prompt: firstBot.prompt } });
   await battleCommand(a, { action: "leave", matchId: match.id }, clock);
 });
@@ -191,7 +204,7 @@ test("forfeit reward requires three personal answers and locked sessions cannot 
   const p = await pair();
   const players = await prisma.battlePlayer.findMany({ where: { matchId: p.match.id } });
   const winner = players.find(player => player.userId === p.a.id)!;
-  await prisma.battlePlayer.update({ where: { id: winner.id }, data: { answered: 3 } });
+  const ready = await runtime(p.match.id); ready.answered[winner.slot] = 3; await saveRuntime(p.match.id, ready);
   const state = await battleCommand(p.b, { action: "leave", matchId: p.match.id }, p.clock) as BattleView;
   expect(state.players[winner.slot].xp).toBe(60); expect(state.players[1 - winner.slot].xp).toBe(0);
   expect((await prisma.user.findUniqueOrThrow({ where: { id: p.a.id } })).xp).toBe(60);
@@ -222,3 +235,44 @@ test("20 simultaneous players pair once each and produce measurable local latenc
     await battleCommand(u, { action: "leave", matchId: id! });
   }
 }, 30000);
+
+test("a locked match does not block another match or an idle player", async () => {
+  const p = await pair(), q = await pair(), idle = await user();
+  let release!: () => void, acquired!: () => void;
+  const acquiredPromise = new Promise<void>(resolve => { acquired = resolve; });
+  const releasePromise = new Promise<void>(resolve => { release = resolve; });
+  const lock = prisma.$transaction(async tx => {
+    await tx.$queryRaw`SELECT "id" FROM "BattleMatch" WHERE "id" = ${p.match.id} FOR UPDATE`;
+    acquired(); await releasePromise;
+  }, { timeout: 10000 });
+  await acquiredPromise;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const result = await Promise.race([
+      Promise.all([battleCommand(q.a, { action: "state", matchId: q.match.id }, q.clock), battleCommand(idle, { action: "state" })]),
+      new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Unrelated match was blocked")), 3000); }),
+    ]);
+    expect(result.map(s => s.kind)).toEqual(["match", "idle"]);
+  } finally { clearTimeout(timer); release(); await lock; }
+});
+
+test("a running legacy match resumes without losing its answer or awarding twice", async () => {
+  const p = await pair();
+  const state = await runtime(p.match.id);
+  const players = await prisma.battlePlayer.findMany({ where: { matchId: p.match.id }, orderBy: { slot: "asc" } });
+  await prisma.battleTurn.createMany({ data: state.questions.map((q, number) => ({ ...q, matchId: p.match.id, number, slot: number % 2, difficulty: 1, explanation: "Legacy fixture" })) });
+  const first = await prisma.battleTurn.findUniqueOrThrow({ where: { matchId_number: { matchId: p.match.id, number: 0 } } });
+  const answeredAt = state.start + 2000;
+  await prisma.battleAnswer.create({ data: { turnId: first.id, userId: players[0].userId, choice: first.correct, points: 143, createdAt: new Date(answeredAt) } });
+  await prisma.battlePlayer.update({ where: { id: players[0].id }, data: { score: 143, answered: 1, correct: 1 } });
+  await prisma.battleMatch.update({ where: { id: p.match.id }, data: { runtime: Prisma.DbNull } });
+  p.time.value = answeredAt + RESULT_MS;
+  const resumed = await battleCommand(p.a, { action: "state", matchId: p.match.id, heartbeat: true }, p.clock) as BattleView;
+  expect(resumed.current).toMatchObject({ number: 1, answered: false });
+  expect(resumed.players[0].score).toBe(143);
+  const owner = players[0].userId === p.a.id ? p.a : p.b;
+  const retried = await battleCommand(owner, { action: "answer", matchId: p.match.id, turn: 0, choice: first.correct }, p.clock) as BattleView;
+  expect(retried.players[0].score).toBe(143);
+  await battleCommand(p.a, { action: "leave", matchId: p.match.id }, p.clock);
+  expect((await prisma.battleMatch.findUniqueOrThrow({ where: { id: p.match.id } })).runtime).toBeNull();
+});

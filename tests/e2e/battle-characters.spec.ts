@@ -10,6 +10,7 @@ test("all 24 poses render; motion changes pixels and pause freezes them", async 
   await expect(characters).toHaveCount(2);
   await expect(page.locator('[data-ready="true"]')).toHaveCount(2);
   const surface = characters.first().locator("canvas");
+  await surface.evaluate(node => { node.dataset.qaIdentity = "persistent-canvas"; });
   const clip = (await surface.boundingBox())!;
   const before = await page.screenshot({ clip });
   await page.waitForTimeout(250);
@@ -24,6 +25,7 @@ test("all 24 poses render; motion changes pixels and pause freezes them", async 
   for (let i = 0; i < 12; i++) {
     await controls.nth(i).click();
     await expect(page.locator('[data-ready="true"]')).toHaveCount(2);
+    await expect(surface).toHaveAttribute("data-qa-identity", "persistent-canvas");
     await expect(controls.nth(i)).toHaveAttribute("aria-pressed", "true");
     for (const image of await characters.locator("img").all()) {
       await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth === 768)).toBe(true);
@@ -60,5 +62,7 @@ test("mobile, reduced motion, and lost WebGL context retain visible artwork", as
   await expect(hero).not.toHaveAttribute("data-ready", "true");
   await expect(hero.locator("img")).toHaveCSS("opacity", "1");
   await page.getByRole("button", { name: /Tấn công/ }).click();
-  await expect(page.locator('[data-ready="true"]')).toHaveCount(2);
+  await expect(hero).toHaveAttribute("data-state", "attack");
+  await expect(hero.locator("img")).toHaveCSS("opacity", "1");
+  await expect(hero).not.toHaveAttribute("data-ready", "true");
 });

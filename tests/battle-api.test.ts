@@ -22,7 +22,7 @@ it("history always scopes to current user and applies bounded database paginatio
   mock.count.mockResolvedValue(22); mock.history.mockResolvedValue([]); mock.profile.mockResolvedValue({ xp: 10 });
   const response = await GET(new Request("http://localhost/api/battle?page=2&userId=other"));
   expect(response.status).toBe(200);
-  expect(mock.history).toHaveBeenCalledWith(expect.objectContaining({ where: { userId: "learner", match: { status: { not: "ACTIVE" } } }, skip: 10, take: 10 }));
+  expect(mock.history).toHaveBeenCalledWith(expect.objectContaining({ where: { userId: "learner", match: { status: { not: "ACTIVE" } } }, skip: 10, take: 10, select: { slot: true, match: { select: { id: true, status: true, winnerSlot: true, finishedAt: true } } } }));
 });
 it("learners cannot read, create, import, edit or delete admin questions", async () => {
   expect((await adminGET(new Request("http://localhost/api/manage/battle"))).status).toBe(403);

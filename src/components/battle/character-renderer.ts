@@ -75,7 +75,7 @@ export function createCharacterRenderer(canvas: HTMLCanvasElement) {
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error("Character program failed");
     gl.useProgram(program);
     const vertices: number[] = [];
-    const cells = 32;
+    const cells = 24;
     for (let y = 0; y < cells; y++) for (let x = 0; x < cells; x++) {
       for (const [dx, dy] of [[0,0],[1,0],[0,1],[0,1],[1,0],[1,1]]) vertices.push((x + dx) / cells, (y + dy) / cells);
     }
@@ -94,7 +94,7 @@ export function createCharacterRenderer(canvas: HTMLCanvasElement) {
     const hands = gl.getUniformLocation(program, "u_hands");
     function draw() {
       if (disposed || !loaded) return;
-      const size = Math.max(1, Math.min(900, Math.round(canvas.clientWidth * Math.min(devicePixelRatio, 2))));
+      const size = Math.max(1, Math.min(640, Math.round(canvas.clientWidth * Math.min(devicePixelRatio, 2))));
       if (canvas.width !== size) canvas.width = canvas.height = size;
       gl!.viewport(0, 0, size, size);
       gl!.uniform1f(time, elapsed);
@@ -104,20 +104,24 @@ export function createCharacterRenderer(canvas: HTMLCanvasElement) {
     function tick(now: number) {
       frame = 0;
       if (!running || disposed) return;
-      elapsed += lastTime ? Math.min((now - lastTime) / 1000, .05) : 0;
-      lastTime = now;
-      draw();
+      // Limit GPU work to 30 frames/second, including high-refresh mobile screens.
+      if (!lastTime || now - lastTime >= 1000 / 30 - 1) {
+        elapsed += lastTime ? Math.min((now - lastTime) / 1000, .1) : 0;
+        lastTime = now;
+        draw();
+      }
       frame = requestAnimationFrame(tick);
     }
     return {
       load(image: HTMLImageElement, index: number, anchors: readonly number[]) {
-        if (disposed) return;
+        if (disposed || gl.isContextLost()) return false;
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
         gl.uniform1f(pose, index);
         gl.uniform4fv(hands, anchors);
         elapsed = 0;
         loaded = true;
         draw();
+        return true;
       },
       setRunning(value: boolean) {
         running = value;
