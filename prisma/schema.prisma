@@ -405,12 +405,19 @@ model LearningVideo {
   id          String   @id @default(cuid())
   slug        String   @unique
   title       String
+  titleVi     String?
   description String?
   youtubeId   String
+  sourceUrl   String?
   level       String?
   category    String?
   duration    String?
   transcript  Json?
+  questions   Json?
+  transcriptSource String?
+  ipaDialect  String?  @default("en-US")
+  status      String   @default("DRAFT")
+  errorMessage String?
   published   Boolean  @default(true)
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())

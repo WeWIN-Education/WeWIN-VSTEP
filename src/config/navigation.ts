@@ -38,7 +38,7 @@ export type NavGroup = {
   items: NavItem[];
 };
 
-/** Teacher-facing navigation aligned with Hanbeego's grouped sidebar. */
+/** Learner-facing navigation aligned with Hanbeego's grouped sidebar. */
 export const NAV_GROUPS: NavGroup[] = [
   {
     id: "top",
@@ -109,6 +109,7 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Nhập từ vựng", href: "/manage/vocabulary/import", roles: ["ADMIN"] },
           { label: "Nhập collocations", href: "/manage/collocations/import", roles: ["ADMIN"] },
           { label: "Tải tài liệu", href: "/manage/materials", roles: ["ADMIN"] },
+          { label: "Video luyện VSTEP", href: "/manage/videos", roles: ["ADMIN"] },
         ],
       },
     ],

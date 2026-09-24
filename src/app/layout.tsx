@@ -24,7 +24,7 @@ const inter = localFont({
 export const metadata: Metadata = {
   title: "Học tiếng Anh online | WEWIN EDUCATION",
   description:
-    "WEWIN EDUCATION — luyện VSTEP và Classroom English dành cho giáo viên Việt Nam.",
+    "WEWIN EDUCATION — luyện thi VSTEP cho người học Việt Nam.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

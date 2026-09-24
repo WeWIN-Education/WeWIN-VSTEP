@@ -1,5 +1,7 @@
 import { PrismaClient, Programme } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import classroomTranscript from "../src/lib/classroom-transcript.json";
+import { CLASSROOM_INSTRUCTIONS_QUESTIONS } from "../src/lib/video-config";
 
 const prisma = new PrismaClient();
 
@@ -28,7 +30,7 @@ async function main() {
   }
 
   await prisma.learningVideo.createMany({ data: [
-    { slug: "classroom-instructions", title: "Classroom Instructions in English", description: "Câu hướng dẫn lớp học bằng tiếng Anh.", youtubeId: "lkw2PtVpCJM", level: "A2", category: "Điều phối lớp", duration: "08:12", transcript: [{ id: "c1", start: "0:00", en: "Good morning, everyone. Eyes on me, please.", vi: "Chào buổi sáng các em. Các em chú ý nhé." }, { id: "c2", start: "0:22", en: "Work in pairs and compare your answers.", vi: "Làm việc theo cặp và so sánh câu trả lời." }], sortOrder: 1 },
+    { slug: "classroom-instructions", title: "Classroom Instructions in English", titleVi: "Câu hướng dẫn lớp học bằng tiếng Anh", description: "Video bổ trợ giúp luyện nghe và nhận diện câu hướng dẫn trong bối cảnh lớp học.", youtubeId: "lkw2PtVpCJM", sourceUrl: "https://www.youtube.com/watch?v=lkw2PtVpCJM", level: "A2", category: "Luyện nghe bổ trợ", duration: "12:46", transcript: classroomTranscript, questions: CLASSROOM_INSTRUCTIONS_QUESTIONS, transcriptSource: "fixture", ipaDialect: "en-US", status: "PUBLISHED", published: true, sortOrder: 1 },
   ] });
 
   console.log(`Seed completed for ${email}.`);

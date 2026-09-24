@@ -1,12 +1,19 @@
 import { getCurrentUser } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { findLearningVideo } from "@/lib/video-config";
+import { findPublishedLearningVideo } from "@/lib/video-repository";
 import { mergeIntervals, watchedSeconds, type Interval } from "@/lib/watched-intervals";
 import { object } from "@/lib/exam-submission";
 import type { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 const privateHeaders = { "Cache-Control": "private, no-store" };
+
+function durationSeconds(value: string) {
+ const parts=value.split(":").map(Number);
+ if(parts.some(part=>!Number.isFinite(part)))return 0;
+ if(parts.length===3)return parts[0]*3600+parts[1]*60+parts[2];
+ return parts[0]*60+(parts[1]||0);
+}
 
 function privateJson(body: unknown, status = 200) {
  return NextResponse.json(body, { status, headers: privateHeaders });
@@ -16,7 +23,7 @@ export async function GET(request:Request){
  const session=await getCurrentUser();
  if(!session?.id)return privateJson({error:"Bạn cần đăng nhập."},401);
  const videoSlug=new URL(request.url).searchParams.get("videoSlug")||"";
- if(!findLearningVideo(videoSlug))return privateJson({error:"Không có video."},404);
+ if(!await findPublishedLearningVideo(videoSlug))return privateJson({error:"Không có video."},404);
  const progress=await prisma.videoProgress.findUnique({where:{userId_videoSlug:{userId:session.id,videoSlug}}});
  return privateJson(progress||{currentSec:0,watchedIntervals:[],quizAnswers:{},completed:false});
 }
@@ -26,9 +33,9 @@ export async function POST(request:Request){
  try{
  const body=object(await request.json());
  const videoSlug=String(body.videoSlug||"");
- const video=findLearningVideo(videoSlug);
+ const video=await findPublishedLearningVideo(videoSlug);
  if(!video)return privateJson({error:"Không có video."},404);
- const [minutes,seconds]=video.duration.split(":").map(Number);const duration=minutes*60+seconds;
+ const duration=durationSeconds(video.duration);
  if(!Array.isArray(body.watchedIntervals)||body.watchedIntervals.length>2000)throw new Error("Tiến độ không hợp lệ.");
  const incoming=mergeIntervals(body.watchedIntervals as Interval[],duration);
  const previous=await prisma.videoProgress.findUnique({where:{userId_videoSlug:{userId:session.id,videoSlug}}});

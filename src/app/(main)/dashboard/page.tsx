@@ -47,7 +47,7 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-[1180px] space-y-6">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-ink-muted">Không gian học tập · {user.role === "ADMIN" ? "Quản trị viên" : "Giáo viên"}</p>
+          <p className="text-sm text-ink-muted">Không gian học tập · {user.role === "ADMIN" ? "Quản trị viên" : "Học viên VSTEP"}</p>
           <h1 className="mt-1 font-[family-name:var(--font-jakarta)] text-3xl font-extrabold text-ink">Xin chào, {firstName}</h1>
         </div>
         {user.role === "ADMIN" ? <Link href="/manage/users" className="hidden items-center gap-2 rounded-full bg-brand-soft px-3 py-2 text-xs font-extrabold text-brand sm:inline-flex"><ShieldCheck className="size-4" aria-hidden="true" />Khu quản trị</Link> : null}
@@ -56,7 +56,7 @@ export default async function DashboardPage() {
       <PageHero
         eyebrow={submittedInProgress ? "TIẾP TỤC BÀI ĐANG LÀM" : "BẮT ĐẦU PHIÊN HỌC"}
         title={submittedInProgress ? submittedInProgress.examPaper.title : "Chọn một đề để bắt đầu"}
-        description={submittedInProgress ? "Bài làm đang được lưu theo tài khoản của bạn." : "Làm đề VSTEP hoặc mở một nội dung Classroom English đã xuất bản."}
+        description={submittedInProgress ? "Bài làm đang được lưu theo tài khoản của bạn." : "Làm đề VSTEP hoặc mở một video luyện nghe đã xuất bản."}
         aside={<Link href={nextHref} className="flex h-10 items-center justify-center rounded-[var(--radius-btn)] bg-brand px-5 text-sm font-extrabold text-white">{submittedInProgress ? "Tiếp tục" : "Mở chương trình"}<ArrowRight className="ml-2 size-4" aria-hidden="true" /></Link>}
       />
 
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
           <h2 className="font-[family-name:var(--font-jakarta)] text-xl font-extrabold text-ink">Mở nhanh</h2>
           <div className="mt-5 space-y-3">
             <Task href="/exam/vstep" icon={<BookOpen />} title="Luyện thi VSTEP" detail="Bốn kỹ năng · đề đã xuất bản" />
-            <Task href="/video" icon={<Headphones />} title="Classroom English" detail="Video và transcript Anh–Việt" />
+            <Task href="/video" icon={<Headphones />} title="Video luyện VSTEP" detail="Video và transcript Anh–Việt" />
             <Task href="/vocabulary/notebook" icon={<PenLine />} title="Sổ tay từ vựng" detail={`${vocabularyDue} mục cần ôn`} />
           </div>
         </Card>

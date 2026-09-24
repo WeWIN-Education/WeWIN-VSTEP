@@ -10,13 +10,13 @@ import { getCurrentUser } from "@/lib/access";
 import { DailyChallenges } from "@/components/gamification/DailyChallenges";
 
 export const metadata: Metadata = {
-  title: "WEWIN Education | English LMS for Teachers",
-  description: "Luyện VSTEP và Classroom English dành cho giáo viên Việt Nam.",
+  title: "WEWIN Education | Luyện thi VSTEP",
+  description: "Luyện thi VSTEP theo lộ trình rõ ràng cho người học Việt Nam.",
 };
 
 const programmes = [
   { href: "/exam/vstep", label: "VSTEP", title: "Luyện thi VSTEP", text: "Luyện đủ Listening, Reading, Writing và Speaking theo cấu trúc VSTEP.3–5.", tone: "bg-[#ECFBF3] text-[#1F7A4D]" },
-  { href: "/video", label: "CLASSROOM ENGLISH", title: "Học tiếng Anh qua video", text: "Nghe và luyện lại những câu giáo viên có thể dùng trong lớp học ngay ngày mai.", tone: "bg-[#EEF4FF] text-brand" },
+  { href: "/video", label: "VSTEP QUA VIDEO", title: "Luyện thi VSTEP qua video", text: "Luyện nghe, phát âm và từ vựng theo các chủ đề thường gặp trong bài thi.", tone: "bg-[#EEF4FF] text-brand" },
 ];
 
 export default async function HomePage() {
@@ -25,8 +25,8 @@ export default async function HomePage() {
     <div className="mx-auto w-full min-w-0 max-w-[1180px] space-y-6">
       <PageHero
         eyebrow="WEWIN EDUCATION LUYỆN THI VSTEP"
-        title="Tiếng Anh tự tin hơn trong mỗi giờ dạy"
-        description="Luyện VSTEP và Classroom English theo lộ trình rõ ràng. Đăng nhập để lưu tiến độ."
+        title="Tiếng Anh tự tin hơn trong kỳ thi VSTEP"
+        description="Luyện thi VSTEP theo lộ trình rõ ràng. Đăng nhập để lưu tiến độ."
         backgroundSrc="/brand/bg.png"
         className="min-h-[220px] bg-cover bg-left md:bg-center"
       />

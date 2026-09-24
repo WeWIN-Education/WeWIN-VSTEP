@@ -111,10 +111,11 @@ Trong Vercel → Project → Settings → Environment Variables, thêm các bi�
 | `AUTH_SECRET` | Có | Không | Chuỗi ngẫu nhiên dài |
 | `BLOB_READ_WRITE_TOKEN` | Có | Có | Token của Blob store tương ứng |
 | `GRADING_MODE` | `async` | Không | Production nên là `async` |
-| `OPENAI_API_KEY` | Không bắt buộc | Có | Giữ ở worker để giảm phạm vi bí mật |
+| `OPENAI_API_KEY` | Có nếu dùng tự tạo transcript/IPA/dịch/câu hỏi hoặc nhận dạng âm thanh | Có | Chỉ dùng ở server; không đưa khóa vào client |
 | `OPENAI_GRADING_MODEL` | Không | Có | Mặc định `gpt-4o-mini` |
 | `OPENAI_SPEAKING_MODEL` | Không | Có | Mặc định `gpt-audio-1.5` |
 | `OPENAI_TRANSCRIPTION_MODEL` | Không | Có | Mặc định `whisper-1` |
+| `OPENAI_VIDEO_MODEL` | Có nếu dùng tự tạo nội dung video | Không | Mặc định `gpt-4o-mini` |
 | `FFMPEG_PATH` | Không | Có | Trong Docker worker là `ffmpeg` |
 
 `SEED_*` không cần khai báo cho production. Không chạy seed production.
