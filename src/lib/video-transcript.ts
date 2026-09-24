@@ -14,8 +14,26 @@ export function formatTimestamp(seconds: number) {
   return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, "0")}`;
 }
 
-function segment(id: string, startSeconds: number, endSeconds: number | undefined, en: string): VideoTranscript {
-  return { id, start: formatTimestamp(startSeconds), startSeconds, ...(endSeconds !== undefined ? { endSeconds } : {}), en: en.trim(), vi: "" };
+function segment(id: string, startSeconds: number, endSeconds: number | undefined, en: string, ipa = "", vi = ""): VideoTranscript {
+  return { id, start: formatTimestamp(startSeconds), startSeconds, ...(endSeconds !== undefined ? { endSeconds } : {}), en: en.trim(), vi: vi.trim(), ...(ipa.trim() ? { ipa: ipa.trim() } : {}) };
+}
+
+function cueText(lines: string[]) {
+  const values: Record<"en" | "ipa" | "vi", string[]> = { en: [], ipa: [], vi: [] };
+  let field: "en" | "ipa" | "vi" = "en";
+  let labeled = false;
+  for (const raw of lines) {
+    const line = raw.replace(/<[^>]+>/g, "").trim();
+    const label = line.match(/^(EN|ENGLISH|IPA|VI|VN|VIETNAMESE)\s*:\s*(.*)$/i);
+    if (label) {
+      labeled = true;
+      field = /^(IPA)$/i.test(label[1]) ? "ipa" : /^(VI|VN|VIETNAMESE)$/i.test(label[1]) ? "vi" : "en";
+      if (label[2]) values[field].push(label[2]);
+      continue;
+    }
+    values[field].push(line);
+  }
+  return { labeled, en: values.en.join(" ").trim(), ipa: labeled ? values.ipa.join(" ").trim() : "", vi: labeled ? values.vi.join(" ").trim() : "" };
 }
 
 /** Accepts SRT, WebVTT, or one plain English sentence per line. */
@@ -34,8 +52,8 @@ export function parseTranscriptText(source: string): VideoTranscript[] {
     const startSeconds = parseTimestamp(match[1]);
     if (startSeconds < 0) continue;
     const endSeconds = match[2] ? parseTimestamp(match[2]) : undefined;
-    const en = lines.slice(timingIndex + 1).join(" ").replace(/<[^>]+>/g, "").trim();
-    if (en) timed.push(segment(`v${index + 1}`, startSeconds, endSeconds, en));
+    const cue = cueText(lines.slice(timingIndex + 1));
+    if (cue.en) timed.push(segment(`v${index + 1}`, startSeconds, endSeconds, cue.en, cue.ipa, cue.vi));
   }
   if (timed.length) return addMissingEnds(timed);
   return text.split("\n").map((line) => line.replace(/^[-*]\s+/, "").trim()).filter(Boolean).map((en, index) => segment(`v${index + 1}`, -1, undefined, en));

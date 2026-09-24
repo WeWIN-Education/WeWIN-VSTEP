@@ -65,6 +65,10 @@ export async function POST(request: Request) {
     let fetchedDuration = "";
     let transcriptSource = "upload";
     let sourceError = "";
+    if (!sourceTranscript.length && typeof body.transcriptSource === "string") {
+      sourceTranscript = transcriptFromSource(body.transcriptSource);
+      transcriptSource = "upload";
+    }
     if (!sourceTranscript.length) {
       try {
         const fetched = await fetchYoutubeSource(youtubeId);
@@ -75,10 +79,6 @@ export async function POST(request: Request) {
       } catch (error) {
         sourceError = error instanceof Error ? error.message : "Không lấy được phụ đề YouTube.";
       }
-    }
-    if (!sourceTranscript.length && typeof body.transcriptSource === "string") {
-      sourceTranscript = transcriptFromSource(body.transcriptSource);
-      transcriptSource = "upload";
     }
     let aiError = "";
     let questions: unknown[] = [];

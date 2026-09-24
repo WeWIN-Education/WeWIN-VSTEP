@@ -73,7 +73,7 @@ export async function enrichVideoTranscript(transcript: VideoTranscript[], diale
   const byId = new Map(generatedSegments.map((item) => [item.id, item]));
   const enriched = transcript.map((item) => {
     const generatedItem = byId.get(item.id);
-    return generatedItem ? { ...item, ipa: generatedItem.ipa, vi: generatedItem.vi || item.vi } : item;
+    return generatedItem ? { ...item, ...(item.ipa ? {} : generatedItem.ipa ? { ipa: generatedItem.ipa } : {}), vi: item.vi || generatedItem.vi || "" } : item;
   });
   return { transcript: enriched, questions: validQuestions(generated.questions) };
 }
