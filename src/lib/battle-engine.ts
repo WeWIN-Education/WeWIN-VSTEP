@@ -3,7 +3,7 @@ import { randomInt } from "node:crypto";
 import { Prisma, type BattleMatch, type BattlePlayer, type BattleSession } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { recordBaseline } from "@/lib/performance-baseline";
-import { ANSWER_MS, RESULT_MS, QUEUE_MS, battleDay, battleRank, battleTurnStarts, botDecision, selectBattleQuestions, type BattleQuestionInput } from "./battle-rules";
+import { ANSWER_MS, ANSWER_GRACE_MS, BATTLE_QUESTION_COUNT, RESULT_MS, QUEUE_MS, battleDay, battleRank, battleTurnStarts, botDecision, selectBattleQuestions, type BattleQuestionInput } from "./battle-rules";
 import { answerRuntime, advanceRuntime, type BattleRuntime } from "./battle-runtime";
 import { BATTLE_BOT_NAMES } from "./battle-bot-names";
 
@@ -72,6 +72,7 @@ export function publicBattle(match: Match, userId: string, now: Date, updatedXp:
   } : null;
   return { kind: "match" as const, id: match.id, status: match.status, reason: match.reason, winnerSlot: match.winnerSlot,
     startsAt: match.startsAt.getTime(), serverNow: now.getTime(), mySlot: me.slot, updatedXp,
+    total: state?.questions.length ?? BATTLE_QUESTION_COUNT,
     players: match.players.map(p => ({ slot: p.slot, name: p.userId || p.isBot ? p.name : "Người dùng đã xóa", rank: p.rank,
       score: state?.scores[p.slot] ?? 0, correct: state?.correct[p.slot] ?? 0, xp: p.reward?.xp ?? 0 })), current };
 }
@@ -118,7 +119,7 @@ async function matchCommand(user: Actor, id: string, command: BattleCommand, clo
           if (command.turn! % 2 !== player.slot) error = new BattleError("Không phải lượt của bạn.");
           else if (receipt && receipt.turn === command.turn) {
             if (receipt.choice !== command.choice) error = new BattleError("Đáp án đã được ghi nhận, không thể sửa.");
-          } else if (command.turn !== state.index || state.answer || now.getTime() < state.start || now.getTime() >= state.start + ANSWER_MS) {
+          } else if (command.turn !== state.index || state.answer || now.getTime() < state.start || now.getTime() >= state.start + ANSWER_MS + ANSWER_GRACE_MS) {
             error = new BattleError("Lượt này chưa bắt đầu hoặc đã hết giờ.");
           } else answerRuntime(state, command.choice!, now.getTime());
         }

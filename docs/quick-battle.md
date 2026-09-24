@@ -3,7 +3,7 @@
 ## Implemented
 
 - `/game`: public introduction; active accounts can queue, resume, see rank and paginated history.
-- `/battle/[matchId]`: focused responsive arena, 30 alternating turns, countdown, answers, effects, and final result.
+- `/battle/[matchId]`: focused responsive arena, 15 alternating questions, countdown, answers, effects, and final result.
 - `/manage/battle`: admin-only paginated/searchable bank, draft/publish, add/edit/delete, idempotent 150-question starter import.
 - `POST /api/battle`: state, join, cancel, answer, leave. Heartbeat is sent every 5 seconds with polling, not a separate extra request. State polling is every 1.5 seconds in the queue and every second during a match; a confirmed answer reveals immediately and the next turn starts one second later.
 - `GET /api/battle?page=1`: private history, 10 rows/page, current total XP.
@@ -15,7 +15,7 @@ The question pack is original WEWIN B1 practice oriented toward VSTEP, not an of
 
 PostgreSQL is authoritative. A transaction advisory lock serializes matchmaking across instances; active matches lock only their own row, so separate games proceed independently. This simple queue lock targets up to 20 concurrent players. No Redis, sockets, background timer, dependency, worker or deployment-service changes.
 
-Each active match snapshots its 30 questions, bot decisions, current turn and temporary score in `BattleMatch.runtime`. Bot accuracy remains 80%; each response is independently set to arrive in 2–6 seconds. The server resolves overdue events lazily; late requests cannot backdate answers. After the 3-second countdown, each turn allows up to 15 seconds. Correctness appears as soon as the answer is accepted, then the next turn starts one second later. At finish, the runtime is cleared: new matches do not save individual answers, explanations, or a review. Only final outcome and XP awards remain in history. The additive migration `20260923120000_battle_runtime` adds the temporary runtime column; existing in-progress matches can resume from legacy turns. Bot display names are sampled once per match from the supplied 100 Vietnamese names. The lobby and arena use the six supplied WEWIN rank badges and omit the manual animation toggle; system reduced-motion preferences still apply.
+Each active match snapshots its 15 questions, bot decisions, current turn and temporary score in `BattleMatch.runtime`. Bot accuracy remains 80%; each response is independently set to arrive in 2–6 seconds. The server resolves overdue events lazily. After the 3-second countdown, each turn allows up to 15 seconds, with a one-second server grace window for a click that arrives at the visible deadline. Correctness appears as soon as the answer is accepted, then the next turn starts one second later. At finish, the runtime is cleared: new matches do not save individual answers, explanations, or a review. Only final outcome and XP awards remain in history. The additive migration `20260923120000_battle_runtime` adds the temporary runtime column; existing in-progress matches can resume from legacy turns. Bot display names are sampled once per match from the supplied 100 Vietnamese names. The lobby and arena use the six supplied WEWIN rank badges and omit the manual animation toggle; system reduced-motion preferences still apply.
 
 Adjacent difficulty pairs from each sampled group of 10 split between players, balancing difficulty as closely as the published pool permits. Exact equality is not mathematically possible for every arbitrary admin-supplied pool (for example, an odd count in a difficulty bucket).
 
@@ -67,7 +67,7 @@ npx playwright test tests/e2e/quick-battle.spec.ts tests/e2e/battle-characters.s
 
 Browser tests create temporary local accounts, log in through the credentials endpoint, pair two contexts, answer with the keyboard, observe the entering-game screen, reload the next question, and check outcome-only history. The character test checks canvas reuse as poses change. Only the isolated match runtime is advanced to test final results. Screenshots go to `.qa/quick-battle-*.png`.
 
-Unit/integration coverage includes 150-question validation, question allocation, score/rank/day boundaries, 20,000 bot trials, duplicate/concurrent joins, ownership/late/changed answers, durable timeout settlement, bot threshold, cancellation, full 30-turn completion, repeated reward reads, five-match reward cap, reconnect/double disconnect, removed/locked accounts, forfeit eligibility, rate limiting and snapshot isolation.
+Unit/integration coverage includes 150-question validation, 15-question allocation, score/rank/day boundaries, 20,000 bot trials, duplicate/concurrent joins, ownership/late/changed answers, the deadline grace window, durable timeout settlement, bot threshold, cancellation, full 15-question completion, repeated reward reads, five-match reward cap, reconnect/double disconnect, removed/locked accounts, forfeit eligibility, rate limiting and snapshot isolation.
 
 ## Measurements and remaining release checks
 
@@ -82,7 +82,7 @@ Unit/integration coverage includes 150-question validation, question allocation,
 
 - The additive runtime migration was applied only to the isolated local QA database; no production or learner database was changed.
 - TypeScript, lint, Prisma validation, and production build passed after the runtime-storage changes. The isolated database suite passed 10 scenarios; 26 focused unit/API/integration tests passed together.
-- Integration checks cover immediate correctness, the one-second transition, concurrent/retried answers, distinct match locks, 30-turn settlement, once-only XP, the daily cap, timeout/reconnect behavior, legacy-match recovery, the bot response distribution, and load from 20 simultaneous users.
+- Integration checks cover immediate correctness, the one-second transition, deadline clicks, concurrent/retried answers, distinct match locks, 15-question settlement, once-only XP, the daily cap, timeout/reconnect behavior, legacy-match recovery, the bot response distribution, and load from 20 simultaneous users.
 - The character WebGL canvas now survives pose changes instead of being recreated. Drawing is capped at 30 FPS with a smaller mesh/texture; reduced-motion and static-image fallback remain available.
 - The local browser preview could not be started: automatic approval blocked the command with “blocked by policy,” even after the operator authorized it. Browser and desktop/mobile visual checks remain pending.
 - The six supplied rank badge images and the legacy completed match records remain intact. The migration is additive and does not require restoring a backup.

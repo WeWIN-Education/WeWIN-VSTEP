@@ -1,4 +1,4 @@
-import { ANSWER_MS, RESULT_MS, DISCONNECT_MS, battlePoints, type BattleQuestionInput } from "./battle-rules";
+import { ANSWER_MS, ANSWER_GRACE_MS, RESULT_MS, DISCONNECT_MS, battlePoints, type BattleQuestionInput } from "./battle-rules";
 
 export type RuntimeQuestion = Pick<BattleQuestionInput, "type" | "prompt" | "options" | "correct"> & { botChoice: number | null; botDelay: number | null };
 export type BattleRuntime = {
@@ -16,7 +16,8 @@ export type BattleRuntime = {
 
 export function answerRuntime(state: BattleRuntime, choice: number | null, at: number) {
   const slot = state.index % 2;
-  const points = choice === state.questions[state.index].correct ? battlePoints(at - state.start) : 0;
+  const elapsed = Math.min(Math.max(at - state.start, 0), ANSWER_MS - 1);
+  const points = choice === state.questions[state.index].correct ? battlePoints(elapsed) : 0;
   state.answer = { choice, points, at };
   state.scores[slot] += points;
   state.correct[slot] += points > 0 ? 1 : 0;
@@ -33,9 +34,11 @@ export function advanceRuntime(state: BattleRuntime, humans: boolean[], now: num
   while (state.index < state.questions.length) {
     const question = state.questions[state.index];
     if (!state.answer) {
-      const due = state.start + (question.botDelay ?? ANSWER_MS);
+      const bot = question.botDelay !== null;
+      const resolveAt = state.start + (bot ? question.botDelay! : ANSWER_MS);
+      const due = bot ? resolveAt : resolveAt + ANSWER_GRACE_MS;
       if (due > until) break;
-      answerRuntime(state, question.botChoice, due);
+      answerRuntime(state, bot ? question.botChoice : null, resolveAt);
     }
     const next = state.answer!.at + RESULT_MS;
     if (next > until) break;

@@ -15,13 +15,13 @@ it("rejects duplicate options, invalid answer indices and oversized questions", 
   const q = BATTLE_STARTER[0];
   for (const patch of [{ options: ["A", " a ", "B", "C"] }, { correct: 4 }, { correct: 0.5 }, { prompt: "x".repeat(241) }, { explanation: "" }, { published: "true" }]) expect(() => validateBattleQuestion({ ...q, ...patch })).toThrow();
 });
-it("selects 30 distinct questions with 5 per type per player and balanced difficulty", () => {
+it("selects 15 distinct questions with 5 per type", () => {
   const random = seeded();
   for (let run = 0; run < 100; run++) {
     const selected = selectBattleQuestions(BATTLE_STARTER, random);
-    expect(selected).toHaveLength(30);
-    expect(new Set(selected.map(q => q.sourceKey)).size).toBe(30);
-    for (let slot = 0; slot < 2; slot++) for (const t of BATTLE_TYPES) expect(selected.filter((q, i) => i % 2 === slot && q.type === t)).toHaveLength(5);
+    expect(selected).toHaveLength(15);
+    expect(new Set(selected.map(q => q.sourceKey)).size).toBe(15);
+    for (const t of BATTLE_TYPES) expect(selected.filter(q => q.type === t)).toHaveLength(5);
   }
   expect(() => selectBattleQuestions(BATTLE_STARTER.slice(0, 10), random)).toThrow();
 });

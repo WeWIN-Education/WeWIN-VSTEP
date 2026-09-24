@@ -2,9 +2,12 @@ export const BATTLE_TYPES = ["VOCABULARY", "GRAMMAR", "PHRASES"] as const;
 export type BattleType = typeof BATTLE_TYPES[number];
 export const TYPE_LABELS: Record<BattleType, string> = { VOCABULARY: "Từ vựng", GRAMMAR: "Ngữ pháp", PHRASES: "Cụm từ" };
 export const ANSWER_MS = 15_000;
+// Accept a click that reaches the server just after the visible deadline.
+export const ANSWER_GRACE_MS = 1_000;
 export const RESULT_MS = 1_000;
 export const QUEUE_MS = 5_000;
 export const DISCONNECT_MS = 30_000;
+export const BATTLE_QUESTION_COUNT = 15;
 export const RANKS = [
   { name: "Đồng", min: 0, badge: "/battle/ranks/bronze.png" }, { name: "Bạc", min: 500, badge: "/battle/ranks/silver.png" }, { name: "Vàng", min: 1500, badge: "/battle/ranks/gold.png" },
   { name: "Bạch Kim", min: 3500, badge: "/battle/ranks/platinum.png" }, { name: "Kim Cương", min: 7000, badge: "/battle/ranks/diamond.png" }, { name: "Cao Thủ", min: 12000, badge: "/battle/ranks/master.png" },
@@ -43,18 +46,14 @@ export function shuffle<T>(items: readonly T[], random: () => number): T[] {
   for (let i = result.length - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [result[i], result[j]] = [result[j], result[i]]; }
   return result;
 }
-// Adjacent difficulty pairs give each side the same distribution where the pool permits it.
+// Keep the short match balanced across the three question types.
 export function selectBattleQuestions<T extends BattleQuestionInput>(pool: T[], random: () => number) {
-  const sides: [T[], T[]] = [[], []];
-  for (const type of BATTLE_TYPES) {
-    const selected = shuffle(pool.filter(q => q.type === type), random).slice(0, 10).sort((a, b) => a.difficulty - b.difficulty);
-    if (selected.length < 10) throw new Error("Cần ít nhất 10 câu đã xuất bản cho mỗi dạng.");
-    for (let i = 0; i < 10; i += 2) {
-      const pair = shuffle(selected.slice(i, i + 2), random); sides[0].push(pair[0]); sides[1].push(pair[1]);
-    }
-  }
-  const a = shuffle(sides[0], random), b = shuffle(sides[1], random);
-  return a.flatMap((q, i) => [q, b[i]]);
+  const selected = BATTLE_TYPES.flatMap(type => {
+    const questions = shuffle(pool.filter(q => q.type === type), random).slice(0, 5);
+    if (questions.length < 5) throw new Error("Cần ít nhất 5 câu đã xuất bản cho mỗi dạng.");
+    return questions;
+  });
+  return shuffle(selected, random);
 }
 export function botDecision(correct: number, random: () => number) {
   const choice = random() < 0.8 ? correct : [0, 1, 2, 3].filter(i => i !== correct)[Math.floor(random() * 3)];

@@ -62,7 +62,7 @@ test("guest introduction and responsive lobby; two humans pair, answer and reloa
   const stored = await db.battleMatch.findUniqueOrThrow({ where: { id }, include: { players: { orderBy: { slot: "asc" } } } });
   const first = (stored.runtime as unknown as BattleRuntime).questions[0];
   const active = stored.players[0].userId === `${prefix}-a` ? a : b;
-  const answer = active.locator('button[data-selected]').nth(first.correct);
+  const answer = active.locator(".options button").nth(first.correct);
   await expect(answer).toBeEnabled();
   await answer.focus(); await answer.press("Enter");
   await expect(active.getByText("Đã ghi nhận đáp án", { exact: true })).toBeVisible();
@@ -73,9 +73,9 @@ test("guest introduction and responsive lobby; two humans pair, answer and reloa
   await a.screenshot({ path: ".qa/quick-battle-arena-desktop.png", fullPage: true });
   await b.screenshot({ path: ".qa/quick-battle-arena-mobile.png", fullPage: true });
   expect(await b.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  // Only the isolated fixture clock is advanced, allowing end-state UI coverage without an 8.5 minute wait.
+  // Only the isolated fixture runtime is advanced, allowing end-state UI coverage without waiting.
   const done = (await db.battleMatch.findUniqueOrThrow({ where: { id } })).runtime as unknown as BattleRuntime;
-  done.index = 30; done.start = Date.now(); done.lastSeen = [Date.now(), Date.now()];
+  done.index = 15; done.start = Date.now(); done.lastSeen = [Date.now(), Date.now()];
   await db.battleMatch.update({ where: { id }, data: { runtime: JSON.parse(JSON.stringify(done)) } });
   await expect(a.getByRole("heading", { name: /Chiến thắng|Hòa|Chưa thắng/ })).toBeVisible({ timeout: 15000 });
   await expect(b.getByRole("heading", { name: /Chiến thắng|Hòa|Chưa thắng/ })).toBeVisible();
@@ -84,7 +84,7 @@ test("guest introduction and responsive lobby; two humans pair, answer and reloa
   expect((await db.battleMatch.findUniqueOrThrow({ where: { id } })).runtime).toBeNull();
   await a.getByRole("link", { name: "Về sảnh và xem rank mới" }).click();
   await expect(a.getByRole("heading", { name: "Lịch sử trận đấu" })).toBeVisible();
-  await expect(a.getByText(/Ôn lại 30 câu/)).toHaveCount(0);
+  await expect(a.getByText(/Ôn lại/)).toHaveCount(0);
   const history = await (await ca.request.get("/api/battle")).json();
   expect(history.items[0]).toEqual({ slot: stored.players.find(p => p.userId === `${prefix}-a`)!.slot, match: { id, status: "FINISHED", winnerSlot: 0, finishedAt: expect.any(String) } });
   expect(errors).toEqual([]);
