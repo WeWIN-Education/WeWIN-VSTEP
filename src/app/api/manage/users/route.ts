@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/lib/access";
+import { classroomEnabled, managedAccountRoles } from "@/lib/classroom/access";
 import { isSameOrigin } from "@/lib/request-security";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
@@ -50,7 +51,7 @@ export async function GET(request: Request) {
   const query = new URL(request.url).searchParams.get("q")?.trim() ?? "";
   const users = await prisma.user.findMany({
     where: {
-      role: "LEARNER",
+      role: { in: managedAccountRoles() },
       ...(query
         ? { OR: [{ name: { contains: query, mode: "insensitive" } }, { email: { contains: query, mode: "insensitive" } }] }
         : {}),
@@ -67,7 +68,9 @@ export async function POST(request: Request) {
   if (!actor) return jsonError("Bạn cần đăng nhập.", 401);
   if (actor.role !== "ADMIN") return jsonError("Chỉ quản trị viên được tạo tài khoản.", 403);
 
-  const body = await request.json().catch(() => null) as { email?: unknown; name?: unknown; password?: unknown } | null;
+  const body = await request.json().catch(() => null) as { email?: unknown; name?: unknown; password?: unknown; role?: unknown } | null;
+  const role = body?.role ?? "LEARNER";
+  if (role !== "LEARNER" && (role !== "TEACHER" || !classroomEnabled())) return jsonError("Vai trò không hợp lệ hoặc lớp học online chưa được mở.", 400);
   const email = emailValue(body?.email);
   const name = optionalName(body?.name);
   const password = typeof body?.password === "string" ? body.password : "";
@@ -77,7 +80,7 @@ export async function POST(request: Request) {
 
   try {
     const user = await prisma.user.create({
-      data: { email, name, passwordHash: await bcrypt.hash(password, 12), role: "LEARNER", isActive: true },
+      data: { email, name, passwordHash: await bcrypt.hash(password, 12), role, isActive: true },
       select: USER_SELECT,
     });
     return NextResponse.json({ user: safeUser(user) }, { status: 201 });

@@ -69,7 +69,7 @@ export function VocabularyNotebookBoard({ entries, initialPage, initialCounts, u
             onClick={() => setFilter(item.id)}
             className={cn(
               "inline-flex min-h-10 items-center gap-2 rounded-full border px-4 text-xs font-extrabold transition",
-              filter === item.id ? "border-brand bg-brand text-white" : "border-border bg-white text-ink-muted hover:border-brand/40 hover:text-brand",
+              filter === item.id ? "border-brand bg-brand text-white" : "border-border bg-surface-card text-ink-muted hover:border-brand/40 hover:text-brand",
             )}
           >
             {item.label} <span className={cn("rounded-full px-1.5 py-0.5 text-[10px]", filter === item.id ? "bg-white/15 text-white" : "bg-surface text-ink-faint")}>{counts[item.id]}</span>
@@ -77,7 +77,7 @@ export function VocabularyNotebookBoard({ entries, initialPage, initialCounts, u
         ))}
       </div>
 
-      <label className="flex min-h-11 items-center gap-2 rounded-xl border border-border bg-white px-3 focus-within:border-brand">
+      <label className="flex min-h-11 items-center gap-2 rounded-xl border border-border bg-surface-card px-3 focus-within:border-brand">
         <Search className="size-4 text-ink-muted" aria-hidden="true" />
         <span className="sr-only">Tìm trong sổ tay</span>
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm từ, nghĩa hoặc ví dụ…" className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-ink-faint" />

@@ -11,12 +11,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { TeacherDashboard } from "@/components/classroom/TeacherDashboard";
+import { classroomEnabled } from "@/lib/classroom/access";
 
 export const metadata: Metadata = { title: "Tổng quan | WEWIN EDUCATION" };
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?callbackUrl=/dashboard");
+  if (user.role === "TEACHER") return classroomEnabled() ? <TeacherDashboard user={user} /> : <div className="classroom-panel"><h1>Không gian giáo viên</h1><p className="mt-4 text-sm text-ink-muted">Trung tâm chưa mở lớp học online.</p></div>;
 
   const [attempts, submitted, publishedPapers, vocabularyDue, gamification, leaderboard, inProgress, completedPapers, latestInProgress] = await Promise.all([
     prisma.examAttempt.findMany({

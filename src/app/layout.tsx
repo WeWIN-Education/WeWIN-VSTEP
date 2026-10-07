@@ -31,9 +31,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="vi"
+      suppressHydrationWarning
       className={`${inter.variable} ${beVietnam.variable} h-full antialiased`}
     >
       <body className="h-full font-[family-name:var(--font-be-vietnam)]">
+        <script dangerouslySetInnerHTML={{ __html: `try{var m=localStorage.getItem('wewin-theme');document.documentElement.dataset.theme=m==='dark'||m==='light'?m:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}catch{}` }} />
         {children}
       </body>
     </html>

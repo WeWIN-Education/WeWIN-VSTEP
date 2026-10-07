@@ -28,7 +28,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
           required
           autoComplete="email"
           placeholder="ban@email.com"
-          className="h-12 w-full rounded-xl border border-border bg-white px-3 text-sm outline-none ring-brand/30 placeholder:text-ink-faint focus:border-brand focus:ring-2"
+          className="h-12 w-full rounded-xl border border-border bg-surface-card px-3 text-sm outline-none ring-brand/30 placeholder:text-ink-faint focus:border-brand focus:ring-2"
         />
       </div>
 
@@ -44,7 +44,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
           type={showPassword ? "text" : "password"}
           required
           autoComplete="current-password"
-          className="h-12 w-full rounded-xl border border-border bg-white px-3 pr-12 text-sm outline-none ring-brand/30 focus:border-brand focus:ring-2"
+          className="h-12 w-full rounded-xl border border-border bg-surface-card px-3 pr-12 text-sm outline-none ring-brand/30 focus:border-brand focus:ring-2"
           />
           <button type="button" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"} onClick={() => setShowPassword((value) => !value)} className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-ink-muted hover:text-brand">
             {showPassword ? <EyeOff className="size-5" aria-hidden="true" /> : <Eye className="size-5" aria-hidden="true" />}

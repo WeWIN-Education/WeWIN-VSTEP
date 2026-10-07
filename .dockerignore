@@ -4,5 +4,12 @@ node_modules
 .env
 .env.*
 .data
+.qa
+.tmp
+.agents
+.playwright-cli
+output
+test-results
+playwright-report
 coverage
 *.log

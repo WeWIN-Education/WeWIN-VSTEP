@@ -21,9 +21,9 @@ export default async function HistoryPage({ searchParams }: { searchParams: Prom
     ]} />
     <Card padding="md">
       <form key={JSON.stringify(filters)} action="/history" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6" method="get">
-        <select name="catalog" defaultValue={catalog || ""} aria-label="Lọc dạng bài" className="h-11 rounded-xl border border-border bg-white px-3 text-sm"><option value="">Tất cả dạng bài</option>{catalogs.map(item => <option key={item} value={item}>{label(item)}</option>)}</select>
-        <select name="skill" defaultValue={skill || ""} aria-label="Lọc kỹ năng" className="h-11 rounded-xl border border-border bg-white px-3 text-sm"><option value="">Tất cả kỹ năng</option>{skills.map(item => <option key={item} value={item}>{label(item)}</option>)}</select>
-        <select name="status" defaultValue={status || ""} aria-label="Lọc trạng thái" className="h-11 rounded-xl border border-border bg-white px-3 text-sm"><option value="">Mọi trạng thái</option><option value="IN_PROGRESS">Đang làm</option><option value="SUBMITTED">Đã nộp</option></select>
+        <select name="catalog" defaultValue={catalog || ""} aria-label="Lọc dạng bài" className="h-11 rounded-xl border border-border bg-surface-card px-3 text-sm"><option value="">Tất cả dạng bài</option>{catalogs.map(item => <option key={item} value={item}>{label(item)}</option>)}</select>
+        <select name="skill" defaultValue={skill || ""} aria-label="Lọc kỹ năng" className="h-11 rounded-xl border border-border bg-surface-card px-3 text-sm"><option value="">Tất cả kỹ năng</option>{skills.map(item => <option key={item} value={item}>{label(item)}</option>)}</select>
+        <select name="status" defaultValue={status || ""} aria-label="Lọc trạng thái" className="h-11 rounded-xl border border-border bg-surface-card px-3 text-sm"><option value="">Mọi trạng thái</option><option value="IN_PROGRESS">Đang làm</option><option value="SUBMITTED">Đã nộp</option></select>
         <input name="paper" defaultValue={paper} placeholder="Tên đề" aria-label="Tên đề" className="h-11 rounded-xl border border-border px-3 text-sm outline-none focus:border-brand" />
         <input name="from" type="date" defaultValue={from} aria-label="Từ ngày" aria-describedby="history-dates" className="h-11 rounded-xl border border-border px-3 text-sm" />
         <input name="to" type="date" defaultValue={to} aria-label="Đến ngày" aria-describedby="history-dates" className="h-11 rounded-xl border border-border px-3 text-sm" />

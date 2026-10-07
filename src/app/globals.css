@@ -1,6 +1,7 @@
-@import "tailwindcss";
+@import "tailwindcss" source("../");
 
 :root {
+  color-scheme: light;
   --font-jakarta: var(--font-be-vietnam);
   --font-noto-sans-sc: var(--font-be-vietnam);
   --font-jetbrains-mono: var(--font-inter);
@@ -15,11 +16,13 @@
   --footer-accent: #f4c35e;
   --footer-muted: #dceaff;
   --accent-green: #22c55e;
+  --attention-warning-bg: #fef3c7;
+  --attention-warning-ink: #854d0e;
   --surface: #f8fafc;
   --surface-card: #ffffff;
   --ink: #1f2937;
-  --ink-muted: #6b7280;
-  --ink-faint: #9ca3af;
+  --ink-muted: #626c7b;
+  --ink-faint: #647084;
   --border: #e5e7eb;
   --border-width-panel: 2px;
   --shadow-panel: 0 4px 0 var(--border);
@@ -36,6 +39,8 @@
   --color-brand-pink: var(--brand-pink);
   --color-accent-orange: var(--accent-orange);
   --color-accent-green: var(--accent-green);
+  --color-attention-warning-bg: var(--attention-warning-bg);
+  --color-attention-warning-ink: var(--attention-warning-ink);
   --color-surface: var(--surface);
   --color-surface-card: var(--surface-card);
   --color-ink: var(--ink);
@@ -63,6 +68,43 @@ body {
   height: 100%;
   overflow-x: hidden;
 }
+
+:root[data-theme="dark"] {
+  --attention-warning-bg: #3b2d15;
+  --attention-warning-ink: #fde68a;
+  color-scheme: dark;
+  --brand: #76adff;
+  --brand-dark: #4f94f9;
+  --brand-soft: #192e4c;
+  --brand-pink: #233a5b;
+  --surface: #0c1422;
+  --surface-card: #152133;
+  --ink: #edf3fb;
+  --ink-muted: #afbdd1;
+  --ink-faint: #8c9bb0;
+  --border: #2b3a50;
+  --shadow-panel: 0 4px 0 #243146;
+}
+
+/* Legacy VSTEP surfaces use these neutral utilities; preserve white text on CTAs. */
+@layer utilities {
+  :root[data-theme="dark"] .bg-gray-50,
+  :root[data-theme="dark"] .bg-slate-50,
+  :root[data-theme="dark"] .bg-gray-100,
+  :root[data-theme="dark"] .bg-slate-100 { background-color: var(--surface); }
+  :root[data-theme="dark"] .text-gray-900,
+  :root[data-theme="dark"] .text-slate-900,
+  :root[data-theme="dark"] .text-gray-800 { color: var(--ink); }
+  :root[data-theme="dark"] .text-gray-600,
+  :root[data-theme="dark"] .text-slate-600 { color: var(--ink-muted); }
+}
+
+.classroom-input { width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-card); color: var(--ink); padding: 10px 12px; }
+.classroom-input:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+input::placeholder, textarea::placeholder { color: var(--ink-muted); opacity: 1; }
+.classroom-select { appearance: auto; padding-right: 16px; }
+.classroom-panel { border: 1px solid var(--border); border-radius: 24px; background: var(--surface-card); padding: 24px; }
+@media(max-width: 640px) { .classroom-panel { padding: 18px; } }
 
 @media (max-width: 1023px) {
   :root { --header-height: 64px; }
@@ -171,3 +213,8 @@ select:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 30%, t
   50% { transform: translateY(-8px) rotate(2deg); }
 }
 .mascot-welcome:hover { animation-play-state: paused; }
+
+@layer utilities {
+  :root[data-theme="dark"] .bg-brand { background-color: #004aad; }
+  :root[data-theme="dark"] .hover\:bg-brand-dark:hover { background-color: #003a8c; }
+}

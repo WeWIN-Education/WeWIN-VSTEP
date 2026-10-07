@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/Card";
 import { LinkifiedText } from "@/components/ui/LinkifiedText";
 import { PageHero } from "@/components/ui/PageHero";
 import { getCurrentUser } from "@/lib/access";
+import { managedAccountRoles } from "@/lib/classroom/access";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { ArrowLeft, Bookmark, FileText, MessageSquareText, UserRound } from "lucide-react";
@@ -64,7 +65,7 @@ export default async function ManageUserProfilePage({ params, searchParams }: { 
   const activeTab = tabs.some(([key]) => key === tab) ? tab : "overview";
 
   const user = await prisma.user.findFirst({
-    where: { id: userId, role: "LEARNER" },
+    where: { id: userId, role: { in: managedAccountRoles() } },
     select: {
       id: true, name: true, email: true, isActive: true, createdAt: true, updatedAt: true,
       _count: { select: { attempts: true, vocabularyProgress: true, personalVocabulary: true, posts: true, questionBookmarks: true } },
@@ -89,7 +90,7 @@ export default async function ManageUserProfilePage({ params, searchParams }: { 
     return { catalog, total: items.length, submitted: submitted.length, latest: items[0]?.updatedAt || null, listening: submitted.filter((attempt) => typeof attempt.listeningScore === "number").length, reading: submitted.filter((attempt) => typeof attempt.readingScore === "number").length };
   });
 
-  return <div className="mx-auto w-full max-w-[1180px] space-y-6"><Link href="/manage/users" className="inline-flex min-h-10 items-center gap-2 text-sm font-bold text-brand hover:underline"><ArrowLeft className="size-4" />Quản lý học viên</Link><PageHero eyebrow="HỒ SƠ NỘI BỘ" title={user.name || "Học viên chưa đặt tên"} description={user.email + " · " + (user.isActive ? "Tài khoản đang hoạt động" : "Tài khoản đã khóa")} stats={[{ label: "Lượt thi", value: String(user._count.attempts) }, { label: "Mục từ đang theo dõi", value: String(user._count.vocabularyProgress) }, { label: "Bài viết", value: String(user._count.posts) }]} /><nav className="flex gap-2 overflow-x-auto pb-1" aria-label="Các tab hồ sơ">{tabs.map(([key, title]) => <Link key={key} href={"/manage/users/" + user.id + "?tab=" + key} aria-current={activeTab === key ? "page" : undefined} className={activeTab === key ? "shrink-0 rounded-xl border border-brand bg-brand px-4 py-2.5 text-sm font-extrabold text-white" : "shrink-0 rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-extrabold text-ink-muted hover:border-brand hover:text-brand"}>{title}</Link>)}</nav>{activeTab === "overview" ? <Overview user={user} attempts={attempts} progress={progress} /> : null}{activeTab === "attempts" ? <AttemptList attempts={attempts} /> : null}{activeTab === "progress" ? <ProgressPanel progress={progress} vocabularyCount={user._count.vocabularyProgress} personalCount={user._count.personalVocabulary} /> : null}{activeTab === "posts" ? <PostList posts={posts} /> : null}{activeTab === "bookmarks" ? <BookmarkList bookmarks={bookmarks} /> : null}</div>;
+  return <div className="mx-auto w-full max-w-[1180px] space-y-6"><Link href="/manage/users" className="inline-flex min-h-10 items-center gap-2 text-sm font-bold text-brand hover:underline"><ArrowLeft className="size-4" />Quản lý học viên</Link><PageHero eyebrow="HỒ SƠ NỘI BỘ" title={user.name || "Học viên chưa đặt tên"} description={user.email + " · " + (user.isActive ? "Tài khoản đang hoạt động" : "Tài khoản đã khóa")} stats={[{ label: "Lượt thi", value: String(user._count.attempts) }, { label: "Mục từ đang theo dõi", value: String(user._count.vocabularyProgress) }, { label: "Bài viết", value: String(user._count.posts) }]} /><nav className="flex gap-2 overflow-x-auto pb-1" aria-label="Các tab hồ sơ">{tabs.map(([key, title]) => <Link key={key} href={"/manage/users/" + user.id + "?tab=" + key} aria-current={activeTab === key ? "page" : undefined} className={activeTab === key ? "shrink-0 rounded-xl border border-brand bg-brand px-4 py-2.5 text-sm font-extrabold text-white" : "shrink-0 rounded-xl border border-border bg-surface-card px-4 py-2.5 text-sm font-extrabold text-ink-muted hover:border-brand hover:text-brand"}>{title}</Link>)}</nav>{activeTab === "overview" ? <Overview user={user} attempts={attempts} progress={progress} /> : null}{activeTab === "attempts" ? <AttemptList attempts={attempts} /> : null}{activeTab === "progress" ? <ProgressPanel progress={progress} vocabularyCount={user._count.vocabularyProgress} personalCount={user._count.personalVocabulary} /> : null}{activeTab === "posts" ? <PostList posts={posts} /> : null}{activeTab === "bookmarks" ? <BookmarkList bookmarks={bookmarks} /> : null}</div>;
 }
 
 function Overview({ user, attempts, progress }: { user: { email: string; createdAt: Date; updatedAt: Date; _count: { personalVocabulary: number; questionBookmarks: number } }; attempts: UserAttempt[]; progress: { catalog: string; total: number; submitted: number }[] }) {

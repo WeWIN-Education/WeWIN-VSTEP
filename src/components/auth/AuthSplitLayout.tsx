@@ -38,7 +38,7 @@ export function AuthSplitLayout({
         </div>
 
         <div className="mx-auto flex w-full max-w-[440px] flex-1 flex-col justify-center">
-          <div className="rounded-[20px] border border-border/80 bg-white p-6 shadow-[0_8px_30px_rgba(11,31,92,0.06)] sm:p-8">
+          <div className="rounded-[20px] border border-border/80 bg-surface-card p-6 shadow-[0_8px_30px_rgba(11,31,92,0.06)] sm:p-8">
             <span className="inline-flex rounded-full bg-[#FEF3C7] px-3 py-1 text-[11px] font-bold tracking-wide text-[#B45309]">
               {badge}
             </span>
@@ -80,7 +80,7 @@ export function AuthSplitLayout({
                 <Mascot state="friendly" size={176} animated />
               </div>
             </div>
-            <span className="absolute -right-2 top-6 rounded-2xl bg-white px-3 py-1.5 text-[12px] font-semibold text-brand shadow-md">
+            <span className="absolute -right-2 top-6 rounded-2xl bg-surface-card px-3 py-1.5 text-[12px] font-semibold text-brand shadow-md">
               Hello!
             </span>
           </div>

@@ -614,13 +614,13 @@ export function VocabularyFlashcards({
                   <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand">{title}</p>
                   <p className="mt-1 text-sm text-ink-muted">Tập trung vào một thẻ, rồi chọn mức độ nhớ của bạn.</p>
                 </div>
-                <span className="rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink-muted">{current.status ? statusLabels[current.status] : "Chưa đánh dấu"}</span>
+                <span className="rounded-full border border-border bg-surface-card px-3 py-1.5 text-xs font-semibold text-ink-muted">{current.status ? statusLabels[current.status] : "Chưa đánh dấu"}</span>
               </div>
 
               <button
                 type="button"
                 onClick={() => setFlipped((value) => !value)}
-                className="group relative flex min-h-[420px] w-full min-w-0 flex-col overflow-hidden rounded-[28px] border-2 border-brand/15 bg-white text-center shadow-[0_20px_60px_rgba(0,58,140,0.1)] transition hover:border-brand/35 focus-visible:border-brand sm:min-h-[500px] lg:min-h-[560px]"
+                className="group relative flex min-h-[420px] w-full min-w-0 flex-col overflow-hidden rounded-[28px] border-2 border-brand/15 bg-surface-card text-center shadow-[0_20px_60px_rgba(0,58,140,0.1)] transition hover:border-brand/35 focus-visible:border-brand sm:min-h-[500px] lg:min-h-[560px]"
                 aria-label={flipped ? "Mặt sau: " + current.meaningVi + ". Chạm để xem lại từ." : "Mặt trước: " + current.term + ". Chạm để xem nghĩa."}
               >
                 <span className="pointer-events-none absolute left-5 top-5 size-3 rounded-full bg-[#F8D99D] sm:left-7 sm:top-7" aria-hidden="true" />
@@ -659,7 +659,7 @@ export function VocabularyFlashcards({
               ) : null}
 
               <div className="mt-5 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3">
-                <button type="button" onClick={previousCard} aria-label="Thẻ trước" className="flex min-h-12 min-w-12 items-center justify-center rounded-xl border border-border bg-white text-ink-muted transition hover:border-brand hover:text-brand">
+                <button type="button" onClick={previousCard} aria-label="Thẻ trước" className="flex min-h-12 min-w-12 items-center justify-center rounded-xl border border-border bg-surface-card text-ink-muted transition hover:border-brand hover:text-brand">
                   <ChevronLeft className="size-5" aria-hidden="true" />
                 </button>
                 <button type="button" onClick={() => setFlipped((value) => !value)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-extrabold text-white shadow-[0_8px_18px_rgba(0,74,173,0.18)] transition hover:bg-brand-dark sm:px-6">
@@ -667,13 +667,13 @@ export function VocabularyFlashcards({
                   <span>Lật thẻ</span>
                   <span className="hidden rounded-md bg-white/15 px-1.5 py-0.5 font-mono text-[11px] sm:inline">Space</span>
                 </button>
-                <button type="button" onClick={nextCard} aria-label="Thẻ tiếp theo" className="flex min-h-12 min-w-12 items-center justify-center rounded-xl border border-border bg-white text-ink-muted transition hover:border-brand hover:text-brand">
+                <button type="button" onClick={nextCard} aria-label="Thẻ tiếp theo" className="flex min-h-12 min-w-12 items-center justify-center rounded-xl border border-border bg-surface-card text-ink-muted transition hover:border-brand hover:text-brand">
                   <ChevronRight className="size-5" aria-hidden="true" />
                 </button>
               </div>
 
               <div className="mt-3 grid gap-2 sm:grid-cols-[auto_minmax(0,1fr)]">
-                <button type="button" onClick={() => speak(current)} aria-label={"Nghe phát âm " + current.term} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand">
+                <button type="button" onClick={() => speak(current)} aria-label={"Nghe phát âm " + current.term} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand">
                   <Volume2 className="size-4" aria-hidden="true" /> Nghe phát âm
                 </button>
                 <button type="button" disabled={savingId === current.id} onClick={() => toggleSaved(current)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-soft px-4 text-sm font-extrabold text-brand transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:opacity-50">
@@ -683,7 +683,7 @@ export function VocabularyFlashcards({
               </div>
 
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                <button type="button" disabled={savingId === current.id} onClick={() => void markAndContinue("LEARNING")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border bg-white px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50">
+                <button type="button" disabled={savingId === current.id} onClick={() => void markAndContinue("LEARNING")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50">
                   <RotateCcw className="size-4" aria-hidden="true" /> Chưa nhớ · thẻ tiếp
                 </button>
                 <button type="button" disabled={savingId === current.id} onClick={() => void markAndContinue("MASTERED")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#F8D99D] px-4 text-sm font-extrabold text-[#61430F] transition hover:bg-[#F5CC7B] disabled:cursor-not-allowed disabled:opacity-50">
@@ -692,7 +692,7 @@ export function VocabularyFlashcards({
               </div>
             </div>
 
-            <aside className="rounded-[24px] border border-border bg-white p-4 shadow-[0_10px_28px_rgba(0,58,140,0.06)] sm:p-5 lg:mt-10">
+            <aside className="rounded-[24px] border border-border bg-surface-card p-4 shadow-[0_10px_28px_rgba(0,58,140,0.06)] sm:p-5 lg:mt-10">
               <div className="flex items-center gap-4 lg:block lg:text-center">
                 <Mascot state={currentMascot} size={108} animated className="shrink-0 lg:mx-auto lg:size-[150px]" />
                 <div className="min-w-0 lg:mt-3">
@@ -702,10 +702,10 @@ export function VocabularyFlashcards({
 
               <div className="mt-5 border-t border-border pt-4">
                 <label htmlFor="flashcard-speed" className="flex items-center gap-2 text-xs font-extrabold text-ink"><Gauge className="size-4 text-brand" aria-hidden="true" /> Tốc độ học</label>
-                <select id="flashcard-speed" value={speed} onChange={(event) => setSpeed(Number(event.target.value))} className="mt-2 min-h-11 w-full rounded-xl border border-border bg-white px-3 text-sm font-bold text-ink outline-none transition focus:border-brand">
+                <select id="flashcard-speed" value={speed} onChange={(event) => setSpeed(Number(event.target.value))} className="mt-2 min-h-11 w-full rounded-xl border border-border bg-surface-card px-3 text-sm font-bold text-ink outline-none transition focus:border-brand">
                   {speedOptions.map((option) => <option key={option.seconds} value={option.seconds}>{option.label} · {option.description}</option>)}
                 </select>
-                <button type="button" disabled={reducedMotion} aria-pressed={autoPlay} onClick={() => setAutoPlay((value) => !value)} className={cn("mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border px-3 text-sm font-extrabold transition disabled:cursor-not-allowed disabled:opacity-50", autoPlay ? "border-brand bg-brand-soft text-brand" : "border-border bg-white text-ink-muted hover:border-brand hover:text-brand")}>
+                <button type="button" disabled={reducedMotion} aria-pressed={autoPlay} onClick={() => setAutoPlay((value) => !value)} className={cn("mt-2 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border px-3 text-sm font-extrabold transition disabled:cursor-not-allowed disabled:opacity-50", autoPlay ? "border-brand bg-brand-soft text-brand" : "border-border bg-surface-card text-ink-muted hover:border-brand hover:text-brand")}>
                   {autoPlay ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
                   {autoPlay ? "Tạm dừng tự động" : "Bật tự động lật"}
                 </button>

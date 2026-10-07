@@ -17,11 +17,11 @@ function formatTime(seconds: number) {
 }
 
 function answerClass(question: LearningExerciseQuestion, selected: string | undefined, optionIndex: number, submitted: boolean) {
-  if (!submitted) return "border-2 border-ink/15 bg-white";
-  if (question.answerIndex === null) return "border-2 border-ink/15 bg-white";
+  if (!submitted) return "border-2 border-ink/15 bg-surface-card";
+  if (question.answerIndex === null) return "border-2 border-ink/15 bg-surface-card";
   if (optionIndex === question.answerIndex) return "border-2 border-accent-green bg-green-50 text-green-800";
   if (selected === String(optionIndex)) return "border-2 border-red-300 bg-red-50 text-red-800";
-  return "border-2 border-ink/15 bg-white";
+  return "border-2 border-ink/15 bg-surface-card";
 }
 
 function questionCardClass(question: LearningExerciseQuestion, selected: string | undefined, submitted: boolean) {
@@ -217,7 +217,7 @@ function QuestionPanel({ exercise, answers, submitted, onChoose, writing, setWri
 }
 
 function WritingBox({ value, disabled, onChange }: { value: string; disabled: boolean; onChange: (value: string) => void }) {
-  return <div className="mt-5"><label className="text-sm font-extrabold text-ink" htmlFor="learning-writing-answer">Câu trả lời của bạn</label><textarea id="learning-writing-answer" disabled={disabled} value={value} onChange={(event) => onChange(event.target.value)} rows={14} className="mt-2 w-full rounded-xl border-2 border-ink/25 bg-white p-4 text-sm leading-7 text-ink outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:bg-surface" placeholder="Viết câu trả lời tại đây…" /><p className="mt-2 text-xs text-ink-muted">{value.trim() ? value.trim().split(/\s+/).length : 0} từ</p></div>;
+  return <div className="mt-5"><label className="text-sm font-extrabold text-ink" htmlFor="learning-writing-answer">Câu trả lời của bạn</label><textarea id="learning-writing-answer" disabled={disabled} value={value} onChange={(event) => onChange(event.target.value)} rows={14} className="mt-2 w-full rounded-xl border-2 border-ink/25 bg-surface-card p-4 text-sm leading-7 text-ink outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/15 disabled:bg-surface" placeholder="Viết câu trả lời tại đây…" /><p className="mt-2 text-xs text-ink-muted">{value.trim() ? value.trim().split(/\s+/).length : 0} từ</p></div>;
 }
 
 function AnswerReview({ question, selected }: { question: LearningExerciseQuestion; selected?: string }) {
@@ -240,6 +240,6 @@ function SubmissionReview({ exercise, audioSrc }: { exercise: LearningExercise; 
     {exercise.skill === "SPEAKING" && audioSrc ? <div className="mt-4"><p className="text-sm font-extrabold text-ink">Audio bài mẫu</p><audio className="mt-2 w-full" controls preload="metadata" src={audioSrc} aria-label="Audio bài nói mẫu" /></div> : null}
     {exercise.sample ? <RevealBlock title={exercise.skill === "WRITING" ? "Bài viết mẫu" : "Script bài mẫu"}>{exercise.sample}</RevealBlock> : null}
     {exercise.sampleAnalysis ? <HintBlock title="Phân tích bằng tiếng Việt">{exercise.sampleAnalysis}</HintBlock> : null}
-    {exercise.checklist.length ? <div className="mt-5 rounded-xl border border-border bg-white p-4"><p className="text-sm font-extrabold text-ink">Checklist tự sửa</p><ul className="mt-2 space-y-2 text-sm text-ink">{exercise.checklist.map((item) => <li key={item}>☐ {item}</li>)}</ul></div> : null}
+    {exercise.checklist.length ? <div className="mt-5 rounded-xl border border-border bg-surface-card p-4"><p className="text-sm font-extrabold text-ink">Checklist tự sửa</p><ul className="mt-2 space-y-2 text-sm text-ink">{exercise.checklist.map((item) => <li key={item}>☐ {item}</li>)}</ul></div> : null}
   </Card>;
 }

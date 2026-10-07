@@ -17,7 +17,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ use
   if (actor.role !== "ADMIN") return errorResponse("Chỉ quản trị viên được đặt lại mật khẩu.", 403);
   const { userId } = await params;
   const target = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, role: true } });
-  if (!target || target.role !== "LEARNER") return errorResponse("Không tìm thấy tài khoản học viên.", 404);
+  if (!target || !["LEARNER", "TEACHER"].includes(target.role)) return errorResponse("Không tìm thấy tài khoản học viên.", 404);
 
   const body = await request.json().catch(() => null) as { password?: unknown } | null;
   const password = typeof body?.password === "string" ? body.password : "";

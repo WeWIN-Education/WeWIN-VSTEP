@@ -52,7 +52,7 @@ export function VocabularyImportForm({ kind = "VOCABULARY" }: { kind?: Vocabular
 
   const isCollocation = kind === "COLLOCATION";
   return (
-    <div className="rounded-[24px] border border-border bg-white p-5 shadow-sm sm:p-6">
+    <div className="rounded-[24px] border border-border bg-surface-card p-5 shadow-sm sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="font-[family-name:var(--font-jakarta)] text-lg font-extrabold text-ink">Chọn workbook</h2>

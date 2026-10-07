@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Phòng Zoom WEWIN</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family: system-ui;
+      }
+      #zoom-root {
+        min-height: 640px;
+      }
+      #state {
+        padding: 20px;
+      }
+      /* Zoom's default panels sit beside the video; keep them inside the iframe. */
+      .zoom-MuiPopper-root[role="dialog"],
+      .zoom-MuiPopper-root:has([aria-label="Waiting Room Controls"]) {
+        inset: 8px auto auto 8px !important;
+        transform: none !important;
+        max-width: calc(100vw - 16px);
+      }
+      body.dark {
+        background: #152133;
+        color: #edf3fb;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="state" role="status">Đang chuẩn bị phòng Zoom…</p>
+    <div id="zoom-root"></div>
+    <script src="./room.js"></script>
+  </body>
+</html>

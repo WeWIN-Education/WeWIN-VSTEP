@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/lib/access";
+import { classroomEnabled } from "@/lib/classroom/access";
 import { isSameOrigin } from "@/lib/request-security";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
@@ -20,7 +21,9 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ u
       // Serialize account removal with matchmaking and reward settlement.
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(9232601)`;
       const target = await tx.user.findUnique({ where: { id: userId }, select: { role: true, email: true } });
-      if (!target || target.role !== "LEARNER") return { error: "Không tìm thấy tài khoản học viên.", status: 404 };
+      if (!target || !["LEARNER", "TEACHER"].includes(target.role)) return { error: "Không tìm thấy tài khoản học viên.", status: 404 };
+      const classroomRecords = classroomEnabled() ? await tx.classroomEnrollment.count({ where: { userId } }) + await tx.classroomStaff.count({ where: { userId } }) + await tx.classroomFile.count({ where: { ownerId: userId } }) : 0;
+      if (classroomRecords) return { error: "Tài khoản có hồ sơ lớp học. Hãy khóa tài khoản để giữ dữ liệu.", status: 409 };
       if (body?.confirmation !== target.email) return { error: "Email xác nhận chưa đúng.", status: 400 };
       await tx.battlePlayer.updateMany({ where: { userId }, data: { name: "Người dùng đã xóa" } });
       const recordings = await tx.examRecording.findMany({ where: { attempt: { userId } }, select: { storageKey: true } });
@@ -28,7 +31,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ u
       const materials = await tx.learningMaterial.findMany({ where: { uploadedById: userId }, select: { storageName: true } });
       // Blog authors use SetNull; explicitly remove their posts before cascading the account.
       await tx.blogPost.deleteMany({ where: { authorId: userId } });
-      const deleted = await tx.user.deleteMany({ where: { id: userId, role: "LEARNER" } });
+      const deleted = await tx.user.deleteMany({ where: { id: userId, role: target.role } });
       if (!deleted.count) throw new Error("Account changed during deletion");
       return { keys: [...recordings.map(row => row.storageKey), ...posts.flatMap(row => row.imageUrl && /^[a-f0-9-]{36}\.(jpg|jpeg|png|webp)$/i.test(row.imageUrl) ? [`posts/${row.imageUrl}`] : []), ...materials.map(row => row.storageName.includes("/") ? row.storageName : `materials/${row.storageName}`)] };
     });
@@ -39,7 +42,10 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ u
     }
     revalidatePath("/manage/users"); revalidatePath("/community"); revalidatePath("/blog");
     return NextResponse.json({ ok: true, warning: failed ? `Đã xóa tài khoản và dữ liệu database; ${failed} file chưa dọn được khỏi storage.` : undefined });
-  } catch { return jsonError("Không thể xóa tài khoản lúc này.", 500); }
+  } catch (error) {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "P2003") return jsonError("Tài khoản có hồ sơ tham chiếu. Hãy khóa tài khoản để giữ dữ liệu.", 409);
+    return jsonError("Không thể xóa tài khoản lúc này.", 500);
+  }
 }
 
 const USER_SELECT = {
@@ -74,7 +80,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ us
   const { userId } = await params;
 
   const target = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, role: true, isActive: true } });
-  if (!target || target.role !== "LEARNER") return jsonError("Không tìm thấy tài khoản học viên.", 404);
+  if (!target || !["LEARNER", "TEACHER"].includes(target.role)) return jsonError("Không tìm thấy tài khoản học viên.", 404);
   const body = await request.json().catch(() => null) as { email?: unknown; name?: unknown; isActive?: unknown } | null;
   if (!body || (body.email === undefined && body.name === undefined && body.isActive === undefined)) return jsonError("Không có thay đổi để lưu.", 400);
 

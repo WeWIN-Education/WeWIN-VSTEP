@@ -23,7 +23,7 @@ type SidebarUser = {
   role?: NavRole | null;
 };
 
-export function Sidebar({ user }: { user?: SidebarUser | null }) {
+export function Sidebar({ user, classrooms = false }: { user?: SidebarUser | null; classrooms?: boolean }) {
   const pathname = usePathname();
 
   const visibleGroups = useMemo(
@@ -31,14 +31,14 @@ export function Sidebar({ user }: { user?: SidebarUser | null }) {
       NAV_GROUPS.map((group) => ({
         ...group,
         items: group.items
-          .filter((item) => isAllowed(item.roles, user?.role))
+          .filter((item) => isAllowed(item.roles, user?.role) && (classrooms || item.href !== "/classes"))
           .map((item) => ({
             ...item,
-            children: item.children?.filter((child) => isAllowed(child.roles, user?.role)),
+            children: item.children?.filter((child) => isAllowed(child.roles, user?.role) && (classrooms || !["/manage/classes", "/manage/sessions", "/manage/integrations"].includes(child.href))),
           }))
           .filter((item) => !item.children || item.children.length > 0),
       })).filter((group) => group.items.length > 0),
-    [user?.role],
+    [user?.role, classrooms],
   );
 
   const initiallyOpen = useMemo(() => {
@@ -66,13 +66,13 @@ export function Sidebar({ user }: { user?: SidebarUser | null }) {
   }
 
   return (
-    <aside className="sticky top-0 hidden h-[calc(100vh-var(--header-height))] w-[var(--sidebar-width)] shrink-0 flex-col border-r border-border bg-white lg:flex">
+    <aside className="sticky top-0 hidden h-[calc(100vh-var(--header-height))] w-[var(--sidebar-width)] shrink-0 flex-col border-r border-border bg-surface-card lg:flex">
 
       <nav className="flex-1 overflow-y-auto px-3 py-3 font-[family-name:var(--font-jakarta)]">
         {visibleGroups.map((group) => (
           <div key={group.id} className="mb-4">
             {group.label ? (
-              <div className="mb-1.5 px-2 text-[10px] font-semibold tracking-[0.08em] text-ink-faint">
+              <div className="mb-1.5 px-2 text-xs font-semibold tracking-[0.08em] text-ink-faint">
                 {group.label}
               </div>
             ) : null}
@@ -180,11 +180,11 @@ export function Sidebar({ user }: { user?: SidebarUser | null }) {
         ))}
       </nav>
 
-      <div className="shrink-0 border-t border-border bg-white p-3">
+      <div className="shrink-0 border-t border-border bg-surface-card p-3">
         {user ? (
           <Link href="/profile/settings" className="flex min-w-0 items-center gap-2 rounded-2xl bg-brand-soft px-3 py-2.5 transition-colors hover:bg-brand-soft/70">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-extrabold text-white">{(user.name || user.email || "W").slice(0, 1).toUpperCase()}</span>
-            <span className="min-w-0"><strong className="block truncate text-[12px] font-extrabold text-ink">{user.name || "Tài khoản WEWIN"}</strong><span className="block truncate text-[10px] text-ink-muted">{user.role === "ADMIN" ? "Quản trị viên" : user.email}</span></span>
+            <span className="min-w-0"><strong className="block truncate text-[12px] font-extrabold text-ink">{user.name || "Tài khoản WEWIN"}</strong><span className="block truncate text-xs text-ink-muted">{user.role === "ADMIN" ? "Quản trị viên" : user.email}</span></span>
           </Link>
         ) : (
           <Link href="/login" className="flex w-full items-center justify-center rounded-[var(--radius-btn)] bg-brand px-3 py-2.5 font-[family-name:var(--font-jakarta)] text-[13px] font-bold text-white hover:bg-brand-dark">

@@ -380,7 +380,7 @@ export function SpeakingSession({ unit, recording, onStart, onStop, onEnableMicr
         </p>
       </header>
 
-      <div className="rounded-2xl border border-border bg-white p-6">
+      <div className="rounded-2xl border border-border bg-surface-card p-6">
         <p className="text-lg font-semibold">{unit.prompt}</p>
         {unit.questions.length > 0 ? (
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed">
@@ -400,7 +400,7 @@ export function SpeakingSession({ unit, recording, onStart, onStop, onEnableMicr
             type="button"
             disabled={locked || phase === "permission"}
             onClick={() => void beginQuestionFlow()}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-brand bg-white px-5 font-semibold text-brand disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-brand bg-surface-card px-5 font-semibold text-brand disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Play size={18} aria-hidden="true" />
             Nghe câu hỏi và chuẩn bị
@@ -418,7 +418,7 @@ export function SpeakingSession({ unit, recording, onStart, onStop, onEnableMicr
             <button
               type="button"
               onClick={cancelPendingPermission}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#A62B20] bg-white px-5 font-semibold text-[#A62B20]"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#A62B20] bg-surface-card px-5 font-semibold text-[#A62B20]"
             >
               Hủy chờ quyền
             </button>
@@ -427,7 +427,7 @@ export function SpeakingSession({ unit, recording, onStart, onStop, onEnableMicr
             <button
               type="button"
               onClick={() => void finishRecording(generationRef.current)}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-brand bg-white px-5 font-semibold text-brand"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-brand bg-surface-card px-5 font-semibold text-brand"
             >
               <Square size={16} aria-hidden="true" />
               Kết thúc và lưu

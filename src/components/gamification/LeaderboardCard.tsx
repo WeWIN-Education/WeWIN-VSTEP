@@ -35,7 +35,7 @@ export function LeaderboardCard({ data }: { data: LeaderboardData }) {
 function LeaderboardRow({ entry }: { entry: LeaderboardData["entries"][number] }) {
   return (
     <div className={`flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 ${entry.isCurrentUser ? "bg-brand-soft" : "bg-surface"}`}>
-      <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-white text-xs font-extrabold text-brand">{entry.rank}</span>
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-surface-card text-xs font-extrabold text-brand">{entry.rank}</span>
       <Medal className="size-4 shrink-0 text-[#D4A017]" aria-hidden="true" />
       <span className="min-w-0 flex-1 truncate text-sm font-bold text-ink">{displayName(entry.name)}{entry.isCurrentUser ? <span className="ml-1 text-xs font-normal text-brand">(bạn)</span> : null}</span>
       <span className="shrink-0 text-sm font-extrabold text-[#1F7A4D]">{entry.xp} XP</span>

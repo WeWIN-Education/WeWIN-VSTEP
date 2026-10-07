@@ -14,7 +14,7 @@ import {
   Wrench,
 } from "lucide-react";
 
-export type NavRole = "LEARNER" | "ADMIN";
+export type NavRole = "LEARNER" | "TEACHER" | "ADMIN";
 
 export type NavLeaf = {
   label: string;
@@ -56,6 +56,7 @@ export const NAV_GROUPS: NavGroup[] = [
     id: "hoc-tap",
     label: "HỌC TẬP",
     items: [
+      { label: "Lớp học online", href: "/classes", icon: Users, roles: ["LEARNER", "TEACHER", "ADMIN"] },
       {
         label: "Khóa học",
         icon: GraduationCap,
@@ -88,7 +89,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "Tài liệu học tập", href: "/materials", icon: Library },
       { label: "Công cụ", href: "/tools", icon: Wrench },
       { label: "Bài viết", href: "/blog", icon: Newspaper },
-      { label: "Cài đặt", href: "/profile/settings", icon: Settings, roles: ["LEARNER", "ADMIN"] },
+      { label: "Cài đặt", href: "/profile/settings", icon: Settings, roles: ["LEARNER", "TEACHER", "ADMIN"] },
     ],
   },
   {
@@ -100,6 +101,9 @@ export const NAV_GROUPS: NavGroup[] = [
         icon: ShieldCheck,
         roles: ["ADMIN"],
         children: [
+          { label: "Lớp & ghi danh", href: "/manage/classes", roles: ["ADMIN"] },
+          { label: "Lịch học", href: "/manage/sessions", roles: ["ADMIN"] },
+          { label: "Zoom & tác vụ", href: "/manage/integrations", roles: ["ADMIN"] },
           { label: "Tài khoản", href: "/manage/users", roles: ["ADMIN"] },
           { label: "Đề thi", href: "/manage/exams", roles: ["ADMIN"] },
           { label: "Kỹ năng", href: "/manage/skills", roles: ["ADMIN"] },

@@ -73,7 +73,7 @@ function ToolbarButton({
       className={`flex size-11 items-center justify-center rounded-full border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 ${
         pressed
           ? "border-brand bg-brand-soft text-brand"
-          : "border-border bg-white text-ink-muted hover:border-brand/40 hover:text-brand"
+          : "border-border bg-surface-card text-ink-muted hover:border-brand/40 hover:text-brand"
       }`}
     >
       {children}
@@ -302,7 +302,7 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-[24px] border border-border bg-white shadow-sm">
+    <div className="overflow-hidden rounded-[24px] border border-border bg-surface-card shadow-sm">
       <div
         className={`grid ${listenOnly ? "lg:grid-cols-1" : largeVideo ? "lg:grid-cols-[minmax(0,1.55fr)_minmax(300px,.62fr)]" : "lg:grid-cols-[minmax(0,1.25fr)_minmax(340px,.75fr)]"}`}
       >
@@ -400,7 +400,7 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
             <div className="rounded-2xl bg-surface p-4">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-xs font-bold text-brand">{current.start || "Chưa có mốc"}</p>
-                <span className="rounded-full bg-white px-2 py-1 text-[10px] font-extrabold text-ink-muted">Câu {active + 1}</span>
+                <span className="rounded-full bg-surface-card px-2 py-1 text-[10px] font-extrabold text-ink-muted">Câu {active + 1}</span>
               </div>
               {typingMode ? (
                 <div className="mt-3">
@@ -416,7 +416,7 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
                     }}
                     placeholder="Type what you hear…"
                     autoComplete="off"
-                    className="mt-3 h-12 w-full rounded-xl border border-border bg-white px-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/10"
+                    className="mt-3 h-12 w-full rounded-xl border border-border bg-surface-card px-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/10"
                   />
                   <div className="mt-3 flex flex-wrap items-center gap-3">
                     <button type="button" onClick={checkDictation} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-brand px-4 text-xs font-extrabold text-white">
@@ -473,7 +473,7 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
                   aria-current={index === active ? "true" : undefined}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="rounded-full bg-white px-2 py-1 text-[11px] font-extrabold text-ink-muted">#{index + 1}</span>
+                    <span className="rounded-full bg-surface-card px-2 py-1 text-[11px] font-extrabold text-ink-muted">#{index + 1}</span>
                     <span className="text-[11px] font-mono text-brand">{segment.start || "—"}</span>
                   </div>
                   <p className="mt-3 text-base font-extrabold leading-snug text-ink">{segment.en}</p>
@@ -490,7 +490,7 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
         <span className="text-xs text-ink-muted">Chọn một câu trong bản chép để tua video và luyện lại.</span>
         <span className="ml-auto hidden text-xs text-ink-muted sm:inline">Nguồn: YouTube · WEWIN</span>
       </div>
-      {quiz && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-ink/45 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Câu hỏi kiểm tra video"><div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl"><p className="text-xs font-bold text-brand">Kiểm tra nội dung đã xem</p><h2 className="mt-2 text-lg font-semibold">{quiz.prompt}</h2><div className="mt-4 space-y-2">{quiz.options.map((option,index)=><button key={option} type="button" disabled={quizSubmitted} onClick={()=>setQuizAnswer(index)} className={`w-full rounded-xl border px-3 py-3 text-left text-sm ${quizAnswer===index?"border-brand bg-brand-soft text-brand":"border-border"}`}>{String.fromCharCode(65+index)}. {option}</button>)}</div>{quizSubmitted?<p role="status" className="mt-4 text-sm">{quizAnswer===quiz.correctIndex?"Chính xác.":`Đáp án đúng: ${quiz.options[quiz.correctIndex]}`}</p>:null}<div className="mt-5 flex justify-end"><button type="button" disabled={quizAnswer===null} onClick={()=>{if(!quizSubmitted){const next={...answersRef.current,[quiz.id]:quizAnswer!};answersRef.current=next;setQuizSeen(new Set(Object.keys(next)));setQuizSubmitted(true);void fetch("/api/video/progress",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({videoSlug:video.slug,currentSec:playbackRef.current,watchedIntervals:intervalsRef.current,quizAnswers:next})});}else{setQuiz(null);sendYoutubeCommand(frameRef.current,"playVideo");}}} className="min-h-11 rounded-full bg-brand px-5 font-semibold text-white disabled:opacity-40">{quizSubmitted?"Tiếp tục xem":"Trả lời"}</button></div></div></div>}
+      {quiz && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-ink/45 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Câu hỏi kiểm tra video"><div className="w-full max-w-lg rounded-3xl bg-surface-card p-6 shadow-2xl"><p className="text-xs font-bold text-brand">Kiểm tra nội dung đã xem</p><h2 className="mt-2 text-lg font-semibold">{quiz.prompt}</h2><div className="mt-4 space-y-2">{quiz.options.map((option,index)=><button key={option} type="button" disabled={quizSubmitted} onClick={()=>setQuizAnswer(index)} className={`w-full rounded-xl border px-3 py-3 text-left text-sm ${quizAnswer===index?"border-brand bg-brand-soft text-brand":"border-border"}`}>{String.fromCharCode(65+index)}. {option}</button>)}</div>{quizSubmitted?<p role="status" className="mt-4 text-sm">{quizAnswer===quiz.correctIndex?"Chính xác.":`Đáp án đúng: ${quiz.options[quiz.correctIndex]}`}</p>:null}<div className="mt-5 flex justify-end"><button type="button" disabled={quizAnswer===null} onClick={()=>{if(!quizSubmitted){const next={...answersRef.current,[quiz.id]:quizAnswer!};answersRef.current=next;setQuizSeen(new Set(Object.keys(next)));setQuizSubmitted(true);void fetch("/api/video/progress",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({videoSlug:video.slug,currentSec:playbackRef.current,watchedIntervals:intervalsRef.current,quizAnswers:next})});}else{setQuiz(null);sendYoutubeCommand(frameRef.current,"playVideo");}}} className="min-h-11 rounded-full bg-brand px-5 font-semibold text-white disabled:opacity-40">{quizSubmitted?"Tiếp tục xem":"Trả lời"}</button></div></div></div>}
     </div>
   );
 }

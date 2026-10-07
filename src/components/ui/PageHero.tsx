@@ -26,7 +26,7 @@ export function PageHero({
   return (
     <section
       className={cn(
-        "relative isolate w-full min-w-0 max-w-full overflow-hidden rounded-[24px] border-2 border-border bg-white p-5 shadow-[var(--shadow-panel)] md:p-7",
+        "relative isolate w-full min-w-0 max-w-full overflow-hidden rounded-[24px] border-2 border-border bg-surface-card p-5 shadow-[var(--shadow-panel)] md:p-7",
         className,
       )}
     >

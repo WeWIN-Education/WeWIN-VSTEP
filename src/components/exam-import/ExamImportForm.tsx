@@ -254,7 +254,7 @@ export function ExamImportForm() {
   return (
     <section className="space-y-5" aria-label="Nhập đề VSTEP" aria-busy={pendingAction !== null}>
       <div className="grid gap-5 xl:grid-cols-[1.03fr_.97fr]">
-        <div className="rounded-[24px] border border-border bg-white p-5 shadow-sm sm:p-6">
+        <div className="rounded-[24px] border border-border bg-surface-card p-5 shadow-sm sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-brand">Bước 1</p>
@@ -289,7 +289,7 @@ export function ExamImportForm() {
                 aria-describedby="vstep-docx-help"
                 className="group flex min-h-[108px] w-full items-center gap-4 rounded-2xl border-2 border-dashed border-brand/30 bg-brand-soft/35 px-4 text-left transition hover:border-brand hover:bg-brand-soft/60 focus-visible:border-brand disabled:cursor-wait disabled:opacity-60 sm:px-5"
               >
-                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white text-brand shadow-sm ring-1 ring-brand/10">
+                <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-surface-card text-brand shadow-sm ring-1 ring-brand/10">
                   <FileText className="size-6" />
                 </span>
                 <span className="min-w-0">
@@ -324,9 +324,9 @@ export function ExamImportForm() {
                 type="button"
                 onClick={() => audioInputRef.current?.click()}
                 disabled={pendingAction !== null}
-                className="flex min-h-16 w-full items-center gap-3 rounded-2xl border border-border bg-surface px-4 text-left transition hover:border-brand hover:bg-white focus-visible:border-brand disabled:cursor-wait disabled:opacity-60"
+                className="flex min-h-16 w-full items-center gap-3 rounded-2xl border border-border bg-surface px-4 text-left transition hover:border-brand hover:bg-surface-card focus-visible:border-brand disabled:cursor-wait disabled:opacity-60"
               >
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-brand ring-1 ring-border"><Music2 className="size-4" /></span>
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-surface-card text-brand ring-1 ring-border"><Music2 className="size-4" /></span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-bold text-ink">{audioFiles.length ? `Đã chọn ${audioFiles.length} file audio` : "Chọn một hoặc nhiều file audio"}</span>
                   <span className="mt-0.5 block text-xs text-ink-muted">MP3, WAV, M4A, MP4, OGG hoặc WEBM · {formatBytes(audioTotal)} / 100 MB</span>
@@ -336,7 +336,7 @@ export function ExamImportForm() {
               {audioFiles.length ? (
                 <ul className="mt-3 space-y-2" aria-label="Danh sách audio đã chọn">
                   {audioFiles.map((file, index) => (
-                    <li key={`${file.name}-${file.lastModified}`} className="flex items-center gap-3 rounded-xl border border-border/80 bg-white px-3 py-2.5">
+                    <li key={`${file.name}-${file.lastModified}`} className="flex items-center gap-3 rounded-xl border border-border/80 bg-surface-card px-3 py-2.5">
                       <Music2 className="size-4 shrink-0 text-brand" />
                       <span className="min-w-0 flex-1"><span className="block truncate text-sm font-semibold text-ink">{file.name}</span><span className="text-xs text-ink-muted">{formatBytes(file.size)}</span></span>
                       <button type="button" onClick={() => removeAudio(index)} disabled={pendingAction !== null} aria-label={`Xóa ${file.name}`} className="rounded-lg p-1.5 text-ink-faint transition hover:bg-red-50 hover:text-red-600 disabled:cursor-wait disabled:opacity-50"><Trash2 className="size-4" /></button>
@@ -359,7 +359,7 @@ export function ExamImportForm() {
               {pendingAction === "preview" ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
               {pendingAction === "preview" ? "Đang kiểm tra…" : "Xem trước và kiểm tra"}
             </button>
-            <button type="button" onClick={() => void submit("publish")} disabled={pendingAction !== null || !canPublish} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-btn)] border border-brand/20 bg-white px-5 text-sm font-extrabold text-brand transition hover:border-brand hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-40">
+            <button type="button" onClick={() => void submit("publish")} disabled={pendingAction !== null || !canPublish} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-btn)] border border-brand/20 bg-surface-card px-5 text-sm font-extrabold text-brand transition hover:border-brand hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-40">
               {pendingAction === "publish" ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}
               {pendingAction === "publish" ? "Đang xuất bản…" : "Xuất bản đề"}
             </button>
@@ -367,14 +367,14 @@ export function ExamImportForm() {
           <p className="mt-3 text-xs leading-relaxed text-ink-muted">Nút xuất bản chỉ bật sau khi bản xem trước hợp lệ, đủ 35 câu Nghe, 40 câu Đọc, 2 bài Viết, 3 phần Nói và đủ audio được khai báo.</p>
         </div>
 
-        <div className="rounded-[24px] border border-border bg-white p-5 shadow-sm sm:p-6">
+        <div className="rounded-[24px] border border-border bg-surface-card p-5 shadow-sm sm:p-6">
           <div className="flex items-center gap-3">
             <span className="flex size-9 items-center justify-center rounded-xl bg-brand-soft text-brand"><CheckCircle2 className="size-5" /></span>
             <div><p className="text-xs font-extrabold uppercase tracking-[0.12em] text-brand">Bước 2</p><h2 className="mt-0.5 font-[family-name:var(--font-jakarta)] text-xl font-extrabold text-ink">Kiểm tra cấu trúc</h2></div>
           </div>
           {!preview ? (
             <div className="mt-6 flex min-h-[290px] flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-surface px-5 text-center">
-              <span className="flex size-14 items-center justify-center rounded-2xl bg-white text-ink-faint shadow-sm"><FileText className="size-7" /></span>
+              <span className="flex size-14 items-center justify-center rounded-2xl bg-surface-card text-ink-faint shadow-sm"><FileText className="size-7" /></span>
               <p className="mt-4 text-sm font-extrabold text-ink">Chưa có bản xem trước</p>
               <p className="mt-1 max-w-xs text-xs leading-relaxed text-ink-muted">Chọn DOCX rồi bấm “Xem trước và kiểm tra” để xem số lượng câu, audio thiếu và cảnh báo nội dung.</p>
             </div>
@@ -419,7 +419,7 @@ export function ExamImportForm() {
 }
 
 function Metric({ label, value, detail, ok }: { label: string; value: number; detail: string; ok: boolean }) {
-  return <div className={`rounded-2xl border px-3 py-3 ${ok ? "border-emerald-100 bg-emerald-50/70" : "border-border bg-white"}`}><p className="text-[11px] font-extrabold uppercase tracking-wide text-ink-muted">{label}</p><p className="mt-1 text-xl font-extrabold text-ink">{value}</p><p className={`text-[11px] font-semibold ${ok ? "text-emerald-700" : "text-ink-muted"}`}>{ok ? "Đủ " : "Mục tiêu "}{detail}</p></div>;
+  return <div className={`rounded-2xl border px-3 py-3 ${ok ? "border-emerald-100 bg-emerald-50/70" : "border-border bg-surface-card"}`}><p className="text-[11px] font-extrabold uppercase tracking-wide text-ink-muted">{label}</p><p className="mt-1 text-xl font-extrabold text-ink">{value}</p><p className={`text-[11px] font-semibold ${ok ? "text-emerald-700" : "text-ink-muted"}`}>{ok ? "Đủ " : "Mục tiêu "}{detail}</p></div>;
 }
 
 function PreviewRow({ icon, label, value, tone = "default" }: { icon: ReactNode; label: string; value: string; tone?: "default" | "danger" | "warning" }) {

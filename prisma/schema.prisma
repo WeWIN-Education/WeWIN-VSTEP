@@ -59,6 +59,7 @@ enum VocabularyCollectionKind {
 
 enum UserRole {
   LEARNER
+  TEACHER
   ADMIN
 }
 
@@ -109,6 +110,16 @@ model User {
   approvedBlogPosts  BlogPost[]            @relation("BlogAuthor")
   createdAt          DateTime              @default(now())
   updatedAt          DateTime              @updatedAt
+  classroomEnrollments ClassroomEnrollment[]
+  classroomStaff ClassroomStaff[]
+  classroomHosts ClassroomSession[]
+  zoomHost ZoomHost?
+  classroomGrants ClassroomJoinGrant[]
+  classroomDrafts ClassroomDraft[]
+  classroomSubmissions ClassroomSubmission[]
+  classroomAttendance ClassroomAttendance[]
+  classroomFiles ClassroomFile[]
+  classroomNotifications ClassroomNotification[]
 }
 
 model ProgrammeEnrollment {
@@ -744,4 +755,272 @@ model BattleReward {
   xp          Int
   createdAt   DateTime @default(now())
   @@index([userId, day, xp])
+}
+
+model Classroom {
+  id          String                @id @default(cuid())
+  code        String                @unique
+  title       String
+  description String                @default("")
+  capacity    Int                   @default(30)
+  status      String                @default("ACTIVE")
+  revision    Int                   @default(0)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  enrollments ClassroomEnrollment[]
+  staff       ClassroomStaff[]
+  sessions    ClassroomSession[]
+  materials   ClassroomMaterial[]
+  assignments ClassroomAssignment[]
+  files       ClassroomFile[]
+}
+
+model ClassroomEnrollment {
+  classId    String
+  userId     String
+  status     String    @default("ACTIVE")
+  enrolledAt DateTime  @default(now())
+  classroom  Classroom @relation(fields: [classId], references: [id], onDelete: Restrict)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([classId, userId])
+  @@index([userId, status])
+}
+
+model ClassroomStaff {
+  classId   String
+  userId    String
+  classroom Classroom @relation(fields: [classId], references: [id], onDelete: Restrict)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([classId, userId])
+  @@index([userId])
+}
+
+model ZoomHost {
+  userId     String   @id
+  zoomUserId String   @unique
+  email      String
+  verified   Boolean  @default(false)
+  licensed   Boolean  @default(false)
+  checkedAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+}
+
+model ClassroomSession {
+  id                String                @id @default(cuid())
+  classId           String
+  hostUserId        String
+  title             String
+  startsAt          DateTime
+  endsAt            DateTime
+  status            String                @default("SCHEDULED")
+  revision          Int                   @default(0)
+  meetingId         String?               @unique
+  passcodeEncrypted String?
+  joinUrlEncrypted  String?
+  zoomState         String                @default("PENDING")
+  zoomCreateStarted Boolean               @default(false)
+  confirmedStart    DateTime?
+  confirmedEnd      DateTime?
+  classroom         Classroom             @relation(fields: [classId], references: [id], onDelete: Restrict)
+  host              User                  @relation(fields: [hostUserId], references: [id], onDelete: Restrict)
+  grants            ClassroomJoinGrant[]
+  attendance        ClassroomAttendance[]
+  materials         ClassroomMaterial[]
+  assignments       ClassroomAssignment[]
+
+  @@index([classId, startsAt])
+  @@index([hostUserId, startsAt, endsAt])
+}
+
+model ClassroomJoinGrant {
+  id        String           @id @default(cuid())
+  sessionId String
+  userId    String
+  deviceId  String
+  state     String           @default("RESERVED")
+  issuedAt  DateTime         @default(now())
+  expiresAt DateTime
+  tabVisible Boolean?
+  tabChangedAt DateTime?
+  tabSignalAt DateTime?
+  session   ClassroomSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([sessionId, userId])
+  @@index([userId, state, expiresAt])
+}
+
+model ClassroomMaterial {
+  id         String            @id @default(cuid())
+  classId    String
+  sessionId  String?
+  title      String
+  body       String            @default("")
+  sourceKind String?
+  sourceId   String?
+  published  Boolean           @default(false)
+  revision   Int               @default(0)
+  createdAt  DateTime          @default(now())
+  classroom  Classroom         @relation(fields: [classId], references: [id], onDelete: Restrict)
+  session    ClassroomSession? @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  files      ClassroomFile[]
+
+  @@index([classId, published])
+}
+
+model ClassroomAssignment {
+  id           String                @id @default(cuid())
+  classId      String
+  sessionId    String?
+  title        String
+  instructions String
+  dueAt        DateTime
+  published    Boolean               @default(false)
+  revision     Int                   @default(0)
+  createdAt    DateTime              @default(now())
+  classroom    Classroom             @relation(fields: [classId], references: [id], onDelete: Restrict)
+  session      ClassroomSession?     @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  drafts       ClassroomDraft[]
+  submissions  ClassroomSubmission[]
+  files        ClassroomFile[]
+
+  @@index([classId, published, dueAt])
+}
+
+model ClassroomDraft {
+  assignmentId String
+  userId       String
+  body         String              @default("")
+  revision     Int                 @default(0)
+  reopenUntil  DateTime?
+  updatedAt    DateTime            @updatedAt
+  assignment   ClassroomAssignment @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([assignmentId, userId])
+}
+
+model ClassroomSubmission {
+  id           String              @id @default(cuid())
+  assignmentId String
+  userId       String
+  version      Int
+  body         String
+  late         Boolean
+  requestKey   String
+  submittedAt  DateTime            @default(now())
+  status       String              @default("SUBMITTED")
+  grade        Float?
+  feedback     String              @default("")
+  gradedById   String?
+  gradedAt     DateTime?
+  revision     Int                 @default(0)
+  assignment   ClassroomAssignment @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Restrict)
+  files        ClassroomFile[]
+
+  @@unique([assignmentId, userId, version])
+  @@unique([userId, requestKey])
+}
+
+model ClassroomAttendance {
+  sessionId     String
+  userId        String
+  minutes       Float            @default(0)
+  late          Boolean          @default(false)
+  suggestion    String           @default("PENDING")
+  finalStatus   String?
+  reason        String           @default("")
+  confirmedById String?
+  confirmedAt   DateTime?
+  updatedAt     DateTime         @updatedAt
+  session       ClassroomSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  user          User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@id([sessionId, userId])
+}
+
+model ClassroomFile {
+  id           String               @id @default(cuid())
+  classId      String
+  ownerId      String
+  materialId   String?
+  assignmentId String?
+  submissionId String?
+  name         String
+  mimeType     String
+  sizeBytes    Int
+  storageKey   String               @unique
+  cleanKey     String?
+  state        String               @default("UPLOADING")
+  createdAt    DateTime             @default(now())
+  classroom    Classroom            @relation(fields: [classId], references: [id], onDelete: Restrict)
+  owner        User                 @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  material     ClassroomMaterial?   @relation(fields: [materialId], references: [id], onDelete: Restrict)
+  assignment   ClassroomAssignment? @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
+  submission   ClassroomSubmission? @relation(fields: [submissionId], references: [id], onDelete: Restrict)
+
+  @@index([classId, state])
+}
+
+model ClassroomNotification {
+  id        String    @id @default(cuid())
+  userId    String
+  eventKey  String
+  title     String
+  href      String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, eventKey])
+  @@index([userId, readAt, createdAt])
+}
+
+model ClassroomAudit {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String
+  entityId  String
+  detail    Json
+  createdAt DateTime @default(now())
+
+  @@index([entityId, createdAt])
+}
+
+model ClassroomZoomEvent {
+  id          String    @id
+  meetingId   String
+  meetingUuid String
+  event       String
+  occurredAt  DateTime
+  payload     Json
+  processedAt DateTime?
+  receivedAt  DateTime  @default(now())
+
+  @@index([meetingId, occurredAt])
+}
+
+model ClassroomJob {
+  id             String    @id @default(cuid())
+  key            String    @unique
+  kind           String
+  entityId       String
+  status         String    @default("QUEUED")
+  attempts       Int       @default(0)
+  availableAt    DateTime  @default(now())
+  leaseToken     String?
+  leaseExpiresAt DateTime?
+  error          String?
+  finishedAt     DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([status, availableAt, leaseExpiresAt])
+}
+
+model ClassroomWorker {
+  id         String   @id
+  lastSeenAt DateTime @default(now())
 }

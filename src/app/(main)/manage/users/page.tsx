@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/lib/access";
+import { classroomEnabled, managedAccountRoles } from "@/lib/classroom/access";
 import { UserManagementPanel } from "@/components/manage/UserManagementPanel";
 import { PageHero } from "@/components/ui/PageHero";
 import { prisma } from "@/lib/prisma";
@@ -25,13 +26,14 @@ export default async function ManageUsersPage({ searchParams }: Props) {
   const params = await searchParams;
   const rawQuery = Array.isArray(params.q) ? params.q[0] : params.q;
   const query = rawQuery?.trim().slice(0, 100) || "";
-  const where = { role: "LEARNER" as const, ...(query ? { OR: [{ name: { contains: query, mode: "insensitive" as const } }, { email: { contains: query, mode: "insensitive" as const } }] } : {}) };
+  const roles = managedAccountRoles();
+  const where = { role: { in: roles }, ...(query ? { OR: [{ name: { contains: query, mode: "insensitive" as const } }, { email: { contains: query, mode: "insensitive" as const } }] } : {}) };
   const [users, total, active, inactive] = await Promise.all([
     prisma.user.findMany({ where, orderBy: [{ isActive: "desc" }, { createdAt: "desc" }], select: userSelect }),
-    prisma.user.count({ where: { role: "LEARNER" } }),
-    prisma.user.count({ where: { role: "LEARNER", isActive: true } }),
-    prisma.user.count({ where: { role: "LEARNER", isActive: false } }),
+    prisma.user.count({ where: { role: { in: roles } } }),
+    prisma.user.count({ where: { role: { in: roles }, isActive: true } }),
+    prisma.user.count({ where: { role: { in: roles }, isActive: false } }),
   ]);
 
-  return <div className="mx-auto w-full max-w-[1120px] space-y-6"><PageHero eyebrow="QUẢN TRỊ TÀI KHOẢN" title="Quản lý học viên" description="Tạo, sửa, khóa hoặc xóa tài khoản học viên." stats={[{ label: "Tổng học viên", value: String(total) }, { label: "Đang hoạt động", value: String(active) }, { label: "Đã khóa", value: String(inactive) }]} /><UserManagementPanel initialUsers={users.map((user) => ({ ...user, createdAt: user.createdAt.toISOString(), updatedAt: user.updatedAt.toISOString() }))} initialQuery={query} /></div>;
+  return <div className="mx-auto w-full max-w-[1120px] space-y-6"><PageHero eyebrow="QUẢN TRỊ TÀI KHOẢN" title="Quản lý tài khoản" description="Cấp và quản lý tài khoản học viên, giáo viên. Tài khoản đã có dữ liệu lớp học nên khóa để giữ hồ sơ." stats={[{ label: "Tổng tài khoản", value: String(total) }, { label: "Đang hoạt động", value: String(active) }, { label: "Đã khóa", value: String(inactive) }]} /><UserManagementPanel initialUsers={users.map((user) => ({ ...user, createdAt: user.createdAt.toISOString(), updatedAt: user.updatedAt.toISOString() }))} initialQuery={query} classrooms={classroomEnabled()} /></div>;
 }

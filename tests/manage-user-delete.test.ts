@@ -1,16 +1,18 @@
-import { beforeEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+vi.mock("server-only", () => ({}));
 
-const mock = vi.hoisted(() => ({ actor: vi.fn(), sameOrigin: vi.fn(), target: vi.fn(), remove: vi.fn(), blogs: vi.fn(), recordings: vi.fn(), posts: vi.fn(), materials: vi.fn(), storage: vi.fn() }));
+const mock = vi.hoisted(() => ({ actor: vi.fn(), sameOrigin: vi.fn(), target: vi.fn(), remove: vi.fn(), blogs: vi.fn(), recordings: vi.fn(), posts: vi.fn(), materials: vi.fn(), storage: vi.fn(), classroomCount: vi.fn() }));
 vi.mock("@/lib/access", () => ({ getCurrentUser: mock.actor }));
 vi.mock("@/lib/request-security", () => ({ isSameOrigin: mock.sameOrigin }));
 vi.mock("@/lib/storage", () => ({ deleteObject: mock.storage }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
-vi.mock("@/lib/prisma", () => ({ prisma: { $transaction: async (fn: (tx: unknown) => Promise<unknown>) => fn({ $executeRaw: vi.fn(), battlePlayer: { updateMany: vi.fn() }, user: { findUnique: mock.target, deleteMany: mock.remove }, blogPost: { deleteMany: mock.blogs }, examRecording: { findMany: mock.recordings }, userPost: { findMany: mock.posts }, learningMaterial: { findMany: mock.materials } }) } }));
+vi.mock("@/lib/prisma", () => ({ prisma: { $transaction: async (fn: (tx: unknown) => Promise<unknown>) => fn({ $executeRaw: vi.fn(), battlePlayer: { updateMany: vi.fn() }, user: { findUnique: mock.target, deleteMany: mock.remove }, blogPost: { deleteMany: mock.blogs }, examRecording: { findMany: mock.recordings }, userPost: { findMany: mock.posts }, learningMaterial: { findMany: mock.materials }, classroomEnrollment: { count: mock.classroomCount }, classroomStaff: { count: mock.classroomCount }, classroomFile: { count: mock.classroomCount } }) } }));
 import { DELETE } from "../src/app/api/manage/users/[userId]/route";
 const request = (confirmation = "learner@example.com") => new Request("http://localhost/api/manage/users/student", { method: "DELETE", body: JSON.stringify({ confirmation }) });
 const context = { params: Promise.resolve({ userId: "student" }) };
+afterEach(() => vi.unstubAllEnvs());
 beforeEach(() => {
-  vi.resetAllMocks(); mock.sameOrigin.mockReturnValue(true); mock.actor.mockResolvedValue({ id: "admin", role: "ADMIN" });
+  vi.resetAllMocks(); mock.classroomCount.mockResolvedValue(0); mock.sameOrigin.mockReturnValue(true); mock.actor.mockResolvedValue({ id: "admin", role: "ADMIN" });
   mock.target.mockResolvedValue({ role: "LEARNER", email: "learner@example.com" }); mock.remove.mockResolvedValue({ count: 1 });
   mock.recordings.mockResolvedValue([{ storageKey: "exam-recordings/attempt/part.wav" }]); mock.posts.mockResolvedValue([]); mock.materials.mockResolvedValue([]);
 });
@@ -41,4 +43,20 @@ it("reports storage failure without claiming complete file cleanup", async () =>
 it("does not delete files if the database operation fails", async () => {
   mock.remove.mockRejectedValue(new Error("database failure"));
   expect((await DELETE(request(), context)).status).toBe(500); expect(mock.storage).not.toHaveBeenCalled();
+});
+it("does not query unmigrated classroom tables while the feature is disabled", async () => {
+  vi.stubEnv("CLASSROOM_ENABLED", "false");
+  mock.classroomCount.mockRejectedValue(new Error("table does not exist"));
+  expect((await DELETE(request(), context)).status).toBe(200);
+  expect(mock.classroomCount).not.toHaveBeenCalled();
+});
+it("preserves accounts with classroom records when the module is enabled", async () => {
+  vi.stubEnv("CLASSROOM_ENABLED", "true"); mock.classroomCount.mockResolvedValue(1);
+  expect((await DELETE(request(), context)).status).toBe(409);
+  expect(mock.remove).not.toHaveBeenCalled();
+});
+it("preserves referenced accounts even if the feature has been switched off", async () => {
+  vi.stubEnv("CLASSROOM_ENABLED", "false"); mock.remove.mockRejectedValue({ code: "P2003" });
+  expect((await DELETE(request(), context)).status).toBe(409);
+  expect(mock.storage).not.toHaveBeenCalled();
 });

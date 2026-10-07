@@ -57,7 +57,7 @@ export default async function ExamImportPage() {
 
       <ExamImportForm />
 
-      <section className="rounded-[24px] border border-border bg-white p-5 shadow-sm sm:p-6" aria-labelledby="recent-exams-title">
+      <section className="rounded-[24px] border border-border bg-surface-card p-5 shadow-sm sm:p-6" aria-labelledby="recent-exams-title">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-brand">Lịch sử</p>

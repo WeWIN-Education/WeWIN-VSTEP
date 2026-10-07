@@ -23,19 +23,24 @@
     "grading:health": "tsx scripts/grading-health.ts",
     "storage:migrate": "tsx scripts/migrate-local-storage.ts",
     "cleanup:guest": "tsx scripts/cleanup-guest-sessions.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && node scripts/copy-zoom-assets.mjs",
+    "classroom:worker": "node --conditions=react-server --import tsx scripts/process-classroom-jobs.ts --loop",
+    "classroom:worker:once": "node --conditions=react-server --import tsx scripts/process-classroom-jobs.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",
     "@vercel/blob": "^2.8.0",
+    "@zoom/meetingsdk": "6.5.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "file-type": "^21.3.4",
     "lucide-react": "^0.544.0",
     "mammoth": "^1.12.3",
     "next": "^15.5.3",
     "next-auth": "^5.0.0-beta.32",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "server-only": "^0.0.1",
     "tailwind-merge": "^3.3.1",
     "xlsx": "^0.18.5",
     "youtube-transcript-plus": "^2.0.1"
@@ -57,6 +62,7 @@
     "tailwindcss": "^4.1.13",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
+    "vite": "^8.3.2",
     "vitest": "^5.0.1"
   }
 }
