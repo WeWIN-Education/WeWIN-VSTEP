@@ -5,7 +5,6 @@ import { ChevronDown, LayoutDashboard, Settings, ShieldCheck } from "lucide-reac
 import { NavigationLink as Link } from "@/components/layout/NavigationLink";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { logoutAction } from "@/lib/auth-actions";
-import { ThemeControl } from "./ThemeControl";
 
 export function AccountMenu({ name, email, admin, teacher = false }: { name: string | null; email: string; admin: boolean; teacher?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -35,7 +34,6 @@ export function AccountMenu({ name, email, admin, teacher = false }: { name: str
         <Link href="/profile/settings" className={linkClass}><Settings className="size-4" aria-hidden="true" />Cài đặt tài khoản</Link>
         {admin && <Link href="/manage/users" className={linkClass}><ShieldCheck className="size-4" aria-hidden="true" />Quản trị hệ thống</Link>}
       </nav>
-      <div className="px-1 pb-2"><ThemeControl /></div>
       <form action={logoutAction} className="border-t border-border pt-2"><LogoutButton /></form>
     </div>}
   </div>;

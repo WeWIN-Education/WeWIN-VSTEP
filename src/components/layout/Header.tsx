@@ -14,7 +14,7 @@ export async function Header({ user }: { user: HeaderUser | null }) {
   const gamification = user && user.role !== "TEACHER" ? await getGamificationSummary(user.id) : null;
   return (
     <header className="sticky top-0 z-50 border-b-2 border-brand-soft bg-surface-card shadow-[0_4px_20px_rgb(0_74_173_/_0.03)]">
-      <div className="flex min-h-[var(--header-height)] items-center gap-3 px-3 sm:px-6">
+      <div className="grid min-h-[var(--header-height)] grid-cols-[auto_1fr] items-center gap-x-3 px-3 sm:px-6 xl:grid-cols-[auto_1fr_auto] 2xl:grid-cols-[auto_1fr_auto_auto]">
         <Link href="/" aria-label="WEWIN Education - Trang chủ" className="flex min-h-11 shrink-0 items-center rounded-lg focus-visible:outline-2 focus-visible:outline-brand lg:w-[232px]">
           <Image src="/brand/wewin-logo-gold.png" alt="WEWIN EDUCATION" width={150} height={37} className="h-auto w-[120px] sm:w-[150px]" priority />
         </Link>
@@ -22,12 +22,12 @@ export async function Header({ user }: { user: HeaderUser | null }) {
           <p className="text-xs font-medium tracking-widest text-ink-muted">WEWIN LEARNING</p>
           <p className="mt-1 text-sm font-bold text-brand">Luyện thi VSTEP</p>
         </div>
-        {gamification && <div className="ml-auto hidden xl:block"><VstepStatsBar summary={gamification} /></div>}
-        <div className={`flex shrink-0 items-center border-border sm:pl-4 ${gamification ? "ml-auto xl:ml-2 xl:border-l" : "ml-auto"}`}>
-          {user ? <><span className="mr-2">{classroomEnabled() && <NotificationMenu />}</span><AccountMenu teacher={user.role === "TEACHER"} name={user.name} email={user.email} admin={user.role === "ADMIN"} /></> : <><span className="mr-2"><ThemeControl compact /></span><Link href="/login" className="inline-flex min-h-11 items-center justify-center rounded-xl border-2 border-brand bg-brand px-5 text-sm font-bold text-white transition-colors hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">Đăng nhập</Link></>}
+        {gamification && <div className="order-last col-span-2 mt-1 border-t border-brand-soft py-2 xl:order-none xl:col-span-1 xl:mt-0 xl:justify-self-end xl:border-0 xl:py-0"><VstepStatsBar summary={gamification} /></div>}
+        <div className={`col-start-2 row-start-1 flex items-center justify-self-end border-border sm:pl-4 xl:col-start-3 2xl:col-start-4 ${gamification ? "xl:ml-2 xl:border-l" : ""}`}>
+          {!gamification && <span className="mr-2"><ThemeControl /></span>}
+          {user ? <><span className="mr-2">{classroomEnabled() && <NotificationMenu />}</span><AccountMenu teacher={user.role === "TEACHER"} name={user.name} email={user.email} admin={user.role === "ADMIN"} /></> : <Link href="/login" className="inline-flex min-h-11 items-center justify-center rounded-xl border-2 border-brand bg-brand px-4 text-sm font-bold text-white transition-colors hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">Đăng nhập</Link>}
         </div>
       </div>
-      {gamification && <div className="border-t border-brand-soft bg-gradient-to-r from-brand-soft/30 to-surface-card px-3 py-2 sm:px-6 xl:hidden"><VstepStatsBar summary={gamification} /></div>}
     </header>
   );
 }

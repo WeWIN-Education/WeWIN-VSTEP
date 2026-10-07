@@ -30,6 +30,10 @@
   --header-height: 80px;
   --radius-card: 24px;
   --radius-btn: 20px;
+  --theme-switch-day: #75bbce;
+  --theme-switch-night: #061c35;
+  --theme-switch-sun: #ffe04b;
+  --theme-switch-moon: #f4efd9;
 }
 
 @theme inline {
@@ -102,6 +106,27 @@ body {
 .classroom-input { width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-card); color: var(--ink); padding: 10px 12px; }
 .classroom-input:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 input::placeholder, textarea::placeholder { color: var(--ink-muted); opacity: 1; }
+.theme-switch { display: inline-flex; width: 88px; min-height: 44px; align-items: center; padding: 0; cursor: pointer; border: 0; border-radius: 24px; background: transparent; flex-shrink: 0; }
+.theme-switch:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.theme-switch-track { position: relative; display: block; width: 88px; height: 38px; overflow: hidden; border-radius: 24px; background: var(--theme-switch-day); box-shadow: inset 0 2px 5px #00394d45; transition: background-color 350ms ease; }
+.theme-switch-orb { position: absolute; top: 4px; left: 4px; width: 30px; height: 30px; border-radius: 50%; background: var(--theme-switch-sun); box-shadow: 0 0 8px #fff47ca0, inset 0 -2px 3px #f1b82080; transition: transform 350ms cubic-bezier(.22,1,.36,1), background-color 350ms ease, box-shadow 350ms ease; }
+.theme-switch-clouds, .theme-switch-stars { position: absolute; inset: 0; transition: opacity 250ms ease, transform 350ms ease; }
+.theme-switch-cloud { position: absolute; left: 43px; top: 4px; width: 27px; height: 18px; fill: white; stroke: #e3f4f8; stroke-width: 1; }
+.theme-switch-cloud.small { left: 57px; top: 20px; width: 22px; height: 13px; }
+.theme-switch-stars { color: #dcecff; opacity: 0; transform: translateY(-8px); }
+.theme-switch-stars svg { position: absolute; width: 16px; height: 16px; left: 23px; top: 9px; stroke-width: 1.5; }
+.theme-switch-stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: currentColor; left: 13px; top: 10px; }
+.theme-switch-stars i:nth-of-type(2) { left: 43px; top: 6px; }
+.theme-switch-stars i:nth-of-type(3) { left: 17px; top: 28px; }
+.theme-switch-orb i { position: absolute; border-radius: 50%; background: #c9c3ad; opacity: 0; transition: opacity 250ms ease; width: 8px; height: 8px; left: 6px; top: 6px; box-shadow: inset 0 1px 2px #a8a18a50; }
+.theme-switch-orb i:nth-child(2) { width: 5px; height: 5px; left: 19px; top: 12px; }
+.theme-switch-orb i:nth-child(3) { width: 7px; height: 7px; left: 11px; top: 20px; }
+.theme-switch[aria-checked="true"] .theme-switch-track { background: var(--theme-switch-night); }
+.theme-switch[aria-checked="true"] .theme-switch-orb { transform: translateX(50px); background: var(--theme-switch-moon); box-shadow: 0 0 8px #d8e9fb60, inset 0 -2px 3px #d4cfb9; }
+.theme-switch[aria-checked="true"] .theme-switch-orb i { opacity: .6; }
+.theme-switch[aria-checked="true"] .theme-switch-clouds { opacity: 0; transform: translateY(8px); }
+.theme-switch[aria-checked="true"] .theme-switch-stars { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .theme-switch *, .theme-switch-track { transition: none; } }
 .classroom-select { appearance: auto; padding-right: 16px; }
 .classroom-panel { border: 1px solid var(--border); border-radius: 24px; background: var(--surface-card); padding: 24px; }
 @media(max-width: 640px) { .classroom-panel { padding: 18px; } }
