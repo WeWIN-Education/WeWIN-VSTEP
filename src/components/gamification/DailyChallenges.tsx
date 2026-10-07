@@ -90,7 +90,7 @@ export function DailyChallenges() {
         </Link>;
       })}</div>
       <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-        <p className="text-sm font-semibold text-ink">{state.claimed ? `Đã nhận ${state.reward} XP hôm nay` : `Hoàn thành cả ba để nhận ${state.reward} XP`}</p>
+        <p className="text-sm font-semibold text-[#1f2937]">{state.claimed ? `Đã nhận ${state.reward} XP hôm nay` : `Hoàn thành cả ba để nhận ${state.reward} XP`}</p>
         {!state.claimed && <button type="button" disabled={!complete || busy || remaining === 0 || Boolean(error)} onClick={() => void refresh(true, state.day)} className="mt-3 min-h-11 w-full rounded-xl bg-brand px-4 text-sm font-bold text-white transition-colors hover:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:bg-brand-soft disabled:text-brand">{busy ? "Đang cập nhật…" : complete ? "Nhận thưởng" : "Tiếp tục học để mở thưởng"}</button>}
       </div>
       {busy && <p role="status" aria-live="polite" className="mt-3 text-xs text-ink-muted">Đang đồng bộ tiến độ…</p>}
