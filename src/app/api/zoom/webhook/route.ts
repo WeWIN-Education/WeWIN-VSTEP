@@ -1,12 +1,14 @@
 import { createHash, createHmac } from "node:crypto";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { classroomEnabled, enqueue } from "@/lib/classroom/access";
 import { verifyWebhook } from "@/lib/classroom/domain";
 import { webhookObject } from "@/lib/classroom/events";
+import { runClassroomJob } from "@/lib/classroom/jobs";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 export async function POST(request: Request) {
   if (!classroomEnabled()) return new Response(null, { status: 404 });
   const secret = process.env.ZOOM_WEBHOOK_SECRET || "";
@@ -111,6 +113,9 @@ export async function POST(request: Request) {
         update: {},
       });
       await enqueue(db, `event:${id}`, "ZOOM_EVENT", meetingId);
+    });
+    after(async () => {
+      await runClassroomJob({ kind: "ZOOM_EVENT", entityId: meetingId });
     });
     return new Response(null, { status: 204 });
   } catch {

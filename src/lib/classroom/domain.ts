@@ -35,6 +35,7 @@ export function requireValue(
 }
 export function zoomHostAllowed(licensed: boolean) {
   if (licensed) return true;
+  if (process.env.ZOOM_ALLOW_BASIC === "true") return true;
   if (process.env.ZOOM_ALLOW_BASIC_LOCAL !== "true") return false;
   try {
     const db = new URL(process.env.DATABASE_URL || "");

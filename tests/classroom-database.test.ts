@@ -2,6 +2,10 @@ import { beforeAll, afterAll, expect, it, vi } from "vitest";
 import { PrismaClient } from "@prisma/client";
 import { createHmac } from "node:crypto";
 vi.mock("server-only", () => ({}));
+vi.mock("next/server", async (original) => ({
+  ...(await original<typeof import("next/server")>()),
+  after: vi.fn(),
+}));
 vi.mock("@/lib/access", () => ({ getCurrentUser: vi.fn() }));
 const enabled = process.env.CLASSROOM_DATABASE_QA === "1";
 const db = new PrismaClient(),

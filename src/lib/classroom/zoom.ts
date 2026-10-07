@@ -66,6 +66,14 @@ export async function zoomApi(path: string, method = "GET", body?: unknown) {
     signal: AbortSignal.timeout(8000),
   });
   requireValue(
+    !(
+      method === "GET" &&
+      path.startsWith("/users/") &&
+      response.status === 404
+    ),
+    "Không tìm thấy email host trong tài khoản Zoom đã kết nối. Hãy dùng email thuộc tài khoản này.",
+  );
+  requireValue(
     response.ok || (method === "DELETE" && response.status === 404),
     `Zoom chưa xử lý được yêu cầu (${response.status}).`,
     503,
@@ -90,10 +98,12 @@ export async function verifyHost(actor: Actor, input: Record<string, unknown>) {
   );
   const host = await zoomApi(`/users/${encodeURIComponent(email)}`);
   requireValue(
-    host.account_id === process.env.ZOOM_ACCOUNT_ID &&
-      host.status === "active" &&
-      zoomHostAllowed(host.type !== 1),
-    "Host phải có giấy phép, đang hoạt động và thuộc tài khoản WEWIN.",
+    host.account_id === process.env.ZOOM_ACCOUNT_ID && host.status === "active",
+    "Host phải đang hoạt động và thuộc tài khoản Zoom đã kết nối.",
+  );
+  requireValue(
+    zoomHostAllowed(host.type !== 1),
+    "Host đang dùng Zoom Basic. Quản trị viên cần bật ZOOM_ALLOW_BASIC để thử buổi học tối đa 40 phút, hoặc cấp giấy phép Zoom cho host.",
   );
   return prisma.zoomHost.upsert({
     where: { userId },

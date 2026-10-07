@@ -1,9 +1,16 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { createHmac } from "node:crypto";
-const { upsert, enqueue } = vi.hoisted(() => ({
+const { upsert, enqueue, after, runClassroomJob } = vi.hoisted(() => ({
   upsert: vi.fn(),
   enqueue: vi.fn(),
+  after: vi.fn(),
+  runClassroomJob: vi.fn(),
 }));
+vi.mock("next/server", async (original) => ({
+  ...(await original<typeof import("next/server")>()),
+  after,
+}));
+vi.mock("@/lib/classroom/jobs", () => ({ runClassroomJob }));
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/prisma", () => ({
   prisma: {
@@ -43,6 +50,7 @@ it("rejects malformed JSON structures and unsigned events without persisting", a
     (await POST(request({ event: "meeting.started" }, false))).status,
   ).toBe(401);
   expect(upsert).not.toHaveBeenCalled();
+  expect(after).not.toHaveBeenCalled();
 });
 it("uses leave/end timestamps instead of earlier join/start timestamps and deduplicates delivery", async () => {
   const start = "2026-10-06T03:00:00Z",
@@ -82,6 +90,12 @@ it("uses leave/end timestamps instead of earlier join/start timestamps and dedup
     new Date(end).toISOString(),
   );
   expect(enqueue).toHaveBeenCalledTimes(3);
+  expect(runClassroomJob).not.toHaveBeenCalled();
+  await after.mock.calls[0][0]();
+  expect(runClassroomJob).toHaveBeenCalledWith({
+    kind: "ZOOM_EVENT",
+    entityId: "12345678901",
+  });
 });
 it("answers signed endpoint validation without storing an attendance event", async () => {
   const response = await POST(

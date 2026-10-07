@@ -116,7 +116,9 @@ export function SessionManagement() {
                   required
                   defaultValue={localDate(
                     editing?.endsAt ||
-                      new Date(Date.now() + 86400000 + 3600000).toISOString(),
+                      new Date(
+                        Date.now() + 86400000 + 30 * 60000,
+                      ).toISOString(),
                   )}
                   className="classroom-input"
                 />
@@ -139,8 +141,9 @@ export function SessionManagement() {
               </select>
             </Field>
             <p className="text-xs leading-6 text-ink-muted">
-              Host cần có giấy phép Zoom trong tài khoản WEWIN. Lịch giữ khoảng
-              cách 15 phút để tránh trùng phòng.
+              Host phải được xác minh trong tài khoản Zoom WEWIN. Buổi học với
+              host Basic tối đa 40 phút. Lịch giữ khoảng cách 15 phút để tránh
+              trùng phòng. Khi lưu, hệ thống sẽ tạo phòng Zoom.
             </p>
           </Form>
         </section>
@@ -229,6 +232,7 @@ function Cancel({
   );
 }
 type Integration = {
+  allowBasic: boolean;
   configuration: Record<string, boolean>;
   hosts: {
     userId: string;
@@ -286,6 +290,11 @@ export function IntegrationManagement() {
               </section>
               <section className="classroom-panel">
                 <h2 className="mb-5 text-lg">Xác minh host</h2>
+                <p className="mb-4 text-sm text-ink-muted">
+                  {state.data.allowBasic
+                    ? "Đã bật dùng thử Zoom Basic: mỗi buổi tối đa 40 phút. Dùng email thuộc tài khoản Zoom đã kết nối."
+                    : "Dùng email host có giấy phép thuộc tài khoản Zoom đã kết nối."}
+                </p>
                 <Form
                   title="Kết nối & xác minh"
                   onDone={() => void state.reload()}
@@ -326,7 +335,7 @@ export function IntegrationManagement() {
                         {h.verified
                           ? h.licensed
                             ? "Đã xác minh · Có giấy phép"
-                            : "Đã xác minh · Basic"
+                            : "Đã xác minh · Basic · Tối đa 40 phút"
                           : "Cần xác minh lại"}
                       </span>
                     </p>
@@ -336,6 +345,11 @@ export function IntegrationManagement() {
             </div>
             <section className="classroom-panel space-y-4">
               <h2 className="text-lg">Worker lớp học</h2>
+              <p className="text-sm leading-6 text-ink-muted">
+                Phòng Zoom được tạo khi lưu buổi học; webhook được xử lý trên
+                web. Worker dùng để quét tệp, thử lại tác vụ lỗi và dọn dữ liệu
+                hết hạn.
+              </p>
               {state.data.workers.length ? (
                 state.data.workers.map((w) => (
                   <p key={w.id} className="break-all text-sm">
@@ -350,7 +364,8 @@ export function IntegrationManagement() {
                 ))
               ) : (
                 <Empty>
-                  Worker chưa chạy. Tác vụ tạo Zoom và quét tệp sẽ chờ xử lý.
+                  Worker chưa chạy. Tệp đính kèm sẽ chờ quét; bạn vẫn có thể tạo
+                  phòng Zoom để học thử.
                 </Empty>
               )}
               <Button variant="outline" onClick={() => void state.reload()}>
@@ -408,7 +423,7 @@ export function IntegrationManagement() {
                     )}
                   </div>
                   <Badge value={j.status} />
-                  {j.status === "FAILED" && (
+                  {["QUEUED", "FAILED"].includes(j.status) && (
                     <Button
                       variant="outline"
                       onClick={() =>

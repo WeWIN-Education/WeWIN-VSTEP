@@ -218,11 +218,11 @@ export async function saveSession(actor: Actor, input: Input, id?: string) {
     });
     requireValue(
       zoomHost && zoomHostAllowed(zoomHost.licensed),
-      "Cần xác minh host Zoom có giấy phép trước.",
+      "Cần xác minh host tại mục Zoom & tác vụ trước; host Basic cần bật quyền dùng thử.",
     );
     requireValue(
       zoomHost.licensed || +endsAt - +startsAt <= 40 * 60000,
-      "Host Basic chỉ dùng cho buổi thử local tối đa 40 phút.",
+      "Host Zoom Basic chỉ dùng cho buổi học tối đa 40 phút.",
     );
     const overlap = await db.classroomSession.count({
       where: {

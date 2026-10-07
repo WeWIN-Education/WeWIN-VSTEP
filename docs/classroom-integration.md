@@ -1,6 +1,6 @@
 # Lớp học online trong VSTEP
 
-Bản này bổ sung vào Auth.js/Prisma hiện có, không nhập database hoặc tài khoản từ dự án Zoom. Thay đổi được giữ local; chưa push hoặc triển khai production.
+Bản này bổ sung vào Auth.js/Prisma hiện có, không nhập database hoặc tài khoản từ dự án Zoom. Web đã triển khai trên Vercel; database production nhận migration bổ sung qua bước build.
 
 ## Quyền truy cập
 
@@ -15,7 +15,7 @@ Giáo viên không thêm/sửa/xóa/khóa/reset học viên, không ghi danh, kh
 
 ## Chạy thử tại máy này
 
-Database **riêng**: Docker container `wewin-classroom-qa`, PostgreSQL cổng 5434, database `wewin_classroom_test`. Chỉ database này đã nhận migration trong quá trình thử; database VSTEP hiện hành chưa nhận migration.
+Database **riêng**: Docker container `wewin-classroom-qa`, PostgreSQL cổng 5434, database `wewin_classroom_test`. Kiểm thử tự động có ghi dữ liệu chỉ chạy trên database riêng này, không chạy trên database production.
 
 Chạy `node scripts/classroom-local.mjs` rồi mở `http://localhost:3000/classes`. Tài khoản thử nằm ở `.qa/classroom-review.txt`. Runner đọc `.qa/classroom-env.json`, không ghi đè `.env.local`. Dữ liệu QA, mật khẩu và storage-state không đưa vào Git.
 
@@ -36,23 +36,24 @@ Giữ `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `BLOB_READ_WRITE_TOKEN` và c
 
 | Biến                                               | Công dụng                                                          |
 | -------------------------------------------------- | ------------------------------------------------------------------ |
-| `CLASSROOM_ENABLED`                                | Mặc định false; bật tại staging đã chuẩn bị migration/worker       |
+| `CLASSROOM_ENABLED`                                | Mặc định false; bật sau khi đã chuẩn bị migration và Zoom       |
 | `APP_ORIGIN`                                       | Origin HTTPS web; local dùng localhost                             |
 | `ZOOM_ACCOUNT_ID`                                  | Tài khoản Zoom WEWIN                                               |
 | `ZOOM_OAUTH_CLIENT_ID`, `ZOOM_OAUTH_CLIENT_SECRET` | Server-to-Server OAuth tạo/cập nhật/xóa phòng và lấy ZAK           |
 | `ZOOM_MEETING_SDK_KEY`, `ZOOM_MEETING_SDK_SECRET`  | Client ID/Secret app có Meeting SDK, ký grant trên server          |
+| `ZOOM_ALLOW_BASIC` | Bật rõ ràng `true` để thử host Basic trên web, tối đa 40 phút |
 | `ZOOM_WEBHOOK_SECRET`                              | Xác minh chữ ký và URL validation                                  |
 | `DATA_ENCRYPTION_KEY`                              | 32 byte ngẫu nhiên, base64; giữ ổn định và giống nhau ở web/worker |
 | `CLAMAV_HOST`, `CLAMAV_PORT`                       | Scanner trong mạng riêng của worker, mặc định cổng 3310            |
 | `CLASSROOM_WORKER_ID`                              | Tùy chọn tên worker                                                |
 
-Zoom cần các quyền quản trị tương ứng cho đọc người dùng/giấy phép, đọc/tạo/cập nhật/xóa meetings, đọc token ZAK; đối chiếu đúng scope trong app đang dùng. Đăng ký meeting.started, meeting.ended, meeting.participant_joined, meeting.participant_left. Admin xác minh host bằng email và tài khoản WEWIN trước khi tạo lịch. Hosts phải cùng account và có giấy phép khi triển khai thật. Riêng QA cho phép Basic tối đa 40 phút khi ZOOM_ALLOW_BASIC_LOCAL=true, DATABASE_URL đúng localhost:5434/wewin_classroom_test và APP_ORIGIN đúng http://localhost:3000. Ngoài tổ hợp này Basic vẫn bị chặn; không hỗ trợ external-account hosts.
+Zoom cần các quyền quản trị tương ứng cho đọc người dùng/giấy phép, đọc/tạo/cập nhật/xóa meetings, đọc token ZAK; đối chiếu đúng scope trong app đang dùng. Đăng ký meeting.started, meeting.ended, meeting.participant_joined, meeting.participant_left. Admin xác minh host bằng email và tài khoản WEWIN trước khi tạo lịch. Host phải cùng account và đang hoạt động. Mặc định cần giấy phép; có thể cho phép Basic tối đa 40 phút bằng ZOOM_ALLOW_BASIC=true trên môi trường dùng thử, kể cả Vercel. Cờ QA cũ ZOOM_ALLOW_BASIC_LOCAL vẫn chỉ áp dụng khi database/origin đúng môi trường local riêng. Không hỗ trợ external-account hosts.
 
 SDK 6.5.0 dùng React 18. Phòng Zoom chạy trong iframe cùng origin, với vendor React 18 riêng; VSTEP giữ React 19. `postinstall` copy SDK vào public/zoom (không track vendor). Desktop component view, điện thoại client view; cần nghiệm thu media thật trên thiết bị thật. Không ghi hình, không thêm AI vào lớp.
 
 ## Triển khai worker
 
-Web giữ Vercel + Neon + private Blob. Railway dùng `deploy/classroom-worker.Dockerfile`, cùng database/khóa mã hóa/Zoom/Blob với web; ClamAV là service riêng trong mạng nội bộ. Chạy worker bằng `npm run classroom:worker`. Worker có hàng việc riêng với lease, retry/backoff và heartbeat, không xử lý `ExamGradingJob` và không tác động worker chấm VSTEP.
+Web giữ Vercel + Neon + private Blob. Railway dùng `deploy/classroom-worker.Dockerfile`, cùng database/khóa mã hóa/Zoom/Blob với web; ClamAV là service riêng trong mạng nội bộ. Chạy worker bằng `npm run classroom:worker`. Web chạy tác vụ Zoom ngay khi lưu/đổi/hủy/đối soát buổi, dùng chung bộ xử lý lease với worker để không gọi Zoom trùng. Signed webhook dùng Next.js after để xử lý sau khi trả phản hồi. Worker vẫn cần cho quét tệp, retry tự động và dọn dữ liệu định kỳ; admin có thể thử lại tác vụ Zoom đang chờ/lỗi ngay trên web. Hàng việc có lease, retry/backoff và heartbeat, không xử lý `ExamGradingJob` và không tác động worker chấm VSTEP.
 
 Scanner mất kết nối hoặc trả kết quả không xác định: tệp không thành CLEAN. Tệp 25 MB upload trực tiếp private Blob, web kiểm quyền và cấp token cho đúng pathname; worker kiểm signature/MIME và quét trước khi công bố. Tổng mỗi nội dung tối đa 5 tệp/100 MB. Local có upload qua server để thử; production không sử dụng đường multipart này.
 
@@ -62,7 +63,7 @@ Migration `20261006040000_classrooms` chỉ thêm role TEACHER và bảng Classr
 
 Nháp có revision; bài nộp bất biến theo phiên bản, requestKey chống gửi trùng. Nộp muộn đánh dấu theo giờ server. Giáo viên mở lại để nộp bản mới, grade null khác 0; chấm lớp không cộng XP.
 
-Webhook xác minh raw bytes/timestamp, dedup và enqueue, không chờ xử lý Zoom trong request. Worker rebuild từ sự kiện đã lưu, gộp reconnect/overlap, chỉ dùng customer_key grant được cấp, không tin tên/email từ participant. Thiếu danh tính/sự kiện/thời gian thực: PENDING. Đủ dữ liệu gợi ý >=80%; đi muộn >10 phút. Xác nhận của nhân sự và lý do được giữ riêng, webhook muộn không ghi đè.
+Webhook xác minh raw bytes/timestamp, dedup và enqueue, không chờ xử lý Zoom trong request. Bộ xử lý chung rebuild từ sự kiện đã lưu, gộp reconnect/overlap, chỉ dùng customer_key grant được cấp, không tin tên/email từ participant. Thiếu danh tính/sự kiện/thời gian thực: PENDING. Đủ dữ liệu gợi ý >=80%; đi muộn >10 phút. Xác nhận của nhân sự và lý do được giữ riêng, webhook muộn không ghi đè.
 
 Tạo phòng timeout/crash: NEEDS_RECONCILE, không thử tạo lại mù. Đối soát yêu cầu đúng host và agenda WEWIN_SESSION. Link app chỉ là fallback sau kiểm quyền, không là bằng chứng danh tính.
 
@@ -74,7 +75,7 @@ Migration bổ sung `20261007040000_classroom_tab_attention` thêm ba trường 
 
 Unit/domain và integration database nằm ở `tests/classroom-*.test.ts`; integration chỉ chạy khi `CLASSROOM_DATABASE_QA=1` và URL chính xác database local riêng. Không dùng database chung để chạy test này. QA API/browser chỉ dùng tài khoản local. Các test mock/provider không chứng minh Zoom media thật.
 
-Cần tiếp tục nghiệm thu khi đã có credentials: phòng 2 thiết bị, desktop/mobile audio/video/chat/raise-hand/share-screen, phòng 30 người, signed webhook trên public HTTPS, private Blob + ClamAV thật, rồi kiểm API/web với 200 tài khoản và 4 phòng tùy giấy phép Zoom. Chưa chứng nhận 200 hoặc 1.000 học viên Zoom đồng thời. Đừng bật production flag trước các bước đó.
+Cần tiếp tục nghiệm thu khi đã có credentials: phòng 2 thiết bị, desktop/mobile audio/video/chat/raise-hand/share-screen, phòng 30 người, signed webhook trên public HTTPS, private Blob + ClamAV thật, rồi kiểm API/web với 200 tài khoản và 4 phòng tùy giấy phép Zoom. Chưa chứng nhận 200 hoặc 1.000 học viên Zoom đồng thời. Việc bật cờ dùng thử không thay thế nghiệm thu tải, media và quét tệp.
 
 ## Kiểm tra Zoom local thật ngày 06/10/2026
 

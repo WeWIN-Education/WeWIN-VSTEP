@@ -11,10 +11,16 @@ import {
   sessionAccess,
   admin,
 } from "./access";
-import { ClassroomError, csvCell, requireValue } from "./domain";
+import {
+  ClassroomError,
+  csvCell,
+  requireValue,
+  zoomHostAllowed,
+} from "./domain";
 import * as service from "./service";
 import * as zoom from "./zoom";
 import { listAttention, recordAttention } from "./attention";
+import { runClassroomJob } from "./jobs";
 import { completeFile, downloadFile, reserveFile } from "./files";
 
 export const sessionSelect = {
@@ -281,9 +287,11 @@ export async function classroomHTTP(request: Request, segments: string[]) {
         });
       else if (!id && method === "POST") {
         const saved = await service.saveSession(actor, input);
+        await runClassroomJob({ kind: "ZOOM_SYNC", entityId: saved.id });
         result = { id: saved.id };
       } else if (id && !action && method === "PATCH") {
         const saved = await service.saveSession(actor, input, id);
+        await runClassroomJob({ kind: "ZOOM_SYNC", entityId: saved.id });
         result = { id: saved.id };
       } else if (id && !action && method === "GET") {
         await sessionAccess(actor, id);
@@ -320,6 +328,7 @@ export async function classroomHTTP(request: Request, segments: string[]) {
         });
       } else if (id && action === "cancel" && method === "POST") {
         await service.cancelSession(actor, id, input);
+        await runClassroomJob({ kind: "ZOOM_SYNC", entityId: id });
         result = { ok: true };
       } else if (id && action === "attention" && method === "GET")
         result = await listAttention(actor, id);
@@ -340,8 +349,10 @@ export async function classroomHTTP(request: Request, segments: string[]) {
         );
       else if (id && action === "attendance" && method === "POST")
         result = await service.confirmAttendance(actor, id, input);
-      else if (id && action === "reconcile" && method === "POST")
+      else if (id && action === "reconcile" && method === "POST") {
         result = await zoom.reconcileMeeting(actor, id, input);
+        await runClassroomJob({ kind: "ZOOM_SYNC", entityId: id });
+      }
     } else if (group === "assignments" && id) {
       if (!action && method === "GET") {
         await assignmentAccess(actor, id);
@@ -473,7 +484,7 @@ export async function classroomHTTP(request: Request, segments: string[]) {
       if (method === "POST" && action === "retry" && id) {
         const job = await prisma.classroomJob.findUnique({ where: { id } });
         requireValue(
-          job && ["FAILED", "DONE"].includes(job.status),
+          job && ["QUEUED", "FAILED", "DONE"].includes(job.status),
           "Tác vụ không thể thử lại.",
           409,
         );
@@ -487,20 +498,29 @@ export async function classroomHTTP(request: Request, segments: string[]) {
             409,
           );
         }
-        await prisma.classroomJob.update({
-          where: { id },
+        const reset = await prisma.classroomJob.updateMany({
+          where: { id, status: job.status, leaseToken: null },
           data: {
             status: "QUEUED",
             attempts: 0,
             availableAt: new Date(),
             error: null,
+            finishedAt: null,
           },
         });
+        requireValue(
+          reset.count,
+          "Tác vụ đang được xử lý. Hãy tải lại danh sách.",
+          409,
+        );
+        if (job.kind === "ZOOM_SYNC" || job.kind === "ZOOM_EVENT")
+          await runClassroomJob({ kind: job.kind, entityId: job.entityId });
         result = { ok: true };
       } else if (method === "POST")
         result = await zoom.verifyHost(actor, input);
       else if (method === "GET")
         result = {
+          allowBasic: zoomHostAllowed(false),
           configuration: Object.fromEntries(
             [
               "ZOOM_ACCOUNT_ID",

@@ -12,6 +12,7 @@ import {
 } from "../src/lib/classroom/domain";
 afterEach(() => vi.unstubAllEnvs());
 it("allows Basic hosts only with an explicit flag in the isolated local environment", () => {
+  vi.stubEnv("ZOOM_ALLOW_BASIC", "false");
   expect(zoomHostAllowed(true)).toBe(true);
   vi.stubEnv("ZOOM_ALLOW_BASIC_LOCAL", "false");
   expect(zoomHostAllowed(false)).toBe(false);
@@ -37,6 +38,14 @@ it("allows Basic hosts only with an explicit flag in the isolated local environm
   );
   vi.stubEnv("APP_ORIGIN", "https://we-win-vstep.vercel.app");
   expect(zoomHostAllowed(false)).toBe(false);
+});
+it("allows Basic on a public deployment only when explicitly enabled", () => {
+  vi.stubEnv("ZOOM_ALLOW_BASIC_LOCAL", "false");
+  vi.stubEnv("APP_ORIGIN", "https://we-win-vstep.vercel.app");
+  vi.stubEnv("ZOOM_ALLOW_BASIC", "false");
+  expect(zoomHostAllowed(false)).toBe(false);
+  vi.stubEnv("ZOOM_ALLOW_BASIC", "true");
+  expect(zoomHostAllowed(false)).toBe(true);
 });
 it("merges reconnect overlaps, clamps to the actual meeting and uses the 80 percent threshold", () => {
   const minute = 60000,
