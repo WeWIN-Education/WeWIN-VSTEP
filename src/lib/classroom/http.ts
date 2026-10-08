@@ -558,14 +558,15 @@ export async function classroomHTTP(request: Request, segments: string[]) {
               "ZOOM_MEETING_SDK_SECRET",
               "ZOOM_WEBHOOK_SECRET",
               "DATA_ENCRYPTION_KEY",
-              "CLAMAV_HOST",
               "BLOB_READ_WRITE_TOKEN",
             ].map((key) => [key, Boolean(process.env[key])]),
           ),
           hosts: await prisma.zoomHost.findMany({
             include: { user: { select: safeUser } },
           }),
-          workers: await prisma.classroomWorker.findMany(),
+          workers: await prisma.classroomWorker.findMany({
+            select: { id: true, lastSeenAt: true },
+          }),
           jobs: await prisma.classroomJob.findMany({
             orderBy: { createdAt: "desc" },
             take: 50,

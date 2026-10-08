@@ -150,7 +150,8 @@ export function FilePicker({
         />
       </label>
       <p className="text-xs text-ink-muted">
-        Tối đa 25 MB/tệp. Chỉ gửi được sau khi tệp đã quét an toàn.
+        Tối đa 25 MB/tệp. Tệp được kiểm tra định dạng và dung lượng trước khi sử
+        dụng.
       </p>
       {busy && (
         <p role="status" className="text-sm">
@@ -200,7 +201,7 @@ export function FilePicker({
           }
           className="min-h-11 text-sm font-medium text-brand"
         >
-          Kiểm tra trạng thái quét
+          Kiểm tra trạng thái tệp
         </button>
       )}
     </div>

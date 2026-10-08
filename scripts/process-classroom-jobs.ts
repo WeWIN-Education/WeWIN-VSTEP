@@ -6,7 +6,6 @@ import { runClassroomJob } from "../src/lib/classroom/jobs";
 import { clearExpiredAttention } from "../src/lib/classroom/attention";
 import { clearEndedPresentations } from "../src/lib/classroom/presentation";
 import { queueMissingPreviews } from "../src/lib/classroom/file-preview";
-import { scannerHealth } from "../src/lib/classroom/files";
 const workerId = process.env.CLASSROOM_WORKER_ID || `classroom-${randomUUID()}`;
 let stop = false,
   lastAttentionCleanup = 0;
@@ -21,12 +20,6 @@ async function tick() {
     await clearExpiredAttention();
     await clearEndedPresentations();
     await queueMissingPreviews();
-    const scannerOk = await scannerHealth();
-    await db.classroomWorker.upsert({
-      where: { id: workerId },
-      create: { id: workerId, scannerOk, scannerCheckedAt: new Date() },
-      update: { scannerOk, scannerCheckedAt: new Date() },
-    });
     lastAttentionCleanup = Date.now();
   }
   await db.classroomWorker.upsert({

@@ -1,6 +1,5 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { connect } from "node:net";
 import { fileTypeFromBuffer } from "file-type";
 import { prisma } from "@/lib/prisma";
 import {
@@ -62,7 +61,7 @@ export async function reserveFile(
       sizeBytes <= MAX_FILE_SIZE,
     "Tệp cần nhỏ hơn hoặc bằng 25 MB.",
   );
-  // Bound abandoned uploads per account; a scanner outage must not grow an unbounded queue.
+  // Bound abandoned uploads and pending processing per account.
   requireValue(
     (await prisma.classroomFile.count({
       where: {
@@ -107,69 +106,9 @@ export async function completeFile(actor: Actor, id: string) {
     return db.classroomFile.findUniqueOrThrow({ where: { id } });
   });
 }
-export function scanClamAV(bytes: Buffer) {
-  return new Promise<void>((resolve, reject) => {
-    requireValue(process.env.CLAMAV_HOST, "Chưa cấu hình máy quét tệp.", 503);
-    const socket = connect(
-        Number(process.env.CLAMAV_PORT || 3310),
-        process.env.CLAMAV_HOST,
-      ),
-      chunks: Buffer[] = [];
-    socket.setTimeout(60000);
-    socket.on("connect", () => {
-      socket.write("zINSTREAM\0");
-      for (let offset = 0; offset < bytes.length; offset += 65536) {
-        const chunk = bytes.subarray(offset, offset + 65536),
-          size = Buffer.alloc(4);
-        size.writeUInt32BE(chunk.length);
-        socket.write(size);
-        socket.write(chunk);
-      }
-      socket.write(Buffer.alloc(4));
-    });
-    socket.on("data", (chunk) => chunks.push(chunk));
-    socket.on("timeout", () =>
-      socket.destroy(new Error("Máy quét không phản hồi.")),
-    );
-    socket.on("error", reject);
-    socket.on("end", () => {
-      const reply = Buffer.concat(chunks).toString().replace(/\0/g, "").trim();
-      if (reply === "stream: OK") resolve();
-      else
-        reject(
-          new Error(
-            reply.includes("FOUND")
-              ? "FILE_INFECTED"
-              : "Máy quét chưa xác nhận an toàn.",
-          ),
-        );
-    });
-  });
-}
-export async function scannerHealth(): Promise<boolean> {
-  if (!process.env.CLAMAV_HOST) return false;
-  return new Promise((resolve) => {
-    const socket = connect(
-      Number(process.env.CLAMAV_PORT || 3310),
-      process.env.CLAMAV_HOST,
-    );
-    let reply = "";
-    const finish = (ok: boolean) => {
-      socket.destroy();
-      resolve(ok);
-    };
-    socket.setTimeout(3000);
-    socket.on("connect", () => socket.write("zPING\0"));
-    socket.on("data", (bytes) => {
-      reply += bytes.toString();
-      if (reply.includes("PONG")) finish(true);
-    });
-    socket.on("end", () => finish(reply.includes("PONG")));
-    socket.on("timeout", () => finish(false));
-    socket.on("error", () => finish(false));
-  });
-}
-export async function scanFile(id: string) {
+// Keep legacy job/state names so existing uploads remain compatible; CLEAN now
+// means size/signature validation passed, not an antivirus verdict.
+export async function validateFile(id: string) {
   const file = await prisma.classroomFile.findUniqueOrThrow({ where: { id } });
   if (file.state === "CLEAN" || file.state === "REJECTED") return;
   try {
@@ -186,7 +125,6 @@ export async function scanFile(id: string) {
         ),
       "FILE_TYPE_MISMATCH",
     );
-    await scanClamAV(bytes);
     const cleanKey = `classrooms/clean/${file.id}.${kind.ext}`;
     const exists = await headObject(cleanKey);
     if (!exists) await putObject(cleanKey, bytes, kind.mime);
@@ -203,9 +141,7 @@ export async function scanFile(id: string) {
   } catch (error) {
     const rejected =
       error instanceof Error &&
-      ["FILE_INFECTED", "FILE_TYPE_MISMATCH", "FILE_SIZE_MISMATCH"].includes(
-        error.message,
-      );
+      ["FILE_TYPE_MISMATCH", "FILE_SIZE_MISMATCH"].includes(error.message);
     await prisma.classroomFile.update({
       where: { id },
       data: { state: rejected ? "REJECTED" : "SCAN_FAILED" },
@@ -224,7 +160,7 @@ export async function accessibleFile(actor: Actor, id: string) {
   });
   requireValue(
     row?.state === "CLEAN" && row.cleanKey,
-    "Tệp chưa được quét an toàn.",
+    "Tệp chưa xử lý xong hoặc không hợp lệ.",
     404,
   );
   await classAccess(actor, row.classId);

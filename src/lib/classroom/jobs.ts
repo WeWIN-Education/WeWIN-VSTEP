@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { syncMeeting } from "./zoom";
 import { processEvents } from "./events";
 
-// Web requests run only their own Zoom job; the worker also handles file scans.
+// Web requests run only their own Zoom job; the worker also validates files.
 export async function runClassroomJob(target?: {
   kind: "ZOOM_SYNC" | "ZOOM_EVENT";
   entityId: string;
@@ -62,8 +62,8 @@ export async function runClassroomJob(target?: {
     if (row.kind === "ZOOM_SYNC") await syncMeeting(row.entityId);
     else if (row.kind === "ZOOM_EVENT") await processEvents(row.entityId);
     else if (row.kind === "FILE_SCAN") {
-      const { scanFile } = await import("./files");
-      await scanFile(row.entityId);
+      const { validateFile } = await import("./files");
+      await validateFile(row.entityId);
     } else if (row.kind === "FILE_PREVIEW") {
       const { prepareFilePreview } = await import("./file-preview");
       await prepareFilePreview(row.entityId);

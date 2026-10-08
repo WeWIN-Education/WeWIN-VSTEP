@@ -1,5 +1,7 @@
 # Kiểm thử và bản xem lớp học online — 06/10/2026
 
+> Cập nhật 08/10/2026: theo yêu cầu, đã bỏ quét virus và phụ thuộc ClamAV. Các ca quét bên dưới là kết quả lịch sử của bản cũ; cấu hình và luồng hiện tại xem `../classroom-integration.md` và `../classroom-presentation.md`. Không cần migration cho việc bỏ máy quét.
+
 ## Cập nhật 07/10/2026 — trạng thái tab
 
 Web và worker đã chạy lại sau khi WSL phục hồi. Migration ba trường trạng thái đã áp dụng vào QA riêng; database VSTEP chính không thay đổi. Giáo viên/admin có panel Trạng thái tab, học viên có thông báo trước khi vào. Không lưu lịch sử chuyển tab. Kết quả kiểm thử và phần cần kiểm trên thiết bị thật nằm trong [classroom-tab-attention.md](classroom-tab-attention.md). Tài khoản, giờ và đường vào buổi local mới nằm trong `.qa/classroom-review.txt`. Tunnel webhook tạm trước đó không được khởi động lại trong lượt này; không coi các ghi chú tunnel ngày 06/10 bên dưới là trạng thái đang chạy hiện tại. Không push GitHub hoặc triển khai production.

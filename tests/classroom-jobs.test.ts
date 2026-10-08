@@ -30,6 +30,8 @@ it.skipIf(!enabled)(
           key: `${entityId}:${key}`,
           kind: target.kind,
           entityId,
+          // Avoid depending on millisecond clock differences between Node and PostgreSQL.
+          availableAt: new Date(0),
           ...data,
         },
       });

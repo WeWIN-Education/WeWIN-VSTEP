@@ -244,8 +244,6 @@ type Integration = {
   workers: {
     id: string;
     lastSeenAt: string;
-    scannerOk: boolean | null;
-    scannerCheckedAt: string | null;
   }[];
   jobs: {
     id: string;
@@ -352,8 +350,8 @@ export function IntegrationManagement() {
               <h2 className="text-lg">Worker lớp học</h2>
               <p className="text-sm leading-6 text-ink-muted">
                 Phòng Zoom được tạo khi lưu buổi học; webhook được xử lý trên
-                web. Worker dùng để quét tệp, thử lại tác vụ lỗi và dọn dữ liệu
-                hết hạn.
+                web. Worker dùng để kiểm tra tệp, chuẩn bị bản xem, thử lại tác
+                vụ lỗi và dọn dữ liệu hết hạn.
               </p>
               {state.data.workers.length ? (
                 state.data.workers.map((w) => (
@@ -365,22 +363,12 @@ export function IntegrationManagement() {
                     <span className="mt-1 block text-xs text-ink-muted">
                       Lần cuối: {when(w.lastSeenAt)}
                     </span>
-                    <span className="mt-2 block text-xs text-ink-muted">
-                      Máy quét tệp:{" "}
-                      {w.scannerCheckedAt &&
-                      Date.now() - new Date(w.scannerCheckedAt).getTime() <
-                        120000
-                        ? w.scannerOk
-                          ? "Đang kết nối"
-                          : "Không kết nối được; tệp mới sẽ chờ quét"
-                        : "Chưa có tín hiệu mới"}
-                    </span>
                   </p>
                 ))
               ) : (
                 <Empty>
-                  Worker chưa chạy. Tệp đính kèm sẽ chờ quét; bạn vẫn có thể tạo
-                  phòng Zoom để học thử.
+                  Worker chưa chạy. Tệp đính kèm sẽ chờ xử lý; bạn vẫn có thể
+                  tạo phòng Zoom để học thử.
                 </Empty>
               )}
               <Button variant="outline" onClick={() => void state.reload()}>

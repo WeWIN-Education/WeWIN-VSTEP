@@ -44,7 +44,6 @@ Giữ `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `BLOB_READ_WRITE_TOKEN` và c
 | `ZOOM_ALLOW_BASIC` | Bật rõ ràng `true` để thử host Basic trên web, tối đa 40 phút |
 | `ZOOM_WEBHOOK_SECRET`                              | Xác minh chữ ký và URL validation                                  |
 | `DATA_ENCRYPTION_KEY`                              | 32 byte ngẫu nhiên, base64; giữ ổn định và giống nhau ở web/worker |
-| `CLAMAV_HOST`, `CLAMAV_PORT`                       | Scanner trong mạng riêng của worker, mặc định cổng 3310            |
 | `CLASSROOM_WORKER_ID`                              | Tùy chọn tên worker                                                |
 
 Zoom cần các quyền quản trị tương ứng cho đọc người dùng/giấy phép, đọc/tạo/cập nhật/xóa meetings, đọc token ZAK; đối chiếu đúng scope trong app đang dùng. Đăng ký meeting.started, meeting.ended, meeting.participant_joined, meeting.participant_left. Admin xác minh host bằng email và tài khoản WEWIN trước khi tạo lịch. Host phải cùng account và đang hoạt động. Mặc định cần giấy phép; có thể cho phép Basic tối đa 40 phút bằng ZOOM_ALLOW_BASIC=true trên môi trường dùng thử, kể cả Vercel. Cờ QA cũ ZOOM_ALLOW_BASIC_LOCAL vẫn chỉ áp dụng khi database/origin đúng môi trường local riêng. Không hỗ trợ external-account hosts.
@@ -53,9 +52,9 @@ SDK 6.5.0 dùng React 18. Phòng Zoom chạy trong iframe cùng origin, với ve
 
 ## Triển khai worker
 
-Web giữ Vercel + Neon + private Blob. Railway dùng `deploy/classroom-worker.Dockerfile`, cùng database/khóa mã hóa/Zoom/Blob với web; ClamAV là service riêng trong mạng nội bộ. Chạy worker bằng `npm run classroom:worker`. Web chạy tác vụ Zoom ngay khi lưu/đổi/hủy/đối soát buổi, dùng chung bộ xử lý lease với worker để không gọi Zoom trùng. Signed webhook dùng Next.js after để xử lý sau khi trả phản hồi. Worker vẫn cần cho quét tệp, retry tự động và dọn dữ liệu định kỳ; admin có thể thử lại tác vụ Zoom đang chờ/lỗi ngay trên web. Hàng việc có lease, retry/backoff và heartbeat, không xử lý `ExamGradingJob` và không tác động worker chấm VSTEP.
+Web giữ Vercel + Neon + private Blob. Railway dùng `deploy/classroom-worker.Dockerfile`, cùng database/khóa mã hóa/Zoom/Blob với web. Chạy worker bằng `npm run classroom:worker`. Web chạy tác vụ Zoom ngay khi lưu/đổi/hủy/đối soát buổi, dùng chung bộ xử lý lease với worker để không gọi Zoom trùng. Signed webhook dùng Next.js after để xử lý sau khi trả phản hồi. Worker kiểm tra định dạng/dung lượng tệp, chuẩn bị bản xem, retry tự động và dọn dữ liệu định kỳ; admin có thể thử lại tác vụ Zoom đang chờ/lỗi ngay trên web. Hàng việc có lease, retry/backoff và heartbeat, không xử lý `ExamGradingJob` và không tác động worker chấm VSTEP.
 
-Scanner mất kết nối hoặc trả kết quả không xác định: tệp không thành CLEAN. Tệp 25 MB upload trực tiếp private Blob, web kiểm quyền và cấp token cho đúng pathname; worker kiểm signature/MIME và quét trước khi công bố. Tổng mỗi nội dung tối đa 5 tệp/100 MB. Local có upload qua server để thử; production không sử dụng đường multipart này.
+Theo yêu cầu ngày 08/10/2026, không quét virus và không cần ClamAV. Tệp tối đa 25 MB upload trực tiếp private Blob, web kiểm quyền và cấp token cho đúng pathname; worker kiểm kích thước thực tế và signature/MIME trước khi sử dụng. Giữ tên trạng thái/job cũ để tương thích: `SCAN_PENDING` là chờ kiểm tra, `SCAN_FAILED` là lỗi xử lý, `CLEAN` là hợp lệ về định dạng/dung lượng, không phải chứng nhận không có virus. Tổng mỗi nội dung tối đa 5 tệp/100 MB. Local có upload qua server để thử; production không sử dụng đường multipart này.
 
 ## Dữ liệu và đồng thời
 
@@ -75,7 +74,7 @@ Migration bổ sung `20261007040000_classroom_tab_attention` thêm ba trường 
 
 Unit/domain và integration database nằm ở `tests/classroom-*.test.ts`; integration chỉ chạy khi `CLASSROOM_DATABASE_QA=1` và URL chính xác database local riêng. Không dùng database chung để chạy test này. QA API/browser chỉ dùng tài khoản local. Các test mock/provider không chứng minh Zoom media thật.
 
-Cần tiếp tục nghiệm thu khi đã có credentials: phòng 2 thiết bị, desktop/mobile audio/video/chat/raise-hand/share-screen, phòng 30 người, signed webhook trên public HTTPS, private Blob + ClamAV thật, rồi kiểm API/web với 200 tài khoản và 4 phòng tùy giấy phép Zoom. Chưa chứng nhận 200 hoặc 1.000 học viên Zoom đồng thời. Việc bật cờ dùng thử không thay thế nghiệm thu tải, media và quét tệp.
+Cần tiếp tục nghiệm thu khi đã có credentials: phòng 2 thiết bị, desktop/mobile audio/video/chat/raise-hand/share-screen, phòng 30 người, signed webhook trên public HTTPS, private Blob thật, rồi kiểm API/web với 200 tài khoản và 4 phòng tùy giấy phép Zoom. Chưa chứng nhận 200 hoặc 1.000 học viên Zoom đồng thời. Việc bật cờ dùng thử không thay thế nghiệm thu tải và media.
 
 ## Kiểm tra Zoom local thật ngày 06/10/2026
 

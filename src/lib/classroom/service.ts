@@ -341,7 +341,7 @@ async function attachFiles(
   requireValue(
     files.length === ids.length &&
       files.reduce((n, f) => n + f.sizeBytes, 0) <= 100 * 1024 * 1024,
-    "Tệp chưa quét xong, đã sử dụng hoặc vượt 100 MB.",
+    "Tệp chưa xử lý xong, đã sử dụng hoặc vượt 100 MB.",
   );
   await db.classroomFile.updateMany({
     where: { id: { in: ids } },
