@@ -8,7 +8,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV FFMPEG_PATH=ffmpeg
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 COPY tsconfig.json ./
 COPY prisma ./prisma
 RUN npm ci --include=dev --ignore-scripts
