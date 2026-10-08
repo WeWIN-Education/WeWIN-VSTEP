@@ -291,6 +291,15 @@ export async function cancelSession(actor: Actor, id: string, input: Input) {
       where: { sessionId: id },
       data: { state: "RELEASED", ...clearedAttention },
     });
+    await db.classroomPresentation.updateMany({
+      where: { sessionId: id },
+      data: {
+        fileId: null,
+        page: 1,
+        controllerId: null,
+        revision: { increment: 1 },
+      },
+    });
     await enqueue(db, `cancel:${id}:${row.revision}`, "ZOOM_SYNC", id);
     await notify(
       db,

@@ -47,6 +47,16 @@ export async function processEvents(meetingId: string) {
     const open = new Map<string, { userId: string; start: number }>(),
       intervals = new Map<string, { start: number; end: number }[]>();
     if (end || session.status === "CANCELED")
+      await db.classroomPresentation.updateMany({
+        where: { sessionId: session.id, fileId: { not: null } },
+        data: {
+          fileId: null,
+          page: 1,
+          controllerId: null,
+          revision: { increment: 1 },
+        },
+      });
+    if (end || session.status === "CANCELED")
       await db.classroomJoinGrant.updateMany({
         where: { sessionId: session.id },
         data: clearedAttention,

@@ -1,10 +1,11 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { NavigationLink as Link } from "@/components/layout/NavigationLink";
 import { Button } from "@/components/ui/Button";
 import { api, type Role } from "./shared";
 import { TabAttentionPanel, useTabRoster, useTabSignal } from "./TabAttention";
+import { SessionMaterials } from "./SessionMaterials";
 type Context = {
   signature: string;
   meetingNumber: string;
@@ -18,6 +19,7 @@ type Context = {
 };
 export function ZoomRoom({ id, role }: { id: string; role: Role }) {
   const router = useRouter(),
+    params = useSearchParams(),
     frame = useRef<HTMLIFrameElement>(null),
     contextRef = useRef<Context | null>(null),
     connectedRef = useRef(false),
@@ -29,7 +31,10 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
     [version, setVersion] = useState(0),
     [mobile, setMobile] = useState(false),
     [roomHeight, setRoomHeight] = useState(720),
-    [attentionOpen, setAttentionOpen] = useState(false);
+    [attentionOpen, setAttentionOpen] = useState(false),
+    [mobileTab, setMobileTab] = useState("zoom"),
+    [split, setSplit] = useState(50),
+    [expanded, setExpanded] = useState(false);
   const staff = role !== "LEARNER",
     roster = useTabRoster(id, staff && attentionOpen),
     awayCount = roster.data?.learners.filter(
@@ -43,7 +48,7 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
     );
   }, []);
   useEffect(() => {
-    const media = matchMedia("(max-width:1023px)");
+    const media = matchMedia("(max-width:1279px)");
     const resize = () => setMobile(media.matches);
     resize();
     media.addEventListener("change", resize);
@@ -90,7 +95,7 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
               ...contextRef.current,
               theme: document.documentElement.dataset.theme || "light",
               mobile:
-                matchMedia("(max-width:1023px)").matches ||
+                matchMedia("(max-width:1279px)").matches ||
                 /Android|iPhone|iPad/.test(navigator.userAgent),
             },
           },
@@ -168,7 +173,7 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
       );
       contextRef.current = result;
       setContext(result);
-      setMobile(matchMedia("(max-width:1023px)").matches);
+      setMobile(matchMedia("(max-width:1279px)").matches);
       setVersion((v) => v + 1);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Chưa vào được lớp.");
@@ -177,8 +182,14 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
   }
   return (
     <div className="mx-auto max-w-[1400px] space-y-5">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+      <header
+        className={
+          mobile && context
+            ? "fixed inset-x-0 top-0 z-[80] flex h-16 items-center justify-between gap-2 border-b border-border bg-surface-card px-3"
+            : "flex flex-wrap items-center justify-between gap-3"
+        }
+      >
+        <div className={mobile && context ? "hidden" : undefined}>
           <p className="text-xs text-brand">WEWIN ONLINE</p>
           <h1 className="mt-2 text-2xl">Phòng học trực tuyến</h1>
         </div>
@@ -194,9 +205,7 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
                   ? `Số liệu ${roster.fresh ? "cập nhật" : "lần xem trước"}; mở danh sách để cập nhật.`
                   : "Xem trạng thái tab học viên"
               }
-              className={
-                mobile && context ? "fixed left-3 top-2 z-[80] min-h-11" : "min-h-11"
-              }
+              className="min-h-11"
               onClick={() => setAttentionOpen((open) => !open)}
             >
               Trạng thái tab{awayCount !== undefined ? ` · ${awayCount}` : ""}
@@ -204,14 +213,17 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
           )}
           <Link
             href={`/sessions/${id}`}
-            className="inline-flex min-h-11 items-center px-3 text-sm text-brand"
+            className={
+              mobile && context
+                ? "hidden"
+                : "inline-flex min-h-11 items-center px-3 text-sm text-brand"
+            }
           >
             Thông tin buổi
           </Link>
           {context && (
             <Button
               variant="outline"
-              className={mobile ? "fixed right-3 top-2 z-[80]" : undefined}
               onClick={() =>
                 frame.current?.contentWindow?.postMessage(
                   { type: "wewin-zoom-leave" },
@@ -221,6 +233,16 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
             >
               Rời lớp
             </Button>
+          )}
+          {mobile && context && (
+            <a
+              href={context.appUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center px-2 text-sm text-brand"
+            >
+              Mở app ↗
+            </a>
           )}
         </div>
       </header>
@@ -261,16 +283,110 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
           </Button>
         </section>
       )}
-      <div
-        className={
-          staff && attentionOpen && !mobile
-            ? "grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_320px]"
-            : "min-w-0"
-        }
-      >
-        <div className="min-w-0">
-          {context && (
-            <>
+      {context && (
+        <>
+          {mobile ? (
+            <div
+              role="tablist"
+              aria-label="Nội dung phòng học"
+              className="fixed inset-x-0 top-16 z-[80] flex h-12 border-b border-border bg-surface-card"
+            >
+              {[
+                { id: "zoom", name: "Zoom" },
+                { id: "materials", name: "Học liệu" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  id={`room-tab-${tab.id}`}
+                  role="tab"
+                  aria-selected={mobileTab === tab.id}
+                  aria-controls={`room-${tab.id}`}
+                  tabIndex={mobileTab === tab.id ? 0 : -1}
+                  className={`flex-1 text-sm font-medium ${mobileTab === tab.id ? "border-b-2 border-brand text-brand" : "text-ink-muted"}`}
+                  onClick={() => setMobileTab(tab.id)}
+                  onKeyDown={(event) => {
+                    if (
+                      ["ArrowLeft", "ArrowRight", "Home", "End"].includes(
+                        event.key,
+                      )
+                    ) {
+                      event.preventDefault();
+                      const next =
+                        event.key === "Home"
+                          ? "zoom"
+                          : event.key === "End"
+                            ? "materials"
+                            : mobileTab === "zoom"
+                              ? "materials"
+                              : "zoom";
+                      setMobileTab(next);
+                      document.getElementById(`room-tab-${next}`)?.focus();
+                    }
+                  }}
+                >
+                  {" "}
+                  {tab.name}{" "}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-end gap-4">
+              <label className="flex items-center gap-3 text-xs text-ink-muted">
+                Tỷ lệ Zoom / học liệu
+                <input
+                  type="range"
+                  min={35}
+                  max={65}
+                  value={split}
+                  disabled={expanded}
+                  aria-label="Tỷ lệ chiều rộng Zoom"
+                  className="w-28 accent-brand"
+                  onChange={(event) => setSplit(Number(event.target.value))}
+                />
+              </label>
+              <Button variant="outline" onClick={() => setExpanded((v) => !v)}>
+                {expanded ? "Trở lại Zoom và học liệu" : "Mở rộng học liệu"}
+              </Button>
+            </div>
+          )}
+          <div
+            className={
+              mobile
+                ? "fixed inset-x-0 top-28 z-[60] h-[calc(100dvh-112px)] overflow-hidden bg-surface"
+                : "relative grid min-w-0 gap-4"
+            }
+            style={
+              mobile
+                ? undefined
+                : {
+                    gridTemplateColumns: expanded
+                      ? "0 minmax(0,1fr)"
+                      : `minmax(450px,${split}fr) minmax(0,${100 - split}fr)`,
+                  }
+            }
+          >
+            {mobile && error && (
+              <div
+                role="alert"
+                className="absolute inset-x-3 top-3 z-20 space-y-2 rounded-xl border border-border bg-surface-card p-3 text-sm shadow-modal"
+              >
+                <p>{error}</p>
+                <Button disabled={pending} onClick={() => void start()}>
+                  {pending ? "Đang vào lớp…" : "Thử kết nối lại"}
+                </Button>
+              </div>
+            )}
+            <div
+              id="room-zoom"
+              role={mobile ? "tabpanel" : undefined}
+              aria-labelledby={mobile ? "room-tab-zoom" : undefined}
+              inert={(mobile && mobileTab !== "zoom") || expanded}
+              className={
+                mobile
+                  ? `absolute inset-0 ${mobileTab === "zoom" ? "z-10" : "pointer-events-none opacity-0"}`
+                  : `min-w-0 overflow-hidden ${expanded ? "pointer-events-none opacity-0" : ""}`
+              }
+            >
               <iframe
                 key={version}
                 ref={frame}
@@ -278,36 +394,57 @@ export function ZoomRoom({ id, role }: { id: string; role: Role }) {
                 title="Phòng Zoom WEWIN"
                 allow="camera; microphone; display-capture; fullscreen; autoplay; clipboard-write"
                 style={mobile ? undefined : { height: roomHeight }}
-                className={`border border-border bg-surface-card ${mobile ? "fixed inset-x-0 top-16 z-[60] h-[calc(100dvh-64px)] w-full" : "w-full rounded-2xl"}`}
+                className={`border border-border bg-surface-card ${mobile ? "h-full w-full" : "w-full rounded-2xl"}`}
               />
-              <div className="classroom-panel text-sm leading-7">
-                <p>
-                  Nếu trình duyệt không kết nối được, bạn có thể mở ứng dụng
-                  Zoom. Rời phòng web trước khi chuyển sang app, rồi chờ giáo
-                  viên đối chiếu tên và duyệt.
-                </p>
-                <a
-                  href={context.appUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex min-h-11 items-center text-brand"
-                >
-                  Mở Zoom app dự phòng ↗
-                </a>
-              </div>
-            </>
-          )}
-        </div>
-        {staff && attentionOpen && (
-          <div id="tab-attention-panel">
-            <TabAttentionPanel
-              {...roster}
-              mobile={mobile}
-              onClose={closeAttention}
-            />
+            </div>
+            <div
+              id="room-materials"
+              role={mobile ? "tabpanel" : undefined}
+              aria-labelledby={mobile ? "room-tab-materials" : undefined}
+              inert={mobile && mobileTab !== "materials"}
+              className={
+                mobile
+                  ? `absolute inset-0 overflow-auto p-3 ${mobileTab === "materials" ? "z-10" : "pointer-events-none opacity-0"}`
+                  : "min-w-0"
+              }
+              style={mobile ? undefined : { height: Math.max(600, roomHeight) }}
+            >
+              <SessionMaterials
+                id={id}
+                connected={connected}
+                staff={staff}
+                initialFileId={params.get("present")}
+              />
+            </div>
           </div>
-        )}
-      </div>
+          <div
+            className={`${mobile ? "hidden" : "classroom-panel"} text-sm leading-7`}
+          >
+            <p>
+              Nếu trình duyệt không kết nối được, bạn có thể mở ứng dụng Zoom.
+              Rời phòng web trước khi chuyển sang app, rồi chờ giáo viên đối
+              chiếu tên và duyệt.
+            </p>
+            <a
+              href={context.appUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex min-h-11 items-center text-brand"
+            >
+              Mở Zoom app dự phòng ↗
+            </a>
+          </div>
+        </>
+      )}
+      {staff && attentionOpen && (
+        <div id="tab-attention-panel">
+          <TabAttentionPanel
+            {...roster}
+            mobile={true}
+            onClose={closeAttention}
+          />
+        </div>
+      )}
     </div>
   );
 }

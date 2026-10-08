@@ -146,6 +146,29 @@ export function scanClamAV(bytes: Buffer) {
     });
   });
 }
+export async function scannerHealth(): Promise<boolean> {
+  if (!process.env.CLAMAV_HOST) return false;
+  return new Promise((resolve) => {
+    const socket = connect(
+      Number(process.env.CLAMAV_PORT || 3310),
+      process.env.CLAMAV_HOST,
+    );
+    let reply = "";
+    const finish = (ok: boolean) => {
+      socket.destroy();
+      resolve(ok);
+    };
+    socket.setTimeout(3000);
+    socket.on("connect", () => socket.write("zPING\0"));
+    socket.on("data", (bytes) => {
+      reply += bytes.toString();
+      if (reply.includes("PONG")) finish(true);
+    });
+    socket.on("end", () => finish(reply.includes("PONG")));
+    socket.on("timeout", () => finish(false));
+    socket.on("error", () => finish(false));
+  });
+}
 export async function scanFile(id: string) {
   const file = await prisma.classroomFile.findUniqueOrThrow({ where: { id } });
   if (file.state === "CLEAN" || file.state === "REJECTED") return;
@@ -171,7 +194,12 @@ export async function scanFile(id: string) {
       where: { id },
       data: { state: "CLEAN", cleanKey, mimeType: kind.mime },
     });
-    await deleteObject(file.storageKey);
+    await prisma.classroomJob.upsert({
+      where: { key: `preview:${id}` },
+      create: { key: `preview:${id}`, kind: "FILE_PREVIEW", entityId: id },
+      update: {},
+    });
+    await deleteObject(file.storageKey).catch(() => undefined);
   } catch (error) {
     const rejected =
       error instanceof Error &&
@@ -189,7 +217,7 @@ export async function scanFile(id: string) {
     throw error;
   }
 }
-export async function downloadFile(actor: Actor, id: string) {
+export async function accessibleFile(actor: Actor, id: string) {
   const row = await prisma.classroomFile.findUnique({
     where: { id },
     include: { material: true, assignment: true, submission: true },
@@ -208,7 +236,11 @@ export async function downloadFile(actor: Actor, id: string) {
       "Bạn không có quyền tải tệp này.",
       403,
     );
-  const object = await getObject(row.cleanKey);
+  return row;
+}
+export async function downloadFile(actor: Actor, id: string) {
+  const row = await accessibleFile(actor, id);
+  const object = await getObject(row.cleanKey!);
   requireValue(object, "Không tìm thấy tệp.", 404);
   return new Response(object.stream, {
     headers: {
@@ -219,4 +251,60 @@ export async function downloadFile(actor: Actor, id: string) {
       "Cache-Control": "private, no-store",
     },
   });
+}
+
+// A single byte range, including open-ended and suffix ranges. Multiple ranges are rejected.
+export function fileRange(value: string, size: number) {
+  const match = /^bytes=(\d*)-(\d*)$/.exec(value);
+  if (!match || (!match[1] && !match[2])) return null;
+  const start = match[1]
+    ? Number(match[1])
+    : Math.max(0, size - Number(match[2]));
+  const end =
+    match[1] && match[2] ? Math.min(size - 1, Number(match[2])) : size - 1;
+  return Number.isSafeInteger(start) &&
+    Number.isSafeInteger(end) &&
+    start >= 0 &&
+    start <= end &&
+    start < size &&
+    (match[1] || Number(match[2]) > 0)
+    ? { start, end }
+    : null;
+}
+export async function viewFile(actor: Actor, id: string, request: Request) {
+  const row = await accessibleFile(actor, id);
+  requireValue(
+    ["application/pdf", "image/jpeg", "image/png"].includes(row.mimeType),
+    "Xuất Word/PowerPoint thành PDF để xem hoặc trình chiếu trên web.",
+    415,
+  );
+  const head = await headObject(row.cleanKey!);
+  requireValue(head, "Không tìm thấy tệp.", 404);
+  const value = request.headers.get("range");
+  const range = value ? fileRange(value, head.sizeBytes) : undefined;
+  const headers: Record<string, string> = {
+    "Content-Type": row.mimeType,
+    "Accept-Ranges": "bytes",
+    "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(row.name)}`,
+    "X-Content-Type-Options": "nosniff",
+    // Revalidate permission on every request; the browser may retain immutable bytes privately.
+    "Cache-Control": "private, no-cache, must-revalidate",
+    Vary: "Cookie",
+  };
+  if (value && !range)
+    return new Response(null, {
+      status: 416,
+      headers: { ...headers, "Content-Range": `bytes */${head.sizeBytes}` },
+    });
+  headers["Content-Length"] = String(
+    range ? range.end - range.start + 1 : head.sizeBytes,
+  );
+  if (range)
+    headers["Content-Range"] =
+      `bytes ${range.start}-${range.end}/${head.sizeBytes}`;
+  if (request.method === "HEAD")
+    return new Response(null, { headers, status: range ? 206 : 200 });
+  const object = await getObject(row.cleanKey!, range ? { range } : {});
+  requireValue(object, "Không đọc được tệp.", 404);
+  return new Response(object.stream, { headers, status: range ? 206 : 200 });
 }

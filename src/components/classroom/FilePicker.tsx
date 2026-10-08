@@ -1,8 +1,16 @@
 "use client";
 import { upload } from "@vercel/blob/client";
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { api, Badge } from "./shared";
-type Uploaded = { id: string; name: string; state: string; storageKey: string };
+type Uploaded = {
+  id: string;
+  name: string;
+  state: string;
+  storageKey: string;
+  mimeType: string;
+  previewPageCount?: number | null;
+  previewError?: string | null;
+};
 export function FilePicker({
   classId,
   onFiles,
@@ -12,11 +20,55 @@ export function FilePicker({
 }) {
   const [files, setFiles] = useState<Uploaded[]>([]),
     [error, setError] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const needsUpdate = files.some(
+      (f) =>
+        ["SCAN_PENDING", "SCAN_FAILED"].includes(f.state) ||
+        (f.state === "CLEAN" &&
+          ["application/pdf", "image/jpeg", "image/png"].includes(f.mimeType) &&
+          !f.previewPageCount &&
+          !f.previewError),
+    );
+    if (!needsUpdate) return;
+    let canceled = false,
+      running = false;
+    const timer = setInterval(() => {
+      if (running || document.visibilityState !== "visible") return;
+      running = true;
+      void Promise.all(
+        files.map((f) =>
+          api<Uploaded>(`/api/classroom-files/${f.id}`).then((next) => ({
+            ...f,
+            ...next,
+          })),
+        ),
+      )
+        .then((next) => {
+          if (!canceled) {
+            setFiles(next);
+            setError("");
+          }
+        })
+        .catch(() => {
+          if (!canceled)
+            setError("Mất kết nối kiểm tra tệp. Nội dung đã tải được giữ lại.");
+        })
+        .finally(() => {
+          running = false;
+        });
+    }, 3000);
+    return () => {
+      canceled = true;
+      clearInterval(timer);
+    };
+  }, [files]);
   async function select(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
     setBusy(true);
+    setProgress(0);
     setError("");
     try {
       if (file.size > 25 * 1024 * 1024 || files.length >= 5)
@@ -49,6 +101,8 @@ export function FilePicker({
           clientPayload: row.id,
           contentType: known[ext || ""] || file.type,
           multipart: true,
+          onUploadProgress: ({ percentage }) =>
+            setProgress(Math.round(percentage)),
         });
         await api(`/api/classroom-files/${row.id}/complete`, "POST", {});
       } else {
@@ -100,7 +154,7 @@ export function FilePicker({
       </p>
       {busy && (
         <p role="status" className="text-sm">
-          Đang tải tệp…
+          Đang tải tệp… {progress > 0 ? `${progress}%` : ""}
         </p>
       )}
       {error && (
@@ -112,6 +166,17 @@ export function FilePicker({
         <div key={f.id} className="flex flex-wrap items-center gap-2 text-xs">
           <span className="break-all">{f.name}</span>
           <Badge value={f.state} />
+          {f.state === "CLEAN" &&
+            ["application/pdf", "image/jpeg", "image/png"].includes(
+              f.mimeType,
+            ) && (
+              <span className="text-ink-muted">
+                {f.previewError ||
+                  (f.previewPageCount
+                    ? "Bản xem sẵn sàng"
+                    : "Đang chuẩn bị bản xem…")}
+              </span>
+            )}
           <button
             type="button"
             onClick={() => {

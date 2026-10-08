@@ -10,7 +10,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  { ignores: [".next/**", ".agents/**", ".qa/**", ".tmp/**", "output/**", ".playwright-cli/**", "public/zoom/**", "next-env.d.ts"] },
+  { ignores: [".next/**", ".agents/**", ".qa/**", ".tmp/**", "output/**", ".playwright-cli/**", "public/zoom/**", "public/pdfjs/**", "next-env.d.ts"] },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

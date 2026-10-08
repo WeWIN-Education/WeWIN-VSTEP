@@ -241,7 +241,12 @@ type Integration = {
     verified: boolean;
     user: { name: string | null };
   }[];
-  workers: { id: string; lastSeenAt: string }[];
+  workers: {
+    id: string;
+    lastSeenAt: string;
+    scannerOk: boolean | null;
+    scannerCheckedAt: string | null;
+  }[];
   jobs: {
     id: string;
     kind: string;
@@ -359,6 +364,16 @@ export function IntegrationManagement() {
                     · {w.id}
                     <span className="mt-1 block text-xs text-ink-muted">
                       Lần cuối: {when(w.lastSeenAt)}
+                    </span>
+                    <span className="mt-2 block text-xs text-ink-muted">
+                      Máy quét tệp:{" "}
+                      {w.scannerCheckedAt &&
+                      Date.now() - new Date(w.scannerCheckedAt).getTime() <
+                        120000
+                        ? w.scannerOk
+                          ? "Đang kết nối"
+                          : "Không kết nối được; tệp mới sẽ chờ quét"
+                        : "Chưa có tín hiệu mới"}
                     </span>
                   </p>
                 ))

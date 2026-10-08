@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { NavigationLink as Link } from "@/components/layout/NavigationLink";
 import { Button } from "@/components/ui/Button";
 import { FilePicker } from "./FilePicker";
+import type { PreviewFile } from "./DocumentViewer";
 import {
   api,
   Badge,
@@ -32,7 +33,7 @@ export type Material = {
   sessionId: string | null;
   sourceKind: string | null;
   sourceId: string | null;
-  files: { id: string; name: string }[];
+  files: PreviewFile[];
 };
 export type Assignment = {
   id: string;
@@ -63,6 +64,7 @@ export function ClassDetail({ id, role }: { id: string; role: Role }) {
     [form, setForm] = useState<"material" | "assignment" | null>(null),
     [editing, setEditing] = useState<Material | null>(null),
     [fileIds, setFiles] = useState<string[]>([]),
+    [presentSession, setPresentSession] = useState(""),
     [sourceKind, setKind] = useState("");
   const options = useAPI<Options>(
     role !== "LEARNER" ? "/api/classroom-options" : null,
@@ -421,6 +423,36 @@ export function ClassDetail({ id, role }: { id: string; role: Role }) {
                     <Empty>Chưa có học liệu được công bố.</Empty>
                   ) : (
                     <div className="space-y-4">
+                      {staff &&
+                        classroom.sessions.some(
+                          (s) =>
+                            ["SCHEDULED", "LIVE"].includes(s.status) &&
+                            Date.parse(s.endsAt) > Date.now(),
+                        ) && (
+                          <label className="block text-sm">
+                            Buổi học để trình chiếu
+                            <select
+                              className="mt-2 min-h-11 w-full rounded-xl border border-border bg-surface-card px-3"
+                              value={presentSession}
+                              onChange={(event) =>
+                                setPresentSession(event.target.value)
+                              }
+                            >
+                              <option value="">Chọn buổi học</option>
+                              {classroom.sessions
+                                .filter(
+                                  (s) =>
+                                    ["SCHEDULED", "LIVE"].includes(s.status) &&
+                                    Date.parse(s.endsAt) > Date.now(),
+                                )
+                                .map((s) => (
+                                  <option key={s.id} value={s.id}>
+                                    {s.title} · {when(s.startsAt)}
+                                  </option>
+                                ))}
+                            </select>
+                          </label>
+                        )}
                       {classroom.materials.map((m) => (
                         <article
                           key={m.id}
@@ -434,13 +466,60 @@ export function ClassDetail({ id, role }: { id: string; role: Role }) {
                             {m.body}
                           </p>
                           {m.files.map((f) => (
-                            <a
+                            <div
                               key={f.id}
-                              href={`/api/classroom-files/${f.id}/download`}
-                              className="mt-2 block min-h-11 py-2 text-sm text-brand"
+                              className="mt-3 rounded-xl border border-border p-3"
                             >
-                              ↓ {f.name}
-                            </a>
+                              <p className="break-words text-sm font-medium">
+                                {f.name}
+                              </p>
+                              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-brand">
+                                {[
+                                  "application/pdf",
+                                  "image/jpeg",
+                                  "image/png",
+                                ].includes(f.mimeType) && (
+                                  <Link
+                                    href={`/classroom-files/${f.id}`}
+                                    className="inline-flex min-h-11 items-center"
+                                  >
+                                    Xem trên web
+                                  </Link>
+                                )}
+                                <a
+                                  href={`/api/classroom-files/${f.id}/download`}
+                                  className="inline-flex min-h-11 items-center"
+                                >
+                                  Tải về ↓
+                                </a>
+                                {staff &&
+                                m.published &&
+                                f.previewPageCount &&
+                                !f.previewError &&
+                                presentSession &&
+                                (!m.sessionId ||
+                                  m.sessionId === presentSession) ? (
+                                  <Link
+                                    href={`/sessions/${presentSession}/room?present=${f.id}`}
+                                    className="inline-flex min-h-11 items-center"
+                                  >
+                                    Trình chiếu trong lớp ↗
+                                  </Link>
+                                ) : null}
+                              </div>
+                              {f.previewError && (
+                                <p className="text-xs leading-6 text-ink-muted">
+                                  {f.previewError}
+                                </p>
+                              )}
+                              {/wordprocessingml|presentationml/.test(
+                                f.mimeType,
+                              ) && (
+                                <p className="text-xs leading-6 text-ink-muted">
+                                  Xuất thành PDF để xem và trình chiếu trên web.
+                                </p>
+                              )}
+                            </div>
                           ))}
                           {m.sourceHref && (
                             <Link

@@ -21,7 +21,18 @@ import * as service from "./service";
 import * as zoom from "./zoom";
 import { listAttention, recordAttention } from "./attention";
 import { runClassroomJob } from "./jobs";
-import { completeFile, downloadFile, reserveFile } from "./files";
+import {
+  accessibleFile,
+  completeFile,
+  downloadFile,
+  reserveFile,
+  viewFile,
+} from "./files";
+import {
+  listPresentation,
+  updatePresentation,
+  previewSelect,
+} from "./presentation";
 
 export const sessionSelect = {
   id: true,
@@ -51,10 +62,11 @@ export async function classroomHTTP(request: Request, segments: string[]) {
       "Yêu cầu quá lớn.",
       413,
     );
-    const raw = method === "GET" ? "" : await request.text();
+    const readOnly = ["GET", "HEAD"].includes(method);
+    const raw = readOnly ? "" : await request.text();
     requireValue(raw.length <= 1024 * 1024, "Yêu cầu quá lớn.", 413);
     let input: Record<string, unknown> | null = {};
-    if (method !== "GET") {
+    if (!readOnly) {
       try {
         input = JSON.parse(raw);
       } catch {
@@ -112,7 +124,7 @@ export async function classroomHTTP(request: Request, segments: string[]) {
               include: {
                 files: {
                   where: { state: "CLEAN" },
-                  select: { id: true, name: true, sizeBytes: true },
+                  select: previewSelect,
                 },
               },
               orderBy: { createdAt: "desc" },
@@ -330,7 +342,11 @@ export async function classroomHTTP(request: Request, segments: string[]) {
         await service.cancelSession(actor, id, input);
         await runClassroomJob({ kind: "ZOOM_SYNC", entityId: id });
         result = { ok: true };
-      } else if (id && action === "attention" && method === "GET")
+      } else if (id && action === "presentation" && method === "GET")
+        result = await listPresentation(actor, id);
+      else if (id && action === "presentation" && method === "PUT")
+        result = await updatePresentation(actor, id, input);
+      else if (id && action === "attention" && method === "GET")
         result = await listAttention(actor, id);
       else if (id && action === "attention" && method === "POST")
         result = await recordAttention(actor, id, input);
@@ -421,10 +437,22 @@ export async function classroomHTTP(request: Request, segments: string[]) {
         result = await completeFile(actor, id);
       else if (id && action === "download" && method === "GET")
         return await downloadFile(actor, id);
-      else if (id && !action && method === "GET") {
+      else if (id && action === "view" && ["GET", "HEAD"].includes(method))
+        return await viewFile(actor, id, request);
+      else if (id && action === "metadata" && method === "GET") {
+        const file = await accessibleFile(actor, id);
+        result = {
+          id: file.id,
+          name: file.name,
+          mimeType: file.mimeType,
+          sizeBytes: file.sizeBytes,
+          previewPageCount: file.previewPageCount,
+          previewError: file.previewError,
+        };
+      } else if (id && !action && method === "GET") {
         const file = await prisma.classroomFile.findFirst({
           where: { id, ownerId: actor.id },
-          select: { id: true, name: true, state: true },
+          select: { ...previewSelect, state: true },
         });
         requireValue(file, "Không tìm thấy tệp.", 404);
         result = file;

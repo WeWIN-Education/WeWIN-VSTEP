@@ -23,7 +23,7 @@
     "grading:health": "tsx scripts/grading-health.ts",
     "storage:migrate": "tsx scripts/migrate-local-storage.ts",
     "cleanup:guest": "tsx scripts/cleanup-guest-sessions.ts",
-    "postinstall": "prisma generate && node scripts/copy-zoom-assets.mjs",
+    "postinstall": "prisma generate && node scripts/copy-zoom-assets.mjs && node scripts/copy-pdf-assets.mjs",
     "classroom:worker": "node --conditions=react-server --import tsx scripts/process-classroom-jobs.ts --loop",
     "classroom:worker:once": "node --conditions=react-server --import tsx scripts/process-classroom-jobs.ts"
   },
@@ -38,6 +38,7 @@
     "mammoth": "^1.12.3",
     "next": "^15.5.3",
     "next-auth": "^5.0.0-beta.32",
+    "pdfjs-dist": "^6.4.299",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "server-only": "^0.0.1",

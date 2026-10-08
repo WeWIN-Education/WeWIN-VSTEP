@@ -64,6 +64,9 @@ export async function runClassroomJob(target?: {
     else if (row.kind === "FILE_SCAN") {
       const { scanFile } = await import("./files");
       await scanFile(row.entityId);
+    } else if (row.kind === "FILE_PREVIEW") {
+      const { prepareFilePreview } = await import("./file-preview");
+      await prepareFilePreview(row.entityId);
     } else throw new Error("Loại tác vụ không hợp lệ.");
     await prisma.classroomJob.updateMany({
       where: { id: row.id, leaseToken: token },

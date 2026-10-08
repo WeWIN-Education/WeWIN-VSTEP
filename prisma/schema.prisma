@@ -829,6 +829,7 @@ model ClassroomSession {
   attendance        ClassroomAttendance[]
   materials         ClassroomMaterial[]
   assignments       ClassroomAssignment[]
+  presentation      ClassroomPresentation?
 
   @@index([classId, startsAt])
   @@index([hostUserId, startsAt, endsAt])
@@ -955,14 +956,28 @@ model ClassroomFile {
   storageKey   String               @unique
   cleanKey     String?
   state        String               @default("UPLOADING")
+  previewPageCount Int?
+  previewError String?
   createdAt    DateTime             @default(now())
   classroom    Classroom            @relation(fields: [classId], references: [id], onDelete: Restrict)
   owner        User                 @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   material     ClassroomMaterial?   @relation(fields: [materialId], references: [id], onDelete: Restrict)
   assignment   ClassroomAssignment? @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
   submission   ClassroomSubmission? @relation(fields: [submissionId], references: [id], onDelete: Restrict)
+  presentations ClassroomPresentation[]
 
   @@index([classId, state])
+}
+
+model ClassroomPresentation {
+  sessionId String @id
+  fileId String?
+  page Int @default(1)
+  revision Int @default(0)
+  controllerId String?
+  updatedAt DateTime @default(now()) @updatedAt
+  session ClassroomSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  file ClassroomFile? @relation(fields: [fileId], references: [id], onDelete: SetNull)
 }
 
 model ClassroomNotification {
@@ -1023,4 +1038,6 @@ model ClassroomJob {
 model ClassroomWorker {
   id         String   @id
   lastSeenAt DateTime @default(now())
+  scannerOk Boolean?
+  scannerCheckedAt DateTime?
 }

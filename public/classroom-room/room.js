@@ -86,6 +86,36 @@
         );
         joined = true;
         document.getElementById("zmmtg-root")?.removeAttribute("aria-hidden");
+        // The SDK preloads a hidden whiteboard modal which can hide the live room
+        // from assistive technology. Keep real visible modals' focus isolation.
+        let accessibilityFrame = 0;
+        const accessibility = new MutationObserver(() => {
+          cancelAnimationFrame(accessibilityFrame);
+          accessibilityFrame = requestAnimationFrame(() => {
+            if (!joined) return;
+            const modalOpen = [
+              ...document.querySelectorAll(".ReactModal__Content"),
+            ].some((el) =>
+              el.checkVisibility({
+                checkOpacity: true,
+                checkVisibilityCSS: true,
+              }),
+            );
+            if (!modalOpen)
+              document
+                .getElementById("zmmtg-root")
+                ?.removeAttribute("aria-hidden");
+          });
+        });
+        accessibility.observe(document.body, {
+          subtree: true,
+          childList: true,
+          attributes: true,
+          attributeFilter: ["aria-hidden", "class", "style"],
+        });
+        addEventListener("pagehide", () => accessibility.disconnect(), {
+          once: true,
+        });
         report("wewin-zoom-connected");
       } else {
         await script(`${base}/zoomus-websdk-embedded.umd.min.js`);
@@ -118,6 +148,8 @@
           client.updateVideoOptions({
             viewSizes: { default: size, ribbon: size },
           });
+          // Gallery needs more width than one half of the WEWIN split view.
+          if (joined && innerWidth < 720) client.setViewType("speaker");
         });
         client.on("connection-change", (e) => {
           if (e.state === "Closed") {
