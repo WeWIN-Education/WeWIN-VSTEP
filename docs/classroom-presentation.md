@@ -1,6 +1,6 @@
 # Zoom và học liệu WEWIN
 
-## Bản local
+## Chức năng
 
 - Máy tính rộng từ 1280px: Zoom và tài liệu cạnh nhau, mặc định 50/50. Có thanh chỉnh tỷ lệ và nút mở rộng tài liệu; vùng Zoom giữ tối thiểu 450px để không cắt thanh công cụ của SDK.
 - Màn hẹp: hai tab **Zoom / Học liệu**. Iframe Zoom luôn được giữ khi đổi tab; không tạo lại phòng hoặc grant.
@@ -30,10 +30,12 @@ Database và ClamAV phải đang chạy trước. Chỉ chạy một web server 
 
 ## Worker Railway riêng
 
-Đã chuẩn bị `deploy/classroom-worker.railway.json` cho **classroom worker**, giữ nguyên Railway config của worker chấm bài VSTEP. Chưa tạo dịch vụ cloud: Railway CLI chưa được đăng nhập. Các bước dưới đây là hướng dẫn triển khai, chưa phải kết quả nghiệm thu cloud.
+Đã tạo hai service `classroom-worker` và `classroom-clamav` trong project Railway hiện có. Worker học liệu đã có heartbeat trong database production; worker chấm bài VSTEP vẫn là service riêng. ClamAV dùng private network và volume `/var/lib/clamav`, không mở public domain/TCP proxy.
+
+**Chưa nghiệm thu quét cloud:** tài khoản Railway hiện giới hạn mỗi service ở 1 GB RAM. Yêu cầu tăng ClamAV lên 4 GB bị từ chối với thông báo `The maximum allowed memory for this service is 1 GB`; heartbeat worker đang báo `scannerOk=false`. Cần gói cho phép đủ RAM rồi xác minh scanner và chạy thử upload. Tệp chưa sạch tiếp tục bị chặn xem/tải.
 
 1. Tạo service ClamAV từ `deploy/clamav.Dockerfile` hoặc image chính thức `clamav/clamav:stable`. Gắn volume `/var/lib/clamav` để giữ virus database. **Không tạo public domain/TCP proxy** cho scanner; dùng private network trong cùng project/environment với worker. Chờ tải definitions và scanner sẵn sàng.
-2. Tạo classroom worker từ repository, chọn config `deploy/classroom-worker.railway.json`. Dockerfile chạy `npm run classroom:worker`, không cần HTTP/public domain. Node 22 mới nhất trong image đáp ứng PDF.js.
+2. Tạo classroom worker từ repository; đặt Dockerfile Path và biến `RAILWAY_DOCKERFILE_PATH` thành `deploy/classroom-worker.Dockerfile`, start command `npm run classroom:worker`. Không cần HTTP/public domain. Node 22 mới nhất trong image đáp ứng PDF.js. Railway không cho service mới dùng `railway.json`; cấu hình service trực tiếp hoặc dùng IaC.
 3. Sao chép cấu hình server bên dưới từ **cùng môi trường của web**, đặc biệt giữ nguyên khóa mã hóa. Không lấy cấu hình/mật khẩu QA làm production.
 4. Kiểm tra trang admin **Zoom & tác vụ**: heartbeat worker mới, scanner báo hoạt động. Scanner probe dùng TCP PING/PONG thật; heartbeat đơn lẻ không đủ chứng minh scanner chạy.
 5. Thử upload PDF/ảnh sạch, PDF lỗi, tệp thử EICAR; chỉ file sạch mới trở thành CLEAN. Kiểm download và Range trên private Blob thật. Chỉ đưa luồng upload mới ra production sau khi kiểm hết.
@@ -43,6 +45,7 @@ Biến worker cần dùng chung với web:
 ```dotenv
 CLASSROOM_ENABLED=true
 CLASSROOM_WORKER_ID=classroom-railway
+RAILWAY_DOCKERFILE_PATH=deploy/classroom-worker.Dockerfile
 DATABASE_URL=<database cùng môi trường web>
 DIRECT_URL=<database cùng môi trường web>
 APP_ORIGIN=https://we-win-vstep.vercel.app
@@ -58,7 +61,9 @@ CLAMAV_PORT=3310
 
 Meeting SDK key/secret và webhook secret tiếp tục dùng ở web hiện có. Không đưa ClamAV lên public để Vercel kết nối: upload vào vùng chờ, worker trong private network đọc/quét/copy file sạch qua Blob. Web không cần truy cập trực tiếp scanner.
 
-Migration bổ sung: `20261007140000_classroom_presentation`, đã áp dụng vào QA. Áp dụng production theo pipeline Prisma hiện có **trước khi chạy worker mới**. Không thay/rotate `DATA_ENCRYPTION_KEY` trong thao tác này.
+Migration bổ sung: `20261007140000_classroom_presentation`, đã áp dụng vào QA và production qua pipeline Vercel, đã kiểm lại trên database. Không thay/rotate `DATA_ENCRYPTION_KEY` trong thao tác này.
+
+Dockerfile worker chấm bài đã được sửa để sao chép `.npmrc`, khắc phục lỗi cài đặt peer dependency React/Zoom; bản build Railway mới đã đạt. Config `railway.json` cũ của worker này vẫn còn hoạt động theo cơ chế legacy, cần chuyển sang cấu hình service/IaC trước hạn 01/12/2026 của Railway.
 
 Worker quét tệp, tạo metadata bản xem và dọn trạng thái buổi mỗi phút. PDF sạch cũ thiếu metadata được bổ sung qua cùng hàng tác vụ. Theo dõi hàng lỗi và retry tại admin; không coi tệp là sạch khi scanner không phản hồi.
 
