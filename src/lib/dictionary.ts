@@ -38,19 +38,21 @@ function isSingleWord(text: string) {
 
 async function findEntry(text: string, sourceLanguage: "en" | "vi", userId: string): Promise<DictionaryEntry | null> {
   if (sourceLanguage === "en") {
-    return prisma.vocabularyEntry.findFirst({
+    const shared = await prisma.vocabularyEntry.findFirst({
       where: { term: { equals: text, mode: "insensitive" } },
       orderBy: { createdAt: "asc" },
       select: { term: true, meaningVi: true, ipa: true, partOfSpeech: true, exampleEn: true, exampleVi: true, audioUrl: true },
     });
+    if (shared) return shared;
   }
 
   const personal = await prisma.personalVocabulary.findFirst({
-    where: { userId, term: { equals: text, mode: "insensitive" } },
+    where: { userId, ...(sourceLanguage === "en" ? { term: { equals: text, mode: "insensitive" as const } } : { meaningVi: { equals: text, mode: "insensitive" as const } }) },
     select: { term: true, meaningVi: true, ipa: true, exampleEn: true },
   });
   if (personal) return { term: personal.term, meaningVi: personal.meaningVi, ipa: personal.ipa, partOfSpeech: null, exampleEn: personal.exampleEn, exampleVi: null, audioUrl: null };
 
+  if (sourceLanguage === "en") return null;
   return prisma.vocabularyEntry.findFirst({
     where: { meaningVi: { equals: text, mode: "insensitive" } },
     orderBy: { createdAt: "asc" },
@@ -60,14 +62,22 @@ async function findEntry(text: string, sourceLanguage: "en" | "vi", userId: stri
 
 async function translateWithGoogle(text: string, sourceLanguage: "en" | "vi", targetLanguage: "en" | "vi") {
   const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY?.trim();
-  if (!apiKey) throw new DictionaryError("UNAVAILABLE", "Dịch câu và đoạn văn chưa được cấu hình dịch vụ dịch thuật.");
+  if (!apiKey) throw new DictionaryError("UNAVAILABLE", isSingleWord(text)
+    ? "Từ này chưa có trong kho từ vựng. Quản trị viên cần cấu hình Google Cloud Translation để tra thêm từ ngoài kho."
+    : "Dịch câu và đoạn văn chưa được cấu hình dịch vụ dịch thuật. Quản trị viên cần cấu hình Google Cloud Translation.");
 
-  const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${encodeURIComponent(apiKey)}`, {
+  let response: Response;
+  try {
+    response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${encodeURIComponent(apiKey)}`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ q: text, source: sourceLanguage, target: targetLanguage, format: "text" }),
     cache: "no-store",
-  });
+    signal: AbortSignal.timeout(10_000),
+    });
+  } catch {
+    throw new DictionaryError("FAILED", "Dịch vụ dịch thuật không phản hồi. Vui lòng thử lại.");
+  }
   if (!response.ok) throw new DictionaryError("FAILED", "Không thể kết nối dịch vụ dịch thuật. Vui lòng thử lại.");
 
   const payload = await response.json() as { data?: { translations?: Array<{ translatedText?: string }> } };
@@ -82,7 +92,7 @@ export async function lookupDictionary(input: { text: string; direction: Diction
 
   const sourceLanguage = input.direction === "en-vi" ? "en" : input.direction === "vi-en" ? "vi" : detectLanguage(text);
   const targetLanguage = sourceLanguage === "en" ? "vi" : "en";
-  const entry = isSingleWord(text) ? await findEntry(text, sourceLanguage, input.userId) : null;
+  const entry = isSingleWord(text) || (sourceLanguage === "vi" && text.length <= 80) ? await findEntry(text, sourceLanguage, input.userId) : null;
 
   if (entry) {
     return {

@@ -7,11 +7,14 @@ import { mkdirSync, writeFileSync } from "node:fs";
 it.skipIf(process.env.EXAM_BROWSER_QA !== "1")("profiles the live exam and preserves answers, recording and submission", async () => {
   const fixture = `import React,{Profiler} from 'react';import {createRoot} from 'react-dom/client';
 import {ExamTake} from '/src/components/exam/ExamTake.tsx';
+import {LearningExercisePlayer} from '/src/components/learning/LearningExercisePlayer.tsx';
 window.qa={renders:0,commits:[],mic:0,played:0};
 const parts=['listening','reading','writing','speaking'].map(skill=>({id:skill,skill,title:skill,duration:'60 minutes',questions:2}));
 const content={listening:{instructions:'Listen',parts:[{id:'l1',title:'Listening',audioUrl:'/qa-prompt',durationSeconds:60,instructions:'Listen',questions:[]}]},reading:{instructions:'Read',passages:[{id:'r1',title:'Reading',text:'Synthetic reading passage.',questions:[]}]},writing:[1,2].map(i=>({id:'w'+i,title:'Task '+i,prompt:'Write a letter',minimumWords:120,durationMinutes:30})),speaking:{parts:[{id:'s1',title:'Part 1',prompt:'Describe your city',questions:[],preparationSeconds:1,speakingSeconds:180}]}};
 const exam={slug:'qa',program:'vstep',title:'QA exam',subtitle:'Synthetic fixture',duration:'180 minutes',questions:4,parts,content};
-createRoot(document.getElementById('root')).render(React.createElement(Profiler,{id:'exam',onRender:(id,phase,duration)=>window.qa.commits.push({phase,duration})},React.createElement(ExamTake,{exam,catalog:location.search.includes('speaking')?'SPEAKING':location.search.includes('full')?'FULL':'WRITING',candidate:{role:'LEARNER',name:'QA'}})));`;
+const exercise={skill:'READING',durationMinutes:7,sourceText:'A short reading passage.',transcript:'',questions:[{id:'q1',number:1,prompt:'Choose an answer.',options:['One','Two'],answerIndex:0,explanation:'One is correct.',evidence:'',distractors:''}],prompt:'',writingInstructions:[],vocabulary:[],sample:'',sampleAnalysis:'',checklist:[],preparationSeconds:null,speakingSeconds:null,speakingQuestions:[],strategy:''};
+const child=location.search.includes('exercise')?React.createElement(LearningExercisePlayer,{exercise,storageKey:location.search.includes('otherUser')?'qa-exercise-other':'qa-exercise'}):React.createElement(ExamTake,{exam,catalog:location.search.includes('speaking')?'SPEAKING':location.search.includes('full')?'FULL':'WRITING',candidate:{role:'LEARNER',name:'QA'}});
+createRoot(document.getElementById('root')).render(React.createElement(Profiler,{id:'exam',onRender:(id,phase,duration)=>window.qa.commits.push({phase,duration})},child));`;
   const server = await createServer({ configFile: false, root: process.cwd(), cacheDir: "node_modules/.vite-exam", logLevel: "error",
     oxc: { jsx: { runtime: "automatic" } }, resolve: { alias: { "@": resolve("src") } },
     define: { "process.env.NODE_ENV": JSON.stringify("development") }, server: { host: "127.0.0.1", port: 0 },
@@ -30,7 +33,8 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
   await server.listen();
   const browser = await chromium.launch({ headless: true });
   try {
-    const page = await browser.newPage();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     page.setDefaultTimeout(10_000);
     const errors: string[] = [];
     page.on("pageerror", error => errors.push(error.message));
@@ -53,12 +57,13 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
     });
     let saved: Record<string, unknown> = {};
     let deadline = new Date(Date.now() + 600_000).toISOString();
-    let submits = 0; let saves = 0; let polls = 0;
+    let submits = 0; let saves = 0; let polls = 0; let starts = 0;
+    let attemptStatus = "IN_PROGRESS"; let attemptCatalog = "WRITING"; let reviewFailures = 0;
     const submittedBodies: { writingAnswers: Record<string, string> }[] = [];
     let grading = "PROCESSING"; let failPoll = false;
     let activePolls = 0; let maxActivePolls = 0;
     const payloadSizes: number[] = [];
-    await page.route("**/api/**", async route => {
+    await page.context().route("**/api/**", async route => {
       const path = new URL(route.request().url()).pathname;
       const method = route.request().method();
       let json: unknown = {};
@@ -70,14 +75,18 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
         if (failPoll) { failPoll = false; await route.fulfill({ status: 500, json: { error: "QA temporary failure" } }); return; }
         json = { status: grading, progress: { completed: grading === "GRADED" ? 2 : 0, total: 2, parts: [] } };
         payloadSizes.push(Buffer.byteLength(JSON.stringify(json)));
-      } else if (path.endsWith("/submit")) { submits++; submittedBodies.push(route.request().postDataJSON()); json = { id: "qa", writingStatus: "PROCESSING", speakingStatus: "PROCESSING" }; }
+      } else if (path.endsWith("/submit")) { submits++; attemptStatus = "SUBMITTED"; submittedBodies.push(route.request().postDataJSON()); json = { id: "qa", writingStatus: "PROCESSING", speakingStatus: "PROCESSING" }; }
+      else if (path.endsWith("/review")) {
+        if (reviewFailures-- > 0) { await route.fulfill({ status: 503, json: { error: "QA unavailable" } }); return; }
+        json = { review: { listening: [], reading: [] } };
+      }
       else if (path.endsWith("/recordings/upload")) json = { directUpload: true };
       else if (path.endsWith("/recordings/complete")) json = { recording: { storageKey: "qa/s1.webm", playbackUrl: "/qa-audio", mimeType: "audio/webm" } };
       else if (path.endsWith("/bookmarks")) json = { bookmarks: [] };
-      else if (path.endsWith("/attempts")) json = { id: "qa", expiresAt: deadline };
+      else if (path.endsWith("/attempts")) { starts++; attemptStatus = "IN_PROGRESS"; attemptCatalog = route.request().postDataJSON().catalog; json = { id: "qa", expiresAt: deadline }; }
       else if (path.endsWith("/qa")) {
         if (method === "PATCH") { saves++; saved = route.request().postDataJSON(); }
-        json = { ...saved, status: "IN_PROGRESS", expiresAt: deadline };
+        json = { ...saved, status: attemptStatus, examSlug: "qa", catalog: attemptCatalog, expiresAt: deadline };
       }
       await route.fulfill({ json });
     });
@@ -110,11 +119,27 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
     await page.waitForFunction(() => document.querySelector("textarea")?.value === "Task two stays saved.");
     await page.getByLabel("Chọn phần").selectOption("0");
     expect(await page.locator("textarea").inputValue()).toBe("A synthetic writing answer for task one.");
+    const secondTab = await page.context().newPage();
+    await secondTab.goto(page.url());
+    await secondTab.locator("textarea").waitFor();
+    const startsBeforeSubmit = starts;
+    reviewFailures = 3;
     await page.getByRole("button", { name: "Nộp bài", exact: true }).click();
     await page.getByRole("dialog").getByRole("button", { name: "Nộp bài", exact: true }).click();
-    await page.waitForFunction(() => location.search.includes("attempt=qa"));
+    await page.getByRole("heading", { name: "Bài luyện đã được nộp" }).waitFor();
     expect(submits).toBe(1);
     expect(submittedBodies[0].writingAnswers).toEqual({ w1: "A synthetic writing answer for task one.", w2: "Task two stays saved." });
+    await page.getByRole("button", { name: "Tải lại đáp án" }).waitFor();
+    await page.getByRole("button", { name: "Tải lại đáp án" }).click();
+    await page.getByRole("button", { name: "Tải lại đáp án" }).waitFor({ state: "hidden" });
+    await secondTab.reload();
+    await secondTab.getByRole("heading", { name: "Bài luyện đã được nộp" }).waitFor();
+    expect(await secondTab.getByText("Task two stays saved.", { exact: true }).count()).toBe(1);
+    expect(starts).toBe(startsBeforeSubmit);
+    await secondTab.close();
+    await page.reload();
+    await page.getByRole("heading", { name: "Bài luyện đã được nộp" }).waitFor();
+    expect(starts).toBe(startsBeforeSubmit);
     await page.waitForTimeout(500);
     await page.evaluate(() => { Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" }); document.dispatchEvent(new Event("visibilitychange")); });
     const hiddenPolls = polls;
@@ -168,18 +193,39 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
       // Advance wall clock without replaying interval ticks (suspended/throttled tab).
       await page.clock.setSystemTime(new Date(Date.now() + 120_000));
       await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
-      await page.waitForFunction(() => location.search.includes("attempt=qa"));
+      await page.getByRole("heading", { name: "Bài luyện đã được nộp" }).waitFor();
       expect(submits).toBe(2);
       await page.waitForTimeout(1200);
       expect(submits).toBe(2);
       // Already-expired reload must flush restored answers before auto-submitting.
       saved = { writingAnswers: { w1: "Restored at expiry" } };
       await page.goto(url);
-      await page.waitForFunction(() => location.search.includes("attempt=qa"));
+      await page.getByRole("heading", { name: "Bài luyện đã được nộp" }).waitFor();
       expect(submits).toBe(3);
       expect(saved.writingAnswers).toEqual({ w1: "Restored at expiry" });
       expect(submittedBodies[2].writingAnswers).toEqual({ w1: "Restored at expiry" });
     }
+    // Exercise answers and an absolute deadline survive reload, expiry and account changes.
+    await page.goto(url + "?exercise");
+    await page.getByRole("button", { name: "A. One", exact: true }).click();
+    const exerciseDeadline = await page.evaluate(() => JSON.parse(localStorage.getItem("qa-exercise")!).deadline);
+    await page.clock.setSystemTime(new Date(exerciseDeadline - 240_000));
+    await page.reload();
+    await page.getByRole("button", { name: "A. One", exact: true }).waitFor();
+    expect(await page.getByRole("button", { name: "A. One", exact: true }).getAttribute("aria-pressed")).toBe("true");
+    expect(await page.getByText("04:00", { exact: true }).count()).toBe(1);
+    await page.goto(url + "?exercise&otherUser");
+    await page.getByRole("button", { name: "A. One", exact: true }).waitFor();
+    expect(await page.getByRole("button", { name: "A. One", exact: true }).getAttribute("aria-pressed")).toBe("false");
+    await page.goto(url + "?exercise");
+    await page.clock.setSystemTime(new Date(exerciseDeadline + 1000));
+    await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
+    await page.getByText("Hết giờ. Bài đã được nộp tự động.").waitFor();
+    await page.reload();
+    await page.getByText("Hết giờ. Bài đã được nộp tự động.").waitFor();
+    expect(await page.getByRole("button", { name: /^A\. One/ }).isDisabled()).toBe(true);
+    await page.getByRole("button", { name: "Làm lại bài" }).click();
+    expect(await page.getByRole("button", { name: "A. One", exact: true }).getAttribute("aria-pressed")).toBe("false");
     expect(errors).toEqual([]);
     mkdirSync(".qa", { recursive: true });
     writeFileSync(`.qa/phase4-exam-${process.env.PHASE4_BASELINE === "1" ? "before" : "after"}.json`, JSON.stringify({ environment: "Chromium, React development Profiler, synthetic APIs/media; not production latency", idle: idleMeasurement, typing: typingMeasurement, polling: { syntheticPayloadBytes: payloadSizes, maxActiveRequests: maxActivePolls }, errors }, null, 2));

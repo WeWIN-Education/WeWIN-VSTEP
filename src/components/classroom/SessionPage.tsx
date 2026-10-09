@@ -3,6 +3,7 @@ import { NavigationLink as Link } from "@/components/layout/NavigationLink";
 import {
   api,
   Badge,
+  SessionBadge,
   Empty,
   Field,
   Form,
@@ -50,7 +51,7 @@ export function SessionPage({ id, role }: { id: string; role: Role }) {
                   {when(s.startsAt)} — {when(s.endsAt)}
                 </p>
               </div>
-              <Badge value={s.status} />
+              <SessionBadge session={s} />
             </header>
             <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
               <section className="classroom-panel space-y-5">
@@ -63,7 +64,7 @@ export function SessionPage({ id, role }: { id: string; role: Role }) {
                   <Badge value={s.zoomState} />
                   <span className="text-sm">Giáo viên: {s.host.name}</span>
                 </div>
-                {["SCHEDULED", "LIVE"].includes(s.status) ? (
+                {["SCHEDULED", "LIVE"].includes(s.status) && Date.parse(s.endsAt) + 15 * 60_000 > Date.now() ? (
                   <Link
                     href={`/sessions/${id}/room`}
                     className="inline-flex min-h-12 items-center rounded-xl bg-brand px-5 text-sm font-semibold text-white"

@@ -78,6 +78,17 @@ export function Badge({ value }: { value: string }) {
     </span>
   );
 }
+export function SessionBadge({ session }: { session: Pick<Session, "status" | "startsAt" | "endsAt"> }) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+  const label = session.status === "SCHEDULED"
+    ? Date.parse(session.endsAt) <= now ? "Đã qua giờ học" : Date.parse(session.startsAt) <= now ? "Đến giờ học" : "Sắp diễn ra"
+    : statusLabel[session.status] || session.status;
+  return <Badge value={label} />;
+}
 export function when(value: string) {
   return new Date(value).toLocaleString("vi-VN", {
     timeZone: "Asia/Ho_Chi_Minh",

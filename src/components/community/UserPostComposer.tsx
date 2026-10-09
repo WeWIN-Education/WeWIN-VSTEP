@@ -23,10 +23,15 @@ export function UserPostComposer() {
       const form = event.currentTarget;
       const formData = new FormData(form);
       const image = formData.get("image");
-      const capabilityResponse = await fetch("/api/posts/upload", { cache: "no-store" });
-      const capabilities = await capabilityResponse.json().catch(() => ({})) as { directUpload?: boolean; serverUpload?: boolean; error?: string };
-      if (!capabilityResponse.ok) throw new Error(capabilities.error || "Không kiểm tra được nơi lưu ảnh.");
-      if (image instanceof File && image.size > 0 && !capabilities.directUpload && !capabilities.serverUpload) throw new Error("Blob storage chưa được kết nối với deployment hiện tại. Hãy redeploy Vercel rồi thử lại.");
+      let capabilities: { directUpload?: boolean; serverUpload?: boolean; error?: string } = {};
+      if (image instanceof File && image.size > 0) {
+        const capabilityResponse = await fetch("/api/posts/upload", { cache: "no-store" });
+        capabilities = await capabilityResponse.json().catch(() => ({}));
+        if (!capabilityResponse.ok) throw new Error(capabilities.error || "Không kiểm tra được nơi lưu ảnh.");
+        if (!capabilities.directUpload && !capabilities.serverUpload) throw new Error("Blob storage chưa được kết nối với deployment hiện tại. Hãy redeploy Vercel rồi thử lại.");
+      } else {
+        formData.delete("image");
+      }
 
       let response: Response;
       if (capabilities.directUpload && image instanceof File && image.size > 0) {

@@ -9,6 +9,7 @@ import type { LearningExercise, LearningExerciseQuestion } from "@/lib/learning-
 type LearningExercisePlayerProps = {
   exercise: LearningExercise;
   audioSrc?: string;
+  storageKey: string;
 };
 
 function formatTime(seconds: number) {
@@ -29,13 +30,16 @@ function questionCardClass(question: LearningExerciseQuestion, selected: string 
   return selected === String(question.answerIndex) ? "border-accent-green" : "border-red-300";
 }
 
-export function LearningExercisePlayer({ exercise, audioSrc }: LearningExercisePlayerProps) {
+export function LearningExercisePlayer({ exercise, audioSrc, storageKey }: LearningExercisePlayerProps) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [writing, setWriting] = useState("");
   const [remaining, setRemaining] = useState(exercise.durationMinutes * 60);
   const [submitted, setSubmitted] = useState(false);
   const [automaticSubmit, setAutomaticSubmit] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [deadline, setDeadline] = useState(0);
+  const [ready, setReady] = useState(false);
+  const [storageError, setStorageError] = useState("");
   const [recording, setRecording] = useState<"idle" | "recording" | "saved">("idle");
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [recordingUrl, setRecordingUrl] = useState<string | null>(null);
@@ -43,18 +47,52 @@ export function LearningExercisePlayer({ exercise, audioSrc }: LearningExerciseP
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const submittedRemaining = submitted ? remaining : null;
 
   useEffect(() => {
-    if (submitted) return;
-    const timer = window.setInterval(() => setRemaining((value) => Math.max(0, value - 1)), 1000);
-    return () => window.clearInterval(timer);
-  }, [submitted]);
+    let expiry = Date.now() + exercise.durationMinutes * 60_000;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      const saved = raw ? JSON.parse(raw) : null;
+      if (saved?.version === 1 && Number.isFinite(saved.deadline) && saved.deadline > 0) {
+        expiry = saved.deadline;
+        const questionIds = new Set(exercise.questions.map((q) => q.id));
+        setAnswers(Object.fromEntries(Object.entries(saved.answers ?? {}).filter(([id, value]) => questionIds.has(id) && typeof value === "string")) as Record<string, string>);
+        setWriting(typeof saved.writing === "string" ? saved.writing : "");
+        setSubmitted(saved.submitted === true);
+        setAutomaticSubmit(saved.automaticSubmit === true);
+        if (saved.submitted === true && Number.isFinite(saved.remaining)) setRemaining(Math.max(0, saved.remaining));
+        else setRemaining(Math.max(0, Math.ceil((expiry - Date.now()) / 1000)));
+      }
+    } catch {
+      setStorageError("Không khôi phục được bài trên trình duyệt này. Hãy giữ trang mở khi làm bài.");
+    }
+    setDeadline(expiry);
+    setReady(true);
+  }, [exercise.durationMinutes, exercise.questions, storageKey]);
 
   useEffect(() => {
-    if (!submitted && remaining === 0) void submit(true);
+    if (!ready) return;
+    try {
+      localStorage.setItem(storageKey, JSON.stringify({ version: 1, answers, writing, deadline, submitted, automaticSubmit, remaining: submittedRemaining }));
+    } catch {
+      setStorageError("Trình duyệt không lưu được bài. Hãy giữ trang mở để tránh mất câu trả lời.");
+    }
+  }, [answers, writing, deadline, submitted, automaticSubmit, submittedRemaining, ready, storageKey]);
+
+  useEffect(() => {
+    if (!ready || submitted) return;
+    const tick = () => setRemaining(Math.max(0, Math.ceil((deadline - Date.now()) / 1000)));
+    const timer = window.setInterval(tick, 1000);
+    document.addEventListener("visibilitychange", tick);
+    return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", tick); };
+  }, [ready, submitted, deadline]);
+
+  useEffect(() => {
+    if (ready && !submitted && remaining === 0) void submit(true);
     // The timer intentionally submits only once when it reaches zero.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remaining, submitted]);
+  }, [remaining, submitted, ready]);
 
   useEffect(() => {
     if (recording !== "recording") return;
@@ -126,9 +164,12 @@ export function LearningExercisePlayer({ exercise, audioSrc }: LearningExerciseP
   const isReading = exercise.skill === "READING";
   const questionCount = exercise.questions.length;
 
+  if (!ready) return <Card><p role="status" className="text-sm text-ink-muted">Đang khôi phục phiên luyện tập…</p></Card>;
+
   return (
     <div className="space-y-5">
-      <Card className="sticky top-3 z-10 border-2 border-brand/30 bg-white/95 shadow-lg backdrop-blur" padding="sm">
+      {storageError ? <p role="alert" className="text-sm text-red-700">{storageError}</p> : <p className="text-xs text-ink-muted">Đáp án và thời gian được giữ trên trình duyệt này khi tải lại trang.</p>}
+      <Card className="sticky top-3 z-10 border-2 border-brand/30 bg-surface-card/95 shadow-lg backdrop-blur" padding="sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-brand">Phiên luyện tập</p>
@@ -180,6 +221,12 @@ export function LearningExercisePlayer({ exercise, audioSrc }: LearningExerciseP
             <p className="mt-1 text-sm text-ink-muted">{submitted ? "Đáp án, transcript và bài mẫu đã được mở để bạn tự đối chiếu." : "Kiểm tra lại câu trả lời rồi nộp để xem phần đối chiếu."}</p>
           </div>
           {!submitted ? <Button type="button" disabled={submitting} onClick={() => void submit()}>{submitting ? "Đang nộp…" : "Nộp bài"}</Button> : null}
+          {submitted ? <Button type="button" variant="outline" onClick={() => {
+            setAnswers({}); setWriting(""); setSubmitted(false); setAutomaticSubmit(false);
+            setRemaining(exercise.durationMinutes * 60); setDeadline(Date.now() + exercise.durationMinutes * 60_000);
+            if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+            setRecordingUrl(null); setRecording("idle"); setRecordingSeconds(0); setRecordingError("");
+          }}>Làm lại bài</Button> : null}
         </div>
       </Card>
     </div>
@@ -208,7 +255,7 @@ function QuestionPanel({ exercise, answers, submitted, onChoose, writing, setWri
     <div className="space-y-4">
       {exercise.questions.map((question) => (
         <Card key={question.id} className={cn("border-2", questionCardClass(question, answers[question.id], submitted))} padding="lg">
-          <div className="flex items-start gap-3"><span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-ink text-sm font-extrabold text-white">{question.number}</span><div className="min-w-0 flex-1"><p className="font-extrabold leading-6 text-ink">{question.prompt}</p>{question.options.length ? <div className="mt-4 grid gap-2">{question.options.map((option, index) => { const selected = answers[question.id] === String(index); return <button key={`${question.id}-${option}`} type="button" disabled={submitted} aria-pressed={selected} onClick={() => onChoose(question.id, String(index))} className={cn("min-h-12 rounded-xl px-4 py-3 text-left text-sm font-semibold transition", answerClass(question, answers[question.id], index, submitted), selected && !submitted && "border-brand bg-brand-soft text-brand")}>{String.fromCharCode(65 + index)}. {option}{submitted && question.answerIndex === index ? <span className="ml-2 text-xs font-extrabold text-accent-green">Đáp án đúng</span> : null}</button>; })}</div> : null}{exercise.skill === "WRITING" ? <WritingBox value={writing} disabled={submitted} onChange={setWriting} /> : null}{submitted ? <AnswerReview question={question} selected={answers[question.id]} /> : null}</div></div>
+          <div className="flex items-start gap-3"><span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand text-sm font-extrabold text-white">{question.number}</span><div className="min-w-0 flex-1"><p className="font-extrabold leading-6 text-ink">{question.prompt}</p>{question.options.length ? <div className="mt-4 grid gap-2">{question.options.map((option, index) => { const selected = answers[question.id] === String(index); return <button key={`${question.id}-${option}`} type="button" disabled={submitted} aria-pressed={selected} onClick={() => onChoose(question.id, String(index))} className={cn("min-h-12 rounded-xl px-4 py-3 text-left text-sm font-semibold transition", answerClass(question, answers[question.id], index, submitted), selected && !submitted && "border-brand bg-brand-soft text-brand")}>{String.fromCharCode(65 + index)}. {option}{submitted && question.answerIndex === index ? <span className="ml-2 text-xs font-extrabold text-accent-green">Đáp án đúng</span> : null}</button>; })}</div> : null}{exercise.skill === "WRITING" ? <WritingBox value={writing} disabled={submitted} onChange={setWriting} /> : null}{submitted ? <AnswerReview question={question} selected={answers[question.id]} /> : null}</div></div>
         </Card>
       ))}
       {!exercise.questions.length ? <Card className="border-2 border-ink/15"><p className="text-sm text-ink-muted">Bộ bài chưa có câu hỏi hợp lệ để tương tác. Hãy kiểm tra lại mẫu nội dung trong trang quản trị.</p></Card> : null}

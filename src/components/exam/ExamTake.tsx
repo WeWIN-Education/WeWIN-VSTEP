@@ -159,23 +159,6 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
   const activeRecordingKeyRef = useRef<string | null>(null);
   const microphoneRequestRef = useRef<Promise<boolean> | null>(null);
 
-  useEffect(()=>{
-    const id=new URLSearchParams(window.location.search).get("attempt");
-    if(!id)return;
-    let cancelled=false;
-    void fetch(`/api/exams/attempts/${encodeURIComponent(id)}`).then(async response=>{
-      if(!response.ok)throw new Error("Không tải được kết quả lượt thi.");
-      const data=await response.json();
-      if(cancelled||data.status!=="SUBMITTED")return;
-      setAttemptId(id);setSubmittedResult({...data,id});
-      setWritingAnswers(data.writingAnswers||{});setAnswers(data.answers||{});
-      setRecordings(Object.fromEntries(Object.entries(data.recordings||{}).map(([key,value])=>[key,restoreRecording(value)])));
-      setBookmarks(new Set((data.bookmarks ?? []).map((item: { questionId: string }) => item.questionId)));
-      setStage("submitted");
-    }).catch(error=>{if(!cancelled)setErrorMessage(error.message);});
-    return ()=>{cancelled=true;};
-  },[]);
-
   const skill = exam.parts[skillIndex]?.skill ?? "listening";
   const skillLabel = exam.parts[skillIndex]?.title ?? "Listening";
   const units = useMemo(() => getUnits(exam, content, skill), [content, exam, skill]);
@@ -542,34 +525,36 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
 
     preflightAudioRef.current?.pause();
     try {
-      if (candidate?.role === "GUEST") {
-        const sessionResponse = await fetch("/api/exams/guest-session", { method: "POST", credentials: "same-origin" });
-        if (!sessionResponse.ok) throw new Error("Không thể tạo phiên học thử. Hãy thử lại.");
+      // A URL belongs to one attempt, including after submission in another tab.
+      let id = new URLSearchParams(window.location.search).get("attempt");
+      if (!id) {
+        if (candidate?.role === "GUEST") {
+          const sessionResponse = await fetch("/api/exams/guest-session", { method: "POST", credentials: "same-origin" });
+          if (!sessionResponse.ok) throw new Error("Không thể tạo phiên học thử. Hãy thử lại.");
+        }
+        const response = await fetch("/api/exams/attempts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ program: exam.program, slug: exam.slug, catalog }),
+        });
+        const data = await response.json().catch(() => ({})) as { id?: string; attemptId?: string; error?: string };
+        if (!response.ok) throw new Error(data.error || "Không thể bắt đầu lượt thi.");
+        id = data.id ?? data.attemptId ?? null;
       }
-      const response = await fetch("/api/exams/attempts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ program: exam.program, slug: exam.slug, catalog }),
-      });
-      if (!response.ok) {
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
-        throw new Error(data.error || "Không thể bắt đầu lượt thi.");
-      }
-      const data = (await response.json()) as { id?: string; attemptId?: string; expiresAt?: string };
-      const id = data.id ?? data.attemptId;
       if (!id) throw new Error("Máy chủ chưa trả về mã lượt thi.");
-      const restoredResponse=await fetch(`/api/exams/attempts/${id}`, { cache: "no-store" });
-      if(!restoredResponse.ok)throw new Error("Chưa tải được bài làm đã lưu.");
+      const query = new URLSearchParams(window.location.search);
+      query.set("attempt", id);
+      window.history.replaceState(null, "", `${window.location.pathname}?${query.toString()}`);
+      const restoredResponse=await fetch(`/api/exams/attempts/${encodeURIComponent(id)}`, { cache: "no-store" });
+      if(!restoredResponse.ok)throw new Error("Không tải được lượt thi này. Hãy thử lại hoặc mở danh sách đề.");
       const restored=await restoredResponse.json();
+      if (!mountedRef.current) return;
+      if (restored.examSlug !== exam.slug || restored.catalog !== catalog) throw new Error("Mã lượt thi không thuộc đề hoặc kho kỹ năng này. Hãy mở đúng lượt từ lịch sử.");
       setAnswers(restored.answers||{});answersRef.current=restored.answers||{};
       setWritingAnswers(restored.writingAnswers||{});writingAnswersRef.current=restored.writingAnswers||{};
       const restoredRecordings=Object.fromEntries(Object.entries(restored.recordings||{}).map(([key,value])=>[key,restoreRecording(value)]));
       setRecordings(restoredRecordings);recordingsRef.current=restoredRecordings;
-      const bookmarkResponse = await fetch(`/api/exams/attempts/${encodeURIComponent(id)}/bookmarks`, { cache: "no-store" });
-      if (bookmarkResponse.ok) {
-        const bookmarkData = await bookmarkResponse.json() as { bookmarks?: { questionId: string }[] };
-        setBookmarks(new Set((bookmarkData.bookmarks ?? []).map((item) => item.questionId)));
-      }
+      setBookmarks(new Set((restored.bookmarks ?? []).map((item: { questionId: string }) => item.questionId)));
       setSkillIndex(catalog === "FULL" ? restored.currentPart || 0 : catalogSkillIndex);setUnitIndex(restored.currentUnit||0);
       attemptIdRef.current = id;
       setAttemptId(id);
@@ -578,7 +563,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
         setStage("submitted");
         return;
       }
-      const expiresAt = data.expiresAt ?? restored.expiresAt;
+      const expiresAt = restored.expiresAt;
       const expiry = expiresAt ? Date.parse(expiresAt) : NaN;
       setDeadline(Number.isFinite(expiry) ? expiry : Date.now() + getDurationSeconds(exam, catalog) * 1000);
       setStage("exam");
@@ -594,7 +579,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
   }, [candidate?.role, catalog, catalogSkillIndex, exam]);
 
   useEffect(() => {
-    if (catalog === "FULL" || stage !== "preflight") return;
+    if (stage !== "preflight" || (catalog === "FULL" && !new URLSearchParams(window.location.search).has("attempt"))) return;
     void beginExam();
   }, [beginExam, catalog, stage]);
 
@@ -960,6 +945,8 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
   const [gradingSnapshot, setGradingSnapshot] = useState<GradingSnapshot>({});
   const [gradingBusy, setGradingBusy] = useState(false);
   const [gradingError, setGradingError] = useState("");
+  const [reviewError, setReviewError] = useState("");
+  const [reviewRetry, setReviewRetry] = useState(0);
   const gradingSnapshotRef = useRef(gradingSnapshot);
   const gradingRunRef = useRef(0);
   const gradingRequestRef = useRef<AbortController | null>(null);
@@ -1083,22 +1070,29 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
   useEffect(() => {
     const controller = new AbortController();
     if (!attemptId) return () => controller.abort();
-    void fetch(`/api/exams/attempts/${encodeURIComponent(attemptId)}/review`, { signal: controller.signal, cache: "no-store" })
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Chưa tải được đáp án. Hãy tải lại trang.");
-        return response.json();
-      })
-      .then((data) => {
+    let timer: number | undefined;
+    let retries = 0;
+    setReviewError("");
+    const load = async () => {
+      let retryable = true;
+      try {
+        const response = await fetch(`/api/exams/attempts/${encodeURIComponent(attemptId)}/review`, { signal: controller.signal, cache: "no-store" });
+        retryable = response.status === 404 || response.status >= 500;
+        if (!response.ok) throw new Error("Chưa tải được đáp án. Bài làm vẫn đã được lưu.");
+        const data = await response.json();
         if (!mountedRef.current || controller.signal.aborted) return;
         // A slow initial review must not replace newer polled grading results.
         setResult((current) => ({ ...current, ...(gradingSnapshotRef.current.status ? {} : toPublicGrading(data.grading)), review: data.review }));
-      })
-      .catch((error) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-        if (mountedRef.current) setGradingError("Chưa tải được đáp án. Hãy tải lại trang.");
-      });
-    return () => controller.abort();
-  }, [attemptId]);
+        setReviewError("");
+      } catch {
+        if (!mountedRef.current || controller.signal.aborted) return;
+        if (retryable && retries < 2) timer = window.setTimeout(() => void load(), ++retries * 1000);
+        else setReviewError("Chưa tải được đáp án. Bài làm vẫn đã được lưu.");
+      }
+    };
+    void load();
+    return () => { controller.abort(); window.clearTimeout(timer); };
+  }, [attemptId, reviewRetry]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -1114,7 +1108,7 @@ function ResultScreen({ exam, result: initialResult, candidate, writingAnswers, 
   const account = candidate?.email?.trim() || "Tài khoản hiện tại";
   const attempt = result.id ?? result.attemptId ?? "—";
   const canRetry = Boolean(gradingSnapshot.retryable) && !gradingBusy;
-  return <div className="min-h-screen bg-[#F8FAFC] px-4 py-8 text-ink"><div className="mx-auto max-w-[1220px]"><header className="flex flex-wrap items-start justify-between gap-4"><div><Image src="/brand/wewin-logo.png" alt="WEWIN EDUCATION" width={150} height={37} className="h-9 w-auto" /><p className="mt-6 text-xs font-extrabold uppercase tracking-[0.15em] text-brand">BÁO CÁO KẾT QUẢ</p><h1 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Bài luyện đã được nộp</h1></div><div className="rounded-2xl border border-brand-soft bg-surface-card px-4 py-3 text-sm"><p className="text-xs text-ink-muted">Mã lượt thi</p><p className="mt-1 break-all font-mono text-xs font-bold text-brand">{attempt}</p></div></header><div className="mt-7 grid gap-5 lg:grid-cols-[1.08fr_.72fr]"><section className="overflow-hidden rounded-3xl border border-brand-soft bg-surface-card shadow-sm"><div className="border-t-4 border-brand bg-brand-soft/40 px-6 py-7 text-center md:px-10"><h2 className="text-2xl font-extrabold tracking-wide text-brand md:text-3xl">KẾT QUẢ {exam.program.toUpperCase()}</h2><p className="mt-2 text-sm text-ink-muted">Kết quả luyện tập, không thay thế chứng chỉ VSTEP</p><div className="mt-7 flex flex-wrap items-center justify-center gap-7"><div><p className="text-xs font-bold text-ink-muted">ĐIỂM TỔNG</p><p className="mt-1 text-5xl font-extrabold text-brand">{typeof result.overallScore === "number" ? result.overallScore : "—"}</p></div><div className="hidden h-14 w-px bg-brand-soft sm:block" /><div><p className="text-xs font-bold text-ink-muted">TRẠNG THÁI</p><p className="mt-1 text-2xl font-extrabold text-brand">Đã nộp</p></div></div></div><div className="px-6 py-7 md:px-10"><h3 className="flex items-center gap-2 text-xl font-extrabold"><BarChart3 className="size-5 text-brand" aria-hidden="true" />Điểm thành phần</h3><div className="mt-5 grid gap-3 sm:grid-cols-4"><ScoreCard label="Nghe" score={result.listening} /><ScoreCard label="Đọc" score={result.reading} /><ScoreCard label="Viết" score={typeof result.writingScore === "number" ? { score: result.writingScore } : undefined} /><ScoreCard label="Nói" score={typeof result.speakingScore === "number" ? { score: result.speakingScore } : undefined} /></div><div className="mt-7 flex flex-wrap justify-center gap-3 border-t border-border pt-6"><a href="#answer-review" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-brand px-6 text-sm font-extrabold text-brand transition hover:bg-brand-soft"><CheckCircle2 className="size-4" aria-hidden="true" />Xem dữ liệu đáp án</a><Link href={`/exam/${exam.program}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand px-8 text-sm font-extrabold text-white shadow-sm transition hover:bg-brand-dark"><Send className="size-4" aria-hidden="true" />Làm bài khác</Link><Link href="/" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-surface-card px-6 text-sm font-extrabold text-ink transition hover:border-brand hover:bg-brand-soft hover:text-brand"><House className="size-4" aria-hidden="true" />Về trang chủ</Link></div></div></section><aside className="space-y-5"><section className="rounded-3xl border border-border bg-surface-card p-5 shadow-sm md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><ShieldCheck className="size-5 text-brand" aria-hidden="true" />Thông tin thí sinh</h3><div className="mt-5 rounded-2xl bg-surface p-5"><div className="flex items-center gap-4"><span className="flex size-12 items-center justify-center rounded-full bg-brand text-white"><span className="text-lg font-extrabold">{name.slice(0, 1).toUpperCase()}</span></span><div className="min-w-0"><p className="break-words font-extrabold">{name}</p><span className="mt-1 block break-all text-xs text-ink-muted">{account}</span></div></div></div><InfoRow label="Vai trò" value={candidate?.role === "ADMIN" ? "Quản trị viên" : candidate?.role === "LEARNER" ? "Học viên" : "Khách học thử"} /><InfoRow label="Mã lượt thi" value={attempt} /></section><section className="rounded-3xl border border-brand-soft bg-brand-soft/40 p-5 md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><Headphones className="size-5 text-brand" aria-hidden="true" />Bước tiếp theo</h3><p className="mt-4 text-sm leading-relaxed text-ink">Bạn có thể xem lại dữ liệu đã lưu bên dưới hoặc bắt đầu một bài luyện khác.</p></section></aside></div><section className="mt-5 rounded-3xl border border-brand-soft bg-surface-card p-6"><h2 className="text-xl font-bold">Nhận xét phần Viết & Nói</h2><p className="mt-2 text-sm text-ink-muted">Kết quả từng phần sẽ hiện ngay khi có dữ liệu. Bạn có thể rời trang và quay lại; trạng thái chấm sẽ được đọc lại từ hệ thống.</p><GradingProgressPanel snapshot={gradingSnapshot} busy={gradingBusy} error={gradingError} onRetry={canRetry ? () => void requestGrading() : undefined} /><GradingFeedback value={result.writing}/><GradingFeedback value={result.speaking}/></section><ResultReview items={reviewItems} writingAnswers={writingAnswers} recordings={recordings} /></div></div>;
+  return <div className="min-h-screen bg-[#F8FAFC] px-4 py-8 text-ink"><div className="mx-auto max-w-[1220px]"><header className="flex flex-wrap items-start justify-between gap-4"><div><Image src="/brand/wewin-logo.png" alt="WEWIN EDUCATION" width={150} height={37} className="h-9 w-auto" /><p className="mt-6 text-xs font-extrabold uppercase tracking-[0.15em] text-brand">BÁO CÁO KẾT QUẢ</p><h1 className="mt-2 text-3xl font-extrabold tracking-tight md:text-4xl">Bài luyện đã được nộp</h1></div><div className="rounded-2xl border border-brand-soft bg-surface-card px-4 py-3 text-sm"><p className="text-xs text-ink-muted">Mã lượt thi</p><p className="mt-1 break-all font-mono text-xs font-bold text-brand">{attempt}</p></div></header><div className="mt-7 grid gap-5 lg:grid-cols-[1.08fr_.72fr]"><section className="overflow-hidden rounded-3xl border border-brand-soft bg-surface-card shadow-sm"><div className="border-t-4 border-brand bg-brand-soft/40 px-6 py-7 text-center md:px-10"><h2 className="text-2xl font-extrabold tracking-wide text-brand md:text-3xl">KẾT QUẢ {exam.program.toUpperCase()}</h2><p className="mt-2 text-sm text-ink-muted">Kết quả luyện tập, không thay thế chứng chỉ VSTEP</p><div className="mt-7 flex flex-wrap items-center justify-center gap-7"><div><p className="text-xs font-bold text-ink-muted">ĐIỂM TỔNG</p><p className="mt-1 text-5xl font-extrabold text-brand">{typeof result.overallScore === "number" ? result.overallScore : "—"}</p></div><div className="hidden h-14 w-px bg-brand-soft sm:block" /><div><p className="text-xs font-bold text-ink-muted">TRẠNG THÁI</p><p className="mt-1 text-2xl font-extrabold text-brand">Đã nộp</p></div></div></div><div className="px-6 py-7 md:px-10"><h3 className="flex items-center gap-2 text-xl font-extrabold"><BarChart3 className="size-5 text-brand" aria-hidden="true" />Điểm thành phần</h3><div className="mt-5 grid gap-3 sm:grid-cols-4"><ScoreCard label="Nghe" score={result.listening} /><ScoreCard label="Đọc" score={result.reading} /><ScoreCard label="Viết" score={typeof result.writingScore === "number" ? { score: result.writingScore } : undefined} /><ScoreCard label="Nói" score={typeof result.speakingScore === "number" ? { score: result.speakingScore } : undefined} /></div><div className="mt-7 flex flex-wrap justify-center gap-3 border-t border-border pt-6"><a href="#answer-review" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-brand px-6 text-sm font-extrabold text-brand transition hover:bg-brand-soft"><CheckCircle2 className="size-4" aria-hidden="true" />Xem dữ liệu đáp án</a><Link href={`/exam/${exam.program}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-brand px-8 text-sm font-extrabold text-white shadow-sm transition hover:bg-brand-dark"><Send className="size-4" aria-hidden="true" />Làm bài khác</Link><Link href="/" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-surface-card px-6 text-sm font-extrabold text-ink transition hover:border-brand hover:bg-brand-soft hover:text-brand"><House className="size-4" aria-hidden="true" />Về trang chủ</Link></div></div></section><aside className="space-y-5"><section className="rounded-3xl border border-border bg-surface-card p-5 shadow-sm md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><ShieldCheck className="size-5 text-brand" aria-hidden="true" />Thông tin thí sinh</h3><div className="mt-5 rounded-2xl bg-surface p-5"><div className="flex items-center gap-4"><span className="flex size-12 items-center justify-center rounded-full bg-brand text-white"><span className="text-lg font-extrabold">{name.slice(0, 1).toUpperCase()}</span></span><div className="min-w-0"><p className="break-words font-extrabold">{name}</p><span className="mt-1 block break-all text-xs text-ink-muted">{account}</span></div></div></div><InfoRow label="Vai trò" value={candidate?.role === "ADMIN" ? "Quản trị viên" : candidate?.role === "LEARNER" ? "Học viên" : "Khách học thử"} /><InfoRow label="Mã lượt thi" value={attempt} /></section><section className="rounded-3xl border border-brand-soft bg-brand-soft/40 p-5 md:p-6"><h3 className="flex items-center gap-2 text-xl font-extrabold"><Headphones className="size-5 text-brand" aria-hidden="true" />Bước tiếp theo</h3><p className="mt-4 text-sm leading-relaxed text-ink">Bạn có thể xem lại dữ liệu đã lưu bên dưới hoặc bắt đầu một bài luyện khác.</p></section></aside></div><section className="mt-5 rounded-3xl border border-brand-soft bg-surface-card p-6"><h2 className="text-xl font-bold">Nhận xét phần Viết & Nói</h2><p className="mt-2 text-sm text-ink-muted">Kết quả từng phần sẽ hiện ngay khi có dữ liệu. Bạn có thể rời trang và quay lại; trạng thái chấm sẽ được đọc lại từ hệ thống.</p><GradingProgressPanel snapshot={gradingSnapshot} busy={gradingBusy} error={gradingError} onRetry={canRetry ? () => void requestGrading() : undefined} /><GradingFeedback value={result.writing}/><GradingFeedback value={result.speaking}/></section><>{reviewError ? <div role="alert" className="mt-5 rounded-2xl border border-border bg-surface-card p-4 text-sm"><p>{reviewError}</p><button type="button" onClick={() => setReviewRetry((value) => value + 1)} className="mt-3 min-h-11 rounded-xl border border-brand px-4 font-bold text-brand">Tải lại đáp án</button></div> : null}</><ResultReview items={reviewItems} writingAnswers={writingAnswers} recordings={recordings} /></div></div>;
 }
 
 function mergeGradingResult(result: SubmitResult): SubmitResult {

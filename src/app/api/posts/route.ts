@@ -14,9 +14,11 @@ export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Bạn cần đăng nhập để đăng bài." }, { status: 401 });
   const form = await request.formData();
-  const title = typeof form.get("title") === "string" ? String(form.get("title")).trim().slice(0, 140) : "";
+  const title = typeof form.get("title") === "string" ? String(form.get("title")).trim() : "";
   const body = typeof form.get("body") === "string" ? String(form.get("body")).trim() : "";
-  const image = form.get("image");
+  const attached = form.get("image");
+  // Browsers include an unnamed, empty File when the optional input is untouched.
+  const image = attached instanceof File && !attached.name && !attached.size ? null : attached;
   if (!body || body.length < 10) return NextResponse.json({ error: "Nội dung bài viết cần ít nhất 10 ký tự." }, { status: 400 });
   if (body.length > 5000) return NextResponse.json({ error: "Nội dung bài viết tối đa 5.000 ký tự." }, { status: 400 });
   if (title.length > 140) return NextResponse.json({ error: "Tiêu đề tối đa 140 ký tự." }, { status: 400 });

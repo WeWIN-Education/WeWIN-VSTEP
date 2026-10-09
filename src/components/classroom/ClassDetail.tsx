@@ -8,6 +8,7 @@ import type { PreviewFile } from "./DocumentViewer";
 import {
   api,
   Badge,
+  SessionBadge,
   Empty,
   Field,
   Form,
@@ -619,7 +620,7 @@ export function SessionRow({ session: s }: { session: Session }) {
           {when(s.startsAt)} · {s.host.name}
         </p>
       </div>
-      <Badge value={s.status} />
+      <SessionBadge session={s} />
     </Link>
   );
 }
