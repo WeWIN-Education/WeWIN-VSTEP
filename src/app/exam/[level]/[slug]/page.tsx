@@ -28,12 +28,13 @@ export default async function ExamTakePage({ params, searchParams }: Props) {
   const access = authState.kind === "authenticated"
     ? authState.user.role === "ADMIN" ? { kind: "admin" as const, userId: authState.user.id } : { kind: "learner" as const, userId: authState.user.id }
     : { kind: "guest" as const };
-  const exam = await getExamForRun(program, slug, access);
+  const catalog = readCatalog(filters.catalog);
+  const exam = await getExamForRun(program, slug, access, catalog);
   if (!exam) notFound();
   return (
     <ExamTake
       exam={exam}
-      catalog={readCatalog(filters.catalog)}
+      catalog={catalog}
       candidate={
         authState.kind === "authenticated"
           ? {

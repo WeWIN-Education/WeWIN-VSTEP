@@ -15,14 +15,15 @@ function Fixture(){
   const [mounted,setMounted]=useState(true);
   useEffect(()=>{const refresh=e=>{setEntries((e.detail?.ids??Array.from({length:30},(_,i)=>i)).map(word));if(e.detail?.scope)setScope(e.detail.scope);if(e.detail?.unmount)setMounted(false)};window.addEventListener('qa:refresh',refresh);return()=>window.removeEventListener('qa:refresh',refresh)},[]);
   if(!mounted)return React.createElement('p',null,'Unmounted');
-  return location.search.includes('board') ? React.createElement(VocabularyNotebookBoard,{key:scope,entries,initialPage:{nextCursor:'29',previousCursor:null},initialCounts:{ALL:65,NEW:65,LEARNING:0,MASTERED:0},userId:scope}) : React.createElement(VocabularyFlashcards,{entries,title:'QA words',pagination:{endpoint:'/api/vocabulary/entries?mode=collection',sessionKey:'QA:'+scope,nextCursor:entries.length>=30?entries.at(-1).cursor:null,previousCursor:null,notebook:location.search.includes('notebook'),status:location.search.includes('filtered')?'NEW':'ALL'}});
+  return location.search.includes('board') ? React.createElement(VocabularyNotebookBoard,{key:scope,entries,initialPage:{nextCursor:'29',previousCursor:null},initialCounts:{ALL:65,NEW:65,LEARNING:0,MASTERED:0},userId:scope}) : React.createElement(VocabularyFlashcards,{guest:location.search.includes('guest'),entries,title:'QA words',pagination:{endpoint:'/api/vocabulary/entries?mode=collection',sessionKey:'QA:'+scope,nextCursor:entries.length>=30?entries.at(-1).cursor:null,previousCursor:null,notebook:location.search.includes('notebook'),status:location.search.includes('filtered')?'NEW':'ALL'}});
 }
 window.qaCommits=[];
 createRoot(document.getElementById('root')).render(React.createElement(Profiler,{id:'flashcards',onRender:(id,phase,duration)=>window.qaCommits.push(duration)},React.createElement(Fixture)));`;
   const css = readdirSync(".next/static/css").filter(n => n.endsWith(".css")).map(n => readFileSync(`.next/static/css/${n}`, "utf8")).join("\n");
   const server = await createServer({ configFile: false, root: process.cwd(), cacheDir: "node_modules/.vite-vocabulary", logLevel: "error", oxc: { jsx: { runtime: "automatic" } },
+    optimizeDeps: { entries: [] },
     resolve: { alias: { "@": resolve("src") } }, define: { "process.env.NODE_ENV": JSON.stringify("development") },
-    server: { host: "127.0.0.1", port: 0 },
+    server: { host: "127.0.0.1", port: 0, watch: { ignored: ["**/disk-audit-*/**"] } },
     plugins: [{ name: "vocabulary-fixture", enforce: "pre", resolveId(id) { if (id === "/qa-entry" || id === "next/image") return `\0${id}`; },
       load(id) { if (id === "\0/qa-entry") return fixture; if (id === "\0next/image") return `import React from 'react'; export default function Image({fill,priority,unoptimized,...props}) {return React.createElement('img',props)}`; },
       configureServer(s) { s.middlewares.use((req, res, next) => { if (req.url?.startsWith("/fixture")) { res.setHeader("Content-Type", "text/html; charset=utf-8"); res.end(`<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style></head><body><div id="root"></div><script type="module" src="/qa-entry"></script></body></html>`); } else next(); }); },
@@ -65,7 +66,7 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
       await route.fulfill({ json: { items, nextCursor: start + items.length < 65 ? String(start + items.length - 1) : null, previousCursor: start > 0 ? String(start) : null, counts } }).catch(() => {});
       if (held) finish();
     });
-    await page.goto(`http://127.0.0.1:${address.port}/fixture?A`);
+    await page.goto(`http://127.0.0.1:${address.port}/fixture?A`, { waitUntil: "domcontentloaded" });
     await page.waitForFunction(() => document.querySelectorAll("button").length > 1).catch(() => { throw new Error(errors.join("; ") || "Fixture did not mount"); });
     await page.getByRole("button", { name: "word 29", exact: true }).click();
     await page.getByRole("dialog").waitFor();
@@ -202,6 +203,25 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
     await page.getByRole("tab", { name: "Tất cả 64", exact: true }).waitFor();
     expect(calls.slice(before).filter(url => url.includes("/entries"))).toHaveLength(2);
     expect(calls.slice(before).filter(url => url.includes("/entries")).every(url => url.includes("countsOnly=1"))).toBe(true);
+    // Guests can study and page through shared words without authenticated writes.
+    await page.goto(`http://127.0.0.1:${address.port}/fixture?guest`);
+    const guestCalls = calls.length;
+    await page.getByRole("button", { name: "word 0", exact: true }).click();
+    await page.getByRole("button", { name: /Đã nhớ · thẻ tiếp/ }).click();
+    await page.getByRole("button", { name: /^Mặt trước: word 1\./ }).waitFor();
+    await page.getByRole("button", { name: "Đăng nhập để lưu sổ tay", exact: true }).click();
+    await page.getByRole("alert").getByText("Đăng nhập để lưu từ vào sổ tay và đồng bộ tiến độ.").waitFor();
+    expect(calls.slice(guestCalls).some(url => url.includes("/progress"))).toBe(false);
+    await page.getByRole("button", { name: "Đóng", exact: true }).click();
+    for (const theme of ["light", "dark"]) {
+      await page.evaluate(theme => { document.documentElement.dataset.theme = theme; }, theme);
+      for (const width of [1440, 375]) {
+        await page.setViewportSize({ width, height: 900 });
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        await page.screenshot({ path: `.qa/guest-flashcard-${theme}-${width}.png` });
+      }
+    }
+    await page.keyboard.press("Escape");
     expect(errors).toEqual([]);
   } finally { await browser.close(); await server.close(); }
 }, 90_000);

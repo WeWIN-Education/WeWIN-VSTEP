@@ -1,10 +1,23 @@
 import type { ExamPaper } from "@prisma/client";
 import type { ExamFixture, ExamProgram } from "./exam-config";
+import type { ExamCatalog } from "@prisma/client";
 import type { VstepTest1Public } from "./vstep-test-1-public";
 
 export type VstepAnswer = { correctIndex: number; explanation: string };
 export type VstepPrivateData = { version: 1; answerKey: Record<string, VstepAnswer>; sourceName?: string };
 export type StoredVstepPublic = VstepTest1Public & { version: 1; durationMinutes: number; questionCount: number };
+
+/** Send only the selected skill's content to the exam client. Keep all part metadata. */
+export function fixtureForCatalog(exam: ExamFixture, catalog: ExamCatalog): ExamFixture {
+  if (catalog === "FULL" || !exam.content) return exam;
+  const content = exam.content;
+  return { ...exam, content: { ...content,
+    listening: { ...content.listening, parts: catalog === "LISTENING" ? content.listening.parts : [] },
+    reading: { ...content.reading, passages: catalog === "READING" ? content.reading.passages : [] },
+    writing: catalog === "WRITING" ? content.writing : [],
+    speaking: { ...content.speaking, parts: catalog === "SPEAKING" ? content.speaking.parts : [] },
+  } };
+}
 
 export function readStoredPaper(value: unknown): StoredVstepPublic | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;

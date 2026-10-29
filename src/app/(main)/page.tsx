@@ -27,7 +27,7 @@ export default async function HomePage() {
         eyebrow="WEWIN EDUCATION LUYỆN THI VSTEP"
         title="Tiếng Anh tự tin hơn trong kỳ thi VSTEP"
         description="Luyện thi VSTEP theo lộ trình rõ ràng. Đăng nhập để lưu tiến độ."
-        backgroundSrc="/brand/bg.png"
+        backgroundSrc="/brand/bg.webp"
         className="min-h-[220px] bg-cover bg-left md:bg-center"
       />
 

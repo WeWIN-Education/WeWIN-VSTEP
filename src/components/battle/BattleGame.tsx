@@ -106,7 +106,7 @@ export function BattleLobby({ authenticated, enabled }: { authenticated: boolean
           : <button className={styles.primary} disabled={!enabled || busy || !state} onClick={() => void send({ action: "join" })}>{busy ? "Đang tìm…" : enabled ? "Tìm trận ngay" : "Đang chuẩn bị mở đấu"}<Swords size={20} aria-hidden /></button>}
         {error && <p role="alert" className={styles.error}>{error}</p>}
       </div>
-      <div className={styles.heroArt}><div aria-hidden><BattleCharacter state={queued ? "ready" : "idle"} /></div></div>
+      <div className={styles.heroArt}><Image src={`/battle/hero/${queued ? "ready" : "idle"}.webp`} alt="Mascot WEWIN sẵn sàng thi đấu" width={768} height={768} sizes="(max-width: 700px) 280px, (max-width: 1050px) 40vw, 520px" priority className="relative h-auto w-full" /></div>
     </section>
     <div className={styles.lobbyGrid}>
       <section className={styles.panel}><span className={styles.eyebrow}><Trophy size={18} aria-hidden /> HÀNH TRÌNH CỦA BẠN</span><div className={styles.rankHeading}><RankBadge rank={rank} size={96} /><div><h2>{authenticated ? `Hạng ${RANKS[rank].name}` : "Tích XP, mở hào quang"}</h2><p>{authenticated ? `${xp.toLocaleString("vi-VN")} XP` : "Rank dùng chung XP trên toàn website."}</p></div></div>

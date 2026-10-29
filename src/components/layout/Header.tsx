@@ -16,7 +16,7 @@ export async function Header({ user }: { user: HeaderUser | null }) {
     <header className="sticky top-0 z-50 border-b-2 border-brand-soft bg-surface-card shadow-[0_4px_20px_rgb(0_74_173_/_0.03)]">
       <div className="grid min-h-[var(--header-height)] grid-cols-[auto_1fr] items-center gap-x-3 px-3 sm:px-6 xl:grid-cols-[auto_1fr_auto] 2xl:grid-cols-[auto_1fr_auto_auto]">
         <Link href="/" aria-label="WEWIN Education - Trang chủ" className="flex min-h-11 shrink-0 items-center rounded-lg focus-visible:outline-2 focus-visible:outline-brand lg:w-[232px]">
-          <Image src="/brand/wewin-logo-gold.png" alt="WEWIN EDUCATION" width={150} height={37} className="h-auto w-[120px] sm:w-[150px]" priority />
+          <Image src="/brand/wewin-logo-gold.webp" alt="WEWIN EDUCATION" width={600} height={135} sizes="150px" className="h-auto w-[120px] sm:w-[150px]" priority />
         </Link>
         <div className="hidden border-l-2 border-brand-soft pl-5 2xl:block">
           <p className="text-xs font-medium tracking-widest text-ink-muted">WEWIN LEARNING</p>

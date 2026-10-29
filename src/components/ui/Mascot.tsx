@@ -37,7 +37,7 @@ type MascotProps = {
 export function Mascot({ state = "friendly", size = 156, animated = true, className, priority = false }: MascotProps) {
   return (
     <Image
-      src={`/brand/mascots/${state}.png`}
+      src={`/brand/mascots/${state}.webp`}
       alt={`Linh vật WEWIN đang ${mascotLabels[state]}`}
       width={size}
       height={size}

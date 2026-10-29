@@ -1,7 +1,8 @@
 import "server-only";
 import { prisma } from "./prisma";
 import type { ExamProgram } from "./exam-config";
-import { fixtureFromRecord } from "./vstep-paper";
+import { fixtureForCatalog, fixtureFromRecord } from "./vstep-paper";
+import type { ExamCatalog } from "@prisma/client";
 
 export type ExamAccess =
   | { kind: "guest" }
@@ -41,8 +42,9 @@ export async function getExamPaperForAccess(program: ExamProgram, slug: string, 
  * VSTEP fixture is used only as a representation of an existing database
  * paper whose public JSON predates the stored-paper envelope.
  */
-export async function getExamForRun(program: ExamProgram, slug: string, access: ExamAccess = { kind: "learner", userId: "" }) {
+export async function getExamForRun(program: ExamProgram, slug: string, access: ExamAccess = { kind: "learner", userId: "" }, catalog: ExamCatalog = "FULL") {
   const record = await getExamPaperForAccess(program, slug, access);
   if (!record) return undefined;
-  return fixtureFromRecord(record) || undefined;
+  const exam = fixtureFromRecord(record);
+  return exam ? fixtureForCatalog(exam, catalog) : undefined;
 }

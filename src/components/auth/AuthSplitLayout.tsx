@@ -20,11 +20,12 @@ export function AuthSplitLayout({
         <div className="mb-6 flex items-center justify-between">
           <Link href="/" className="inline-flex items-center">
             <Image
-              src="/brand/wewin-logo-gold.png"
+              src="/brand/wewin-logo-gold.webp"
               alt="WEWIN EDUCATION"
-              width={150}
-              height={40}
-              className="h-9 w-auto object-contain"
+              width={600}
+              height={135}
+              sizes="150px"
+              className="h-auto w-[150px] object-contain"
               priority
             />
           </Link>

@@ -39,6 +39,7 @@ export type FlashcardEntry = {
 };
 
 type VocabularyFlashcardsProps = {
+  guest?: boolean;
   entries: FlashcardEntry[];
   title?: string;
   showIpa?: boolean;
@@ -145,6 +146,7 @@ export function VocabularyFlashcards({
   onStatusChange,
   onRemove,
   pagination,
+  guest = false,
 }: VocabularyFlashcardsProps) {
   const [items, setItems] = useState(entries);
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -337,6 +339,10 @@ export function VocabularyFlashcards({
 
   const updateStatus = useCallback(
     async (id: string, status: StudyStatus) => {
+      if (guest) {
+        setItems(items => items.map(entry => entry.id === id ? { ...entry, status } : entry));
+        return true;
+      }
       const version = dataVersion.current;
       setSavingId(id);
       setError(null);
@@ -369,7 +375,7 @@ export function VocabularyFlashcards({
         if (version === dataVersion.current) setSavingId(null);
       }
     },
-    [onStatusChange, pagination, items],
+    [onStatusChange, pagination, items, guest],
   );
 
   const removeFromNotebook = useCallback(
@@ -410,10 +416,14 @@ export function VocabularyFlashcards({
 
   const toggleSaved = useCallback(
     (entry: FlashcardEntry) => {
+      if (guest) {
+        setError("Đăng nhập để lưu từ vào sổ tay và đồng bộ tiến độ.");
+        return;
+      }
       if (entry.status) void removeFromNotebook(entry.id);
       else void updateStatus(entry.id, "NEW");
     },
-    [removeFromNotebook, updateStatus],
+    [removeFromNotebook, updateStatus, guest],
   );
 
   const markAndContinue = useCallback(
@@ -531,7 +541,7 @@ export function VocabularyFlashcards({
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {items.map((entry, index) => {
-          const saved = Boolean(entry.status);
+          const saved = !guest && Boolean(entry.status);
           return (
             <Card key={entry.id} padding="md" className="flex min-h-[218px] min-w-0 flex-col transition hover:-translate-y-0.5 hover:border-brand/40">
               <div className="flex min-w-0 items-start justify-between gap-3">
@@ -550,7 +560,7 @@ export function VocabularyFlashcards({
                   </button>
                   <button
                     type="button"
-                    aria-label={saved ? "Bỏ lưu " + entry.term : "Lưu " + entry.term + " vào sổ tay"}
+                    aria-label={guest ? "Đăng nhập để lưu " + entry.term : saved ? "Bỏ lưu " + entry.term : "Lưu " + entry.term + " vào sổ tay"}
                     disabled={savingId === entry.id}
                     onClick={() => toggleSaved(entry)}
                     className={cn(
@@ -582,8 +592,8 @@ export function VocabularyFlashcards({
       {loading && <p role="status">Đang tải mục từ…</p>}
       {(nextCursor || previousCursor) && <p className="mt-2 text-xs text-ink-muted">Đã tải {items.length} mục từ. Các thẻ tiếp theo được tải khi bạn học tiếp.</p>}
       {current ? (
-        <div ref={dialogRef} className="fixed inset-0 z-[80] min-h-dvh overflow-y-auto bg-[#F8FAFC] text-ink" role="dialog" aria-modal="true" aria-labelledby="vocabulary-study-title" tabIndex={-1}>
-          <header className="sticky top-0 z-10 border-b border-border bg-white/95 backdrop-blur">
+        <div ref={dialogRef} className="fixed inset-0 z-[80] min-h-dvh overflow-y-auto bg-surface text-ink" role="dialog" aria-modal="true" aria-labelledby="vocabulary-study-title" tabIndex={-1}>
+          <header className="sticky top-0 z-10 border-b border-border bg-surface-card/95 backdrop-blur">
             <div className="mx-auto flex min-h-[74px] w-full max-w-[1200px] items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6">
               <button type="button" onClick={closeFlashcard} aria-label="Đóng chế độ học flashcard" className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border text-ink-muted transition hover:border-brand hover:text-brand">
                 <ArrowLeft className="size-5" aria-hidden="true" />
@@ -647,7 +657,7 @@ export function VocabularyFlashcards({
                     </>
                   )}
                 </div>
-                <span className="border-t border-border bg-[#FBFCFF] px-5 py-3 text-xs font-semibold text-ink-muted">{flipped ? "Chạm để quay lại mặt trước" : "Chạm vào thẻ hoặc nhấn Space để xem nghĩa"}</span>
+                <span className="border-t border-border bg-surface px-5 py-3 text-xs font-semibold text-ink-muted">{flipped ? "Chạm để quay lại mặt trước" : "Chạm vào thẻ hoặc nhấn Space để xem nghĩa"}</span>
               </button>
 
               {error ? (
@@ -677,8 +687,8 @@ export function VocabularyFlashcards({
                   <Volume2 className="size-4" aria-hidden="true" /> Nghe phát âm
                 </button>
                 <button type="button" disabled={savingId === current.id} onClick={() => toggleSaved(current)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-soft px-4 text-sm font-extrabold text-brand transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:opacity-50">
-                  {current.status ? <BookmarkCheck className="size-4" aria-hidden="true" /> : <Bookmark className="size-4" aria-hidden="true" />}
-                  {current.status ? "Đã lưu trong sổ tay" : "Lưu vào sổ tay"}
+                  {!guest && current.status ? <BookmarkCheck className="size-4" aria-hidden="true" /> : <Bookmark className="size-4" aria-hidden="true" />}
+                  {guest ? "Đăng nhập để lưu sổ tay" : current.status ? "Đã lưu trong sổ tay" : "Lưu vào sổ tay"}
                 </button>
               </div>
 

@@ -95,10 +95,13 @@ it("uses authorized full notebook counts including personal entries", async () =
   expect(await notebookCounts("A")).toEqual({ ALL: 113, NEW: 110, LEARNING: 0, MASTERED: 3 });
   expect(mocks.personal.groupBy.mock.calls[0][0].where).toEqual({ userId: "A" });
 });
-it("denies guest requests without queries and keeps authenticated responses private", async () => {
+it("allows shared guest vocabulary without exposing progress and protects notebooks", async () => {
   mocks.user.mockResolvedValue(null);
-  expect((await GET(new Request("http://localhost/api/vocabulary/entries?mode=collocations"))).status).toBe(401);
+  expect((await GET(new Request("http://localhost/api/vocabulary/entries?mode=notebook"))).status).toBe(401);
   expect(mocks.entry.findMany).not.toHaveBeenCalled();
+  mocks.entry.findMany.mockResolvedValue(entries(3));
+  expect((await GET(new Request("http://localhost/api/vocabulary/entries?mode=collocations&userId=B"))).status).toBe(200);
+  expect(mocks.entry.findMany.mock.lastCall![0].select.progress.where).toEqual({ id: { in: [] } });
   mocks.user.mockResolvedValue({ id: "A" }); mocks.entry.findMany.mockResolvedValue([]);
   const response = await GET(new Request("http://localhost/api/vocabulary/entries?mode=collocations&userId=B"));
   expect(response.headers.get("Cache-Control")).toBe("private, no-store");

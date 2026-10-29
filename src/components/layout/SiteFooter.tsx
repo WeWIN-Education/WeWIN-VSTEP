@@ -139,10 +139,10 @@ export function SiteFooter() {
             className="inline-flex min-h-11 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--footer-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--footer-navy)]"
           >
             <Image
-              src="/brand/wewin-logo-gold.png"
+              src="/brand/wewin-logo-gold.webp"
               alt="WEWIN Education"
-              width={198}
-              height={45}
+              width={600}
+              height={135}
               sizes="198px"
               className="h-auto w-[170px] sm:w-[198px]"
             />

@@ -16,8 +16,9 @@ const exercise={skill:'READING',durationMinutes:7,sourceText:'A short reading pa
 const child=location.search.includes('exercise')?React.createElement(LearningExercisePlayer,{exercise,storageKey:location.search.includes('otherUser')?'qa-exercise-other':'qa-exercise'}):React.createElement(ExamTake,{exam,catalog:location.search.includes('speaking')?'SPEAKING':location.search.includes('full')?'FULL':'WRITING',candidate:{role:'LEARNER',name:'QA'}});
 createRoot(document.getElementById('root')).render(React.createElement(Profiler,{id:'exam',onRender:(id,phase,duration)=>window.qa.commits.push({phase,duration})},child));`;
   const server = await createServer({ configFile: false, root: process.cwd(), cacheDir: "node_modules/.vite-exam", logLevel: "error",
+    optimizeDeps: { entries: [] },
     oxc: { jsx: { runtime: "automatic" } }, resolve: { alias: { "@": resolve("src") } },
-    define: { "process.env.NODE_ENV": JSON.stringify("development") }, server: { host: "127.0.0.1", port: 0 },
+    define: { "process.env.NODE_ENV": JSON.stringify("development") }, server: { host: "127.0.0.1", port: 0, watch: { ignored: ["**/disk-audit-*/**"] } },
     plugins: [{ name: "exam-fixture", enforce: "pre",
       resolveId(id) { if (["/qa-exam", "next/image", "next/link", "@vercel/blob/client"].includes(id)) return `\0${id}`; },
       load(id) {
@@ -91,7 +92,7 @@ createRoot(document.getElementById('root')).render(React.createElement(Profiler,
       await route.fulfill({ json });
     });
     const url = `http://127.0.0.1:${(server.httpServer!.address() as { port: number }).port}/fixture`;
-    await page.goto(url);
+    await page.goto(url, { waitUntil: "domcontentloaded" });
     await page.locator("textarea").waitFor();
     await page.waitForTimeout(1100);
     const sample = () => page.evaluate(() => {

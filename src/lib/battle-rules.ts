@@ -9,8 +9,8 @@ export const QUEUE_MS = 5_000;
 export const DISCONNECT_MS = 30_000;
 export const BATTLE_QUESTION_COUNT = 15;
 export const RANKS = [
-  { name: "Đồng", min: 0, badge: "/battle/ranks/bronze.png" }, { name: "Bạc", min: 500, badge: "/battle/ranks/silver.png" }, { name: "Vàng", min: 1500, badge: "/battle/ranks/gold.png" },
-  { name: "Bạch Kim", min: 3500, badge: "/battle/ranks/platinum.png" }, { name: "Kim Cương", min: 7000, badge: "/battle/ranks/diamond.png" }, { name: "Cao Thủ", min: 12000, badge: "/battle/ranks/master.png" },
+  { name: "Đồng", min: 0, badge: "/battle/ranks/bronze.webp" }, { name: "Bạc", min: 500, badge: "/battle/ranks/silver.webp" }, { name: "Vàng", min: 1500, badge: "/battle/ranks/gold.webp" },
+  { name: "Bạch Kim", min: 3500, badge: "/battle/ranks/platinum.webp" }, { name: "Kim Cương", min: 7000, badge: "/battle/ranks/diamond.webp" }, { name: "Cao Thủ", min: 12000, badge: "/battle/ranks/master.webp" },
 ] as const;
 // Derive the schedule from persisted answers so reloads and all players share the same clock.
 export function battleTurnStarts(startsAt: Date, turns: readonly { answer: { createdAt: Date } | null }[]) {

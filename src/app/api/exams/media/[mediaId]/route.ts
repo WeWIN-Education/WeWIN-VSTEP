@@ -1,4 +1,3 @@
-import { getAttemptOwner } from "@/lib/exam-attempt-access";
 import { getAuthState } from "@/lib/access";
 import { consumeGuestRateLimit, guestRateLimitResponse } from "@/lib/guest-exams";
 import { prisma } from "@/lib/prisma";
@@ -11,17 +10,17 @@ export const runtime = "nodejs";
 const mimeByExtension: Record<string,string> = { ".mp3":"audio/mpeg", ".wav":"audio/wav", ".m4a":"audio/mp4", ".mp4":"audio/mp4", ".ogg":"audio/ogg", ".webm":"audio/webm" };
 
 export async function GET(request: Request, { params }: { params: Promise<{ mediaId: string }> }) {
-  const owner = await getAttemptOwner();
-  if (!owner || owner.kind === "invalid") return NextResponse.json({ error: "Phiên đăng nhập hoặc phiên học thử đã hết hạn." }, { status: 401 });
-  if (owner.kind === "guest") {
-    const rate = await consumeGuestRateLimit(request, "media-read", 120, owner.guestSessionId);
+  const authState = await getAuthState();
+  if (authState.kind === "invalid") return NextResponse.json({ error: "Phiên đăng nhập đã hết hạn." }, { status: 401 });
+  // Published trial audio must work before a visitor starts their first attempt.
+  if (authState.kind === "anonymous") {
+    const rate = await consumeGuestRateLimit(request, "media-read", 120);
     if (!rate.allowed) return NextResponse.json({ error: "Bạn thao tác quá nhanh. Hãy thử lại sau ít phút." }, { status: 429, headers: guestRateLimitResponse(rate) });
   }
   const { mediaId } = await params;
   if (!/^[a-f0-9-]{36}\.(mp3|wav|m4a|mp4|ogg|webm)$/i.test(mediaId)) return NextResponse.json({ error: "Audio không hợp lệ." }, { status: 400 });
-  const authState = await getAuthState();
   const allowedPapers = await prisma.examPaper.findMany({
-    where: owner.kind === "guest" ? { status: "PUBLISHED" } : authState.kind === "authenticated" && authState.user.role === "ADMIN" ? {} : { status: "PUBLISHED" },
+    where: authState.kind === "authenticated" && authState.user.role === "ADMIN" ? {} : { status: "PUBLISHED" },
     select: { sections: true },
   });
   const mediaUrl = `/api/exams/media/${mediaId}`;

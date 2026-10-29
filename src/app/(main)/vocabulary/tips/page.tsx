@@ -16,8 +16,6 @@ import {
   Volume2,
 } from "lucide-react";
 import type { Metadata } from "next";
-import { LoginGate } from "@/components/auth/LoginGate";
-import { getCurrentUser } from "@/lib/access";
 
 export const metadata: Metadata = { title: "Mẹo nhớ từ vựng | WEWIN EDUCATION" };
 
@@ -41,7 +39,6 @@ const forgettingReasons = [
 const reviewSteps = ["Ngày 1", "Ngày 2", "Ngày 4", "Ngày 7", "Ngày 14", "Ngày 30"];
 
 export default async function VocabularyTipsPage() {
-  if (!(await getCurrentUser())) return <div className="mx-auto w-full max-w-[1120px]"><PageHero eyebrow="TỪ VỰNG · PHƯƠNG PHÁP" title="Mẹo học từ nhanh thuộc, nhớ lâu" description="Đăng nhập để mở mẹo học." /><LoginGate title="Đăng nhập để mở mẹo học" description="Đăng nhập để xem đầy đủ nội dung." callbackUrl="/vocabulary/tips">{null}</LoginGate></div>;
   return (
     <div className="mx-auto w-full max-w-[1120px] space-y-7">
       <PageHero

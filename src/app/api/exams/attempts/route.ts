@@ -2,6 +2,7 @@ import { getAuthState } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { consumeGuestRateLimit, ensureGuestSession, guestRateLimitResponse } from "@/lib/guest-exams";
 import { getExamPaperForAccess } from "@/lib/exam-server";
+import { guestAttemptState } from "@/lib/guest-attempt-recovery";
 import { Prisma, type ExamCatalog, type ExamPaper, type ExamSkill } from "@prisma/client";
 import { NextResponse } from "next/server";
 
@@ -105,13 +106,17 @@ export async function POST(request: Request) {
       const result = await prisma.$transaction(async (tx) => {
         const existingUse = await tx.guestAttemptUse.findUnique({
           where: { guestSessionId_catalog_examPaperId: { guestSessionId: guest.id, catalog: catalog as ExamCatalog, examPaperId: paper.id } },
-          select: { attempt: { select: { id: true, expiresAt: true } } },
+          select: { id: true, attempt: { select: { id: true, expiresAt: true, status: true, answers: true, recordings: true } } },
         });
-        if (existingUse?.attempt) return { kind: "existing" as const, attempt: existingUse.attempt };
+        if (existingUse?.attempt) {
+          const state = guestAttemptState(existingUse.attempt);
+          if (state === "resume") return { kind: "existing" as const, attempt: existingUse.attempt };
+          if (state === "finished") return { kind: "finished" as const, attempt: existingUse.attempt };
+        }
         const usedCount = await tx.guestAttemptUse.count({ where: { guestSessionId: guest.id, catalog: catalog as ExamCatalog } });
-        if (usedCount >= 2) return { kind: "quota" as const };
+        if (!existingUse && usedCount >= 2) return { kind: "quota" as const };
 
-        const use = await tx.guestAttemptUse.create({ data: { guestSessionId: guest.id, examPaperId: paper.id, catalog: catalog as ExamCatalog } });
+        const use = existingUse ?? await tx.guestAttemptUse.create({ data: { guestSessionId: guest.id, examPaperId: paper.id, catalog: catalog as ExamCatalog } });
         const startedAt = new Date();
         const attempt = await tx.examAttempt.create({
           data: {
@@ -132,17 +137,11 @@ export async function POST(request: Request) {
         return { kind: "created" as const, attempt };
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
       if (result.kind === "quota") return noStore({ error: "Bạn đã dùng đủ 2 đề khác nhau trong kho này.", code: "GUEST_QUOTA_EXHAUSTED" }, { status: 403 });
+      if (result.kind === "finished") return noStore({ error: "Lượt học thử này đã kết thúc. Hãy mở lại bài từ đường dẫn kết quả hoặc chọn một đề khác.", code: "GUEST_ATTEMPT_FINISHED", attemptId: result.attempt.id }, { status: 409 });
       return startResponse(result.attempt);
     } catch (error) {
       const serializationConflict = error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
-      if (serializationConflict && retry < 2) continue;
-      if (isConflict(error)) {
-        const raced = await prisma.guestAttemptUse.findUnique({
-          where: { guestSessionId_catalog_examPaperId: { guestSessionId: guest.id, catalog: catalog as ExamCatalog, examPaperId: paper.id } },
-          select: { attempt: { select: { id: true, expiresAt: true } } },
-        });
-        if (raced?.attempt) return startResponse(raced.attempt);
-      }
+      if ((serializationConflict || isConflict(error)) && retry < 2) continue;
       return noStore({ error: "Không thể bắt đầu bài học thử." }, { status: 409 });
     }
   }

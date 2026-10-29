@@ -20,7 +20,7 @@ export async function notebookCounts(userId: string) {
 }
 
 export async function getVocabularyPage(userId: string, input: VocabularyScope, cursorValue?: string, direction = "next", inclusive = false, anchorId?: string) {
-  if (!userId) throw new Error("Authentication required");
+  if (!userId && input.mode === "notebook") throw new Error("Authentication required");
   const q = (input.q ?? "").trim().slice(0, 100);
   const status = ["NEW", "LEARNING", "MASTERED"].find(s => s === input.status) as "NEW" | "LEARNING" | "MASTERED" | undefined;
   const scope = createHash("sha256").update(JSON.stringify([userId, input.mode, input.collection ?? "", input.topic ?? "", q, status])).digest("hex");
@@ -77,7 +77,7 @@ export async function getVocabularyPage(userId: string, input: VocabularyScope, 
     const entries = await prisma.vocabularyEntry.findMany({
       where: { AND: [{ collection, ...(input.topic ? { topic: { code: input.topic } } : {}), ...search }, boundary(0, names, false)] },
       orderBy: order(names, false), take: 31,
-      select: { ...sharedFields, entryCode: true, progress: { where: { userId }, select: { status: true } } },
+      select: { ...sharedFields, entryCode: true, progress: { where: userId ? { userId } : { id: { in: [] } }, select: { status: true } } },
     });
     rows = entries.map(({ entryCode, progress, ...entry }) => ({ ...entry, status: progress[0]?.status,
       cursor: token({ source: 0, values: input.mode === "collection" ? [entryCode, entry.id] : [entry.term, entryCode, entry.id] }) }));
