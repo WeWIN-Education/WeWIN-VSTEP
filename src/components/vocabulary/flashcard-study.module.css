@@ -1,0 +1,145 @@
+.card {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 26px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: center;
+  perspective: 1400px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 4px;
+}
+
+.cardInner {
+  display: grid;
+  width: 100%;
+  min-height: clamp(350px, 46dvh, 430px);
+  transform-style: preserve-3d;
+  transition: transform 680ms cubic-bezier(0.2, 0.72, 0.25, 1);
+}
+
+.cardFlipped .cardInner {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  min-height: clamp(350px, 46dvh, 430px);
+  grid-area: 1 / 1;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, var(--border));
+  border-radius: 26px;
+  background-color: var(--surface-card);
+  box-shadow: 0 16px 42px rgb(0 58 140 / 8%);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.face::before,
+.face::after {
+  position: absolute;
+  z-index: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  content: "";
+}
+
+.face::before {
+  top: 24px;
+  left: 24px;
+  background: #f8d99d;
+  box-shadow: 0 0 0 6px rgb(248 217 157 / 16%);
+}
+
+.face::after {
+  top: 26px;
+  right: 26px;
+  width: 7px;
+  height: 7px;
+  background: color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+.front {
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--brand-soft) 64%, transparent), transparent 57%),
+    var(--surface-card);
+}
+
+.back {
+  transform: rotateY(180deg);
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, #f8d99d 17%, var(--surface-card)), transparent 60%),
+    var(--surface-card);
+}
+
+.faceContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px clamp(20px, 4vw, 48px) 24px;
+}
+
+.faceFooter {
+  position: relative;
+  z-index: 1;
+  display: block;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  padding: 11px 16px;
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.card:hover .face {
+  border-color: color-mix(in srgb, var(--brand) 36%, var(--border));
+  box-shadow: 0 20px 48px rgb(0 58 140 / 12%);
+}
+
+@media (max-width: 639px) {
+  .cardInner,
+  .face {
+    min-height: clamp(340px, 48dvh, 400px);
+  }
+
+  .face::before {
+    top: 20px;
+    left: 20px;
+  }
+
+  .face::after {
+    top: 22px;
+    right: 22px;
+  }
+
+  .faceContent {
+    padding: 34px 20px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardInner,
+  .face {
+    transition: none;
+  }
+}

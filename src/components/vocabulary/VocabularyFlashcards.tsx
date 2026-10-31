@@ -4,6 +4,7 @@ import { notifyLearningActivity } from "@/lib/learning-activity-events";
 import { Card } from "@/components/ui/Card";
 import { Mascot, type MascotState } from "@/components/ui/Mascot";
 import { cn } from "@/lib/utils";
+import studyStyles from "./flashcard-study.module.css";
 import {
   ArrowLeft,
   ArrowRight,
@@ -594,7 +595,7 @@ export function VocabularyFlashcards({
       {current ? (
         <div ref={dialogRef} className="fixed inset-0 z-[80] min-h-dvh overflow-y-auto bg-surface text-ink" role="dialog" aria-modal="true" aria-labelledby="vocabulary-study-title" tabIndex={-1}>
           <header className="sticky top-0 z-10 border-b border-border bg-surface-card/95 backdrop-blur">
-            <div className="mx-auto flex min-h-[74px] w-full max-w-[1200px] items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6">
+            <div className="mx-auto flex min-h-[66px] w-full max-w-[1120px] items-center gap-3 px-4 py-2 sm:gap-4 sm:px-6">
               <button type="button" onClick={closeFlashcard} aria-label="Đóng chế độ học flashcard" className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border text-ink-muted transition hover:border-brand hover:text-brand">
                 <ArrowLeft className="size-5" aria-hidden="true" />
               </button>
@@ -617,9 +618,9 @@ export function VocabularyFlashcards({
             </div>
           </header>
 
-          <main className="mx-auto grid w-full max-w-[1200px] gap-6 px-4 py-6 sm:px-6 sm:py-8 lg:grid-cols-[minmax(0,1fr)_236px] lg:gap-8 lg:py-10">
+          <main className="mx-auto grid w-full max-w-[1120px] gap-5 px-4 py-5 sm:px-6 sm:py-6 lg:grid-cols-[minmax(0,1fr)_216px] lg:gap-6 lg:py-7">
             <div className="min-w-0">
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand">{title}</p>
                   <p className="mt-1 text-sm text-ink-muted">Tập trung vào một thẻ, rồi chọn mức độ nhớ của bạn.</p>
@@ -630,34 +631,36 @@ export function VocabularyFlashcards({
               <button
                 type="button"
                 onClick={() => setFlipped((value) => !value)}
-                className="group relative flex min-h-[420px] w-full min-w-0 flex-col overflow-hidden rounded-[28px] border-2 border-brand/15 bg-surface-card text-center shadow-[0_20px_60px_rgba(0,58,140,0.1)] transition hover:border-brand/35 focus-visible:border-brand sm:min-h-[500px] lg:min-h-[560px]"
+                className={cn(studyStyles.card, flipped && studyStyles.cardFlipped)}
                 aria-label={flipped ? "Mặt sau: " + current.meaningVi + ". Chạm để xem lại từ." : "Mặt trước: " + current.term + ". Chạm để xem nghĩa."}
               >
-                <span className="pointer-events-none absolute left-5 top-5 size-3 rounded-full bg-[#F8D99D] sm:left-7 sm:top-7" aria-hidden="true" />
-                <span className="pointer-events-none absolute right-5 top-5 size-2 rounded-full bg-brand/20 sm:right-7 sm:top-7" aria-hidden="true" />
-                <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-5 py-12 sm:px-10 sm:py-16">
-                  {flipped ? (
-                    <>
-                      <span className="rounded-full bg-brand-soft px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em] text-brand">Mặt sau · Nghĩa &amp; cách dùng</span>
-                      {showIpa ? <span className="mt-6 max-w-full break-words font-mono text-base text-brand sm:text-lg [overflow-wrap:anywhere]">{current.ipa || "IPA chưa cập nhật"}</span> : null}
-                      <span className={`${showIpa ? "mt-5" : "mt-6"} max-w-3xl break-words text-[clamp(2rem,5vw,4rem)] font-extrabold leading-tight text-ink [overflow-wrap:anywhere]`}>{current.meaningVi}</span>
-                      {current.partOfSpeech ? <span className="mt-5 rounded-full border border-brand/20 bg-brand-soft px-3 py-1.5 text-xs font-bold text-brand">{current.partOfSpeech}</span> : null}
+                <span className={studyStyles.cardInner}>
+                  <span className={cn(studyStyles.face, studyStyles.front)} aria-hidden={flipped}>
+                    <span className={studyStyles.faceContent}>
+                      <span className="rounded-full bg-brand-soft px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-brand">Mặt trước · Từ / cụm từ</span>
+                      <span className="mt-6 max-w-full break-words text-[clamp(2.25rem,6vw,5rem)] font-extrabold leading-[1.08] text-brand [overflow-wrap:anywhere]">{current.term}</span>
+                      {showIpa && current.ipa ? <span className="mt-4 max-w-full break-words font-mono text-sm text-ink-muted [overflow-wrap:anywhere]">{current.ipa}</span> : null}
+                      <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink-muted"><span className="rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs">Space</span> để lật thẻ</span>
+                    </span>
+                    <span className={studyStyles.faceFooter}>Chạm vào thẻ hoặc nhấn Space để xem nghĩa</span>
+                  </span>
+
+                  <span className={cn(studyStyles.face, studyStyles.back)} aria-hidden={!flipped}>
+                    <span className={studyStyles.faceContent}>
+                      <span className="rounded-full bg-brand-soft px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-brand">Mặt sau · Nghĩa &amp; cách dùng</span>
+                      {showIpa ? <span className="mt-4 max-w-full break-words font-mono text-sm text-brand [overflow-wrap:anywhere]">{current.ipa || "IPA chưa cập nhật"}</span> : null}
+                      <span className="mt-4 max-w-3xl break-words text-[clamp(1.75rem,4vw,3rem)] font-extrabold leading-tight text-ink [overflow-wrap:anywhere]">{current.meaningVi}</span>
+                      {current.partOfSpeech ? <span className="mt-3 rounded-full border border-brand/20 bg-brand-soft px-3 py-1.5 text-xs font-bold text-brand">{current.partOfSpeech}</span> : null}
                       {current.exampleEn ? (
-                        <div className="mt-8 max-w-2xl border-t border-border px-4 pt-5">
-                          <p className="break-words text-sm italic leading-relaxed text-ink-muted sm:text-base [overflow-wrap:anywhere]">{current.exampleEn}</p>
-                          {current.exampleVi ? <p className="mt-2 break-words text-sm leading-relaxed text-ink-faint [overflow-wrap:anywhere]">{current.exampleVi}</p> : null}
-                        </div>
+                        <span className="mt-5 max-w-2xl border-t border-border px-4 pt-4">
+                          <span className="block break-words text-sm italic leading-relaxed text-ink-muted sm:text-base [overflow-wrap:anywhere]">{current.exampleEn}</span>
+                          {current.exampleVi ? <span className="mt-1.5 block break-words text-sm leading-relaxed text-ink-faint [overflow-wrap:anywhere]">{current.exampleVi}</span> : null}
+                        </span>
                       ) : null}
-                    </>
-                  ) : (
-                    <>
-                      <span className="rounded-full bg-brand-soft px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em] text-brand">Mặt trước · Từ / cụm từ</span>
-                      <span className="mt-7 max-w-full break-words text-[clamp(2.75rem,8vw,6.4rem)] font-extrabold leading-[1.05] text-brand [overflow-wrap:anywhere]">{current.term}</span>
-                      <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-ink-muted"><span className="rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs">Space</span> để lật thẻ</span>
-                    </>
-                  )}
-                </div>
-                <span className="border-t border-border bg-surface px-5 py-3 text-xs font-semibold text-ink-muted">{flipped ? "Chạm để quay lại mặt trước" : "Chạm vào thẻ hoặc nhấn Space để xem nghĩa"}</span>
+                    </span>
+                    <span className={studyStyles.faceFooter}>Chạm để quay lại mặt trước</span>
+                  </span>
+                </span>
               </button>
 
               {error ? (
@@ -668,49 +671,49 @@ export function VocabularyFlashcards({
                 </div>
               ) : null}
 
-              <div className="mt-5 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3">
-                <button type="button" onClick={previousCard} aria-label="Thẻ trước" className="flex min-h-12 min-w-12 items-center justify-center rounded-xl border border-border bg-surface-card text-ink-muted transition hover:border-brand hover:text-brand">
+              <div className="mt-4 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3">
+                <button type="button" onClick={previousCard} aria-label="Thẻ trước" className="flex size-11 items-center justify-center rounded-xl border border-border bg-surface-card text-ink-muted transition hover:border-brand hover:text-brand">
                   <ChevronLeft className="size-5" aria-hidden="true" />
                 </button>
-                <button type="button" onClick={() => setFlipped((value) => !value)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-extrabold text-white shadow-[0_8px_18px_rgba(0,74,173,0.18)] transition hover:bg-brand-dark sm:px-6">
+                <button type="button" onClick={() => setFlipped((value) => !value)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-extrabold text-white shadow-[0_8px_18px_rgba(0,74,173,0.18)] transition hover:bg-brand-dark sm:px-6">
                   <RotateCcw className="size-4" aria-hidden="true" />
                   <span>Lật thẻ</span>
                   <span className="hidden rounded-md bg-white/15 px-1.5 py-0.5 font-mono text-[11px] sm:inline">Space</span>
                 </button>
-                <button type="button" onClick={nextCard} aria-label="Thẻ tiếp theo" className="flex min-h-12 min-w-12 items-center justify-center rounded-xl border border-border bg-surface-card text-ink-muted transition hover:border-brand hover:text-brand">
+                <button type="button" onClick={nextCard} aria-label="Thẻ tiếp theo" className="flex size-11 items-center justify-center rounded-xl border border-border bg-surface-card text-ink-muted transition hover:border-brand hover:text-brand">
                   <ChevronRight className="size-5" aria-hidden="true" />
                 </button>
               </div>
 
-              <div className="mt-3 grid gap-2 sm:grid-cols-[auto_minmax(0,1fr)]">
-                <button type="button" onClick={() => speak(current)} aria-label={"Nghe phát âm " + current.term} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand">
+              <div className="mt-2 grid gap-2 sm:grid-cols-[auto_minmax(0,1fr)]">
+                <button type="button" onClick={() => speak(current)} aria-label={"Nghe phát âm " + current.term} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand">
                   <Volume2 className="size-4" aria-hidden="true" /> Nghe phát âm
                 </button>
-                <button type="button" disabled={savingId === current.id} onClick={() => toggleSaved(current)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand-soft px-4 text-sm font-extrabold text-brand transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:opacity-50">
+                <button type="button" disabled={savingId === current.id} onClick={() => toggleSaved(current)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-soft px-4 text-sm font-extrabold text-brand transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:opacity-50">
                   {!guest && current.status ? <BookmarkCheck className="size-4" aria-hidden="true" /> : <Bookmark className="size-4" aria-hidden="true" />}
                   {guest ? "Đăng nhập để lưu sổ tay" : current.status ? "Đã lưu trong sổ tay" : "Lưu vào sổ tay"}
                 </button>
               </div>
 
-              <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                <button type="button" disabled={savingId === current.id} onClick={() => void markAndContinue("LEARNING")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50">
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                <button type="button" disabled={savingId === current.id} onClick={() => void markAndContinue("LEARNING")} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50">
                   <RotateCcw className="size-4" aria-hidden="true" /> Chưa nhớ · thẻ tiếp
                 </button>
-                <button type="button" disabled={savingId === current.id} onClick={() => void markAndContinue("MASTERED")} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#F8D99D] px-4 text-sm font-extrabold text-[#61430F] transition hover:bg-[#F5CC7B] disabled:cursor-not-allowed disabled:opacity-50">
+                <button type="button" disabled={savingId === current.id} onClick={() => void markAndContinue("MASTERED")} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#F8D99D] px-4 text-sm font-extrabold text-[#61430F] transition hover:bg-[#F5CC7B] disabled:cursor-not-allowed disabled:opacity-50">
                   <Check className="size-4" aria-hidden="true" /> Đã nhớ · thẻ tiếp
                 </button>
               </div>
             </div>
 
-            <aside className="rounded-[24px] border border-border bg-surface-card p-4 shadow-[0_10px_28px_rgba(0,58,140,0.06)] sm:p-5 lg:mt-10">
+            <aside className="h-fit rounded-[22px] border border-border bg-surface-card p-4 shadow-[0_10px_28px_rgba(0,58,140,0.06)] lg:mt-8">
               <div className="flex items-center gap-4 lg:block lg:text-center">
-                <Mascot state={currentMascot} size={108} animated className="shrink-0 lg:mx-auto lg:size-[150px]" />
+                <Mascot state={currentMascot} size={88} animated className="shrink-0 lg:mx-auto lg:size-[116px]" />
                 <div className="min-w-0 lg:mt-3">
                   <p className="text-sm font-extrabold text-ink">{flipped ? "Tốt lắm, kiểm tra lại ngữ cảnh nhé!" : "Bạn nhớ được từ này không?"}</p>
                 </div>
               </div>
 
-              <div className="mt-5 border-t border-border pt-4">
+              <div className="mt-4 border-t border-border pt-3">
                 <label htmlFor="flashcard-speed" className="flex items-center gap-2 text-xs font-extrabold text-ink"><Gauge className="size-4 text-brand" aria-hidden="true" /> Tốc độ học</label>
                 <select id="flashcard-speed" value={speed} onChange={(event) => setSpeed(Number(event.target.value))} className="mt-2 min-h-11 w-full rounded-xl border border-border bg-surface-card px-3 text-sm font-bold text-ink outline-none transition focus:border-brand">
                   {speedOptions.map((option) => <option key={option.seconds} value={option.seconds}>{option.label} · {option.description}</option>)}
@@ -722,7 +725,7 @@ export function VocabularyFlashcards({
                 {reducedMotion ? <p className="mt-2 text-xs leading-relaxed text-ink-muted">Tự động lật đã tắt vì bạn đang bật giảm chuyển động.</p> : null}
               </div>
 
-              <div className="mt-5 border-t border-border pt-4">
+              <div className="mt-4 border-t border-border pt-3">
                 <p className="flex items-center gap-2 text-xs font-extrabold text-ink"><Keyboard className="size-4 text-brand" aria-hidden="true" /> Phím tắt</p>
                 <dl className="mt-3 space-y-2 text-xs text-ink-muted">
                   <div className="flex items-center justify-between gap-3"><dt>Space</dt><dd>Lật thẻ</dd></div>
