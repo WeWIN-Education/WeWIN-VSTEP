@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import "./globals.css";
+import { SupportChatWidget } from "@/components/chat/SupportChatWidget";
 
 const beVietnam = localFont({
   src: [
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
   title: "Học tiếng Anh online | WEWIN EDUCATION",
   description:
     "WEWIN EDUCATION — luyện thi VSTEP cho người học Việt Nam.",
+  icons: { icon: "/brand/wewin-logo-gold.webp" },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -37,6 +39,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="h-full font-[family-name:var(--font-be-vietnam)]">
         <script dangerouslySetInnerHTML={{ __html: `try{document.documentElement.dataset.theme=localStorage.getItem('wewin-theme')==='dark'?'dark':'light'}catch{}` }} />
         {children}
+        <SupportChatWidget />
       </body>
     </html>
   );

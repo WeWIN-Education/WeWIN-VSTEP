@@ -1,0 +1,30 @@
+.launcher { position: fixed; bottom: max(24px, env(safe-area-inset-bottom)); right: 24px; z-index: 45; width: 76px; height: 76px; border-radius: 50%; background: var(--surface-card); border: 1px solid var(--border); box-shadow: 0 6px 26px rgb(8 31 79 / 16%); transition: transform 140ms cubic-bezier(.23,1,.32,1); }
+.launcher:active { transform: scale(.97); }
+.launcher > img { width: 76px; height: 76px; object-fit: contain; }
+.launcherText { position: absolute; right: 90px; top: 20px; padding: 9px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-card); color: var(--ink); white-space: nowrap; font-size: 12px; box-shadow: 0 4px 16px rgb(8 31 79 / 5%); }
+.bubble { position: absolute; right: -2px; bottom: -2px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #004aad; color: white; border: 2px solid var(--surface-card); }
+.dialog { position: fixed; inset: auto 20px 20px auto; margin: 0; width: min(400px, calc(100vw - 32px)); height: min(640px, calc(100dvh - 40px)); max-width: none; max-height: none; padding: 0; border: 1px solid var(--border); border-radius: 24px; color: var(--ink); background: var(--surface-card); box-shadow: 0 20px 70px rgb(0 0 0 / 22%); }
+.dialog::backdrop { background: rgb(4 16 40 / 32%); }
+.panel { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.heading { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #081f4f; color: white; }
+.heading > img { border-radius: 50%; background: #ffffff15; }
+.heading > div { flex: 1; }
+.heading h2 { font-size: 14px; font-weight: 700; }
+.heading p { font-size: 11px; color: #c4d4eb; margin-top: 2px; }
+.heading button { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; }
+.heading button:hover { background: #ffffff20; }
+.frame { flex: 1; min-height: 0; width: 100%; border: 0; background: white; }
+.loading { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; color: var(--ink-muted); padding: 16px; }
+.contact { padding: 28px 24px; overflow-y: auto; }
+.contact > svg { color: var(--brand); }
+.contact h3 { font-size: 22px; margin-top: 20px; font-weight: 700; }
+.contact p { font-size: 15px; line-height: 1.8; color: var(--ink-muted); margin-block: 16px 24px; }
+.contact a { display: flex; align-items: center; justify-content: center; overflow-wrap: anywhere; gap: 10px; border: 1px solid var(--border); border-radius: 14px; min-height: 48px; font-size: 13px; padding: 12px; margin-top: 12px; }
+.contact a.zalo { background: #004aad; color: white; border-color: transparent; font-weight: 700; }
+.directLinks { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid var(--border); padding: 0 16px; }
+.directLinks a { display: flex; gap: 8px; align-items: center; min-height: 44px; font-size: 12px; font-weight: 600; color: var(--brand); }
+.fallback { padding: 12px 16px; background: var(--attention-warning-bg); color: var(--attention-warning-ink); font-size: 13px; line-height: 1.6; }
+.fallback button { display: flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 700; }
+@media(max-width: 639px) { .launcher { width: 60px; height: 60px; right: 16px; bottom: calc(88px + env(safe-area-inset-bottom)); } .launcher > img { width: 60px; height: 60px; } .launcherText { display: none; } .dialog { inset: auto 8px max(8px, env(safe-area-inset-bottom)) 8px; width: auto; height: min(680px, calc(100dvh - 32px)); border-radius: 20px; } }
+@media(prefers-reduced-motion: reduce) { .launcher { transition: none; } .launcher:active { transform: none; } }
+.standalone { bottom: max(16px, env(safe-area-inset-bottom)); }

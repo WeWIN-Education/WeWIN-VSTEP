@@ -1,0 +1,22 @@
+.page { min-height: 100dvh; background: radial-gradient(ellipse at 50% 28%, var(--brand-soft), transparent 65%), var(--surface); display: flex; flex-direction: column; }
+.header { padding: 24px 36px; display: flex; align-items: center; justify-content: space-between; }
+.logo { width: 150px; height: auto; }
+.main { flex: 1; width: 100%; padding: 16px 20px 32px; display: flex; flex-direction: column; align-items: center; }
+.intro { text-align: center; max-width: 480px; margin-bottom: 24px; }
+.intro > span { color: var(--brand); font-size: 11px; letter-spacing: .16em; font-weight: 700; }
+.intro h1 { margin-top: 10px; font-size: 30px; font-weight: 700; letter-spacing: -.04em; }
+.intro p { font-size: 14px; line-height: 1.7; color: var(--ink-muted); margin-top: 8px; }
+.card { max-width: 460px; width: 100%; overflow: hidden; border: 1px solid var(--border); border-radius: 24px; background: var(--surface-card); box-shadow: 0 12px 40px rgb(8 31 79 / 7%); }
+.cardBanner { padding: 24px 28px; position: relative; display: flex; justify-content: space-between; align-items: center; gap: 8px; overflow: hidden; background: #081f4f; color: white; }
+.cardBanner > div { z-index: 1; }
+.cardBanner > div > span { font-size: 9px; font-weight: 700; letter-spacing: .08em; color: #f8d99d; }
+.cardBanner h2 { font-size: 21px; font-weight: 600; letter-spacing: -.025em; line-height: 1.4; margin-top: 10px; }
+.cardBanner > img { width: 130px; height: 130px; object-fit: contain; flex-shrink: 0; }
+.skillIcons { display: flex; gap: 14px; margin-top: 16px; color: #c4d4eb; }
+.skillIcons svg { width: 16px; height: 16px; }
+.form { padding: 28px; }
+.back { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; margin-top: 16px; font-size: 13px; color: var(--ink-muted); }
+.back:hover { color: var(--brand); }
+.footer { display: flex; justify-content: space-between; gap: 16px; padding: 20px 36px; font-size: 11px; color: var(--ink-muted); }
+.footer nav { display: flex; gap: 24px; }
+@media(max-width: 639px) { .header { padding: 18px 20px; } .main { padding-top: 12px; } .intro h1 { font-size: 27px; } .cardBanner { padding: 22px; } .cardBanner > img { width: 104px; height: 104px; } .cardBanner h2 { font-size: 19px; } .cardBanner > div > span { font-size: 8px; } .form { padding: 24px 20px; } .footer { flex-direction: column; align-items: center; padding: 16px 20px; } }
