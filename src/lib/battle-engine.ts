@@ -66,7 +66,7 @@ export function publicBattle(match: Match, userId: string, now: Date, updatedXp:
   const question = state?.questions[state.index];
   const current = match.status === "ACTIVE" && state && question && now.getTime() >= state.start ? {
     number: state.index, slot: state.index % 2, type: question.type, prompt: question.prompt, options: question.options,
-    ...(state.answer ? { correct: question.correct, choice: state.answer.choice, points: state.answer.points } : {}),
+    ...(state.answer && me.slot === state.index % 2 ? { correct: question.correct, choice: state.answer.choice, points: state.answer.points } : {}),
     answered: Boolean(state.answer), deadline: state.start + ANSWER_MS,
     nextAt: (state.answer?.at ?? state.start + ANSWER_MS) + RESULT_MS,
   } : null;
@@ -100,9 +100,9 @@ async function finish(tx: Tx, match: Match, state: BattleRuntime, at: Date, reas
 
 async function matchCommand(user: Actor, id: string, command: BattleCommand, clock: () => Date) {
   return prisma.$transaction(async tx => {
+    const session = await sessionFor(tx, user, clock());
     const match = await lockedMatch(tx, id);
     const now = clock();
-    const session = await sessionFor(tx, user, now);
     const player = match.players.find(p => p.userId === user.id);
     if (!player) throw new BattleError("Bạn không tham gia trận này.", 403);
     let error: BattleError | undefined;

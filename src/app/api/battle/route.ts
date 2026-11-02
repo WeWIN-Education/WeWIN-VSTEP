@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
 import { getCurrentUser } from "@/lib/access";
 import { isSameOrigin } from "@/lib/request-security";
 import { BattleError, battleCommand, type BattleCommand } from "@/lib/battle-engine";
@@ -11,7 +12,8 @@ const json = (data: unknown, status = 200) => NextResponse.json(data, { status, 
 
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) return json({ error: "Yêu cầu không hợp lệ." }, 403);
-  const user = await getCurrentUser();
+  const session = await auth();
+  const user = session?.user?.id ? { id: session.user.id, sessionVersion: session.user.sessionVersion } : null;
   if (!user) return json({ error: "Bạn cần đăng nhập bằng tài khoản đang hoạt động." }, 401);
   const text = await request.text();
   if (text.length > 2048) return json({ error: "Yêu cầu quá lớn." }, 413);

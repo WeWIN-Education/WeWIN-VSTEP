@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, Check, Clock3, Gamepad2, Shield, Swords, Trophy, X } from "lucide-react";
+import { ArrowLeft, Check, Clock3, Gamepad2, LoaderCircle, Shield, Swords, Trophy, X } from "lucide-react";
 import type { BattleCommand, BattleView } from "@/lib/battle-engine";
 import { RANKS, TYPE_LABELS, battleRank, type BattleType } from "@/lib/battle-rules";
 import { BattleCharacter } from "./BattleCharacter";
@@ -137,12 +137,12 @@ function RankBadge({ rank, size }: { rank: number; size: number }) {
 
 export function BattleArena({ matchId }: { matchId: string }) {
   const { state, now, send, busy, error } = useBattle(matchId);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selection, setSelection] = useState<{ turn: number; choice: number } | null>(null);
   const [celebrating, setCelebrating] = useState(false);
   const confirmLeave = useRef<HTMLDialogElement>(null);
   const match = state?.kind === "match" ? state : null;
   const turn = match?.current;
-  useEffect(() => { setSelected(null); }, [turn?.number]);
+  const selected = turn && selection?.turn === turn.number ? selection.choice : null;
   useEffect(() => {
     if (!turn?.answered || !turn.points) { setCelebrating(false); return; }
     setCelebrating(true);
@@ -155,11 +155,14 @@ export function BattleArena({ matchId }: { matchId: string }) {
   const countdown = Math.max(0, Math.ceil((match.startsAt - now) / 1000));
   const seconds = turn ? Math.max(0, Math.ceil((turn.deadline - now) / 1000)) : 15;
   const mine = turn?.slot === match.mySlot;
-  const correct = turn?.points !== undefined && turn.points > 0;
+  const correct = Boolean(mine && turn?.answered && turn.points !== undefined && turn.points > 0);
   const characterState = (slot: number): CharacterState => {
     if (finished) return match.status === "CANCELLED" || match.winnerSlot === null ? "draw" : match.winnerSlot === slot ? "victory" : "defeat";
     if (!turn || countdown) return "ready";
-    if (turn.answered) return turn.slot === slot ? correct ? celebrating ? "correct" : "attack" : "wrong" : correct ? celebrating ? "defense" : "hit" : "defense";
+    if (turn.answered) {
+      if (!mine) return turn.slot === slot ? "attack" : "defense";
+      return turn.slot === slot ? correct ? celebrating ? "correct" : "attack" : "wrong" : correct ? celebrating ? "defense" : "hit" : "defense";
+    }
     return turn.slot === slot ? busy && mine ? "answering" : "thinking" : "idle";
   };
   return <main className={styles.arenaPage}>
@@ -169,17 +172,26 @@ export function BattleArena({ matchId }: { matchId: string }) {
       <section className={styles.stage} aria-label="Sân đấu">
         <div className={styles.scoreboard}>{[me, opponent].map(p => <div key={p.slot}><RankBadge rank={p.rank} size={64} /><span>{p.name}</span><small>{p.slot === match.mySlot ? "Bạn" : "Đối thủ"} · {RANKS[p.rank]?.name}</small>{!finished && <strong>{p.score.toLocaleString("vi-VN")}</strong>}</div>)}</div>
         <div className={styles.fighters}>{[me, opponent].map((p, i) => <div key={p.slot} className={styles.fighter} data-rank={p.rank}><BattleCharacter variant={i === 0 ? "hero" : "rival"} facing={i === 0 ? "right" : "left"} state={characterState(p.slot)} rank={p.rank} replay={turn?.number ?? 0} /><span className={styles.rankAura} aria-hidden /></div>)}<b className={styles.versus} aria-hidden>VS</b></div>
-        <div className={styles.stageStatus} role="status">{finished ? outcome(match.status, match.winnerSlot, match.mySlot) : countdown ? `Sẵn sàng! ${countdown}` : turn?.answered ? correct ? "Chính xác! Một đòn tấn công đẹp." : "Chưa chính xác. Tiếp tục cố gắng!" : mine ? "Đến lượt bạn!" : `${opponent.name} đang trả lời…`}</div>
+        <div className={styles.stageStatus} role="status">{finished ? outcome(match.status, match.winnerSlot, match.mySlot) : countdown ? `Sẵn sàng! ${countdown}` : turn?.answered ? mine ? correct ? "Chính xác! Một đòn tấn công đẹp." : "Chưa chính xác. Tiếp tục cố gắng!" : `${opponent.name} đã trả lời. Chuẩn bị câu tiếp theo.` : mine ? "Đến lượt bạn!" : `${opponent.name} đang trả lời…`}</div>
         <div className={styles.turns} aria-label={`Tiến độ: câu ${(turn?.number ?? -1) + 1} trên ${match.total}`}>{Array.from({ length: match.total }, (_, i) => <span key={i} data-done={finished || i < (turn?.number ?? 0)} data-current={!finished && i === turn?.number}>{i + 1}</span>)}</div>
       </section>
-      <section className={styles.questionPanel}>
+      <section className={styles.questionPanel} data-my-turn={!finished && !countdown && mine && !turn?.answered}>
         {finished && match.updatedXp !== null && <div className={styles.rankHeading}><RankBadge rank={Math.max(0, battleRank(match.updatedXp))} size={80} /><p>Hạng hiện tại: <strong>{RANKS[Math.max(0, battleRank(match.updatedXp))].name}</strong> · {match.updatedXp.toLocaleString("vi-VN")} XP</p></div>}
         {finished ? <><span className={styles.eyebrow}><Trophy size={20} aria-hidden /> KẾT QUẢ</span><h1>{outcome(match.status, match.winnerSlot, match.mySlot)}</h1><p className={styles.resultScore}>+{me.xp}<small>XP</small></p>{match.reason !== "COMPLETE" && <p>{match.reason === "BOTH_OFFLINE" ? "Cả hai mất kết nối quá 30 giây. Trận không có thưởng." : "Trận kết thúc vì một người bỏ cuộc hoặc mất kết nối."}</p>}{me.xp === 0 && <p>Không có XP: trận không đủ điều kiện thưởng hoặc đã đạt 5 trận có thưởng trong ngày.</p>}<Link href="/game" className={styles.primary}>Đấu ván nữa <Swords size={20} aria-hidden /></Link><Link href="/game" className={styles.backLink}>Về sảnh và xem rank mới</Link></>
           : !turn || countdown ? <div className={styles.countdown}><Shield size={40} aria-hidden /><h1>Sẵn sàng giao đấu</h1><strong>{countdown || 3}</strong><p>{match.total} câu · luân phiên hai bên</p></div>
-          : <><div className={styles.questionTop}><span>{TYPE_LABELS[turn.type as BattleType]} · {turn.number + 1}/{match.total}</span><span className={styles.timer} data-urgent={!turn.answered && seconds <= 5}><Clock3 size={20} aria-hidden />{turn.answered ? `Chuyển ${Math.max(0, Math.ceil((turn.nextAt - now) / 1000))}s` : `${seconds}s`}</span></div><h1>{turn.prompt}</h1><p className={styles.turnLabel}>{turn.answered ? "Đã ghi nhận đáp án" : mine ? "Chọn một đáp án" : "Lượt của đối thủ · Bạn đang theo dõi"}</p>
-            <div className={styles.options}>{turn.options.map((option, i) => <button key={i} data-result={turn.correct === i ? "correct" : turn.choice === i ? "wrong" : undefined} data-selected={selected === i} disabled={!mine || busy || turn.answered} onClick={async () => { setSelected(i); if (!await send({ action: "answer", turn: turn.number, choice: i })) setSelected(null); }}><span>{String.fromCharCode(65 + i)}</span>{option}{turn.correct === i ? <Check aria-label="Đáp án đúng" size={20} /> : turn.choice === i ? <X aria-label="Đáp án sai" size={20} /> : null}</button>)}</div>
-            {turn.answered && <div className={styles.explanation}><strong>{correct ? "Đúng" : "Sai hoặc hết giờ"}</strong><p>Đã ghi nhận kết quả. Chuẩn bị sang câu tiếp theo.</p></div>}
-            {!turn.answered && selected !== null && <p role="status">Đang gửi đáp án…</p>}
+          : <><div className={styles.questionTop}><span>{TYPE_LABELS[turn.type as BattleType]} · {turn.number + 1}/{match.total}</span><span className={styles.timer} data-urgent={!turn.answered && seconds <= 5}><Clock3 size={20} aria-hidden />{turn.answered ? `Chuyển ${Math.max(0, Math.ceil((turn.nextAt - now) / 1000))}s` : `${seconds}s`}</span></div><h1>{turn.prompt}</h1><p className={styles.turnLabel} role={busy && selected !== null ? "status" : undefined}>{busy && selected !== null ? "Đang gửi đáp án…" : turn.answered ? mine ? "Đã ghi nhận đáp án của bạn" : "Đối thủ đã trả lời · chờ câu tiếp theo" : mine ? "Lượt của bạn · chọn một đáp án" : "Lượt của đối thủ · bạn đang theo dõi"}</p>
+            <div className={styles.options}>{turn.options.map((option, i) => {
+              const showOwnResult = Boolean(turn.answered && mine);
+              const pending = busy && selected === i;
+              return <button key={i} data-result={showOwnResult && turn.correct === i ? "correct" : showOwnResult && turn.choice === i ? "wrong" : undefined} data-selected={selected === i} data-pending={pending || undefined} aria-busy={pending} disabled={!mine || busy || turn.answered} onClick={() => {
+                const turnNumber = turn.number;
+                setSelection({ turn: turnNumber, choice: i });
+                void send({ action: "answer", turn: turnNumber, choice: i }).then(ok => {
+                  if (!ok) setSelection(current => current?.turn === turnNumber && current.choice === i ? null : current);
+                });
+              }}><span>{String.fromCharCode(65 + i)}</span>{option}{pending ? <LoaderCircle className="ml-auto size-5 animate-spin" aria-label="Đang gửi" /> : showOwnResult && turn.correct === i ? <Check aria-label="Đáp án đúng" size={20} /> : showOwnResult && turn.choice === i ? <X aria-label="Đáp án sai" size={20} /> : null}</button>;
+            })}</div>
+            {turn.answered && mine && <div className={styles.explanation}><strong>{correct ? "Đúng" : "Sai hoặc hết giờ"}</strong><p>Đã ghi nhận kết quả. Chuẩn bị sang câu tiếp theo.</p></div>}
           </>}
       </section>
     </div>
