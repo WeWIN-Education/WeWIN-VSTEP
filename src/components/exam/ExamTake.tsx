@@ -119,7 +119,11 @@ type RecorderSession = {
   settled: boolean;
 };
 
-export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
+export function ExamTake({ exam: initialExam, candidate, catalog = "FULL" }: Props) {
+  const [exam, setExam] = useState(initialExam);
+  const loadedSkills = useRef(new Set(initialExam.loadedSkills ?? ["listening", "reading", "writing", "speaking"]));
+  const skillRequests = useRef(new Map<ExamSkill, Promise<void>>());
+  const [loadingSkill, setLoadingSkill] = useState(false);
   const content = exam.content;
   const [stage, setStage] = useState<Stage>("preflight");
   const catalogSkillIndex = catalog === "LISTENING" ? 0 : catalog === "READING" ? 1 : catalog === "WRITING" ? 2 : catalog === "SPEAKING" ? 3 : 0;
@@ -171,6 +175,37 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
   const recordingBusy = Object.values(recordings).some((entry) => entry.status === "recording" || entry.status === "saving");
   const displayName = candidate?.name?.trim() || candidate?.email?.trim() || "Tài khoản WEWIN";
   const accountLabel = candidate?.email?.trim() || "Tài khoản hiện tại";
+
+  const loadSkill = useCallback((index: number): Promise<void> => {
+    const nextSkill = initialExam.parts[index]?.skill;
+    if (!nextSkill || loadedSkills.current.has(nextSkill)) return Promise.resolve();
+    const pending = skillRequests.current.get(nextSkill);
+    if (pending) return pending;
+    const request = (async () => {
+      const abort = new AbortController();
+      const timer = window.setTimeout(() => abort.abort(), 20000);
+      try {
+        const response = await fetch(`/api/exams/papers/${encodeURIComponent(initialExam.slug)}?catalog=${nextSkill.toUpperCase()}`, { cache: "no-store", signal: abort.signal });
+        if (!response.ok) throw new Error("Chưa tải được phần thi. Kiểm tra kết nối và thử lại.");
+        const data = await response.json() as { content: VstepTest1Public };
+        if (!data.content?.[nextSkill]) throw new Error("Phần thi chưa sẵn sàng. Hãy thử lại.");
+        if (!mountedRef.current) return;
+        setExam(current => ({ ...current, content: { ...current.content!, [nextSkill]: data.content[nextSkill] } }));
+        loadedSkills.current.add(nextSkill);
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") throw new Error("Kết nối chậm. Bài làm vẫn được giữ; hãy thử chuyển phần lại.");
+        throw error;
+      } finally { window.clearTimeout(timer); }
+    })().finally(() => skillRequests.current.delete(nextSkill));
+    skillRequests.current.set(nextSkill, request);
+    return request;
+  }, [initialExam]);
+
+  useEffect(() => {
+    if (stage !== "exam" || catalog !== "FULL") return;
+    const timer = window.setTimeout(() => { void loadSkill(skillIndex + 1).catch(() => {}); }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [stage, skillIndex, catalog, loadSkill]);
 
   useEffect(() => {
     stageRef.current = stage;
@@ -555,7 +590,10 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
       const restoredRecordings=Object.fromEntries(Object.entries(restored.recordings||{}).map(([key,value])=>[key,restoreRecording(value)]));
       setRecordings(restoredRecordings);recordingsRef.current=restoredRecordings;
       setBookmarks(new Set((restored.bookmarks ?? []).map((item: { questionId: string }) => item.questionId)));
-      setSkillIndex(catalog === "FULL" ? restored.currentPart || 0 : catalogSkillIndex);setUnitIndex(restored.currentUnit||0);
+      const restoredIndex = catalog === "FULL" ? restored.currentPart || 0 : catalogSkillIndex;
+      await loadSkill(restoredIndex);
+      if (!mountedRef.current) return;
+      setSkillIndex(restoredIndex);setUnitIndex(restored.currentUnit||0);
       attemptIdRef.current = id;
       setAttemptId(id);
       if (restored.status === "SUBMITTED") {
@@ -576,7 +614,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
       startingRef.current = false;
       if (mountedRef.current) setStarting(false);
     }
-  }, [candidate?.role, catalog, catalogSkillIndex, exam]);
+  }, [candidate?.role, catalog, catalogSkillIndex, exam, loadSkill]);
 
   useEffect(() => {
     if (stage !== "preflight" || (catalog === "FULL" && !new URLSearchParams(window.location.search).has("attempt"))) return;
@@ -666,12 +704,18 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
     };
   }, []);
 
-  function selectSkill(index: number) {
+  async function selectSkill(index: number) {
+    if (loadingSkill) return;
     if (recordingBusy) {
       setErrorMessage("Hãy đợi bản ghi được lưu trước khi chuyển phần.");
       return;
     }
     if (catalog !== "FULL") return;
+    setLoadingSkill(true);
+    try { await loadSkill(index); }
+    catch (error) { setErrorMessage(error instanceof Error ? error.message : "Không tải được phần thi."); return; }
+    finally { setLoadingSkill(false); }
+    setErrorMessage(null);
     setSkillIndex(index);
     skillIndexRef.current = index;
     setUnitIndex(0);
@@ -679,6 +723,7 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
   }
 
   function selectUnit(index: number) {
+    if (loadingSkill) return;
     if (recordingBusy) {
       setErrorMessage("Hãy đợi bản ghi được lưu trước khi chuyển câu.");
       return;
@@ -730,8 +775,8 @@ export function ExamTake({ exam, candidate, catalog = "FULL" }: Props) {
         <ExamCountdown deadline={deadline} onExpire={submitExam} />
         <div className="flex items-center gap-2 md:gap-4"><span className="hidden text-xs text-ink-muted sm:inline">Đã trả lời: <b className="text-ink">{answeredCount}/{totalQuestions}</b></span><button type="button" onClick={() => setConfirmSubmit(true)} disabled={submitting} className="flex min-h-11 items-center gap-1.5 rounded-[var(--radius-btn)] bg-brand px-3 text-xs font-extrabold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50 md:px-4 md:text-sm">{submitting ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : <Send className="size-3.5" aria-hidden="true" />}{submitting ? "Đang nộp" : "Nộp bài"}</button></div>
       </header>
-      <main className="min-h-0 flex-1 overflow-auto px-3 py-5 md:px-8 md:py-6"><div className="mx-auto flex min-h-full max-w-[1260px] flex-col"><div className="mb-4 flex items-center justify-between gap-3"><div className="min-w-0"><p className="truncate text-xs font-extrabold uppercase tracking-[0.15em] text-brand">{exam.title} · {skillLabel}</p><p className="mt-1 text-sm text-ink-muted">{exam.subtitle}</p></div><span className="hidden shrink-0 text-xs text-ink-faint md:inline">{saving ? "Đang lưu…" : attemptId ? "Đã lưu tự động" : "Chưa có phiên thi"}</span></div>{errorMessage ? <div role="alert" className="mb-4 flex items-start gap-2 rounded-2xl border border-[#F0B7B0] bg-[#FFF7F5] px-4 py-3 text-sm text-[#9B2C20]"><AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" /><p>{errorMessage}</p></div> : null}{renderExamPart({ exam, content, skill, activeUnit, answers, writingAnswers, recordings, bookmarks, activeRecording, canAddToNotebook: candidate?.role !== "GUEST", audioRef: preflightAudioRef, setAudioStarted, onAnswer: handleAnswer, onBookmark: (questionId) => void toggleBookmark(questionId).catch((error) => setErrorMessage(error instanceof Error ? error.message : "Không thể cập nhật bookmark.")), onWriting: handleWriting, onStartRecording: beginRecording, onStopRecording: stopRecording, onEnableMicrophone: requestMicrophone, onRetryRecording: retryRecordingSave })}</div></main>
-      <ExamBottomNav catalog={catalog} exam={exam} content={content} skillIndex={skillIndex} unitIndex={unitIndex} recordingBusy={recordingBusy} onSkill={selectSkill} onUnit={selectUnit} onPrevious={() => (unitIndex > 0 ? selectUnit(unitIndex - 1) : catalog === "FULL" && skillIndex > 0 ? selectSkill(skillIndex - 1) : undefined)} onNext={() => (unitIndex < units.length - 1 ? selectUnit(unitIndex + 1) : catalog === "FULL" && skillIndex < exam.parts.length - 1 ? selectSkill(skillIndex + 1) : setConfirmSubmit(true))} onSave={() => void saveProgress().catch((error) => setErrorMessage(error instanceof Error ? error.message : "Không thể lưu tiến độ."))} />
+      <main className="min-h-0 flex-1 overflow-auto px-3 py-5 md:px-8 md:py-6"><div className="mx-auto flex min-h-full max-w-[1260px] flex-col"><div className="mb-4 flex items-center justify-between gap-3"><div className="min-w-0"><p className="truncate text-xs font-extrabold uppercase tracking-[0.15em] text-brand">{exam.title} · {skillLabel}</p><p className="mt-1 text-sm text-ink-muted">{exam.subtitle}</p></div><span className="hidden shrink-0 text-xs text-ink-faint md:inline">{loadingSkill ? "Đang tải phần thi…" : saving ? "Đang lưu…" : attemptId ? "Đã lưu tự động" : "Chưa có phiên thi"}</span></div>{errorMessage ? <div role="alert" className="mb-4 flex items-start gap-2 rounded-2xl border border-[#F0B7B0] bg-[#FFF7F5] px-4 py-3 text-sm text-[#9B2C20]"><AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" /><p>{errorMessage}</p></div> : null}{renderExamPart({ exam, content, skill, activeUnit, answers, writingAnswers, recordings, bookmarks, activeRecording, canAddToNotebook: candidate?.role !== "GUEST", audioRef: preflightAudioRef, setAudioStarted, onAnswer: handleAnswer, onBookmark: (questionId) => void toggleBookmark(questionId).catch((error) => setErrorMessage(error instanceof Error ? error.message : "Không thể cập nhật bookmark.")), onWriting: handleWriting, onStartRecording: beginRecording, onStopRecording: stopRecording, onEnableMicrophone: requestMicrophone, onRetryRecording: retryRecordingSave })}</div></main>
+      <ExamBottomNav catalog={catalog} exam={exam} content={content} skillIndex={skillIndex} unitIndex={unitIndex} recordingBusy={recordingBusy || loadingSkill} onSkill={selectSkill} onUnit={selectUnit} onPrevious={() => (unitIndex > 0 ? selectUnit(unitIndex - 1) : catalog === "FULL" && skillIndex > 0 ? selectSkill(skillIndex - 1) : undefined)} onNext={() => (unitIndex < units.length - 1 ? selectUnit(unitIndex + 1) : catalog === "FULL" && skillIndex < exam.parts.length - 1 ? selectSkill(skillIndex + 1) : setConfirmSubmit(true))} onSave={() => void saveProgress().catch((error) => setErrorMessage(error instanceof Error ? error.message : "Không thể lưu tiến độ."))} />
       <SubmitModal open={confirmSubmit} busy={submitting} onClose={() => setConfirmSubmit(false)} onSubmit={() => void submitExam()} hasPendingRecording={recordingBusy} />
     </div>
   );

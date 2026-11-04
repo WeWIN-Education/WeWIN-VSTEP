@@ -1,7 +1,7 @@
 import { getAuthState } from "@/lib/access";
 import { consumeGuestRateLimit, guestRateLimitResponse } from "@/lib/guest-exams";
 import { prisma } from "@/lib/prisma";
-import { readStoredPaper } from "@/lib/vstep-paper";
+import { Prisma } from "@prisma/client";
 import { getObject, headObject } from "@/lib/storage";
 import path from "node:path";
 import { NextResponse } from "next/server";
@@ -19,16 +19,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ medi
   }
   const { mediaId } = await params;
   if (!/^[a-f0-9-]{36}\.(mp3|wav|m4a|mp4|ogg|webm)$/i.test(mediaId)) return NextResponse.json({ error: "Audio không hợp lệ." }, { status: 400 });
-  const allowedPapers = await prisma.examPaper.findMany({
-    where: authState.kind === "authenticated" && authState.user.role === "ADMIN" ? {} : { status: "PUBLISHED" },
-    select: { sections: true },
-  });
   const mediaUrl = `/api/exams/media/${mediaId}`;
-  const referenced = allowedPapers.some(({ sections }) => {
-    const paper = readStoredPaper(sections);
-    return paper && [...paper.listening.parts.map((part) => part.audioUrl), ...paper.speaking.parts.map((part) => part.audioUrl)].includes(mediaUrl);
-  });
-  if (!referenced) return NextResponse.json({ error: "Audio không thuộc đề bạn được mở." }, { status: 404 });
+  const admin = authState.kind === "authenticated" && authState.user.role === "ADMIN";
+  const referenced = await prisma.$queryRaw<{ id: string }[]>(Prisma.sql`
+    SELECT "id" FROM "ExamPaper"
+    WHERE (${admin} OR "status" = 'PUBLISHED')
+      AND ("sections" @> ${JSON.stringify({ listening: { parts: [{ audioUrl: mediaUrl }] } })}::jsonb
+        OR "sections" @> ${JSON.stringify({ speaking: { parts: [{ audioUrl: mediaUrl }] } })}::jsonb)
+    LIMIT 1`);
+  if (!referenced.length) return NextResponse.json({ error: "Audio không thuộc đề bạn được mở." }, { status: 404 });
   const storageKey = `exams/${mediaId}`, extension = path.extname(mediaId).toLowerCase();
   try {
     const metadata = await headObject(storageKey);

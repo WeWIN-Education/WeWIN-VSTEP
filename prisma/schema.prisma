@@ -98,6 +98,7 @@ model User {
   dailyActivities    DailyActivity[]
   dailyChallengeRewards DailyChallengeReward[]
   vocabularyProgress VocabularyProgress[]
+  vocabularyStudy    VocabularyStudy?
   personalVocabulary PersonalVocabulary[]
   vocabularyImports  VocabularyImport[]
   videoProgress      VideoProgress[]
@@ -157,6 +158,7 @@ model ExamPaper {
 
   @@unique([programme, slug])
   @@index([programme, status])
+  @@index([sections], type: Gin, map: "ExamPaper_sections_gin_idx")
 }
 
 model ExamAttempt {
@@ -593,12 +595,31 @@ model VocabularyProgress {
   note           String?
   reviewCount    Int                      @default(0)
   lastReviewedAt DateTime?
+  nextReviewAt   DateTime?
+  intervalStep   Int                      @default(0)
+  firstLearnedAt DateTime?
   createdAt      DateTime                 @default(now())
   updatedAt      DateTime                 @updatedAt
 
   @@unique([userId, entryId])
   @@index([userId, status])
   @@index([userId, lastReviewedAt])
+  @@index([userId, nextReviewAt])
+  @@index([userId, firstLearnedAt])
+}
+
+model VocabularyStudy {
+  id         String    @id @default(cuid())
+  userId     String    @unique
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal       Int       @default(10)
+  version    String    @default(cuid())
+  entryIds   String[]  @default([])
+  isReview   Boolean   @default(false)
+  passedAt   DateTime?
+  result     Json?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model PersonalVocabulary {

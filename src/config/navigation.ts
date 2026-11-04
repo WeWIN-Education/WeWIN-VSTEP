@@ -70,6 +70,7 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Từ vựng",
         icon: BookMarked,
         children: [
+          { label: "Học hôm nay", href: "/vocabulary/today" },
           { label: "Sổ tay từ vựng", href: "/vocabulary/notebook", roles: ["LEARNER", "ADMIN"] },
           { label: "Từ vựng theo chủ đề", href: "/vocabulary/topics" },
           { label: "Mẹo nhớ từ vựng", href: "/vocabulary/tips" },

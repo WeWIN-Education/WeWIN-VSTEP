@@ -84,6 +84,7 @@ function ToolbarButton({
 export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const transcriptRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const saveProgressRef = useRef<() => void>(() => {});
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const activeRef = useRef(0);
@@ -142,26 +143,40 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
 
   useEffect(()=>{
     let disposed=false;
+    let ready=false;
+    let inFlight=false;
+    let queued=false;
+    let lastSaved="";
     async function save(){
+      if(!ready)return;
+      if(inFlight){queued=true;return;}
+      const payload=JSON.stringify({videoSlug:video.slug,currentSec:Math.floor(playbackRef.current),watchedIntervals:intervalsRef.current,quizAnswers:answersRef.current});
+      if(payload===lastSaved)return;
+      inFlight=true;
       try{
-        const response=await fetch("/api/video/progress",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({videoSlug:video.slug,currentSec:playbackRef.current,watchedIntervals:intervalsRef.current,quizAnswers:answersRef.current}),keepalive:false});
+        const response=await fetch("/api/video/progress",{method:"POST",headers:{"Content-Type":"application/json"},body:payload,keepalive:disposed});
         if(!response.ok)throw new Error("Chưa lưu được tiến độ xem.");
+        lastSaved=payload;
         if(!disposed)setProgressError("");
       }catch{if(!disposed)setProgressError("Chưa lưu được tiến độ xem. Hãy kiểm tra kết nối.");}
+      finally{inFlight=false;if(queued){queued=false;void save();}}
     }
-    void fetch(`/api/video/progress?videoSlug=${encodeURIComponent(video.slug)}`).then(async response=>{
+    saveProgressRef.current=()=>void save();
+    const abort=new AbortController();
+    void fetch(`/api/video/progress?videoSlug=${encodeURIComponent(video.slug)}`,{signal:abort.signal}).then(async response=>{
       if(!response.ok)throw new Error("Không tải được tiến độ");
       const data=await response.json();
       if(disposed)return;
       intervalsRef.current=mergeIntervals(data.watchedIntervals||[],parseDuration(video.duration));
       answersRef.current=data.quizAnswers||{};
       setWatched(watchedSeconds(intervalsRef.current));setQuizSeen(new Set(Object.keys(answersRef.current)));
+      ready=true;
       await save();
-    }).catch(()=>{if(!disposed)setProgressError("Chưa tải được tiến độ đã lưu.");});
+    }).catch(()=>{if(!disposed)setProgressError("Chưa tải được tiến độ đã lưu. Tải lại trang để thử lại; tiến độ cũ vẫn được giữ.");});
     const timer=window.setInterval(()=>void save(),10000);
     const hide=()=>{if(document.hidden)void save();};
     document.addEventListener("visibilitychange",hide);
-    return ()=>{disposed=true;clearInterval(timer);document.removeEventListener("visibilitychange",hide);void save();};
+    return ()=>{disposed=true;abort.abort();clearInterval(timer);document.removeEventListener("visibilitychange",hide);void save();saveProgressRef.current=()=>{};};
   },[video.slug,video.duration]);
   useEffect(()=>{
     if(quiz || !isPlaying)return;
@@ -469,7 +484,7 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
                   }}
                   type="button"
                   onClick={() => selectSegment(index)}
-                  className={`w-full rounded-2xl p-4 text-left transition ${index === active ? "bg-brand-soft ring-1 ring-brand/20" : "bg-surface hover:bg-brand-soft/60"}`}
+                  style={{ contentVisibility: "auto", containIntrinsicSize: "auto 170px" }} className={`w-full rounded-2xl p-4 text-left transition ${index === active ? "bg-brand-soft ring-1 ring-brand/20" : "bg-surface hover:bg-brand-soft/60"}`}
                   aria-current={index === active ? "true" : undefined}
                 >
                   <div className="flex items-center justify-between">
@@ -490,7 +505,7 @@ export function VideoLearningPlayer({ video }: { video: LearningVideo }) {
         <span className="text-xs text-ink-muted">Chọn một câu trong bản chép để tua video và luyện lại.</span>
         <span className="ml-auto hidden text-xs text-ink-muted sm:inline">Nguồn: YouTube · WEWIN</span>
       </div>
-      {quiz && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-ink/45 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Câu hỏi kiểm tra video"><div className="w-full max-w-lg rounded-3xl bg-surface-card p-6 shadow-2xl"><p className="text-xs font-bold text-brand">Kiểm tra nội dung đã xem</p><h2 className="mt-2 text-lg font-semibold">{quiz.prompt}</h2><div className="mt-4 space-y-2">{quiz.options.map((option,index)=><button key={option} type="button" disabled={quizSubmitted} onClick={()=>setQuizAnswer(index)} className={`w-full rounded-xl border px-3 py-3 text-left text-sm ${quizAnswer===index?"border-brand bg-brand-soft text-brand":"border-border"}`}>{String.fromCharCode(65+index)}. {option}</button>)}</div>{quizSubmitted?<p role="status" className="mt-4 text-sm">{quizAnswer===quiz.correctIndex?"Chính xác.":`Đáp án đúng: ${quiz.options[quiz.correctIndex]}`}</p>:null}<div className="mt-5 flex justify-end"><button type="button" disabled={quizAnswer===null} onClick={()=>{if(!quizSubmitted){const next={...answersRef.current,[quiz.id]:quizAnswer!};answersRef.current=next;setQuizSeen(new Set(Object.keys(next)));setQuizSubmitted(true);void fetch("/api/video/progress",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({videoSlug:video.slug,currentSec:playbackRef.current,watchedIntervals:intervalsRef.current,quizAnswers:next})});}else{setQuiz(null);sendYoutubeCommand(frameRef.current,"playVideo");}}} className="min-h-11 rounded-full bg-brand px-5 font-semibold text-white disabled:opacity-40">{quizSubmitted?"Tiếp tục xem":"Trả lời"}</button></div></div></div>}
+      {quiz && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-ink/45 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Câu hỏi kiểm tra video"><div className="w-full max-w-lg rounded-3xl bg-surface-card p-6 shadow-2xl"><p className="text-xs font-bold text-brand">Kiểm tra nội dung đã xem</p><h2 className="mt-2 text-lg font-semibold">{quiz.prompt}</h2><div className="mt-4 space-y-2">{quiz.options.map((option,index)=><button key={option} type="button" disabled={quizSubmitted} onClick={()=>setQuizAnswer(index)} className={`w-full rounded-xl border px-3 py-3 text-left text-sm ${quizAnswer===index?"border-brand bg-brand-soft text-brand":"border-border"}`}>{String.fromCharCode(65+index)}. {option}</button>)}</div>{quizSubmitted?<p role="status" className="mt-4 text-sm">{quizAnswer===quiz.correctIndex?"Chính xác.":`Đáp án đúng: ${quiz.options[quiz.correctIndex]}`}</p>:null}<div className="mt-5 flex justify-end"><button type="button" disabled={quizAnswer===null} onClick={()=>{if(!quizSubmitted){const next={...answersRef.current,[quiz.id]:quizAnswer!};answersRef.current=next;setQuizSeen(new Set(Object.keys(next)));setQuizSubmitted(true);saveProgressRef.current();}else{setQuiz(null);sendYoutubeCommand(frameRef.current,"playVideo");}}} className="min-h-11 rounded-full bg-brand px-5 font-semibold text-white disabled:opacity-40">{quizSubmitted?"Tiếp tục xem":"Trả lời"}</button></div></div></div>}
     </div>
   );
 }

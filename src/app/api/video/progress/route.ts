@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { findPublishedLearningVideo } from "@/lib/video-repository";
+import { findLearningVideoProgressSource } from "@/lib/video-repository";
 import { mergeIntervals, watchedSeconds, type Interval } from "@/lib/watched-intervals";
 import { object } from "@/lib/exam-submission";
 import type { Prisma } from "@prisma/client";
@@ -23,7 +23,7 @@ export async function GET(request:Request){
  const session=await getCurrentUser();
  if(!session?.id)return privateJson({error:"Bạn cần đăng nhập."},401);
  const videoSlug=new URL(request.url).searchParams.get("videoSlug")||"";
- if(!await findPublishedLearningVideo(videoSlug))return privateJson({error:"Không có video."},404);
+ if(!await findLearningVideoProgressSource(videoSlug))return privateJson({error:"Không có video."},404);
  const progress=await prisma.videoProgress.findUnique({where:{userId_videoSlug:{userId:session.id,videoSlug}}});
  return privateJson(progress||{currentSec:0,watchedIntervals:[],quizAnswers:{},completed:false});
 }
@@ -33,7 +33,7 @@ export async function POST(request:Request){
  try{
  const body=object(await request.json());
  const videoSlug=String(body.videoSlug||"");
- const video=await findPublishedLearningVideo(videoSlug);
+ const video=await findLearningVideoProgressSource(videoSlug);
  if(!video)return privateJson({error:"Không có video."},404);
  const duration=durationSeconds(video.duration);
  if(!Array.isArray(body.watchedIntervals)||body.watchedIntervals.length>2000)throw new Error("Tiến độ không hợp lệ.");
