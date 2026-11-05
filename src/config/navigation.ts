@@ -63,6 +63,7 @@ export const NAV_GROUPS: NavGroup[] = [
         children: [
           { label: "Luyện thi VSTEP", href: "/exam/vstep" },
           { label: "Bài tập", href: "/practice" },
+          { label: "Ngữ pháp", href: "/grammar" },
           { label: "Học qua video", href: "/video" },
         ],
       },
@@ -109,6 +110,7 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Đề thi", href: "/manage/exams", roles: ["ADMIN"] },
           { label: "Kỹ năng", href: "/manage/skills", roles: ["ADMIN"] },
           { label: "Bài tập", href: "/manage/practice", roles: ["ADMIN"] },
+          { label: "Ngữ pháp", href: "/manage/grammar", roles: ["ADMIN"] },
           { label: "Câu hỏi Quick Battle", href: "/manage/battle", roles: ["ADMIN"] },
           { label: "Duyệt bài viết", href: "/manage/posts", roles: ["ADMIN"] },
           { label: "Nhập từ vựng", href: "/manage/vocabulary/import", roles: ["ADMIN"] },

@@ -1,0 +1,486 @@
+[
+  {
+    "number": 2,
+    "worksheet": "02. ADJ_ADV/ADJECTIVES AND ADVERBS-WORKSHEET 1.docx",
+    "sha256": "5760dd79ce1414e8ddfff8628e92eb28ecf2322cac37833cf6f18bb6190c719b",
+    "keyFiles": [
+      {
+        "file": "02. ADJ_ADV/ADJECTIVES AND ADVERBS-KEY.docx",
+        "sha256": "15eb542373d84dfc0be9e72d6beaf66d4c2dcdf32b7d32f9fa3a829e1f762bfe"
+      }
+    ],
+    "note": "Sửa KEY câu 4: good, câu 5: easily; không dùng đáp án well/careful bị lệch vị trí trong KEY."
+  },
+  {
+    "number": 3,
+    "worksheet": "03. SENTENCE PATTERN/BASIC SENTENCE PATTERNS.docx",
+    "sha256": "562be171e1acced574ecce3cb5f9d91ae67041f88f99f9d8b39e23ed42d7f423",
+    "keyFiles": [
+      {
+        "file": "03. SENTENCE PATTERN/BASIC SENTENCE PATTERNS.KEY.docx",
+        "sha256": "ea495b92af9931e8fdac4ffc4fb5ad6a4f2cfd1d18f1c8db3ab643e3d2fab0ca"
+      }
+    ],
+    "note": "Sửa mẫu câu KEY của Passing exams và Lan; khôi phục books trong tân ngữ. Chỉ hỏi thành phần hoặc mẫu rõ ràng, không chấm nhầm trạng ngữ thành bổ ngữ."
+  },
+  {
+    "number": 4,
+    "worksheet": "04. ADJECTIVES STRUCTURES/ADJECTIVES STRUCTURES.docx",
+    "sha256": "a180c4130c8523950f754c95f6db99b26d14edc9c92842d9247d59ca8a9d16fa",
+    "keyFiles": [
+      {
+        "file": "04. ADJECTIVES STRUCTURES/ADJECTIVES STRUCTURES.KEY.docx",
+        "sha256": "06f7636bc49b0b0905536f675a9beda090b44ba80dd8b0fddc3f251b7129f835"
+      }
+    ],
+    "note": "Sửa KEY fast enough và warm enough. Câu so/such được diễn đạt lại từ cùng ví dụ để làm rõ cấu trúc kết quả."
+  },
+  {
+    "number": 5,
+    "worksheet": "05. WORD STRESS/WORD STRESS.docx",
+    "sha256": "2b098e1e9e7999b0e957a019dd4990cdeadd2e43d9d15bebcdc2d60dea91af95",
+    "keyFiles": [
+      {
+        "file": "05. WORD STRESS/WORD STRESS .KEY.docx",
+        "sha256": "56fa0d42aa491816ab8850350762a5f0503efc66c34a77ae401d8b23de0a4ff4"
+      }
+    ],
+    "note": "Bài nhận biết trọng âm qua chữ; chưa có tệp âm thanh và không chấm phát âm bằng micro."
+  },
+  {
+    "number": 6,
+    "worksheet": "06. PRONUNCIATION/E,ES,ED PRONUNCIATION.docx",
+    "sha256": "66c4e9ffdd6634f322e1992b0823a7990d7d7cabc34fdf32a2a394d8687d4f15",
+    "keyFiles": [
+      {
+        "file": "06. PRONUNCIATION/E,ES,ED PRONUNCIATION.KEY.docx",
+        "sha256": "042a0b92e1f4dc4af50128daf0e4abc7c966be0448eb89d583e7fe9b3933787b"
+      }
+    ],
+    "note": "Bài nhận biết cách đọc âm đuôi, không phải tính năng nghe/chấm phát âm. Chọn câu có nhóm âm rõ ràng."
+  },
+  {
+    "number": 7,
+    "worksheet": "07. COMPARISON/COMPARISION-WORKSHEET.docx",
+    "sha256": "2fd1219d13825e9eff4932ddce674db0a775b1bf6b90f32d5770efe56bb5e1d6",
+    "keyFiles": [
+      {
+        "file": "07. COMPARISON/COMPARISION-WORKSHEET.KEY.docx",
+        "sha256": "b0fe66371e8129df3ae94b47a001eb2ae29c3101b5cfab785c7a5b9d9c63aa02"
+      }
+    ],
+    "note": "Sửa KEY câu 3 từ more interesting thành most interesting; khai báo cả hai dạng hợp lệ của clever."
+  },
+  {
+    "number": 8,
+    "worksheet": "08. QUANTIFIER/QUANTIFIERS-WORKSHEET.docx",
+    "sha256": "748802867cb9d75b110e270096fea7d8a87e2120c0ae0ba9ee48bf048ba1938c",
+    "keyFiles": [
+      {
+        "file": "08. QUANTIFIER/QUANTIFIERS-WORKSHEET.KEY.docx",
+        "sha256": "39fc7781a8e8f6c89a2a9877769f0905f21fc16a808cf92c712078373d81b6ef"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 9,
+    "worksheet": "09. ARTICLES/ARTICLE-WORKSHEET 1.docx",
+    "sha256": "0b37700b04190dd317671c11863dbe1fa1896a49fbe73cd946c69feafec2ee8a",
+    "keyFiles": [
+      {
+        "file": "09. ARTICLES/ARTICLE-WORKSHEET 1 key.docx",
+        "sha256": "1731706e31b3d9fb053da40d86a92d1415c6b8aa9741c8d1d18633169081ab46"
+      }
+    ],
+    "note": "Chuẩn hóa a/b/c/d bị dính dòng; hiển thị lựa chọn không dùng mạo từ thay ký tự rỗng."
+  },
+  {
+    "number": 10,
+    "worksheet": "10. WORD FORM/WORD FORM-WORKSHEET 1.docx",
+    "sha256": "6e36e994574dd5faa367919b6dd7cc832e8897fb73c23a32d03590e710da30a2",
+    "keyFiles": [
+      {
+        "file": "10. WORD FORM/WORD FORM-WORKSHEET 1-KEY.docx",
+        "sha256": "589a986c20786c98092320a9df5389b12c0ee700c361befac930e72c9325e569"
+      }
+    ],
+    "note": "Sửa KEY carefully thành careful. Không dùng câu nguồn COMPLETE thiếu chủ ngữ và câu compete diễn đạt sai."
+  },
+  {
+    "number": 11,
+    "worksheet": "11. PRESENT SIMPLE/PRESENT SIMPLE- WORKSHEET 1.docx",
+    "sha256": "70ed28d2071f4fcc064fb145d1875c92c02d0df9e464e1970b3bb1a95bd60343",
+    "keyFiles": [
+      {
+        "file": "11. PRESENT SIMPLE/PRESENT SIMPLE- WORKSHEET 1.KEY.docx",
+        "sha256": "ddb5c505c10e77f11b8523cbcb44c757da8b199b2ec081e10c05fc0d6fe5158e"
+      },
+      {
+        "file": "11. PRESENT SIMPLE/PRESENT SIMPLE- WORKSHEET 2.KEY.docx",
+        "sha256": "17dbab7be51dba1b8b0eb85e20ebe68dd5773fc9050c4c7d96a2a97c6775bb39"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 12,
+    "worksheet": "12. PRESENT CONTINUOUS/PRESENT CONTINOUS- WORKSHEET 1.docx",
+    "sha256": "11e529fc4b5d707501cedec6b8458a0fcc16a1520878cd3d6c20c1d9bbf1f511",
+    "keyFiles": [
+      {
+        "file": "12. PRESENT CONTINUOUS/PRESENT CONTINOUS- WORKSHEET 1.KEY.docx",
+        "sha256": "1953f1bbf7e52344e5e914a62865448664ff7a9629d0c7d8f841cd829a48d650"
+      },
+      {
+        "file": "12. PRESENT CONTINUOUS/PRESENT CONTINUOS- WORKSHEET 2.KEY.docx",
+        "sha256": "04db56b6ed3318165db85d02f0a34c8100b03d01a59a3f38793a6e6e0fc8505a"
+      },
+      {
+        "file": "12. PRESENT CONTINUOUS/PRESENT CONTINUOUS- WORKSHEET 2.KEY.docx",
+        "sha256": "0aaf182f2aa39b0d938d85f4aa9489d22a79431df7faa73f24aab3e06f8cc9bb"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 14,
+    "worksheet": "14. FUTURE SIMPLE/FUTURE SIMPLE -WORKSHEET 2.docx",
+    "sha256": "40afa406f83fe6f181f7ddabf8a63da7db83512f108089a587167fc847278b1a",
+    "keyFiles": [
+      {
+        "file": "14. FUTURE SIMPLE/FUTURE SIMPLE -WORKSHEET 2.KEY.docx",
+        "sha256": "a2bd2ffcacde81ca8dc4d9cb8f48735ca18f2e0089d9e77d1162b5e42b979bee"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 15,
+    "worksheet": "15. NEAR FUTURE/NEAR FUTURE-WORKSHEET 1.docx",
+    "sha256": "31da08d64295512aaeece714f3b2e9a08e09ccd225b1e7fc838115f1af15ad31",
+    "keyFiles": [
+      {
+        "file": "15. NEAR FUTURE/NEAR FUTURE-WORKSHEET 1.KEY.docx",
+        "sha256": "3c71f64dd64dd1b939fe53718a4eb5a0bc49b0331cb01182ffba200873c6455e"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 16,
+    "worksheet": "16. FUTURE CONTINUOUS/FUTURE CONTINOUS-WORKSHEET 1.docx",
+    "sha256": "abed318699e8a58fd55137ed82c43e6e3ece22bc3629fba486217d66bebd7d09",
+    "keyFiles": [
+      {
+        "file": "16. FUTURE CONTINUOUS/FUTURE CONTINOUS-WORKSHEET 1.KEY.docx",
+        "sha256": "d77e4f265aa75736063d2924afe4d72a63f1978bcf4a71542f312bf48c8459a3"
+      }
+    ],
+    "note": "Sửa tiêu đề Exercise bị gõ nhầm future perfect; toàn bộ các câu chọn ở đây được yêu cầu dùng future continuous rõ ràng."
+  },
+  {
+    "number": 17,
+    "worksheet": "17. PAST SIMPLE/PAST SIMPLE-WORKSHEET 1.docx",
+    "sha256": "7ce56cd3a81c0b58ab8a63f3a10ce046085f66a140b551f311ef6cef224d783e",
+    "keyFiles": [
+      {
+        "file": "17. PAST SIMPLE/PAST SIMPLE-WORKSHEET 1.KEY.docx",
+        "sha256": "f2e64790df7f934ae3d1addfd77011d9c05535d32b9a24e1cb61b6b26ecad7b8"
+      },
+      {
+        "file": "17. PAST SIMPLE/PAST SIMPLE-WORKSHEET 2.KEY.docx",
+        "sha256": "662d1e1f53d55e0ef2c0155b88258b4c26c05b97ff7e3fdb754fbc3a93c69492"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 18,
+    "worksheet": "18. PAST CONTINUOUS/PAST CONTINUOUS- WORKSHEET 1.docx",
+    "sha256": "f2f16821895a410d7836d5676614746bb16c551dba297e3e7882bb473b177f67",
+    "keyFiles": [
+      {
+        "file": "18. PAST CONTINUOUS/PAST CONTINUOUS- WORKSHEET 1.KEY.docx",
+        "sha256": "6380045501c74151b9cb2745011fa5cf2ec3095f669ebfdfb7410281a545f6b9"
+      },
+      {
+        "file": "18. PAST CONTINUOUS/PAST CONTINUOUS- WORKSHEET 2.KEY.docx",
+        "sha256": "46e2dc69e6cd628521def5c6b7bd74a3a0cddfe4b3989f7ae6ad1cc78a20d2d4"
+      }
+    ],
+    "note": "Chuẩn hóa whe, stress, thiếu on; câu có hai động từ được tách một ô và cho sẵn động từ còn lại."
+  },
+  {
+    "number": 19,
+    "worksheet": "19. PRESENT PERFECT/PRESENT PERFECT-WORKSHEET 1.docx",
+    "sha256": "b4e9198abbe9a3496ec3f19ae3de03e61434043cbcf0e57f92b41a1565642a80",
+    "keyFiles": [
+      {
+        "file": "19. PRESENT PERFECT/PRESENT PERFECT-WORKSHEET 1.KEY.docx",
+        "sha256": "c9d6fcd6bf87dec08cb651a58b58065a920698c0027b0ff52bfff33ac0f33dc7"
+      },
+      {
+        "file": "19. PRESENT PERFECT/PRESENT PERFECT-WORKSHEET 2.KEY.docx",
+        "sha256": "2243df87d09de7e0f22a38c77c29e1018a6961148ba2f5cc3d0c93fe346d5bee"
+      },
+      {
+        "file": "19. PRESENT PERFECT/PRESENT PERFECT-WORKSHEET 3.KEY.docx",
+        "sha256": "4ec1f5a6332f1caf0d166b6494ea86743356d1e24b2e149c601f06b856126c66"
+      }
+    ],
+    "note": "Bổ sung for bị thiếu; khai báo các biến thể viết tắt và Anh-Anh/Anh-Mỹ thay vì chấm sai khác chính tả hợp lệ."
+  },
+  {
+    "number": 20,
+    "worksheet": "20. PRESENT PERFECT_PAST SIMPLE/PRESENT PERFECT _ PAST SIMPLE- WORKSHEET.docx",
+    "sha256": "d0f9ca62c0f8d486e6b5539d8f4c721a5e0eadf7ba732047779a1d28a769ae0b",
+    "keyFiles": [
+      {
+        "file": "20. PRESENT PERFECT_PAST SIMPLE/PRESENT PERFECT _ PAST SIMPLE- WORKSHEET.KEY.docx",
+        "sha256": "371059dc25a090278dcc424e7c1548ccb6e1f64c05720da169648151dace6c51"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 21,
+    "worksheet": "21. PAST PERFECT/PAST PERFECT-WORKSHEET 1.docx",
+    "sha256": "9b6ac95ca6b3e5321f54b06bd96303ec48425b8f1b6ce61fbb775770447b77a0",
+    "keyFiles": [
+      {
+        "file": "21. PAST PERFECT/PAST PERFECT-WORKSHEET 1.KEY.docx",
+        "sha256": "e675ce6d09077130adb2e059819815057cfd2fe312f94835cc931965880e3396"
+      },
+      {
+        "file": "21. PAST PERFECT/PAST PERFECT-WORKSHEET 2.KEY.docx",
+        "sha256": "1afab0909db224d50db7ab7bebd7d4db6c64c0cf3be8a3ebca5ab5a19ef6fe92"
+      }
+    ],
+    "note": "Đề gốc có tiêu đề yêu cầu quá khứ hoàn thành nhưng chứa câu quá khứ đơn; ghi rõ thì yêu cầu ở từng câu để không gây mơ hồ."
+  },
+  {
+    "number": 22,
+    "worksheet": "22. PERFECT CONTINUOUS TENSES/PERFECT CONTINUOUS TENSES-WORKSHEET 1.docx",
+    "sha256": "e287e80e334e41c3426d4444ef69af5460da2f67dc863786859f80277be76422",
+    "keyFiles": [
+      {
+        "file": "22. PERFECT CONTINUOUS TENSES/PERFECT CONTINUOUS TENSES-WORKSHEET 1.KEY.docx",
+        "sha256": "ce13fe8644753a1debd59f90cbcbcf46c56a52d3ffe91adc8c72e37e3ffac643"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 23,
+    "worksheet": "23. PRESENT TENSES/PRESENT TENSES (CÁC THÌ HIỆN TẠI).docx",
+    "sha256": "710749e06c10964382904f49482474a9828824f4e3b98cc0140886ad8183288a",
+    "keyFiles": [
+      {
+        "file": "23. PRESENT TENSES/PRESENT TENSES (CÁC THÌ HIỆN TẠI).KEY.docx",
+        "sha256": "ec7beca39775b3cdd8145c383f549929201a42ae1cad0a1dfb33d5b193b09108"
+      }
+    ],
+    "note": "Không dùng câu tourism bị KEY chia hiện tại hoàn thành trái hướng dẫn. Câu có biến thể thì hợp lệ được ghi rõ thì cần luyện."
+  },
+  {
+    "number": 24,
+    "worksheet": "24. FUTURE TENSES/FUTURE TENSES (CÁC THÌ TƯƠNG LAI).docx",
+    "sha256": "e02e4261faf8dba2c9794db186d101cf101fa9d7f264fe808e3d61ea86fbe234",
+    "keyFiles": [
+      {
+        "file": "24. FUTURE TENSES/FUTURE TENSES (CÁC THÌ TƯƠNG LAI).KEY.docx",
+        "sha256": "656b008415b8d99f5a0da5607b61bc4f06e5f3d12a3dc62517cf21992b83c114"
+      }
+    ],
+    "note": "Sửa studying; bỏ câu by now có mốc thời gian không phù hợp và các câu động từ có thể chấm nhiều thì nhưng KEY chỉ một."
+  },
+  {
+    "number": 25,
+    "worksheet": "25. PAST TENSES/PAST TENSES (CÁC THÌ QUÁ KHỨ).docx",
+    "sha256": "2f5ec61181418bd5d884ff2e1ee2b82f73fd0718b8c343665564ed056f3bc18e",
+    "keyFiles": [
+      {
+        "file": "25. PAST TENSES/PAST TENSES (CÁC THÌ QUÁ KHỨ).KEY.docx",
+        "sha256": "6f8c2ca3e4568413a54ed9d41a2fb409058204ff24fcd7dd60749216f29c5548"
+      }
+    ],
+    "note": "Sửa đại từ she thành he cho Mr Johnson; nêu rõ yêu cầu hoàn thành đơn ở câu có thể dùng hoàn thành tiếp diễn."
+  },
+  {
+    "number": 26,
+    "worksheet": "26. SEQUENCES OF VERB TENSE/TENSES REVIEW-WORKSHEET 1.docx",
+    "sha256": "7fe6838a3bf73d0f558d9f8ae55423efe13d1e95e9162bc9c3d5731016f201e4",
+    "keyFiles": [
+      {
+        "file": "26. SEQUENCES OF VERB TENSE/TENSES REVIEW-WORKSHEET 1.KEY.docx",
+        "sha256": "59ac7568ea39d3e542118949e856a7eaa5f4b0ed192a3cbe12671ae5526be0c4"
+      }
+    ],
+    "note": "Bỏ câu wedding party thiếu mốc, câu Maggie hỏng nội dung và câu after có nhiều cách chia. Nêu rõ ngữ cảnh ở câu lịch trình/tạm thời; sửa lựa chọn bị gõ sai."
+  },
+  {
+    "number": 27,
+    "worksheet": "27. WISHES/WISH SENTENCES-WORKSHEET.docx",
+    "sha256": "d8b84007915a46105911f3221cf37b9fdce7918f0e42360d0f6ebfa5501a27ce",
+    "keyFiles": [
+      {
+        "file": "27. WISHES/WISH SENTENCES-WORKSHEET.KEY.docx",
+        "sha256": "b49d8769727ee270cd40f6dfb81f08a01800fad3de90745226559f1d9dc316d8"
+      }
+    ],
+    "note": "Sửa would visited thành would visit; bỏ câu thiếu mốc và KEY had felt không có ngữ cảnh quá khứ."
+  },
+  {
+    "number": 28,
+    "worksheet": "28. TAG QUESTIONS/TAG QUESTION-WORKSHEET.docx",
+    "sha256": "9fc3acdc107ad46bab58fc2264c8863f29b3ffb6c397f885021f28a1b8aedf10",
+    "keyFiles": [
+      {
+        "file": "28. TAG QUESTIONS/TAG QUESTION-WORKSHEET.KEY.docx",
+        "sha256": "880da6a82ab8c640979a6decedd44b0b4f884de4e61f9520d241366c72541a9e"
+      }
+    ],
+    "note": "Bổ sung a bị thiếu trong câu no one. Chấp nhận cả dạng phủ định đầy đủ có trật tự câu hỏi đúng."
+  },
+  {
+    "number": 29,
+    "worksheet": "29. INFINITIVES/INFINITIVES -WORKSHEET 1.docx",
+    "sha256": "2f97056682ef994a0870b9766742a8a6a575b67bd20a6151cffcda3f3f996cb3",
+    "keyFiles": [
+      {
+        "file": "29. INFINITIVES/INFINITIVES -WORKSHEET 1 - key.docx",
+        "sha256": "e864bfe33a7258bd7db4e1cf544496457057d6f0874e851e2bacac445b6326f6"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 30,
+    "worksheet": "30. GERUND/GERUNDS -WORKSHEET 1.docx",
+    "sha256": "fbab40a9d59aa78d7de46839a5341735b33648e6357b107d7f22103839b5a28c",
+    "keyFiles": [
+      {
+        "file": "30. GERUND/GERUNDS -WORKSHEET 1 -key.docx",
+        "sha256": "a1ae8db9518ae1b35eb3e43a6a56240d952f95b4359757551683e8804da56b6f"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 31,
+    "worksheet": "31. GERUND_INFINITIVES/GERUNDS AND INFINITIVES - WORKSHEET 1.docx",
+    "sha256": "9a072f7511cf7cb98f492a93eb7174505efcf50d35d29a33e918b9d28951f748",
+    "keyFiles": [
+      {
+        "file": "31. GERUND_INFINITIVES/GERUNDS AND INFINITIVES - WORKSHEET 1.KEY.docx",
+        "sha256": "2ccc04c176a35da3a859735b5c4e544927005f8cd08b90bfd35082166e834947"
+      },
+      {
+        "file": "31. GERUND_INFINITIVES/GERUNDS AND INFINITIVES - key.docx",
+        "sha256": "2ccc04c176a35da3a859735b5c4e544927005f8cd08b90bfd35082166e834947"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "number": 32,
+    "worksheet": "32. PASSIVE VOICE/PASSIVE VOICE 1.docx",
+    "sha256": "f04e5ea974fbadecad88f4f4128e4ab50a02f8adec7831a2c253db7904d1c471",
+    "keyFiles": [
+      {
+        "file": "32. PASSIVE VOICE/PASSIVE VOICE 1 ANSWER KEY.docx",
+        "sha256": "56f8ef425db26902bb73a352dd4bf0ac18316bb0445cefb65603676fb304c321"
+      }
+    ],
+    "note": "Chuyển viết lại câu thành ô cụm động từ để chấp nhận rõ các dạng đúng; sửa KEY human life và giới từ tác nhân by."
+  },
+  {
+    "number": 33,
+    "worksheet": "33. PHRASAL VERBS/PHRASAL VERBS.docx",
+    "sha256": "ab32816d568d064cecff15acc2c55542914360eb7ecc42c829ebf3ba82859a90",
+    "keyFiles": [
+      {
+        "file": "33. PHRASAL VERBS/PHRASAL VERBS-KEY.docx",
+        "sha256": "debcaeec61f29c61fe5881c4da0669870efb9e60fac0438ec28ba9794c96e030"
+      }
+    ],
+    "note": "Chuyên đề học cụm từ qua ngữ cảnh, chưa nối sang sổ tay từ vựng; không tạo dữ liệu trùng vào kho từ."
+  },
+  {
+    "number": 34,
+    "worksheet": "34. REPORTED SPEECH/REPORTED SPEECH 1.docx",
+    "sha256": "dd4f791132e6ca4844f67877f0f7e5fc9ad5a8f63005071a00def87352cd721c",
+    "keyFiles": [
+      {
+        "file": "34. REPORTED SPEECH/REPORTED SPEECH 1. KEY.docx",
+        "sha256": "35c13cb95039d92bd0c23cf7676b975f71f1f23e6f88ec371ea402bbc7fa1208"
+      },
+      {
+        "file": "34. REPORTED SPEECH/REPORTED SPEECH 2 .KEY.docx",
+        "sha256": "7e8f47d920350920703cd61f3a495aa0645b61f21abc5de9fb479f9edbaaa7fc"
+      }
+    ],
+    "note": "Sửa các lỗi following, same và teachers trong KEY. Ghi rõ ngữ cảnh lùi thì; câu hỏi toàn câu được chuyển thành ô cụm từ có biến thể xác định."
+  },
+  {
+    "number": 35,
+    "worksheet": "35. CONDITIONAL SENTENCES/CONDITIONAL SENTENCES.docx",
+    "sha256": "521308cd08db6c746a0cf592e90281e1ee53728d447cc7ca668435f0eb417080",
+    "keyFiles": [
+      {
+        "file": "35. CONDITIONAL SENTENCES/CONDITIONAL SENTENCES .KEY.docx",
+        "sha256": "fe8b7273a626ebdde9acb97abdced6835d40cd4bde598bd8918b2f0e9fb8d1b7"
+      }
+    ],
+    "note": "Hai bài này tập trung loại 1–2 trong worksheet; chưa phải toàn bộ dạng điều kiện nâng cao. Sửa a good handwriting; bỏ câu squeeze có thể hiểu là điều kiện loại 0."
+  },
+  {
+    "number": 36,
+    "worksheet": "36. ADVERB CLAUSE OF PURPOSE/SO THAT- IN ORDER TO.docx",
+    "sha256": "2534b5cb44246acebd526876320c227194695df66e7200754ffd65bcd5cfc3b5",
+    "keyFiles": [
+      {
+        "file": "36. ADVERB CLAUSE OF PURPOSE/SO THAT- IN ORDER TO.KEY.docx",
+        "sha256": "b1ded2bcb1ec443119b1dffa92ac80cde167e4706620136dadc0867a4442e9bd"
+      }
+    ],
+    "note": "Sửa câu talking whispers, wanted everybody could và KEY mục đích của Mary. Chuyển viết lại câu thành một ô mục tiêu để không loại sai cách diễn đạt đồng nghĩa."
+  },
+  {
+    "number": 37,
+    "worksheet": "37. ADVERB CLAUSE OF REASON, RESULT/BECAUSE-BECAUSE OF.docx",
+    "sha256": "c58e3cc659e7d0451a1a6f529a3dd04013f85dcc052784abddd3a6ede942badf",
+    "keyFiles": [
+      {
+        "file": "37. ADVERB CLAUSE OF REASON, RESULT/BECAUSE-BECAUSE OF .KEY.docx",
+        "sha256": "e15b69cfc27e6167207937ac8c95fc88bbaa29d28ce363381de6d6a8d9cfb26c"
+      }
+    ],
+    "note": "Chuẩn hóa dấu câu và câu got mark 10; dùng thêm các câu so có trong worksheet để phủ cả phần kết quả."
+  },
+  {
+    "number": 38,
+    "worksheet": "38. ADVERBS CLAUSES OF CONTRAST/ALTHOUGH-DESPITE-IN SPITE OF.docx",
+    "sha256": "dd05b4fb0174aafb99ab1349eb1e89e2e57215d1dcd9e29703726d8d0f0253aa",
+    "keyFiles": [
+      {
+        "file": "38. ADVERBS CLAUSES OF CONTRAST/ALTHOUGH-DESPITE-IN SPITE OF .KEY.docx",
+        "sha256": "39982d3b8a843de4e8c28728d43368c6c48787440c7981f26cfa91c3212b71ed"
+      }
+    ],
+    "note": "Sửa tiêu đề nhầm because/because of; không dùng câu Julie học chăm nhưng KEY diễn tả nhượng bộ trái nghĩa ngữ cảnh."
+  },
+  {
+    "number": 40,
+    "worksheet": "40. CONJUNCTIONS/CONJUNCTIONS -WORKSHEET.docx",
+    "sha256": "304e8d0fb7aa1036cd0f44c2090066577523753792244b3dc88211c7ccbb9602",
+    "keyFiles": [
+      {
+        "file": "40. CONJUNCTIONS/CONJUNCTIONS -WORKSHEET-KEY.docx",
+        "sha256": "964b6daeef2a7699286523b3e75daa15661e14b74f9e2087c6aebfaf874fe64a"
+      }
+    ],
+    "note": ""
+  }
+]

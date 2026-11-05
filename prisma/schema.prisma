@@ -121,6 +121,83 @@ model User {
   classroomAttendance ClassroomAttendance[]
   classroomFiles ClassroomFile[]
   classroomNotifications ClassroomNotification[]
+  grammarImports GrammarLesson[] @relation("GrammarImporter")
+  grammarReviews GrammarLesson[] @relation("GrammarReviewer")
+  grammarAttempts GrammarAttempt[]
+  grammarProgress GrammarSetProgress[]
+  grammarMistakes GrammarReview[]
+}
+
+model GrammarLesson {
+  id String @id @default(cuid())
+  slug String
+  version String
+  number Int
+  title String
+  summary String
+  content Json
+  status String @default("DRAFT")
+  importedById String?
+  importedBy User? @relation("GrammarImporter", fields: [importedById], references: [id], onDelete: SetNull)
+  reviewedById String?
+  reviewedBy User? @relation("GrammarReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt DateTime?
+  createdAt DateTime @default(now())
+  attempts GrammarAttempt[]
+  progress GrammarSetProgress[]
+  reviews GrammarReview[]
+
+  @@unique([slug, version])
+  @@index([status, number])
+}
+
+model GrammarAttempt {
+  id String @id @default(cuid())
+  submissionId String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId String
+  lesson GrammarLesson @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  setId String
+  mode String
+  answers Json
+  result Json
+  submittedAt DateTime @default(now())
+
+  @@unique([userId, submissionId])
+  @@index([userId, lessonId, submittedAt])
+}
+
+model GrammarSetProgress {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId String
+  lesson GrammarLesson @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  setId String
+  bestCorrect Int
+  total Int
+  passedAt DateTime?
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lessonId, setId])
+}
+
+model GrammarReview {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId String
+  lesson GrammarLesson @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  setId String
+  questionId String
+  intervalStep Int @default(0)
+  reviewCount Int @default(1)
+  nextReviewAt DateTime
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lessonId, questionId])
+  @@index([userId, nextReviewAt])
 }
 
 model ProgrammeEnrollment {

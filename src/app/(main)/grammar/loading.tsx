@@ -1,0 +1,1 @@
+export default function Loading() { return <div className="mx-auto max-w-5xl space-y-6" role="status"><p className="text-sm text-ink-muted">Đang mở chuyên đề…</p><div className="h-40 rounded-3xl border border-border bg-surface-card" /><div className="h-64 rounded-3xl border border-border bg-surface-card" /></div>; }

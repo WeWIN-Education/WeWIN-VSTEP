@@ -1,0 +1,686 @@
+[
+  {
+    "slug": "danh-tu",
+    "number": 1,
+    "title": "Danh từ",
+    "summary": "Nhận biết danh từ số nhiều và dùng đúng từ chỉ lượng qua hai bài luyện ngắn.",
+    "source": {
+      "file": "01. NOUNS/NOUNS-WORKSHEET 1.docx",
+      "sha256": "a62f0eadff6d606e1510e09ec03c706856c853eb8458558fdab1685a98d1c640",
+      "note": "Bản thử biên tập từ worksheet 1. Giữ câu gốc ở bài điền từ; bài chọn, sửa lỗi và sắp xếp chuyển đổi từ câu nguồn. Chuẩn hóa khoảng trắng và dấu câu. Lý thuyết, giải thích được biên soạn cho bản thử, cần trung tâm duyệt trước khi dùng chính thức."
+    },
+    "theory": [
+      {
+        "title": "Danh từ số nhiều",
+        "body": "Phần lớn danh từ thêm -s hoặc -es. Một số danh từ có dạng số nhiều bất quy tắc: person → people, child → children, foot → feet. Với một số từ kết thúc bằng -f/-fe, dạng số nhiều đổi thành -ves.",
+        "examples": [
+          "one woman → two women",
+          "one knife → two knives",
+          "The children are playing."
+        ]
+      },
+      {
+        "title": "How much hay How many?",
+        "body": "Dùng How many với danh từ đếm được ở số nhiều. Dùng How much với danh từ không đếm được. Trong các câu dưới đây, milk và paper chỉ vật liệu là danh từ không đếm được.",
+        "examples": [
+          "How many people are there in your family?",
+          "How much milk do you want?",
+          "I haven’t got any paper to write on."
+        ]
+      }
+    ],
+    "sets": [
+      {
+        "id": "so-nhieu",
+        "title": "Bài 1 · Dạng số nhiều",
+        "required": true,
+        "questions": [
+          {
+            "id": "noun-1",
+            "type": "FILL_BLANK",
+            "prompt": "These (person) ___ are protesting against the president.",
+            "accepted": [
+              "people"
+            ],
+            "explanation": "Person có dạng số nhiều bất quy tắc là people.",
+            "source": "Exercise 1, câu 1",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "noun-2",
+            "type": "FILL_BLANK",
+            "prompt": "The (woman) ___ over there want to meet the manager.",
+            "accepted": [
+              "women"
+            ],
+            "explanation": "Woman → women ở số nhiều.",
+            "source": "Exercise 1, câu 2",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "noun-3",
+            "type": "FILL_BLANK",
+            "prompt": "My (child) ___ hate eating pasta.",
+            "accepted": [
+              "children"
+            ],
+            "explanation": "Child → children; không thêm -s.",
+            "source": "Exercise 1, câu 3",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "noun-4",
+            "type": "FILL_BLANK",
+            "prompt": "I am ill. My (foot) ___ hurt.",
+            "accepted": [
+              "feet"
+            ],
+            "explanation": "Foot có dạng số nhiều là feet.",
+            "source": "Exercise 1, câu 4",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "noun-5",
+            "type": "FILL_BLANK",
+            "prompt": "Where did you put the (knife) ___?",
+            "accepted": [
+              "knives"
+            ],
+            "explanation": "Knife → knives: đổi -fe thành -ves.",
+            "source": "Exercise 1, câu 11",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          }
+        ]
+      },
+      {
+        "id": "su-dung",
+        "title": "Bài 2 · Dùng danh từ trong câu",
+        "required": true,
+        "questions": [
+          {
+            "id": "noun-6",
+            "type": "BINARY_CHOICE",
+            "prompt": "___ milk do you want?",
+            "explanation": "Milk là danh từ không đếm được nên dùng How much.",
+            "source": "Chuyển thể Exercise 3, câu 2",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "options": [
+              {
+                "id": "o1",
+                "text": "How many"
+              },
+              {
+                "id": "o2",
+                "text": "How much"
+              }
+            ],
+            "correctOption": "o2"
+          },
+          {
+            "id": "noun-7",
+            "type": "BINARY_CHOICE",
+            "prompt": "___ people are there in your family?",
+            "explanation": "People là danh từ đếm được ở số nhiều nên dùng How many.",
+            "source": "Chuyển thể Exercise 3, câu 4",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "options": [
+              {
+                "id": "o1",
+                "text": "How many"
+              },
+              {
+                "id": "o2",
+                "text": "How much"
+              }
+            ],
+            "correctOption": "o1"
+          },
+          {
+            "id": "noun-8",
+            "type": "MCQ",
+            "prompt": "I want to write some letters but I haven’t got ___ to write on.",
+            "explanation": "Paper chỉ giấy để viết, không đếm được. Dùng any trong câu phủ định này.",
+            "source": "Chuyển thể Exercise 5, câu 2; thêm phương án nhiễu",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "options": [
+              {
+                "id": "o1",
+                "text": "a paper"
+              },
+              {
+                "id": "o2",
+                "text": "any paper"
+              },
+              {
+                "id": "o3",
+                "text": "a papers"
+              },
+              {
+                "id": "o4",
+                "text": "many paper"
+              }
+            ],
+            "correctOption": "o2"
+          },
+          {
+            "id": "noun-9",
+            "type": "ERROR_CORRECTION",
+            "prompt": "Chọn từ sai rồi nhập dạng đúng.",
+            "accepted": [
+              "teeth"
+            ],
+            "explanation": "Tooth có dạng số nhiều là teeth, không phải tooths.",
+            "source": "Chuyển thể Exercise 1, câu 6: thay từ đúng bằng lỗi để luyện sửa",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "errorTokens": [
+              "I",
+              "brush",
+              "my",
+              "tooths",
+              "three",
+              "times",
+              "a",
+              "day."
+            ],
+            "errorIndexes": [
+              3
+            ]
+          },
+          {
+            "id": "noun-10",
+            "type": "WORD_ORDER",
+            "prompt": "Sắp xếp tất cả thẻ thành câu đúng.",
+            "accepted": [
+              "The students are doing the exercise right now."
+            ],
+            "explanation": "The students là chủ ngữ số nhiều; are doing diễn tả hành động đang diễn ra.",
+            "source": "Chuyển thể Exercise 1, câu 7",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "tokens": [
+              {
+                "id": "t1",
+                "text": "right now."
+              },
+              {
+                "id": "t2",
+                "text": "The students"
+              },
+              {
+                "id": "t3",
+                "text": "the exercise"
+              },
+              {
+                "id": "t4",
+                "text": "are doing"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "hien-tai-don-va-tiep-dien",
+    "number": 13,
+    "title": "Hiện tại đơn và hiện tại tiếp diễn",
+    "summary": "Phân biệt thói quen với hành động đang diễn ra qua điền từ, đoạn ngắn và chọn đáp án.",
+    "source": {
+      "file": "13. PRESENT SIMPLE _ PRESENT CONTINUOUS/PRESENT SIMPLS _ PRESENT CONTINUOUS WORKSHEET 3.docx",
+      "sha256": "5d9a288a3458ccd1f25591b56681197643f31bb0f24db202b2add0dfa4c3ca7e",
+      "note": "Bản thử từ worksheet 3. Ghép lại dòng bị tách trong tài liệu; chuẩn hóa dấu câu. Một câu hai ô trống chuyển thành đoạn điền từ. Có câu chuyển sang sắp xếp thẻ; ghi rõ ở vị trí nguồn. Giải thích cần trung tâm duyệt."
+    },
+    "theory": [
+      {
+        "title": "Thói quen: hiện tại đơn",
+        "body": "Dùng hiện tại đơn cho thói quen và sự việc lặp lại. Với he/she/it, động từ thường thêm -s/-es. Khi dùng does hoặc doesn’t, động từ chính trở về nguyên mẫu.",
+        "examples": [
+          "Every Sunday, we visit our grandparents.",
+          "He often goes to the cinema.",
+          "My brother doesn’t play badminton in the evening."
+        ]
+      },
+      {
+        "title": "Ngay lúc này: hiện tại tiếp diễn",
+        "body": "Dùng am/is/are + động từ -ing cho hành động đang diễn ra. Những từ như now, at the moment, Look! và Keep silent! thường giúp nhận biết ngữ cảnh.",
+        "examples": [
+          "Look! He is leaving the house.",
+          "Keep silent! I am doing the test.",
+          "She usually walks to school, but today she is going by bike."
+        ]
+      }
+    ],
+    "sets": [
+      {
+        "id": "chia-dong-tu",
+        "title": "Bài 1 · Chia động từ",
+        "required": true,
+        "questions": [
+          {
+            "id": "tense-1",
+            "type": "FILL_BLANK",
+            "prompt": "Look! He (leave) ___ the house.",
+            "accepted": [
+              "is leaving",
+              "'s leaving"
+            ],
+            "explanation": "Look! báo hiệu hành động đang diễn ra; he đi với is leaving.",
+            "source": "Exercise 2, câu 1",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "tense-2",
+            "type": "FILL_BLANK",
+            "prompt": "Keep silent! I (do) ___ the test.",
+            "accepted": [
+              "am doing",
+              "'m doing"
+            ],
+            "explanation": "I am doing diễn tả hành động đang xảy ra.",
+            "source": "Exercise 2, câu 2",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "tense-3",
+            "type": "FILL_BLANK",
+            "prompt": "Every Sunday, we (visit) ___ our grandparents.",
+            "accepted": [
+              "visit"
+            ],
+            "explanation": "Every Sunday chỉ thói quen; chủ ngữ we dùng visit.",
+            "source": "Exercise 2, câu 4",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "tense-4",
+            "type": "FILL_BLANK",
+            "prompt": "I (not/do) ___ anything at the moment.",
+            "accepted": [
+              "am not doing",
+              "'m not doing"
+            ],
+            "explanation": "At the moment cần hiện tại tiếp diễn: am not doing.",
+            "source": "Exercise 2, câu 5",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "tense-5",
+            "type": "PASSAGE_CLOZE",
+            "prompt": "She usually {{walk}} to school but today she {{go}} by bike.",
+            "explanation": "Usually đi với walks; đối chiếu hành động hôm nay đang khác thường dùng is going.",
+            "source": "Chuyển thể Exercise 2, câu 3: hai chỗ chia động từ",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "blanks": [
+              {
+                "id": "walk",
+                "label": "Ô 1 · walk",
+                "accepted": [
+                  "walks"
+                ]
+              },
+              {
+                "id": "go",
+                "label": "Ô 2 · go",
+                "accepted": [
+                  "is going",
+                  "'s going"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "nhan-biet",
+        "title": "Bài 2 · Chọn thì theo ngữ cảnh",
+        "required": true,
+        "questions": [
+          {
+            "id": "tense-6",
+            "type": "MCQ",
+            "prompt": "James is ___ judo in the playground with his friends and he is very excited.",
+            "explanation": "Cụm đúng là do judo; sau is dùng doing.",
+            "source": "Exercise 3, câu 1",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "options": [
+              {
+                "id": "o1",
+                "text": "studying"
+              },
+              {
+                "id": "o2",
+                "text": "doing"
+              },
+              {
+                "id": "o3",
+                "text": "playing"
+              },
+              {
+                "id": "o4",
+                "text": "have"
+              }
+            ],
+            "correctOption": "o2"
+          },
+          {
+            "id": "tense-7",
+            "type": "MCQ",
+            "prompt": "Keep quiet! Jessica ___ a headache so she is sleeping in her bedroom.",
+            "explanation": "Have a headache nghĩa là bị đau đầu. Với Jessica dùng has.",
+            "source": "Exercise 3, câu 2",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "options": [
+              {
+                "id": "o1",
+                "text": "does"
+              },
+              {
+                "id": "o2",
+                "text": "plays"
+              },
+              {
+                "id": "o3",
+                "text": "studying"
+              },
+              {
+                "id": "o4",
+                "text": "has"
+              }
+            ],
+            "correctOption": "o4"
+          },
+          {
+            "id": "tense-8",
+            "type": "MCQ",
+            "prompt": "My father is ___ a cup of coffee with his colleague in the living room now.",
+            "explanation": "Have a cup of coffee; sau is dùng having.",
+            "source": "Exercise 3, câu 3",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "options": [
+              {
+                "id": "o1",
+                "text": "plays"
+              },
+              {
+                "id": "o2",
+                "text": "study"
+              },
+              {
+                "id": "o3",
+                "text": "doing"
+              },
+              {
+                "id": "o4",
+                "text": "having"
+              }
+            ],
+            "correctOption": "o4"
+          },
+          {
+            "id": "tense-9",
+            "type": "MCQ",
+            "prompt": "Nam and Minh ___ playing soccer in the yard at the moment.",
+            "explanation": "Nam and Minh là chủ ngữ số nhiều nên dùng are playing.",
+            "source": "Exercise 3, câu 12",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "options": [
+              {
+                "id": "o1",
+                "text": "do"
+              },
+              {
+                "id": "o2",
+                "text": "is"
+              },
+              {
+                "id": "o3",
+                "text": "are"
+              },
+              {
+                "id": "o4",
+                "text": "does"
+              }
+            ],
+            "correctOption": "o3"
+          },
+          {
+            "id": "tense-10",
+            "type": "WORD_ORDER",
+            "prompt": "Sắp xếp tất cả thẻ thành câu đúng.",
+            "accepted": [
+              "He often goes to the cinema at the weekend."
+            ],
+            "explanation": "Often chỉ thói quen; he đi với goes.",
+            "source": "Chuyển thể Exercise 2, câu 7",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "tokens": [
+              {
+                "id": "t1",
+                "text": "the cinema"
+              },
+              {
+                "id": "t2",
+                "text": "He"
+              },
+              {
+                "id": "t3",
+                "text": "at the weekend."
+              },
+              {
+                "id": "t4",
+                "text": "often goes to"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "menh-de-quan-he",
+    "number": 39,
+    "title": "Mệnh đề quan hệ",
+    "summary": "Nối câu và chọn đại từ quan hệ. Bản thử đã chỉnh các lỗi đáp án phát hiện trong KEY gốc.",
+    "source": {
+      "file": "39. RELATIVE CLAUSES/RELATIVE CLAUSE- WORKSHEET.docx",
+      "sha256": "e1eb52ba33378b97f6657f5a364f4c80d2ccc3a03ed0839ab1d18d970f0fb906",
+      "note": "Giữ câu hỏi từ worksheet. Đáp án câu I.1 đã bỏ tân ngữ bị lặp trong KEY gốc; bổ sung các biến thể đại từ quan hệ hợp lệ cho ngữ cảnh xác định. Chuẩn hóa dấu câu và biên tập giải thích. Bản thử cần trung tâm duyệt trước công bố chính thức."
+    },
+    "theory": [
+      {
+        "title": "Who, which, that và whose",
+        "body": "Who thường thay cho người, which thay cho vật. That có thể dùng trong nhiều mệnh đề quan hệ xác định. Whose thể hiện sở hữu và đứng trước danh từ.",
+        "examples": [
+          "The student who sits next to me is from China.",
+          "The man whose opinion I respect most is my father.",
+          "Mr. Brown, who is only 34, is the director of this company."
+        ]
+      },
+      {
+        "title": "Khi nào có thể bỏ đại từ quan hệ?",
+        "body": "Trong mệnh đề xác định, đại từ quan hệ làm tân ngữ có thể được lược bỏ. Không giữ lại tân ngữ mà đại từ quan hệ đã thay thế. Không áp dụng việc lược bỏ này tùy tiện cho mệnh đề có dấu phẩy.",
+        "examples": [
+          "The doctor whom you visited yesterday is famous.",
+          "The doctor you visited yesterday is famous.",
+          "She is the most intelligent woman that I’ve ever met."
+        ]
+      }
+    ],
+    "sets": [
+      {
+        "id": "noi-cau",
+        "title": "Bài 1 · Nối hai câu",
+        "required": true,
+        "questions": [
+          {
+            "id": "relative-1",
+            "type": "SENTENCE_REWRITE",
+            "prompt": "She is the most intelligent woman. I’ve ever met this woman.",
+            "accepted": [
+              "She is the most intelligent woman that I've ever met.",
+              "She is the most intelligent woman that I have ever met.",
+              "She is the most intelligent woman whom I've ever met.",
+              "She is the most intelligent woman whom I have ever met.",
+              "She is the most intelligent woman who I've ever met.",
+              "She is the most intelligent woman who I have ever met.",
+              "She is the most intelligent woman I've ever met.",
+              "She is the most intelligent woman I have ever met."
+            ],
+            "explanation": "Không lặp this woman sau met. Đại từ làm tân ngữ trong mệnh đề xác định có thể được lược bỏ.",
+            "source": "I, câu 1; đã sửa KEY gốc",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "starter": "She is the most intelligent woman"
+          },
+          {
+            "id": "relative-2",
+            "type": "SENTENCE_REWRITE",
+            "prompt": "This doctor is famous. You visited him yesterday.",
+            "accepted": [
+              "The doctor whom you visited yesterday is famous.",
+              "The doctor who you visited yesterday is famous.",
+              "The doctor that you visited yesterday is famous.",
+              "The doctor you visited yesterday is famous."
+            ],
+            "explanation": "Đại từ quan hệ thay him làm tân ngữ; không thêm him vào cuối mệnh đề.",
+            "source": "I, câu 2; dùng đầu câu The doctor theo KEY",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "starter": "The doctor"
+          },
+          {
+            "id": "relative-3",
+            "type": "SENTENCE_REWRITE",
+            "prompt": "The man is my father. I respect this man most.",
+            "accepted": [
+              "The man whom I respect most is my father.",
+              "The man who I respect most is my father.",
+              "The man that I respect most is my father.",
+              "The man I respect most is my father."
+            ],
+            "explanation": "Người được tôn trọng là tân ngữ của respect, nên có thể dùng whom/who/that hoặc lược bỏ.",
+            "source": "I, câu 6",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "starter": "The man"
+          },
+          {
+            "id": "relative-4",
+            "type": "SENTENCE_REWRITE",
+            "prompt": "The man is my father. I respect his opinion most.",
+            "accepted": [
+              "The man whose opinion I respect most is my father."
+            ],
+            "explanation": "Whose opinion thay cho his opinion, thể hiện sự sở hữu.",
+            "source": "I, câu 7",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "starter": "The man"
+          },
+          {
+            "id": "relative-5",
+            "type": "SENTENCE_REWRITE",
+            "prompt": "The student is from China. He sits next to me.",
+            "accepted": [
+              "The student who sits next to me is from China.",
+              "The student that sits next to me is from China."
+            ],
+            "explanation": "Đại từ làm chủ ngữ của sits nên không lược bỏ.",
+            "source": "I, câu 12",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true,
+            "starter": "The student"
+          }
+        ]
+      },
+      {
+        "id": "dien-dai-tu",
+        "title": "Bài 2 · Đại từ và trạng từ quan hệ",
+        "required": true,
+        "questions": [
+          {
+            "id": "relative-6",
+            "type": "FILL_BLANK",
+            "prompt": "Is there anyone ___ can help me do this?",
+            "accepted": [
+              "who",
+              "that"
+            ],
+            "explanation": "Đại từ làm chủ ngữ và chỉ người trong mệnh đề xác định.",
+            "source": "II, câu 2; chuẩn hóa anyone",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "relative-7",
+            "type": "FILL_BLANK",
+            "prompt": "Mr. Brown, ___ is only 34, is the director of this company.",
+            "accepted": [
+              "who"
+            ],
+            "explanation": "Mệnh đề bổ sung có dấu phẩy dùng who cho người; không dùng that.",
+            "source": "II, câu 3",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "relative-8",
+            "type": "FILL_BLANK",
+            "prompt": "I know a place ___ roses grow in abundance.",
+            "accepted": [
+              "where"
+            ],
+            "explanation": "Where diễn tả nơi hoa hồng mọc.",
+            "source": "II, câu 4",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "relative-9",
+            "type": "FILL_BLANK",
+            "prompt": "It was the nurse ___ told me to come in.",
+            "accepted": [
+              "who",
+              "that"
+            ],
+            "explanation": "Who hoặc that thay cho người thực hiện hành động told.",
+            "source": "II, câu 5",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          },
+          {
+            "id": "relative-10",
+            "type": "FILL_BLANK",
+            "prompt": "They showed me the hospital ___ buildings had been destroyed by US bombings.",
+            "accepted": [
+              "whose"
+            ],
+            "explanation": "Whose buildings thể hiện các tòa nhà thuộc bệnh viện.",
+            "source": "II, câu 7",
+            "ignoreCase": true,
+            "ignoreFinalPunctuation": true
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,270 @@
+{
+  "groups": [
+    {
+      "id": "tu-loai",
+      "title": "Từ loại và cấu tạo từ"
+    },
+    {
+      "id": "ngu-am",
+      "title": "Ngữ âm và trọng âm"
+    },
+    {
+      "id": "cac-thi",
+      "title": "Các thì và phối hợp thì"
+    },
+    {
+      "id": "dang-dong-tu",
+      "title": "Dạng động từ và cụm động từ"
+    },
+    {
+      "id": "cau-truc-cau",
+      "title": "Cấu trúc và biến đổi câu"
+    },
+    {
+      "id": "menh-de",
+      "title": "Mệnh đề và liên từ"
+    }
+  ],
+  "topics": [
+    {
+      "number": 1,
+      "slug": "danh-tu",
+      "title": "Danh từ",
+      "group": "tu-loai"
+    },
+    {
+      "number": 2,
+      "slug": "tinh-tu-va-trang-tu",
+      "title": "Tính từ và trạng từ",
+      "group": "tu-loai"
+    },
+    {
+      "number": 3,
+      "slug": "cau-truc-cau-co-ban",
+      "title": "Cấu trúc câu cơ bản",
+      "group": "cau-truc-cau"
+    },
+    {
+      "number": 4,
+      "slug": "cau-truc-tinh-tu",
+      "title": "Cấu trúc với tính từ",
+      "group": "tu-loai"
+    },
+    {
+      "number": 5,
+      "slug": "trong-am-tu",
+      "title": "Trọng âm từ",
+      "group": "ngu-am"
+    },
+    {
+      "number": 6,
+      "slug": "phat-am-duoi-s-ed",
+      "title": "Phát âm đuôi -s và -ed",
+      "group": "ngu-am"
+    },
+    {
+      "number": 7,
+      "slug": "so-sanh",
+      "title": "So sánh",
+      "group": "tu-loai"
+    },
+    {
+      "number": 8,
+      "slug": "tu-chi-luong",
+      "title": "Từ chỉ lượng",
+      "group": "tu-loai"
+    },
+    {
+      "number": 9,
+      "slug": "mao-tu",
+      "title": "Mạo từ",
+      "group": "tu-loai"
+    },
+    {
+      "number": 10,
+      "slug": "cau-tao-tu",
+      "title": "Cấu tạo từ",
+      "group": "tu-loai"
+    },
+    {
+      "number": 11,
+      "slug": "hien-tai-don",
+      "title": "Hiện tại đơn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 12,
+      "slug": "hien-tai-tiep-dien",
+      "title": "Hiện tại tiếp diễn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 13,
+      "slug": "hien-tai-don-va-tiep-dien",
+      "title": "Hiện tại đơn và hiện tại tiếp diễn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 14,
+      "slug": "tuong-lai-don",
+      "title": "Tương lai đơn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 15,
+      "slug": "tuong-lai-gan",
+      "title": "Tương lai với be going to",
+      "group": "cac-thi"
+    },
+    {
+      "number": 16,
+      "slug": "tuong-lai-tiep-dien",
+      "title": "Tương lai tiếp diễn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 17,
+      "slug": "qua-khu-don",
+      "title": "Quá khứ đơn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 18,
+      "slug": "qua-khu-tiep-dien",
+      "title": "Quá khứ tiếp diễn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 19,
+      "slug": "hien-tai-hoan-thanh",
+      "title": "Hiện tại hoàn thành",
+      "group": "cac-thi"
+    },
+    {
+      "number": 20,
+      "slug": "hien-tai-hoan-thanh-va-qua-khu-don",
+      "title": "Hiện tại hoàn thành và quá khứ đơn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 21,
+      "slug": "qua-khu-hoan-thanh",
+      "title": "Quá khứ hoàn thành",
+      "group": "cac-thi"
+    },
+    {
+      "number": 22,
+      "slug": "cac-thi-hoan-thanh-tiep-dien",
+      "title": "Các thì hoàn thành tiếp diễn",
+      "group": "cac-thi"
+    },
+    {
+      "number": 23,
+      "slug": "on-tap-cac-thi-hien-tai",
+      "title": "Ôn tập các thì hiện tại",
+      "group": "cac-thi"
+    },
+    {
+      "number": 24,
+      "slug": "on-tap-cac-thi-tuong-lai",
+      "title": "Ôn tập các thì tương lai",
+      "group": "cac-thi"
+    },
+    {
+      "number": 25,
+      "slug": "on-tap-cac-thi-qua-khu",
+      "title": "Ôn tập các thì quá khứ",
+      "group": "cac-thi"
+    },
+    {
+      "number": 26,
+      "slug": "phoi-hop-thi",
+      "title": "Phối hợp thì",
+      "group": "cac-thi"
+    },
+    {
+      "number": 27,
+      "slug": "cau-uoc-wish",
+      "title": "Câu ước với wish",
+      "group": "cau-truc-cau"
+    },
+    {
+      "number": 28,
+      "slug": "cau-hoi-duoi",
+      "title": "Câu hỏi đuôi",
+      "group": "cau-truc-cau"
+    },
+    {
+      "number": 29,
+      "slug": "dong-tu-nguyen-mau",
+      "title": "Động từ nguyên mẫu",
+      "group": "dang-dong-tu"
+    },
+    {
+      "number": 30,
+      "slug": "danh-dong-tu",
+      "title": "Danh động từ",
+      "group": "dang-dong-tu"
+    },
+    {
+      "number": 31,
+      "slug": "danh-dong-tu-va-nguyen-mau",
+      "title": "Danh động từ và nguyên mẫu",
+      "group": "dang-dong-tu"
+    },
+    {
+      "number": 32,
+      "slug": "cau-bi-dong",
+      "title": "Câu bị động",
+      "group": "cau-truc-cau"
+    },
+    {
+      "number": 33,
+      "slug": "cum-dong-tu",
+      "title": "Cụm động từ",
+      "group": "dang-dong-tu"
+    },
+    {
+      "number": 34,
+      "slug": "cau-tuong-thuat",
+      "title": "Câu tường thuật",
+      "group": "cau-truc-cau"
+    },
+    {
+      "number": 35,
+      "slug": "cau-dieu-kien",
+      "title": "Câu điều kiện",
+      "group": "cau-truc-cau"
+    },
+    {
+      "number": 36,
+      "slug": "menh-de-muc-dich",
+      "title": "Mệnh đề chỉ mục đích",
+      "group": "menh-de"
+    },
+    {
+      "number": 37,
+      "slug": "menh-de-nguyen-nhan-ket-qua",
+      "title": "Nguyên nhân và kết quả",
+      "group": "menh-de"
+    },
+    {
+      "number": 38,
+      "slug": "menh-de-tuong-phan",
+      "title": "Mệnh đề tương phản",
+      "group": "menh-de"
+    },
+    {
+      "number": 39,
+      "slug": "menh-de-quan-he",
+      "title": "Mệnh đề quan hệ",
+      "group": "menh-de"
+    },
+    {
+      "number": 40,
+      "slug": "lien-tu",
+      "title": "Liên từ",
+      "group": "menh-de"
+    }
+  ]
+}
