@@ -228,17 +228,6 @@ select:focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 30%, t
 .admin-action { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; padding: 8px 14px; border: var(--border-width-panel) solid var(--border); border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; }
 .admin-action:disabled { cursor: wait; opacity: .55; }
 
-@keyframes mascot-welcome {
-  from { opacity: 0; transform: translateY(6px) rotate(-3deg); }
-  to { opacity: 1; transform: translateY(0) rotate(0); }
-}
-.mascot-welcome { animation: mascot-welcome 450ms ease-out both, mascot-float 3.5s 450ms ease-in-out 3; }
-@keyframes mascot-float {
-  0%, 100% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-8px) rotate(2deg); }
-}
-.mascot-welcome:hover { animation-play-state: paused; }
-
 @layer utilities {
   :root[data-theme="dark"] .bg-brand { background-color: #004aad; }
   :root[data-theme="dark"] .hover\:bg-brand-dark:hover { background-color: #003a8c; }

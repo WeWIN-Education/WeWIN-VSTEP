@@ -8,7 +8,7 @@ export function SkillMascot({ skill }: { skill: string }) {
         alt=""
         fill
         sizes="(max-width: 640px) 40vw, 180px"
-        className="object-contain p-2 transition-transform duration-300 ease-out group-hover:scale-110 group-focus-visible:scale-110 motion-reduce:transform-none motion-reduce:transition-none"
+        className="object-contain p-2"
       />
     </div>
   );

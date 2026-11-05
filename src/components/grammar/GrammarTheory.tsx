@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowDown, ArrowRight, BookOpen, ChevronDown, Lightbulb, Milk, Repeat2, Shapes, Sparkles, UserRound, UsersRound, Utensils } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpen, Lightbulb, Milk, Repeat2, Shapes, Sparkles, UserRound, UsersRound, Utensils } from "lucide-react";
 import type { GrammarContent } from "@/lib/grammar-rules";
 import { examplePair, theorySentences } from "./theory-format";
 import styles from "./theory.module.css";
@@ -29,7 +29,7 @@ function PairExample({ before, after }: { before: string; after: string }) {
   </details>;
 }
 
-export function GrammarTheory({ theory, source }: Pick<GrammarContent, "theory" | "source">) {
+export function GrammarTheory({ theory }: Pick<GrammarContent, "theory">) {
   return <section className={styles.notebook} aria-labelledby="grammar-theory-title">
     <header className={styles.intro}>
       <div><span className={styles.eyebrow}><Sparkles size={15} aria-hidden="true" /> HIỂU TRƯỚC · NHỚ LÂU HƠN</span><h2 id="grammar-theory-title">Ghi nhớ trước khi luyện</h2><p>Quy tắc ngắn. Ví dụ dễ nhớ.</p></div>
@@ -53,6 +53,5 @@ export function GrammarTheory({ theory, source }: Pick<GrammarContent, "theory" 
         </div>}
       </section>;
     })}
-    <details className={styles.source}><summary>Nguồn và ghi chú biên soạn <ChevronDown size={16} aria-hidden="true" /></summary><p>{source.file}</p><p>{source.note}</p></details>
   </section>;
 }

@@ -707,7 +707,7 @@ export function VocabularyFlashcards({
 
             <aside className="h-fit rounded-[22px] border border-border bg-surface-card p-4 shadow-[0_10px_28px_rgba(0,58,140,0.06)] lg:mt-8">
               <div className="flex items-center gap-4 lg:block lg:text-center">
-                <Mascot state={currentMascot} size={88} animated className="shrink-0 lg:mx-auto lg:size-[116px]" />
+                <Mascot state={currentMascot} size={88} className="shrink-0 lg:mx-auto lg:size-[116px]" />
                 <div className="min-w-0 lg:mt-3">
                   <p className="text-sm font-extrabold text-ink">{flipped ? "Tốt lắm, kiểm tra lại ngữ cảnh nhé!" : "Bạn nhớ được từ này không?"}</p>
                 </div>

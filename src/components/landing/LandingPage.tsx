@@ -61,7 +61,7 @@ export function LandingPage({ loggedIn }: { loggedIn: boolean }) {
         <div className={styles.container}>
           <div data-reveal className={styles.splitHeading}><div><p className={styles.eyebrow}>MỘT MỤC TIÊU · BỐN KỸ NĂNG</p><h2 id="skills-title">Luyện từng phần.<br />Sẵn sàng cho cả bài thi.</h2></div><Link className={styles.textLink} href="/exam/vstep">Khám phá kho đề <ArrowRight size={18} aria-hidden="true" /></Link></div>
           <div className={styles.skillGrid}>
-            {skills.map(({ name, label, text, icon: Icon, href, mascot }, index) => <Link key={name} href={href} data-reveal data-reveal-order={index} className={styles.skillCard}>
+            {skills.map(({ name, label, text, icon: Icon, href, mascot }) => <Link key={name} href={href} prefetch={false} className={styles.skillCard}>
               <div className={styles.skillArt}><Image src={`/brand/skills-v2/${mascot}.webp`} alt={`Linh vật WEWIN luyện ${name}`} width={960} height={640} sizes="(max-width: 639px) calc(100vw - 36px), (max-width: 1023px) 44vw, 286px" /><span><Icon size={20} aria-hidden="true" /></span></div>
               <div className={styles.skillBody}><span>{name}</span><h3>{label}</h3><p>{text}</p><span className={styles.textLink}>Luyện ngay <ArrowRight size={17} aria-hidden="true" /></span></div>
             </Link>)}
@@ -73,7 +73,7 @@ export function LandingPage({ loggedIn }: { loggedIn: boolean }) {
         <div data-reveal className={styles.sectionHeading}><p className={styles.eyebrow}>THÊM CÁCH HỌC, THÊM HỨNG THÚ</p><h2 id="tools-title">Bên cạnh những bộ đề,<br />còn cả một không gian để luyện tập.</h2></div>
         <div className={styles.featureGrid}>
           <Link href="/vocabulary/topics" data-reveal className={styles.vocabularyCard}><div className={styles.featureCopy}><Layers3 size={28} aria-hidden="true" /><h3>Từ mới hôm nay.<br />Vốn từ cho ngày mai.</h3><p>Khám phá từ vựng theo chủ đề, xem nghĩa và IPA, lật flashcard để ôn lại.</p><span className={styles.textLink}>Mở bộ từ vựng <ArrowRight size={17} aria-hidden="true" /></span></div><div className={styles.flashcardPreview} aria-hidden="true"><span>WORD OF THE DAY</span><strong>progress</strong><em>/ˈprəʊ.ɡres/</em><div /><p>sự tiến bộ</p><span>Mỗi ngày một chút.</span></div></Link>
-          <Link href="/video" data-reveal data-reveal-order="1" className={styles.videoCard}><div className={styles.videoVisual}><Image src="/brand/mascots/focused.webp" alt="" width={220} height={220} sizes="180px" /><span><Play size={22} fill="currentColor" aria-hidden="true" /></span></div><div className={styles.featureCopy}><h3>Nghe thật. Hiểu từng câu.</h3><p>Học qua video với transcript, phiên âm và nghĩa tiếng Việt đi cùng nội dung bài học.</p><span className={styles.textLink}>Khám phá video <ArrowRight size={17} aria-hidden="true" /></span></div></Link>
+          <Link href="/video" prefetch={false} className={styles.videoCard}><div className={styles.videoVisual}><Image src="/brand/mascots/focused.webp" alt="" width={220} height={220} sizes="180px" /><span><Play size={22} fill="currentColor" aria-hidden="true" /></span></div><div className={styles.featureCopy}><h3>Nghe thật. Hiểu từng câu.</h3><p>Học qua video với transcript, phiên âm và nghĩa tiếng Việt đi cùng nội dung bài học.</p><span className={styles.textLink}>Khám phá video <ArrowRight size={17} aria-hidden="true" /></span></div></Link>
         </div>
       </section>
 

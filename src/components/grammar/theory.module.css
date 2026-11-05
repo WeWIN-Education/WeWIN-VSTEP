@@ -34,14 +34,10 @@
 .pairTo { display:flex; justify-content:center; gap:12px; align-items:center; padding:16px; border-top:1px dashed var(--border); background:var(--brand-soft); color:var(--brand); }
 .pairTo > span { display:flex; align-items:center; gap:8px; font-size:17px; }
 .pairIcons { display:flex; gap:1px; }
-.pair summary:focus-visible,.source summary:focus-visible { outline:2px solid var(--brand); outline-offset:-4px; border-radius:14px; }
+.pair summary:focus-visible { outline:2px solid var(--brand); outline-offset:-4px; border-radius:14px; }
 .sentence { display:flex; align-items:flex-start; gap:12px; min-width:0; padding:16px; background:var(--surface); border:1px solid var(--border); border-radius:14px; }
 .sentence:last-child:nth-child(odd) { grid-column:1/-1; }
 .sentence p { font-size:15px; line-height:1.8; color:var(--ink); overflow-wrap:anywhere; }
 .exampleNumber { padding-top:4px; color:var(--ink-muted); font-size:10px; font-weight:700; }
-.source { border-top:1px solid var(--border); padding:12px 28px; color:var(--ink-muted); font-size:12px; line-height:1.8; }
-.source summary { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:44px; cursor:pointer; list-style:none; }
-.source summary::-webkit-details-marker { display:none; }
-.source p { margin-block:10px; overflow-wrap:anywhere; }
 @media (prefers-reduced-motion:no-preference) { .pair summary { transition:background-color 150ms; } .pair summary:hover { background:var(--surface); } .revealLabel svg { transition:transform 180ms; } .pair[open] .pairTo { animation:reveal 180ms ease-out; } @keyframes reveal { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } } }
-@media (max-width:600px) { .intro,.concept { padding:20px; } .intro { gap:12px; } .mascot { width:76px; height:92px; } .intro h2 { font-size:22px; } .rules,.exampleGrid { grid-template-columns:1fr; } .rule,.rule:last-child:nth-child(odd) { flex-direction:row; } .rule p { font-size:15px; } .conceptHeading h3 { font-size:19px; } .source { padding-inline:20px; } }
+@media (max-width:600px) { .intro,.concept { padding:20px; } .intro { gap:12px; } .mascot { width:76px; height:92px; } .intro h2 { font-size:22px; } .rules,.exampleGrid { grid-template-columns:1fr; } .rule,.rule:last-child:nth-child(odd) { flex-direction:row; } .rule p { font-size:15px; } .conceptHeading h3 { font-size:19px; } }

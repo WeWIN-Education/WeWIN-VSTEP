@@ -6,18 +6,18 @@ import { SupportChatWidget } from "@/components/chat/SupportChatWidget";
 
 const beVietnam = localFont({
   src: [
-    { path: "../../public/fonts/BeVietnamPro-Regular.ttf", weight: "400", style: "normal" },
-    { path: "../../public/fonts/BeVietnamPro-Medium.ttf", weight: "500", style: "normal" },
-    { path: "../../public/fonts/BeVietnamPro-SemiBold.ttf", weight: "600", style: "normal" },
-    { path: "../../public/fonts/BeVietnamPro-Bold.ttf", weight: "700", style: "normal" },
-    { path: "../../public/fonts/BeVietnamPro-Italic.ttf", weight: "400", style: "italic" },
+    { path: "../../public/fonts/BeVietnamPro-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/BeVietnamPro-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../../public/fonts/BeVietnamPro-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../../public/fonts/BeVietnamPro-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../../public/fonts/BeVietnamPro-Italic.woff2", weight: "400", style: "italic" },
   ],
   variable: "--font-be-vietnam",
   display: "swap",
 });
 
 const inter = localFont({
-  src: [{ path: "../../public/fonts/Inter-Variable.ttf", weight: "100 900", style: "normal" }],
+  src: [{ path: "../../public/fonts/Inter-Variable.woff2", weight: "100 900", style: "normal" }],
   variable: "--font-inter",
   display: "swap",
 });

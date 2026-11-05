@@ -29,12 +29,11 @@ const mascotLabels: Record<MascotState, string> = {
 type MascotProps = {
   state?: MascotState;
   size?: number;
-  animated?: boolean;
   className?: string;
   priority?: boolean;
 };
 
-export function Mascot({ state = "friendly", size = 156, animated = true, className, priority = false }: MascotProps) {
+export function Mascot({ state = "friendly", size = 156, className, priority = false }: MascotProps) {
   return (
     <Image
       src={`/brand/mascots/${state}.webp`}
@@ -43,7 +42,7 @@ export function Mascot({ state = "friendly", size = 156, animated = true, classN
       height={size}
       sizes={`${size}px`}
       priority={priority}
-      className={cn("object-contain", animated && "mascot-welcome", className)}
+      className={cn("object-contain", className)}
     />
   );
 }
