@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { Mascot, type MascotState } from "@/components/ui/Mascot";
 import { cn } from "@/lib/utils";
 import studyStyles from "./flashcard-study.module.css";
+import { useVocabularyPronunciation } from "./useVocabularyPronunciation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -35,6 +36,7 @@ export type FlashcardEntry = {
   exampleEn: string | null;
   exampleVi: string | null;
   audioUrl?: string | null;
+  pronunciationUnavailable?: boolean;
   status?: "NEW" | "LEARNING" | "MASTERED";
   cursor?: string;
 };
@@ -68,20 +70,6 @@ const speedOptions: SpeedOption[] = [
 ];
 
 const OPEN_STUDY_EVENT = "wewin:vocabulary:open-study";
-
-function speak(entry: FlashcardEntry) {
-  if (typeof window === "undefined") return;
-  if (entry.audioUrl) {
-    const audio = new Audio(entry.audioUrl);
-    void audio.play().catch(() => undefined);
-    return;
-  }
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(entry.term);
-  utterance.lang = "en-US";
-  window.speechSynthesis.speak(utterance);
-}
 
 function normaliseIndex(index: number, length: number) {
   if (!length) return 0;
@@ -152,6 +140,7 @@ export function VocabularyFlashcards({
   const [items, setItems] = useState(entries);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { speak, stop } = useVocabularyPronunciation(setError);
   const [flashcardIndex, setFlashcardIndex] = useState<number | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [speed, setSpeed] = useState(5);
@@ -255,6 +244,7 @@ export function VocabularyFlashcards({
     return items[flashcardIndex] ?? null;
   }, [flashcardIndex, items]);
   const studyOpen = current !== null;
+  useEffect(() => { stop(); }, [current?.id, stop]);
 
   useEffect(() => {
     if (flashcardIndex !== null && flashcardIndex >= items.length - 3 && nextCursor && !loading && !error) void loadBatch(nextCursor);
@@ -551,14 +541,14 @@ export function VocabularyFlashcards({
                   {showIpa && entry.ipa ? <span className="mt-1 block break-words font-mono text-xs text-brand [overflow-wrap:anywhere]">{entry.ipa}</span> : null}
                 </button>
                 <div className="flex shrink-0 items-center gap-1">
-                  <button
+                  {!entry.pronunciationUnavailable && <button
                     type="button"
                     aria-label={"Nghe phát âm " + entry.term}
                     onClick={() => speak(entry)}
                     className="flex size-10 items-center justify-center rounded-xl bg-brand-soft text-brand transition hover:bg-brand-pink"
                   >
                     <Volume2 className="size-4" aria-hidden="true" />
-                  </button>
+                  </button>}
                   <button
                     type="button"
                     aria-label={guest ? "Đăng nhập để lưu " + entry.term : saved ? "Bỏ lưu " + entry.term : "Lưu " + entry.term + " vào sổ tay"}
@@ -686,9 +676,9 @@ export function VocabularyFlashcards({
               </div>
 
               <div className="mt-2 grid gap-2 sm:grid-cols-[auto_minmax(0,1fr)]">
-                <button type="button" onClick={() => speak(current)} aria-label={"Nghe phát âm " + current.term} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand">
+                {!current.pronunciationUnavailable && <button type="button" onClick={() => speak(current)} aria-label={"Nghe phát âm " + current.term} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border bg-surface-card px-4 text-sm font-bold text-ink-muted transition hover:border-brand hover:text-brand">
                   <Volume2 className="size-4" aria-hidden="true" /> Nghe phát âm
-                </button>
+                </button>}
                 <button type="button" disabled={savingId === current.id} onClick={() => toggleSaved(current)} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-soft px-4 text-sm font-extrabold text-brand transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:opacity-50">
                   {!guest && current.status ? <BookmarkCheck className="size-4" aria-hidden="true" /> : <Bookmark className="size-4" aria-hidden="true" />}
                   {guest ? "Đăng nhập để lưu sổ tay" : current.status ? "Đã lưu trong sổ tay" : "Lưu vào sổ tay"}

@@ -37,6 +37,16 @@ function reader(data: Data[]) {
 const entries = (n: number) => Array.from({ length: n }, (_, i) => ({ id: `e${String(i).padStart(4, "0")}`, entryCode: String(Math.floor(i / 2)).padStart(4, "0"), term: "term", meaningVi: "meaning", exampleEn: "example", ipa: null, exampleVi: null, audioUrl: null, partOfSpeech: null, collection: { id: "C", kind: "VOCABULARY" }, progress: [] }));
 beforeEach(() => { vi.clearAllMocks(); mocks.entry.findFirst.mockResolvedValue(null); mocks.saved.findFirst.mockResolvedValue(null); mocks.personal.findFirst.mockResolvedValue(null); mocks.saved.findMany.mockResolvedValue([]); mocks.personal.findMany.mockResolvedValue([]); });
 
+it("keeps the supplied pronunciation in guest catalogue pages and saved notebook entries", async () => {
+  const entry = { ...entries(1)[0], entryCode: "A1_A2-A1_A2_EDUCATION_001", term: "assignment" };
+  mocks.entry.findMany.mockResolvedValue([entry]);
+  const catalogue = await getVocabularyPage("", { mode: "collection", collection: "C" });
+  expect(catalogue.items[0].audioUrl).toMatch(/^\/audio\/vocabulary\/a1-a2\//);
+  mocks.saved.findMany.mockResolvedValue([{ id: "saved", updatedAt: new Date(), status: "NEW", entry }]);
+  const notebook = await getVocabularyPage("A", { mode: "notebook" });
+  expect(notebook.items[0].audioUrl).toBe(catalogue.items[0].audioUrl);
+});
+
 it.each([0, 5, 30, 31])("returns %i entries with correct lookahead", async n => {
   mocks.entry.findMany.mockImplementation(reader(entries(n)));
   const page = await getVocabularyPage("A", { mode: "collection", collection: "C" });

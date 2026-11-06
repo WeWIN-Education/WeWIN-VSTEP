@@ -7,6 +7,11 @@ import { lookupDictionary } from "../src/lib/dictionary";
 const entry = { term: "education", meaningVi: "giáo dục", ipa: "ˌedʒuˈkeɪʃn", partOfSpeech: "noun", exampleEn: null, exampleVi: null, audioUrl: null };
 beforeEach(() => { vi.resetAllMocks(); vi.stubEnv("GOOGLE_TRANSLATE_API_KEY", ""); db.shared.mockResolvedValue(null); db.personal.mockResolvedValue(null); });
 afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
+it("returns the supplied recording for shared vocabulary without calling a pronunciation service", async () => {
+  db.shared.mockResolvedValue({ ...entry, entryCode: "A1_A2-A1_A2_EDUCATION_001", term: "assignment" });
+  const result = await lookupDictionary({ text: "assignment", direction: "en-vi", userId: "learner" });
+  expect(result.entry?.audioUrl).toMatch(/^\/audio\/vocabulary\/a1-a2\//);
+});
 it("uses shared vocabulary without an external service", async () => {
   db.shared.mockResolvedValue(entry);
   expect(await lookupDictionary({ text: " Education ", direction: "auto", userId: "learner" })).toMatchObject({ translation: "giáo dục", sourceLanguage: "en", entry });

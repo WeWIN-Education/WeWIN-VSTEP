@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@/lib/prisma";
+import { withVocabularyAudio } from "./vocabulary-audio";
 
 export type DictionaryDirection = "auto" | "en-vi" | "vi-en";
 
@@ -41,9 +42,9 @@ async function findEntry(text: string, sourceLanguage: "en" | "vi", userId: stri
     const shared = await prisma.vocabularyEntry.findFirst({
       where: { term: { equals: text, mode: "insensitive" } },
       orderBy: { createdAt: "asc" },
-      select: { term: true, meaningVi: true, ipa: true, partOfSpeech: true, exampleEn: true, exampleVi: true, audioUrl: true },
+      select: { entryCode: true, term: true, meaningVi: true, ipa: true, partOfSpeech: true, exampleEn: true, exampleVi: true, audioUrl: true },
     });
-    if (shared) return shared;
+    if (shared) return withVocabularyAudio(shared);
   }
 
   const personal = await prisma.personalVocabulary.findFirst({
@@ -53,11 +54,12 @@ async function findEntry(text: string, sourceLanguage: "en" | "vi", userId: stri
   if (personal) return { term: personal.term, meaningVi: personal.meaningVi, ipa: personal.ipa, partOfSpeech: null, exampleEn: personal.exampleEn, exampleVi: null, audioUrl: null };
 
   if (sourceLanguage === "en") return null;
-  return prisma.vocabularyEntry.findFirst({
+  const shared = await prisma.vocabularyEntry.findFirst({
     where: { meaningVi: { equals: text, mode: "insensitive" } },
     orderBy: { createdAt: "asc" },
-    select: { term: true, meaningVi: true, ipa: true, partOfSpeech: true, exampleEn: true, exampleVi: true, audioUrl: true },
+    select: { entryCode: true, term: true, meaningVi: true, ipa: true, partOfSpeech: true, exampleEn: true, exampleVi: true, audioUrl: true },
   });
+  return shared ? withVocabularyAudio(shared) : null;
 }
 
 async function translateWithGoogle(text: string, sourceLanguage: "en" | "vi", targetLanguage: "en" | "vi") {

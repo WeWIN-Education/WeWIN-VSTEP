@@ -1,0 +1,4938 @@
+{
+  "A1_A2-A1_A2_ANIMALS_001": [
+    "bald eagle",
+    "/audio/vocabulary/a1-a2/131-8710c7da2ea94337.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_002": [
+    "bee",
+    "/audio/vocabulary/a1-a2/132-5db6f29da89c6f5d.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_003": [
+    "blackbird",
+    "/audio/vocabulary/a1-a2/133-03dab8fc77e6c619.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_004": [
+    "cat",
+    "/audio/vocabulary/a1-a2/134-fccf1f84860d58db.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_005": [
+    "chicken",
+    "/audio/vocabulary/a1-a2/135-3c9ba79d56fd70b8.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_006": [
+    "chimpanzee",
+    "/audio/vocabulary/a1-a2/136-b1c5ab99137a276f.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_007": [
+    "cow",
+    "/audio/vocabulary/a1-a2/137-75d76ea53032e04c.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_008": [
+    "coyote",
+    "/audio/vocabulary/a1-a2/138-2be86df898554a29.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_009": [
+    "crab",
+    "/audio/vocabulary/a1-a2/139-c5a5072f2334d1e1.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_010": [
+    "crow",
+    "/audio/vocabulary/a1-a2/140-f804a364c9c9c055.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_011": [
+    "deer",
+    "/audio/vocabulary/a1-a2/141-cf09820c75ab8afe.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_012": [
+    "dog",
+    "/audio/vocabulary/a1-a2/142-838d8af856ae4077.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_013": [
+    "dove",
+    "/audio/vocabulary/a1-a2/143-d5c163fd7f3bb996.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_014": [
+    "duck",
+    "/audio/vocabulary/a1-a2/144-72c48d566cc4400f.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_015": [
+    "elephant",
+    "/audio/vocabulary/a1-a2/145-c1b669dce4d6ccdc.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_016": [
+    "fish",
+    "/audio/vocabulary/a1-a2/146-f6ef53d5715033c8.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_017": [
+    "flamingo",
+    "/audio/vocabulary/a1-a2/147-60284cc13da064d9.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_018": [
+    "fox",
+    "/audio/vocabulary/a1-a2/148-085d6bb459ed24d5.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_019": [
+    "giraffe",
+    "/audio/vocabulary/a1-a2/149-e64785ec2bc9a4fc.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_020": [
+    "goat",
+    "/audio/vocabulary/a1-a2/150-a0ac9bb110e18bac.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_021": [
+    "goldfish",
+    "/audio/vocabulary/a1-a2/151-c3c304b97ae83063.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_022": [
+    "goose",
+    "/audio/vocabulary/a1-a2/152-7401f0468b634179.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_023": [
+    "hamster",
+    "/audio/vocabulary/a1-a2/153-fd178cb08141ac12.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_024": [
+    "hawk",
+    "/audio/vocabulary/a1-a2/154-9fda73cc67915c25.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_025": [
+    "hedgehog",
+    "/audio/vocabulary/a1-a2/155-a4471a4dfbd94dbe.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_026": [
+    "hippopotamus",
+    "/audio/vocabulary/a1-a2/156-ae63daed4745aa43.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_027": [
+    "horse",
+    "/audio/vocabulary/a1-a2/157-9b91c4a737f712e8.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_028": [
+    "kangaroo",
+    "/audio/vocabulary/a1-a2/158-3bdc9bfa741b378b.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_029": [
+    "kitten",
+    "/audio/vocabulary/a1-a2/159-1c3ceb229ad5ea52.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_030": [
+    "koala",
+    "/audio/vocabulary/a1-a2/160-9e5867493437419c.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_031": [
+    "leopard",
+    "/audio/vocabulary/a1-a2/161-f9dfafd4556dae0e.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_032": [
+    "lion",
+    "/audio/vocabulary/a1-a2/162-b0ebefc8b8ffb008.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_033": [
+    "mole",
+    "/audio/vocabulary/a1-a2/163-8b8c18d52fc4b426.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_034": [
+    "monkey",
+    "/audio/vocabulary/a1-a2/164-972d2c5992c68773.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_035": [
+    "mouse",
+    "/audio/vocabulary/a1-a2/165-5c10b025ce25c250.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_036": [
+    "ostrich",
+    "/audio/vocabulary/a1-a2/166-4b2619a88769c03a.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_037": [
+    "otter",
+    "/audio/vocabulary/a1-a2/167-e3134368302a028b.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_038": [
+    "owl",
+    "/audio/vocabulary/a1-a2/168-fd4695a7ccfcb411.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_039": [
+    "ox",
+    "/audio/vocabulary/a1-a2/169-7305c95f57b452c0.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_040": [
+    "panda",
+    "/audio/vocabulary/a1-a2/170-2eedb2f7d6ed3d7a.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_041": [
+    "parrot",
+    "/audio/vocabulary/a1-a2/171-c4c4c7d610ade33a.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_042": [
+    "peacock",
+    "/audio/vocabulary/a1-a2/172-9e1c86ed24038657.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_043": [
+    "penguin",
+    "/audio/vocabulary/a1-a2/173-6bf130b6112b4798.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_044": [
+    "pig",
+    "/audio/vocabulary/a1-a2/174-391584a840440bce.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_045": [
+    "pigeon",
+    "/audio/vocabulary/a1-a2/175-d5bfde17c64da23e.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_046": [
+    "puppy",
+    "/audio/vocabulary/a1-a2/176-5b8bb4c2ab13aff5.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_047": [
+    "rabbit",
+    "/audio/vocabulary/a1-a2/177-16d48591719d00a9.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_048": [
+    "raven",
+    "/audio/vocabulary/a1-a2/178-13e3f053463c6969.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_049": [
+    "robin",
+    "/audio/vocabulary/a1-a2/179-5aceb66fc4257663.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_050": [
+    "seagull",
+    "/audio/vocabulary/a1-a2/180-f9239e9fa162577c.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_051": [
+    "sheep",
+    "/audio/vocabulary/a1-a2/181-89a1552b9da9f1fc.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_052": [
+    "shrimp",
+    "/audio/vocabulary/a1-a2/182-00e95da96fa560f2.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_053": [
+    "sparrow",
+    "/audio/vocabulary/a1-a2/183-50517630385659b6.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_054": [
+    "squirrel",
+    "/audio/vocabulary/a1-a2/184-3c1926eeb6a154df.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_055": [
+    "stork",
+    "/audio/vocabulary/a1-a2/185-1f7249173baae1f2.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_056": [
+    "swallow",
+    "/audio/vocabulary/a1-a2/186-d442688b0e77c24d.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_057": [
+    "swan",
+    "/audio/vocabulary/a1-a2/187-d5f09aa242cd9682.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_058": [
+    "turkey",
+    "/audio/vocabulary/a1-a2/188-cb7ad0c82a46d979.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_059": [
+    "turtle",
+    "/audio/vocabulary/a1-a2/189-89436780d2014478.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_060": [
+    "walrus",
+    "/audio/vocabulary/a1-a2/190-4147d0b7eb7abe90.mp3"
+  ],
+  "A1_A2-A1_A2_ANIMALS_061": [
+    "woodpecker",
+    "/audio/vocabulary/a1-a2/191-2fb4ed90791c6124.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_001": [
+    "ankle",
+    "/audio/vocabulary/a1-a2/424-e53ed0806d46606c.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_002": [
+    "arm",
+    "/audio/vocabulary/a1-a2/425-a0e5b44ff189150c.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_003": [
+    "armpit",
+    "/audio/vocabulary/a1-a2/426-8921741932384117.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_004": [
+    "beard",
+    "/audio/vocabulary/a1-a2/427-c676fd594853fba3.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_005": [
+    "breast",
+    "/audio/vocabulary/a1-a2/428-4a158b1cc15bb55b.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_006": [
+    "calf",
+    "/audio/vocabulary/a1-a2/429-8ee371e0c79eab34.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_007": [
+    "cheek",
+    "/audio/vocabulary/a1-a2/430-0542ba8e039b16a8.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_008": [
+    "chest",
+    "/audio/vocabulary/a1-a2/431-fa3a5bafd1a3dc34.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_009": [
+    "chin",
+    "/audio/vocabulary/a1-a2/432-babb33a5b196c549.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_010": [
+    "earlobe",
+    "/audio/vocabulary/a1-a2/433-27196df691407b38.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_011": [
+    "elbow",
+    "/audio/vocabulary/a1-a2/434-351b5fc2ffa823d5.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_012": [
+    "eyebrow",
+    "/audio/vocabulary/a1-a2/435-bd4b8770fec5b3da.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_013": [
+    "eyelash",
+    "/audio/vocabulary/a1-a2/436-4dbf1b647859b2fc.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_014": [
+    "eyelid",
+    "/audio/vocabulary/a1-a2/437-ef8eef49223c52a4.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_015": [
+    "face",
+    "/audio/vocabulary/a1-a2/438-7ed18ac49fb6950d.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_016": [
+    "finger",
+    "/audio/vocabulary/a1-a2/439-11e2fc79ac54cc09.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_017": [
+    "forearm",
+    "/audio/vocabulary/a1-a2/440-73467adbad2540a6.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_018": [
+    "forehead",
+    "/audio/vocabulary/a1-a2/441-e10d66adb4e96dd8.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_019": [
+    "gum",
+    "/audio/vocabulary/a1-a2/442-46291990a961ce04.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_020": [
+    "heel",
+    "/audio/vocabulary/a1-a2/443-0e92d8be699eed76.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_021": [
+    "hip",
+    "/audio/vocabulary/a1-a2/444-49295574d7fa97a1.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_022": [
+    "index finger",
+    "/audio/vocabulary/a1-a2/445-dc36dc3b39c597ae.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_023": [
+    "jaw",
+    "/audio/vocabulary/a1-a2/446-c0fb1474c942a3e4.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_024": [
+    "knee",
+    "/audio/vocabulary/a1-a2/447-45d62c16ef4b2689.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_025": [
+    "knuckle",
+    "/audio/vocabulary/a1-a2/448-69f744ca61b0dcf5.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_026": [
+    "leg",
+    "/audio/vocabulary/a1-a2/449-a1e4869148230992.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_027": [
+    "lip",
+    "/audio/vocabulary/a1-a2/450-a6ad43d421e2d090.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_028": [
+    "mouth",
+    "/audio/vocabulary/a1-a2/451-7e295a07175d103e.mp3"
+  ],
+  "A1_A2-A1_A2_BODY_PARTS_029": [
+    "mustache",
+    "/audio/vocabulary/a1-a2/452-23e35d3f0c7e1776.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_001": [
+    "bathrobe",
+    "/audio/vocabulary/a1-a2/533-b83a7da0aa5db45d.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_002": [
+    "belt",
+    "/audio/vocabulary/a1-a2/534-995ae238570f65fc.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_003": [
+    "blazer",
+    "/audio/vocabulary/a1-a2/535-1c4692406800634e.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_004": [
+    "boot",
+    "/audio/vocabulary/a1-a2/536-d2e230eba7000661.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_005": [
+    "bow tie",
+    "/audio/vocabulary/a1-a2/537-d522fcfaa0a9dfd7.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_006": [
+    "cap",
+    "/audio/vocabulary/a1-a2/538-a33f98dad993fd6b.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_007": [
+    "cardigan",
+    "/audio/vocabulary/a1-a2/539-9cff32baa3dcfa11.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_008": [
+    "cargo pants",
+    "/audio/vocabulary/a1-a2/540-e41255ad64ed2a86.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_009": [
+    "flip-flop",
+    "/audio/vocabulary/a1-a2/541-424275dfbff603a5.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_010": [
+    "glasses",
+    "/audio/vocabulary/a1-a2/542-6514fdfc7dfadb1b.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_011": [
+    "gloves",
+    "/audio/vocabulary/a1-a2/543-407974e1b4e695a8.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_012": [
+    "handbag",
+    "/audio/vocabulary/a1-a2/544-8837ad8eb08f8b51.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_013": [
+    "Hawaiian shirt",
+    "/audio/vocabulary/a1-a2/545-39ac8cd1fdb3faa4.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_014": [
+    "jacket",
+    "/audio/vocabulary/a1-a2/546-0db215ee170d6ae1.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_015": [
+    "jeans",
+    "/audio/vocabulary/a1-a2/547-0e500161c6086dc5.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_016": [
+    "jumper",
+    "/audio/vocabulary/a1-a2/548-d911cf9d7f54737d.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_017": [
+    "polo shirt",
+    "/audio/vocabulary/a1-a2/549-5d30f1c01473e6bc.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_018": [
+    "pullover",
+    "/audio/vocabulary/a1-a2/550-55d9e03d349c1b05.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_019": [
+    "scarf",
+    "/audio/vocabulary/a1-a2/551-7d779f2178412851.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_020": [
+    "shirt",
+    "/audio/vocabulary/a1-a2/552-01060bb3188f5332.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_021": [
+    "shorts",
+    "/audio/vocabulary/a1-a2/553-1e04733d6315f9f1.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_022": [
+    "singlet",
+    "/audio/vocabulary/a1-a2/554-5959362268171250.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_023": [
+    "socks",
+    "/audio/vocabulary/a1-a2/555-ff1261a195ea775f.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_024": [
+    "suit",
+    "/audio/vocabulary/a1-a2/556-e563f1c5faecc473.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_025": [
+    "sunglasses",
+    "/audio/vocabulary/a1-a2/557-6a8f046fbe1e4a39.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_026": [
+    "sweater",
+    "/audio/vocabulary/a1-a2/558-7b39e6daf1ddc591.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_027": [
+    "swimsuit",
+    "/audio/vocabulary/a1-a2/559-059fff70d0f0e713.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_028": [
+    "t-shirt",
+    "/audio/vocabulary/a1-a2/560-c4ac2a61e8815c31.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_029": [
+    "tie",
+    "/audio/vocabulary/a1-a2/561-e7f88f87887e9d6f.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_030": [
+    "trench coat",
+    "/audio/vocabulary/a1-a2/562-c7fbc4c79d48230e.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_031": [
+    "umbrella",
+    "/audio/vocabulary/a1-a2/563-7273f4766e31d7f7.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_032": [
+    "underpants",
+    "/audio/vocabulary/a1-a2/564-7b70ada75cc698d7.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_033": [
+    "vest",
+    "/audio/vocabulary/a1-a2/565-37792018245c3769.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_034": [
+    "waistcoat",
+    "/audio/vocabulary/a1-a2/566-ea4f7885467c1c27.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_035": [
+    "wallet",
+    "/audio/vocabulary/a1-a2/567-93480c84e30673ea.mp3"
+  ],
+  "A1_A2-A1_A2_CLOTHING_036": [
+    "watch",
+    "/audio/vocabulary/a1-a2/568-c05ae93970342318.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_001": [
+    "yellow",
+    "/audio/vocabulary/a1-a2/798-2c50d0d69181e825.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_002": [
+    "white",
+    "/audio/vocabulary/a1-a2/799-958a9b961e2752f0.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_003": [
+    "wheat",
+    "/audio/vocabulary/a1-a2/800-1fec4f3b62aa8b3c.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_004": [
+    "teal",
+    "/audio/vocabulary/a1-a2/801-ade017d6abaf0479.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_005": [
+    "silver",
+    "/audio/vocabulary/a1-a2/802-a8e4d14f160f5f6d.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_006": [
+    "sanguine",
+    "/audio/vocabulary/a1-a2/803-be8b9f98cfd8bb21.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_007": [
+    "red",
+    "/audio/vocabulary/a1-a2/804-4bc4c1c00fc456b8.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_008": [
+    "purple",
+    "/audio/vocabulary/a1-a2/805-a7446d9f51619e1b.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_009": [
+    "orange",
+    "/audio/vocabulary/a1-a2/806-2bda6eb83d7d0339.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_010": [
+    "navy (blue)",
+    "/audio/vocabulary/a1-a2/807-461e1e50c7616181.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_011": [
+    "maroon",
+    "/audio/vocabulary/a1-a2/808-0459326e08f511ee.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_012": [
+    "magenta",
+    "/audio/vocabulary/a1-a2/809-5736922b2a0b8be7.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_013": [
+    "ivory",
+    "/audio/vocabulary/a1-a2/810-f454271ef43fa4c7.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_014": [
+    "indigo",
+    "/audio/vocabulary/a1-a2/811-5a04adc2bb2fc17d.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_015": [
+    "green",
+    "/audio/vocabulary/a1-a2/812-8db27c6051e07ef2.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_016": [
+    "gray",
+    "/audio/vocabulary/a1-a2/813-ef5e1da8ec5a1769.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_017": [
+    "fuchsia",
+    "/audio/vocabulary/a1-a2/814-c862ae6bbb2a6bc2.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_018": [
+    "cyan",
+    "/audio/vocabulary/a1-a2/815-63df25f27b85292e.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_019": [
+    "crimson",
+    "/audio/vocabulary/a1-a2/816-5014e6679ee13b38.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_020": [
+    "coral",
+    "/audio/vocabulary/a1-a2/817-6e9a6e60738ab2b5.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_021": [
+    "charcoal",
+    "/audio/vocabulary/a1-a2/818-980954bbf737d7fe.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_022": [
+    "burgundy",
+    "/audio/vocabulary/a1-a2/819-a9d7da469e264c6e.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_023": [
+    "brown",
+    "/audio/vocabulary/a1-a2/820-c0bd9590393ca94c.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_024": [
+    "blue",
+    "/audio/vocabulary/a1-a2/821-cb49682d9b1fe251.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_025": [
+    "blond",
+    "/audio/vocabulary/a1-a2/822-b8560b0295b15f1a.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_026": [
+    "black",
+    "/audio/vocabulary/a1-a2/823-4e3481490514064c.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_027": [
+    "beige",
+    "/audio/vocabulary/a1-a2/824-3f4011fe86adb914.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_028": [
+    "azure",
+    "/audio/vocabulary/a1-a2/825-471da3cb033530dd.mp3"
+  ],
+  "A1_A2-A1_A2_COLORS_029": [
+    "aquamarine",
+    "/audio/vocabulary/a1-a2/826-efcaeec8afeede71.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_001": [
+    "bake",
+    "/audio/vocabulary/a1-a2/699-70c43ea874229cb6.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_002": [
+    "barbecue",
+    "/audio/vocabulary/a1-a2/700-255d93dbe4a6ae21.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_003": [
+    "baste",
+    "/audio/vocabulary/a1-a2/701-4d932c7763c84f2a.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_004": [
+    "blanch",
+    "/audio/vocabulary/a1-a2/702-54f2b14a606b62ff.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_005": [
+    "blend",
+    "/audio/vocabulary/a1-a2/703-d0dcba69502a82d3.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_006": [
+    "boil",
+    "/audio/vocabulary/a1-a2/704-8b8fc7fd15253e0f.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_007": [
+    "braise",
+    "/audio/vocabulary/a1-a2/705-8cdd801866ab7277.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_008": [
+    "brew",
+    "/audio/vocabulary/a1-a2/706-0dd00d53166ce0d0.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_009": [
+    "caramelize",
+    "/audio/vocabulary/a1-a2/707-4b33598ed7af72d4.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_010": [
+    "char-broil",
+    "/audio/vocabulary/a1-a2/708-f4a58d9cbf0f4019.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_011": [
+    "chill",
+    "/audio/vocabulary/a1-a2/709-c3c3cdf3daaab20b.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_012": [
+    "chop",
+    "/audio/vocabulary/a1-a2/710-9f257b97252359ab.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_013": [
+    "chunk",
+    "/audio/vocabulary/a1-a2/711-67ed2bdaab64578e.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_014": [
+    "churn",
+    "/audio/vocabulary/a1-a2/712-768e96271db4e993.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_015": [
+    "coddle",
+    "/audio/vocabulary/a1-a2/713-4e4eadf8d45b6111.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_016": [
+    "congeal",
+    "/audio/vocabulary/a1-a2/714-8e379a38dff85ed1.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_017": [
+    "cool",
+    "/audio/vocabulary/a1-a2/715-2f28e242b398e952.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_018": [
+    "deglaze",
+    "/audio/vocabulary/a1-a2/716-ed5869a8196520e5.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_019": [
+    "descale",
+    "/audio/vocabulary/a1-a2/717-c7f8e9ec6c7d9e46.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_020": [
+    "dice",
+    "/audio/vocabulary/a1-a2/718-145a61ca4ed6c2ef.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_021": [
+    "dip",
+    "/audio/vocabulary/a1-a2/719-7fa416855bdb7dce.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_022": [
+    "ferment",
+    "/audio/vocabulary/a1-a2/720-b9e045f813d88c8b.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_023": [
+    "fillet",
+    "/audio/vocabulary/a1-a2/721-e3cdce117e2a18ae.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_024": [
+    "flambé",
+    "/audio/vocabulary/a1-a2/722-2c4ff3f3f2c819e9.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_025": [
+    "flavor",
+    "/audio/vocabulary/a1-a2/723-b0c0c97ba9d775c0.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_026": [
+    "fold",
+    "/audio/vocabulary/a1-a2/724-12f636a002117680.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_027": [
+    "garnish",
+    "/audio/vocabulary/a1-a2/725-3d45913409dff607.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_028": [
+    "knead",
+    "/audio/vocabulary/a1-a2/726-818bee3403afba1a.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_029": [
+    "layer",
+    "/audio/vocabulary/a1-a2/727-e4f806475eedc3eb.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_030": [
+    "leaven",
+    "/audio/vocabulary/a1-a2/728-d8c5b7002d1b4b0c.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_031": [
+    "marinate",
+    "/audio/vocabulary/a1-a2/729-fd32d04a12b644ea.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_032": [
+    "mash",
+    "/audio/vocabulary/a1-a2/730-c79522af51d0bcc5.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_033": [
+    "measure",
+    "/audio/vocabulary/a1-a2/731-1b9be754e9cba229.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_034": [
+    "melt",
+    "/audio/vocabulary/a1-a2/732-8e482dd00910db7b.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_035": [
+    "mince",
+    "/audio/vocabulary/a1-a2/733-6067e55c0ccc09f2.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_036": [
+    "pinch",
+    "/audio/vocabulary/a1-a2/734-9631a0f2cb0ac6f5.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_037": [
+    "precook",
+    "/audio/vocabulary/a1-a2/735-016ba20a64ed343c.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_038": [
+    "prepare",
+    "/audio/vocabulary/a1-a2/736-06da516dd24cc417.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_039": [
+    "press",
+    "/audio/vocabulary/a1-a2/737-d2becb08fcd67309.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_040": [
+    "pulp",
+    "/audio/vocabulary/a1-a2/738-46fbf62ff9184061.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_041": [
+    "raw",
+    "/audio/vocabulary/a1-a2/739-b44016027adf899e.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_042": [
+    "refrigerate",
+    "/audio/vocabulary/a1-a2/740-afc21c76c0ae8cfe.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_043": [
+    "roast",
+    "/audio/vocabulary/a1-a2/741-51fb302f853ddf04.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_044": [
+    "roll",
+    "/audio/vocabulary/a1-a2/742-d62897537fdff8bb.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_045": [
+    "salt",
+    "/audio/vocabulary/a1-a2/743-02b10b6e53718505.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_046": [
+    "sauté",
+    "/audio/vocabulary/a1-a2/744-5c2267813c8b40fe.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_047": [
+    "scald",
+    "/audio/vocabulary/a1-a2/745-03b33a22e3643256.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_048": [
+    "scramble",
+    "/audio/vocabulary/a1-a2/746-0c26d7fbfd824bc2.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_049": [
+    "shell",
+    "/audio/vocabulary/a1-a2/747-5f61efb0c256660c.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_050": [
+    "shred",
+    "/audio/vocabulary/a1-a2/748-eec2ffe96f295aea.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_051": [
+    "shuck",
+    "/audio/vocabulary/a1-a2/749-0e3ce60635ceaa45.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_052": [
+    "sieve",
+    "/audio/vocabulary/a1-a2/750-c38d7e010955b0a9.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_053": [
+    "sift",
+    "/audio/vocabulary/a1-a2/751-1ac9828fb406426f.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_054": [
+    "simmer",
+    "/audio/vocabulary/a1-a2/752-0531f48a79e2a795.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_055": [
+    "skewer",
+    "/audio/vocabulary/a1-a2/753-93db6e2e03c4176a.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_056": [
+    "skim",
+    "/audio/vocabulary/a1-a2/754-58223cc5fab2784e.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_057": [
+    "slice",
+    "/audio/vocabulary/a1-a2/755-7cd011c8dc462663.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_058": [
+    "souse",
+    "/audio/vocabulary/a1-a2/756-39661e7010a13322.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_059": [
+    "sprinkle",
+    "/audio/vocabulary/a1-a2/757-048b4570577200e7.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_060": [
+    "steam",
+    "/audio/vocabulary/a1-a2/758-2598e0a4fa7040c1.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_061": [
+    "steep",
+    "/audio/vocabulary/a1-a2/759-b773428e65b51ce7.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_062": [
+    "stew",
+    "/audio/vocabulary/a1-a2/760-397cd3d1d3c18826.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_063": [
+    "stir",
+    "/audio/vocabulary/a1-a2/761-2e6c379e6d9d19c8.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_064": [
+    "sweeten",
+    "/audio/vocabulary/a1-a2/762-d07de6751f09e750.mp3"
+  ],
+  "A1_A2-A1_A2_COOKING_065": [
+    "wash",
+    "/audio/vocabulary/a1-a2/763-be1ad06274d15ce8.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_001": [
+    "bend",
+    "/audio/vocabulary/a1-a2/488-1b67d72642cb3212.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_002": [
+    "break",
+    "/audio/vocabulary/a1-a2/489-efa59ccccff6f8b5.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_003": [
+    "carry",
+    "/audio/vocabulary/a1-a2/490-fc982adb5cb9707e.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_004": [
+    "cartwheel",
+    "/audio/vocabulary/a1-a2/491-2aeffc1757fef1af.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_005": [
+    "catch",
+    "/audio/vocabulary/a1-a2/492-cbcef3721ee55bab.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_006": [
+    "clap",
+    "/audio/vocabulary/a1-a2/493-2a96c8c2c6a3f670.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_007": [
+    "crawl",
+    "/audio/vocabulary/a1-a2/494-9502376236e8fdf2.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_008": [
+    "cry",
+    "/audio/vocabulary/a1-a2/495-7bc95219219f6c1e.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_009": [
+    "dance",
+    "/audio/vocabulary/a1-a2/496-de070d45bb399d20.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_010": [
+    "dive",
+    "/audio/vocabulary/a1-a2/497-9df22212b38e0335.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_011": [
+    "drag",
+    "/audio/vocabulary/a1-a2/498-431b1c87fa5b395a.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_012": [
+    "drop",
+    "/audio/vocabulary/a1-a2/499-4b7c7289b52b0c67.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_013": [
+    "hit",
+    "/audio/vocabulary/a1-a2/500-a6d4c449d96fb1a2.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_014": [
+    "hold",
+    "/audio/vocabulary/a1-a2/501-e6d32213e3649bb3.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_015": [
+    "jog",
+    "/audio/vocabulary/a1-a2/502-c64dc60e314dbf28.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_016": [
+    "jump",
+    "/audio/vocabulary/a1-a2/503-5bff2a95cad146ae.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_017": [
+    "kick",
+    "/audio/vocabulary/a1-a2/504-b00414eea92ccacf.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_018": [
+    "kiss",
+    "/audio/vocabulary/a1-a2/505-bd11e242757a3fc5.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_019": [
+    "kneel",
+    "/audio/vocabulary/a1-a2/506-4136a9ca29dd4779.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_020": [
+    "laugh",
+    "/audio/vocabulary/a1-a2/507-f663611a20964a82.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_021": [
+    "lean",
+    "/audio/vocabulary/a1-a2/508-9b7964e75ebfba70.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_022": [
+    "leap",
+    "/audio/vocabulary/a1-a2/509-15af61f81cfc22e7.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_023": [
+    "lie down",
+    "/audio/vocabulary/a1-a2/510-9022955bed5dc070.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_024": [
+    "lift",
+    "/audio/vocabulary/a1-a2/511-966faaea7ba4cfc4.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_025": [
+    "look",
+    "/audio/vocabulary/a1-a2/512-954d1ab29d7d6178.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_026": [
+    "march",
+    "/audio/vocabulary/a1-a2/513-bc4bc2d2429b5298.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_027": [
+    "open",
+    "/audio/vocabulary/a1-a2/514-509de3ec31576aab.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_028": [
+    "point",
+    "/audio/vocabulary/a1-a2/515-dd5349f0c015e2da.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_029": [
+    "pour",
+    "/audio/vocabulary/a1-a2/516-764850073a012c76.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_030": [
+    "pull",
+    "/audio/vocabulary/a1-a2/517-953101d01552c84a.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_031": [
+    "punch",
+    "/audio/vocabulary/a1-a2/518-588170a7d61f4869.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_032": [
+    "push",
+    "/audio/vocabulary/a1-a2/519-bb91ab2ffe4dfe6d.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_033": [
+    "put down",
+    "/audio/vocabulary/a1-a2/520-7c60ce7f3369ef06.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_034": [
+    "run",
+    "/audio/vocabulary/a1-a2/521-2719d21c370da541.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_035": [
+    "sit",
+    "/audio/vocabulary/a1-a2/522-edd2dd7c10ff640c.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_036": [
+    "slip",
+    "/audio/vocabulary/a1-a2/523-ae29b073211e5d1e.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_037": [
+    "squat",
+    "/audio/vocabulary/a1-a2/524-a8cca037f116df14.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_038": [
+    "stand",
+    "/audio/vocabulary/a1-a2/525-af37847571a2e7e0.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_039": [
+    "stretch",
+    "/audio/vocabulary/a1-a2/526-7d091eeb2bed0e7b.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_040": [
+    "talk",
+    "/audio/vocabulary/a1-a2/527-9a2c098936f74ea5.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_041": [
+    "throw",
+    "/audio/vocabulary/a1-a2/528-aac40b32efbf8550.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_042": [
+    "tiptoe",
+    "/audio/vocabulary/a1-a2/529-d4a22d156d7d7c2e.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_043": [
+    "trip",
+    "/audio/vocabulary/a1-a2/530-6adca13aff94fe1e.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_044": [
+    "walk",
+    "/audio/vocabulary/a1-a2/531-7839c9d55e74784c.mp3"
+  ],
+  "A1_A2-A1_A2_DAILY_ACTIONS_045": [
+    "wave",
+    "/audio/vocabulary/a1-a2/532-9ad65e61a1102dce.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_001": [
+    "assignment",
+    "/audio/vocabulary/a1-a2/001-25c6d65357bef795.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_002": [
+    "boarding school",
+    "/audio/vocabulary/a1-a2/002-6c47dd2411a1f66d.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_003": [
+    "campus",
+    "/audio/vocabulary/a1-a2/003-8bdc19d29965db8e.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_004": [
+    "co-education",
+    "/audio/vocabulary/a1-a2/004-2040c3b476452263.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_005": [
+    "concentrate",
+    "/audio/vocabulary/a1-a2/005-3bb7737f873f0c00.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_006": [
+    "coursework",
+    "/audio/vocabulary/a1-a2/006-85cc9eac1ceb25fe.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_007": [
+    "curriculum",
+    "/audio/vocabulary/a1-a2/007-c95df21fe7758ee7.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_008": [
+    "distance learning",
+    "/audio/vocabulary/a1-a2/008-d90f68f42f4b635c.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_009": [
+    "eager beaver",
+    "/audio/vocabulary/a1-a2/009-1b9bbcfa88d8d041.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_010": [
+    "enroll",
+    "/audio/vocabulary/a1-a2/010-ad58d30ef5650356.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_011": [
+    "evaluation",
+    "/audio/vocabulary/a1-a2/011-7ca9b0d3d260e14b.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_012": [
+    "fellowship",
+    "/audio/vocabulary/a1-a2/012-fb724a72af63691b.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_013": [
+    "final (exam)",
+    "/audio/vocabulary/a1-a2/013-08e1d6afab1d8081.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_014": [
+    "graduate",
+    "/audio/vocabulary/a1-a2/014-0ac5f7a82415f28b.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_015": [
+    "higher education",
+    "/audio/vocabulary/a1-a2/015-3ae86792b51867f3.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_016": [
+    "illiterate",
+    "/audio/vocabulary/a1-a2/016-68196147e8888531.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_017": [
+    "institution",
+    "/audio/vocabulary/a1-a2/017-630238478753ea15.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_018": [
+    "internship",
+    "/audio/vocabulary/a1-a2/018-c4f26208e0705de0.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_019": [
+    "kindergarten",
+    "/audio/vocabulary/a1-a2/019-c1365353706dc73a.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_020": [
+    "lecture",
+    "/audio/vocabulary/a1-a2/020-f438a3f77126a675.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_021": [
+    "literacy",
+    "/audio/vocabulary/a1-a2/021-bef42c022b3c78c1.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_022": [
+    "material",
+    "/audio/vocabulary/a1-a2/022-a4ffaf9d99e56f9c.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_023": [
+    "physical education",
+    "/audio/vocabulary/a1-a2/023-d53f103a01407e79.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_024": [
+    "plagiarize",
+    "/audio/vocabulary/a1-a2/024-778099882fdb08fd.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_025": [
+    "practice",
+    "/audio/vocabulary/a1-a2/025-95c84852c9bfff53.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_026": [
+    "premise",
+    "/audio/vocabulary/a1-a2/026-f9bc308c9476f4a3.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_027": [
+    "preschool",
+    "/audio/vocabulary/a1-a2/027-4769b7f9926a3dae.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_028": [
+    "primary school",
+    "/audio/vocabulary/a1-a2/028-fd5fc246bf34adf2.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_029": [
+    "private school",
+    "/audio/vocabulary/a1-a2/029-bac16338a3bfdc95.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_030": [
+    "qualification",
+    "/audio/vocabulary/a1-a2/030-042c8d00620f0511.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_031": [
+    "secondary school",
+    "/audio/vocabulary/a1-a2/031-b44ac87da70c370c.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_032": [
+    "syllabus",
+    "/audio/vocabulary/a1-a2/032-66e26d6334c1d7c8.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_033": [
+    "teacher's pet",
+    "/audio/vocabulary/a1-a2/033-14de1bced93790d4.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_034": [
+    "thesis",
+    "/audio/vocabulary/a1-a2/034-1f8a7622bf212fe0.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_035": [
+    "tuition",
+    "/audio/vocabulary/a1-a2/035-af03944e6dd35505.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_036": [
+    "undergraduate",
+    "/audio/vocabulary/a1-a2/036-48935b8c8be4f853.mp3"
+  ],
+  "A1_A2-A1_A2_EDUCATION_037": [
+    "vocational school",
+    "/audio/vocabulary/a1-a2/037-f3de15724c09fc3e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_001": [
+    "accepting",
+    "/audio/vocabulary/a1-a2/569-58826f806eeb236a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_002": [
+    "admiration",
+    "/audio/vocabulary/a1-a2/570-7a88d6024b79de3a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_003": [
+    "adoring",
+    "/audio/vocabulary/a1-a2/571-ae756b5483205a4c.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_004": [
+    "annoyed",
+    "/audio/vocabulary/a1-a2/572-a42c4f7b6b8433c4.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_005": [
+    "antsy",
+    "/audio/vocabulary/a1-a2/573-bf33fd0ecbacca36.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_006": [
+    "anxious",
+    "/audio/vocabulary/a1-a2/574-0d9e4ff180f43dcb.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_007": [
+    "apologetic",
+    "/audio/vocabulary/a1-a2/575-362bbcb21b2aa068.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_008": [
+    "appalled",
+    "/audio/vocabulary/a1-a2/576-cddbd292a388b36f.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_009": [
+    "astonished",
+    "/audio/vocabulary/a1-a2/577-cfd93b28d78b382c.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_010": [
+    "awed",
+    "/audio/vocabulary/a1-a2/578-8f14951037df49b7.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_011": [
+    "bashful",
+    "/audio/vocabulary/a1-a2/579-785e4ba75d647167.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_012": [
+    "bemused",
+    "/audio/vocabulary/a1-a2/580-232732615164c2e8.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_013": [
+    "bored",
+    "/audio/vocabulary/a1-a2/581-f89de5c5eac8c005.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_014": [
+    "bothered",
+    "/audio/vocabulary/a1-a2/582-6f5b600825039e48.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_015": [
+    "brooding",
+    "/audio/vocabulary/a1-a2/583-e7f66998e3003562.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_016": [
+    "calm",
+    "/audio/vocabulary/a1-a2/584-3b8eec7021a1faee.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_017": [
+    "captivated",
+    "/audio/vocabulary/a1-a2/585-e970b8ac637f1d54.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_018": [
+    "carefree",
+    "/audio/vocabulary/a1-a2/586-22c412893e997604.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_019": [
+    "certain",
+    "/audio/vocabulary/a1-a2/587-20b2c2d54e7fa24f.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_020": [
+    "clueless",
+    "/audio/vocabulary/a1-a2/588-3ac82cb05b5044ef.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_021": [
+    "cold",
+    "/audio/vocabulary/a1-a2/589-890962a7de520111.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_022": [
+    "cranky",
+    "/audio/vocabulary/a1-a2/590-b9d3b812fb39547e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_023": [
+    "delighted",
+    "/audio/vocabulary/a1-a2/591-a3935816c40a26f6.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_024": [
+    "delirious",
+    "/audio/vocabulary/a1-a2/592-8e75b5666b7ad557.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_025": [
+    "derisive",
+    "/audio/vocabulary/a1-a2/593-70b3732fd8c6acfb.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_026": [
+    "desperate",
+    "/audio/vocabulary/a1-a2/594-f0ccc0e524441cca.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_027": [
+    "disturbed",
+    "/audio/vocabulary/a1-a2/595-1ec03f184d94490f.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_028": [
+    "dopey",
+    "/audio/vocabulary/a1-a2/596-2229c1b067cef05c.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_029": [
+    "doubtful",
+    "/audio/vocabulary/a1-a2/597-df3310feb5b9a365.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_030": [
+    "down",
+    "/audio/vocabulary/a1-a2/598-0ceb461a7b73236b.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_031": [
+    "drained",
+    "/audio/vocabulary/a1-a2/599-12c9fc3b885a5c87.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_032": [
+    "edgy",
+    "/audio/vocabulary/a1-a2/600-1582a2d5ac995a07.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_033": [
+    "elated",
+    "/audio/vocabulary/a1-a2/601-a8b91acc2e333108.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_034": [
+    "embarrassed",
+    "/audio/vocabulary/a1-a2/602-c25ed81c450950c5.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_035": [
+    "empathetic",
+    "/audio/vocabulary/a1-a2/603-d57714eff5444e03.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_036": [
+    "engrossed",
+    "/audio/vocabulary/a1-a2/604-2a8e6db79de8258b.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_037": [
+    "enlightened",
+    "/audio/vocabulary/a1-a2/605-23d2ac2b3bd16875.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_038": [
+    "envious",
+    "/audio/vocabulary/a1-a2/606-b0a142eeba3258df.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_039": [
+    "excited",
+    "/audio/vocabulary/a1-a2/607-fa03ba5067b81da5.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_040": [
+    "excluded",
+    "/audio/vocabulary/a1-a2/608-54390f94b4ee875b.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_041": [
+    "exhausted",
+    "/audio/vocabulary/a1-a2/609-d8433c7254f9f17d.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_042": [
+    "flabbergasted",
+    "/audio/vocabulary/a1-a2/610-9314dfe93ba8abca.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_043": [
+    "foolish",
+    "/audio/vocabulary/a1-a2/611-6edfb35fcf37a146.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_044": [
+    "frazzled",
+    "/audio/vocabulary/a1-a2/612-e1efdf8ac8b2e967.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_045": [
+    "fretful",
+    "/audio/vocabulary/a1-a2/613-ef9a0d6c3a2d09aa.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_046": [
+    "frustrated",
+    "/audio/vocabulary/a1-a2/614-91623cb6b79447d2.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_047": [
+    "furious",
+    "/audio/vocabulary/a1-a2/615-230ae23a4649ba9c.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_048": [
+    "giddy",
+    "/audio/vocabulary/a1-a2/616-d7f86a21bafc07c4.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_049": [
+    "glad",
+    "/audio/vocabulary/a1-a2/617-c6b27a9263473c4a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_050": [
+    "gleeful",
+    "/audio/vocabulary/a1-a2/618-c114ad1eb7092583.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_051": [
+    "guarded",
+    "/audio/vocabulary/a1-a2/619-8f85f4147c606b31.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_052": [
+    "guilty",
+    "/audio/vocabulary/a1-a2/620-56371876d545235e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_053": [
+    "hankering",
+    "/audio/vocabulary/a1-a2/621-17cae247382ef86b.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_054": [
+    "hesitant",
+    "/audio/vocabulary/a1-a2/622-b04cea35322d1d1d.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_055": [
+    "hollow",
+    "/audio/vocabulary/a1-a2/623-678438dea94ceacd.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_056": [
+    "horrified",
+    "/audio/vocabulary/a1-a2/624-9b277a97630aa2a8.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_057": [
+    "hostile",
+    "/audio/vocabulary/a1-a2/625-8aa8f2a34c8ab52e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_058": [
+    "humiliated",
+    "/audio/vocabulary/a1-a2/626-dcc37871515937f7.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_059": [
+    "hysterical",
+    "/audio/vocabulary/a1-a2/627-cee3b1a6568abd57.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_060": [
+    "indifferent",
+    "/audio/vocabulary/a1-a2/628-9964c9416ac6adb8.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_061": [
+    "indignant",
+    "/audio/vocabulary/a1-a2/629-df7b138738cbccbf.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_062": [
+    "intense",
+    "/audio/vocabulary/a1-a2/630-9814aa5689202955.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_063": [
+    "interested",
+    "/audio/vocabulary/a1-a2/631-8e2141ed2bfdc01e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_064": [
+    "intoxicated",
+    "/audio/vocabulary/a1-a2/632-1dd7cafd80bf707a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_065": [
+    "irritated",
+    "/audio/vocabulary/a1-a2/633-9c75adee67fd1771.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_066": [
+    "jittery",
+    "/audio/vocabulary/a1-a2/634-9094633b43d0a8ac.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_067": [
+    "jocular",
+    "/audio/vocabulary/a1-a2/635-896a39a3382c5dd0.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_068": [
+    "jolly",
+    "/audio/vocabulary/a1-a2/636-d015fb4d0576c99a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_069": [
+    "joyful",
+    "/audio/vocabulary/a1-a2/637-8c45bf4261e853a1.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_070": [
+    "jumpy",
+    "/audio/vocabulary/a1-a2/638-7963885d659a3a03.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_071": [
+    "keen",
+    "/audio/vocabulary/a1-a2/639-84a57b19bb477d13.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_072": [
+    "lethargic",
+    "/audio/vocabulary/a1-a2/640-09146da246c54b3b.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_073": [
+    "lonely",
+    "/audio/vocabulary/a1-a2/641-7660b0b3dce3b8a8.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_074": [
+    "longing",
+    "/audio/vocabulary/a1-a2/642-73801068e8c783c1.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_075": [
+    "lost",
+    "/audio/vocabulary/a1-a2/643-4b06a297bdd61437.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_076": [
+    "lucky",
+    "/audio/vocabulary/a1-a2/644-1ed4363766eccb84.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_077": [
+    "melancholic",
+    "/audio/vocabulary/a1-a2/645-6e60da0b64e1ff35.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_078": [
+    "miserable",
+    "/audio/vocabulary/a1-a2/646-11ef1970b10fa5bf.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_079": [
+    "mortified",
+    "/audio/vocabulary/a1-a2/647-36f755cf1cad5eb3.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_080": [
+    "mournful",
+    "/audio/vocabulary/a1-a2/648-7561b12677faea92.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_081": [
+    "nasty",
+    "/audio/vocabulary/a1-a2/649-53d37a6ddfba0b79.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_082": [
+    "needy",
+    "/audio/vocabulary/a1-a2/650-c51f1cee4b9950e2.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_083": [
+    "nervous",
+    "/audio/vocabulary/a1-a2/651-3321cccdfc7574e6.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_084": [
+    "numb",
+    "/audio/vocabulary/a1-a2/652-91e7f78779d0f4cf.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_085": [
+    "obsessed",
+    "/audio/vocabulary/a1-a2/653-30e64e1393ecd962.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_086": [
+    "offended",
+    "/audio/vocabulary/a1-a2/654-9174bd156af718df.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_087": [
+    "optimistic",
+    "/audio/vocabulary/a1-a2/655-22b0635de09a87b5.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_088": [
+    "overwhelmed",
+    "/audio/vocabulary/a1-a2/656-fa51f448868aecb1.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_089": [
+    "paranoid",
+    "/audio/vocabulary/a1-a2/657-f13201a8e3fb9388.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_090": [
+    "passionate",
+    "/audio/vocabulary/a1-a2/658-df8bb4c956ffd79b.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_091": [
+    "peaceful",
+    "/audio/vocabulary/a1-a2/659-c90385fd0dc7a184.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_092": [
+    "perky",
+    "/audio/vocabulary/a1-a2/660-d0cb9b387a186673.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_093": [
+    "perplexed",
+    "/audio/vocabulary/a1-a2/661-bde6bda64a9383dd.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_094": [
+    "pessimistic",
+    "/audio/vocabulary/a1-a2/662-c24eccf6678829d2.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_095": [
+    "petrified",
+    "/audio/vocabulary/a1-a2/663-8d519020a108b221.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_096": [
+    "positive",
+    "/audio/vocabulary/a1-a2/664-ea062f0f3266c98a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_097": [
+    "powerful",
+    "/audio/vocabulary/a1-a2/665-b0303728fe6e0fc5.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_098": [
+    "proud",
+    "/audio/vocabulary/a1-a2/666-6306c1fc32f742d8.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_099": [
+    "rattled",
+    "/audio/vocabulary/a1-a2/667-3807e9d572718e8e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_100": [
+    "reflective",
+    "/audio/vocabulary/a1-a2/668-409baae8ca54a10b.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_101": [
+    "regretful",
+    "/audio/vocabulary/a1-a2/669-0e8879f853ae169a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_102": [
+    "relaxed",
+    "/audio/vocabulary/a1-a2/670-10dd178da8e90b40.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_103": [
+    "relieved",
+    "/audio/vocabulary/a1-a2/671-bd11bfb82e4e201c.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_104": [
+    "remorseful",
+    "/audio/vocabulary/a1-a2/672-73d32424ef204e1f.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_105": [
+    "rueful",
+    "/audio/vocabulary/a1-a2/673-81fa2f35d77b4525.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_106": [
+    "satisfied",
+    "/audio/vocabulary/a1-a2/674-89a578867d5b9d1e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_107": [
+    "self-conscious",
+    "/audio/vocabulary/a1-a2/675-f4bcc9bb50b73500.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_108": [
+    "selfish",
+    "/audio/vocabulary/a1-a2/676-91df4ca5bc2de30f.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_109": [
+    "sensitive",
+    "/audio/vocabulary/a1-a2/677-8997aa458d890924.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_110": [
+    "shameful",
+    "/audio/vocabulary/a1-a2/678-607c8951ba3efc10.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_111": [
+    "shock",
+    "/audio/vocabulary/a1-a2/679-1fc865726aecb21c.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_112": [
+    "sluggish",
+    "/audio/vocabulary/a1-a2/680-704aa7ad5f34b9fb.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_113": [
+    "smug",
+    "/audio/vocabulary/a1-a2/681-723043fac3edad9a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_114": [
+    "snappy",
+    "/audio/vocabulary/a1-a2/682-8a00147d54d55394.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_115": [
+    "somber",
+    "/audio/vocabulary/a1-a2/683-e9d9d3402bf42ed2.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_116": [
+    "speechless",
+    "/audio/vocabulary/a1-a2/684-9c822099c8cc0396.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_117": [
+    "stressed",
+    "/audio/vocabulary/a1-a2/685-7279cbd40c3fe11e.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_118": [
+    "stunned",
+    "/audio/vocabulary/a1-a2/686-8c29f409d8721676.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_119": [
+    "submissive",
+    "/audio/vocabulary/a1-a2/687-b95a4a46b4eb47fc.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_120": [
+    "suffering",
+    "/audio/vocabulary/a1-a2/688-2a136c21d68c1d87.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_121": [
+    "surprised",
+    "/audio/vocabulary/a1-a2/689-515a1560f3b5f8ce.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_122": [
+    "thankful",
+    "/audio/vocabulary/a1-a2/690-1951ffb71fc99dbe.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_123": [
+    "thoughtful",
+    "/audio/vocabulary/a1-a2/691-5f948420cad57148.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_124": [
+    "troubled",
+    "/audio/vocabulary/a1-a2/692-e980f8524552121a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_125": [
+    "upbeat",
+    "/audio/vocabulary/a1-a2/693-40fe6ffd8b9dd29a.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_126": [
+    "uptight",
+    "/audio/vocabulary/a1-a2/694-02f51b3c64963fd0.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_127": [
+    "wary",
+    "/audio/vocabulary/a1-a2/695-2307623926c05b64.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_128": [
+    "woeful",
+    "/audio/vocabulary/a1-a2/696-1f0a0e222bdc082d.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_129": [
+    "wretched",
+    "/audio/vocabulary/a1-a2/697-60c70ce890cb39d8.mp3"
+  ],
+  "A1_A2-A1_A2_EMOTIONS_130": [
+    "zealous",
+    "/audio/vocabulary/a1-a2/698-6227465b2ff539c8.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_001": [
+    "activity",
+    "/audio/vocabulary/a1-a2/192-10a956c083014edc.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_002": [
+    "art gallery",
+    "/audio/vocabulary/a1-a2/193-c45e8a8a3a15c809.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_003": [
+    "ballet",
+    "/audio/vocabulary/a1-a2/194-17fa7d2253054395.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_004": [
+    "bar",
+    "/audio/vocabulary/a1-a2/195-38b7c7df643603fe.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_005": [
+    "bowling",
+    "/audio/vocabulary/a1-a2/196-6a6d203a9a815655.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_006": [
+    "café",
+    "/audio/vocabulary/a1-a2/197-698d29d2a454565f.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_007": [
+    "cheat",
+    "/audio/vocabulary/a1-a2/198-f1bc84f27d59db5d.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_008": [
+    "cinema",
+    "/audio/vocabulary/a1-a2/199-df8a6feb363c1edb.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_009": [
+    "circus",
+    "/audio/vocabulary/a1-a2/200-23e090cd15ed5d43.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_010": [
+    "concert",
+    "/audio/vocabulary/a1-a2/201-11533c8d81a3ed1e.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_011": [
+    "concert hall",
+    "/audio/vocabulary/a1-a2/202-77b836bbe9bf9856.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_012": [
+    "cosplay",
+    "/audio/vocabulary/a1-a2/203-492e21581a1eb867.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_013": [
+    "dartboard",
+    "/audio/vocabulary/a1-a2/204-9e8c494307edc71f.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_014": [
+    "exhibition",
+    "/audio/vocabulary/a1-a2/205-1664adf7392810de.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_015": [
+    "exhibition center",
+    "/audio/vocabulary/a1-a2/206-2406f9113c074ec4.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_016": [
+    "film",
+    "/audio/vocabulary/a1-a2/207-df7ac24799afebb5.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_017": [
+    "handcraft",
+    "/audio/vocabulary/a1-a2/208-2e7a274910698ad1.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_018": [
+    "leisure center",
+    "/audio/vocabulary/a1-a2/209-52c3bb78b5d0adbf.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_019": [
+    "monopoly",
+    "/audio/vocabulary/a1-a2/210-b95ee690f516efed.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_020": [
+    "museum",
+    "/audio/vocabulary/a1-a2/211-9d1b58d641dd62bc.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_021": [
+    "nightclub",
+    "/audio/vocabulary/a1-a2/212-8c562f997ff42607.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_022": [
+    "opera",
+    "/audio/vocabulary/a1-a2/213-61ac9e24492cfda5.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_023": [
+    "opera house",
+    "/audio/vocabulary/a1-a2/214-8a0ceed4653fab37.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_024": [
+    "play",
+    "/audio/vocabulary/a1-a2/215-a87dbab38643c995.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_025": [
+    "pub",
+    "/audio/vocabulary/a1-a2/216-99ffe41fcf5ff58d.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_026": [
+    "puzzle",
+    "/audio/vocabulary/a1-a2/217-d001057a848b93a6.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_027": [
+    "quiz",
+    "/audio/vocabulary/a1-a2/218-cea332c19e408f3b.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_028": [
+    "restaurant",
+    "/audio/vocabulary/a1-a2/219-6dd163ea0b9b2bab.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_029": [
+    "soft play",
+    "/audio/vocabulary/a1-a2/220-8fdb05691cfd3c6a.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_030": [
+    "stadium",
+    "/audio/vocabulary/a1-a2/221-610e2023e435e38e.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_031": [
+    "theater",
+    "/audio/vocabulary/a1-a2/222-bfec0bc9909585fd.mp3"
+  ],
+  "A1_A2-A1_A2_ENTERTAINMENT_032": [
+    "zoo",
+    "/audio/vocabulary/a1-a2/223-350328829e032f9d.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_001": [
+    "ancestor",
+    "/audio/vocabulary/a1-a2/915-0ad2475b2499108f.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_002": [
+    "aunt",
+    "/audio/vocabulary/a1-a2/916-2c940cb0ab34b6eb.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_003": [
+    "bachelor",
+    "/audio/vocabulary/a1-a2/917-8a627d7578c0a9fa.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_004": [
+    "birth mother",
+    "/audio/vocabulary/a1-a2/918-da5b24a72ae7680b.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_005": [
+    "blood relative",
+    "/audio/vocabulary/a1-a2/919-d4aad219c01fba73.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_006": [
+    "bride",
+    "/audio/vocabulary/a1-a2/920-85a23f41ae7322f0.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_007": [
+    "bridegroom",
+    "/audio/vocabulary/a1-a2/921-b7b67a98fb0d166d.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_008": [
+    "brother",
+    "/audio/vocabulary/a1-a2/922-c39d176f66e9e76d.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_009": [
+    "brother-in-law",
+    "/audio/vocabulary/a1-a2/923-a5be78e94c2ac627.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_010": [
+    "brotherhood",
+    "/audio/vocabulary/a1-a2/924-f8f9644f496378bf.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_011": [
+    "brotherly",
+    "/audio/vocabulary/a1-a2/925-1f2944cf4b210fa5.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_012": [
+    "caregiver",
+    "/audio/vocabulary/a1-a2/926-07a050f8b628208a.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_013": [
+    "child",
+    "/audio/vocabulary/a1-a2/927-bf5ba3449dc795d3.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_014": [
+    "childhood",
+    "/audio/vocabulary/a1-a2/928-3823aeec65e42323.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_015": [
+    "children",
+    "/audio/vocabulary/a1-a2/929-6b796feb4f6b80ac.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_016": [
+    "clan",
+    "/audio/vocabulary/a1-a2/930-0cf484ff49dd00b1.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_017": [
+    "close-knit",
+    "/audio/vocabulary/a1-a2/931-732dbe1c28780eda.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_018": [
+    "connection",
+    "/audio/vocabulary/a1-a2/932-7c967ae7289ce790.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_019": [
+    "cousin",
+    "/audio/vocabulary/a1-a2/933-bbc269cf650602c4.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_020": [
+    "dad",
+    "/audio/vocabulary/a1-a2/934-5b151c7f0200eff3.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_021": [
+    "daughter",
+    "/audio/vocabulary/a1-a2/935-6aedc80785dba861.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_022": [
+    "daughter-in-law",
+    "/audio/vocabulary/a1-a2/936-31f2c3eefc69824b.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_023": [
+    "descendant",
+    "/audio/vocabulary/a1-a2/937-cfc9349445b6dfdd.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_024": [
+    "devoted",
+    "/audio/vocabulary/a1-a2/938-7cd47effcb06160f.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_025": [
+    "divorce",
+    "/audio/vocabulary/a1-a2/939-4309fd2830944e17.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_026": [
+    "eligible",
+    "/audio/vocabulary/a1-a2/940-44f67be6db9a9bd6.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_027": [
+    "engaged",
+    "/audio/vocabulary/a1-a2/941-b777858a77f530db.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_028": [
+    "engagement",
+    "/audio/vocabulary/a1-a2/942-0effd6fa4feec394.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_029": [
+    "estranged",
+    "/audio/vocabulary/a1-a2/943-8fdef7983b4da03b.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_030": [
+    "ex-husband",
+    "/audio/vocabulary/a1-a2/944-eb4734510f32e20a.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_031": [
+    "ex-wife",
+    "/audio/vocabulary/a1-a2/945-44539e0df68f6e19.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_032": [
+    "extended family",
+    "/audio/vocabulary/a1-a2/946-57ce284ac0c56307.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_033": [
+    "family",
+    "/audio/vocabulary/a1-a2/947-94da390f6ea82213.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_034": [
+    "family tree",
+    "/audio/vocabulary/a1-a2/948-c8e01cba1bf9e5b7.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_035": [
+    "father",
+    "/audio/vocabulary/a1-a2/949-a9f8745ea5ac9ed2.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_036": [
+    "father-in-law",
+    "/audio/vocabulary/a1-a2/950-86638502424682a3.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_037": [
+    "fiancée",
+    "/audio/vocabulary/a1-a2/951-7d002c6d73433a06.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_038": [
+    "firstborn",
+    "/audio/vocabulary/a1-a2/952-20ccfd25c2068def.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_039": [
+    "first cousin",
+    "/audio/vocabulary/a1-a2/953-c612d6890342db7e.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_040": [
+    "flesh and blood",
+    "/audio/vocabulary/a1-a2/954-076a34c53f38d41b.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_041": [
+    "folks",
+    "/audio/vocabulary/a1-a2/955-b74c0a401afbfd91.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_042": [
+    "foster",
+    "/audio/vocabulary/a1-a2/956-5f9a22ef0da369d6.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_043": [
+    "foster child",
+    "/audio/vocabulary/a1-a2/957-160cda000497dcf0.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_044": [
+    "foster father",
+    "/audio/vocabulary/a1-a2/958-302515ae4611d0f6.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_045": [
+    "foster mother",
+    "/audio/vocabulary/a1-a2/959-e0b278682f54ff68.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_046": [
+    "fraternal",
+    "/audio/vocabulary/a1-a2/960-c65cf0041c1034f9.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_047": [
+    "friend",
+    "/audio/vocabulary/a1-a2/961-49cccd603773558e.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_048": [
+    "genealogy",
+    "/audio/vocabulary/a1-a2/962-f7bddcffa0bd01d1.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_049": [
+    "grandchild",
+    "/audio/vocabulary/a1-a2/963-6d59d15598375b7d.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_050": [
+    "grandfather",
+    "/audio/vocabulary/a1-a2/964-c57a1ea265bb1cf1.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_051": [
+    "grandmother",
+    "/audio/vocabulary/a1-a2/965-615ade2f573ba98e.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_052": [
+    "grandparent",
+    "/audio/vocabulary/a1-a2/966-ca9b47b46f20877d.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_053": [
+    "granny",
+    "/audio/vocabulary/a1-a2/967-55f388a7bd093729.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_054": [
+    "great-aunt",
+    "/audio/vocabulary/a1-a2/968-927e7d5fa0f06a77.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_055": [
+    "great-granddaughter",
+    "/audio/vocabulary/a1-a2/969-27bbb09fa51db8bb.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_056": [
+    "great-grandfather",
+    "/audio/vocabulary/a1-a2/970-f3c62353df212723.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_057": [
+    "great-grandmother",
+    "/audio/vocabulary/a1-a2/971-68f61121369ebb01.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_058": [
+    "great-grandparent",
+    "/audio/vocabulary/a1-a2/972-ec332396df691c96.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_059": [
+    "great-grandson",
+    "/audio/vocabulary/a1-a2/973-6b9055c5f7093fef.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_060": [
+    "great-uncle",
+    "/audio/vocabulary/a1-a2/974-982c3ade53990a38.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_061": [
+    "groom",
+    "/audio/vocabulary/a1-a2/975-de69d906c61a6880.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_062": [
+    "grown-up",
+    "/audio/vocabulary/a1-a2/976-21253bea5cc07121.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_063": [
+    "half-brother",
+    "/audio/vocabulary/a1-a2/977-35d5a74963ea320e.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_064": [
+    "half-sister",
+    "/audio/vocabulary/a1-a2/978-34f356a334b73519.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_065": [
+    "heir",
+    "/audio/vocabulary/a1-a2/979-10c611c5c908d93c.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_066": [
+    "heiress",
+    "/audio/vocabulary/a1-a2/980-3aa449b10b26ec6b.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_067": [
+    "helpmate",
+    "/audio/vocabulary/a1-a2/981-2080d8f1af5ca05c.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_068": [
+    "hereditary",
+    "/audio/vocabulary/a1-a2/982-6a8e134aec2939b3.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_069": [
+    "heritage",
+    "/audio/vocabulary/a1-a2/983-a38e931352dc0308.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_070": [
+    "history",
+    "/audio/vocabulary/a1-a2/984-3d35c46d11bb45b8.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_071": [
+    "home",
+    "/audio/vocabulary/a1-a2/985-967a34f918bb36c4.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_072": [
+    "household",
+    "/audio/vocabulary/a1-a2/986-cf97010bcc14bd1e.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_073": [
+    "husband",
+    "/audio/vocabulary/a1-a2/987-7a8a844e38b6de81.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_074": [
+    "identical twin",
+    "/audio/vocabulary/a1-a2/988-9bc65e095bbf89bf.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_075": [
+    "in-law",
+    "/audio/vocabulary/a1-a2/989-89f6c5ede44807d1.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_076": [
+    "infancy",
+    "/audio/vocabulary/a1-a2/990-a1536faecd6a9a56.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_077": [
+    "infant",
+    "/audio/vocabulary/a1-a2/991-727b2c9722310d56.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_078": [
+    "inherit",
+    "/audio/vocabulary/a1-a2/992-7f346d32e28e8dd4.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_079": [
+    "inheritance",
+    "/audio/vocabulary/a1-a2/993-ed9ace526269d9e7.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_080": [
+    "juvenile",
+    "/audio/vocabulary/a1-a2/994-1372bb5b28c6863d.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_081": [
+    "kin",
+    "/audio/vocabulary/a1-a2/995-3bcb347564f5785b.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_082": [
+    "kindred",
+    "/audio/vocabulary/a1-a2/996-754886e5765e7f88.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_083": [
+    "kinfolk",
+    "/audio/vocabulary/a1-a2/997-31104c55a06addb6.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_084": [
+    "kinship",
+    "/audio/vocabulary/a1-a2/998-810b028024aebcda.mp3"
+  ],
+  "A1_A2-A1_A2_FAMILY_085": [
+    "kith and kin",
+    null
+  ],
+  "A1_A2-A1_A2_FAMILY_086": [
+    "lineage",
+    "/audio/vocabulary/a1-a2/1000-6ca10dd149531127.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_001": [
+    "bacon",
+    "/audio/vocabulary/a1-a2/453-62614edb79a5ff12.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_002": [
+    "bagel",
+    "/audio/vocabulary/a1-a2/454-76f3caee7af13718.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_003": [
+    "baguette",
+    "/audio/vocabulary/a1-a2/455-018bad6de359906f.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_004": [
+    "breadstick",
+    "/audio/vocabulary/a1-a2/456-d62a35239792cc82.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_005": [
+    "cheese",
+    "/audio/vocabulary/a1-a2/457-c832b65d6314bc3b.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_006": [
+    "chicken nugget",
+    "/audio/vocabulary/a1-a2/458-38e8d90e30afaaf9.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_007": [
+    "coffee",
+    "/audio/vocabulary/a1-a2/459-24b418151b300e3b.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_008": [
+    "croissant",
+    "/audio/vocabulary/a1-a2/460-900ee7e78f77c8bd.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_009": [
+    "donut",
+    "/audio/vocabulary/a1-a2/461-5987fb22a2430a65.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_010": [
+    "egg",
+    "/audio/vocabulary/a1-a2/462-b4bcc82d88d6cea3.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_011": [
+    "fish and chips",
+    "/audio/vocabulary/a1-a2/463-a8815e9fb51a43d5.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_012": [
+    "French fries",
+    "/audio/vocabulary/a1-a2/464-da436c5a9c0b52f9.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_013": [
+    "ham",
+    "/audio/vocabulary/a1-a2/465-0a48502791bb7f14.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_014": [
+    "hamburger",
+    "/audio/vocabulary/a1-a2/466-8f966aa476c836ac.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_015": [
+    "hot chocolate",
+    "/audio/vocabulary/a1-a2/467-f6cf3523047d3823.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_016": [
+    "hot dog",
+    "/audio/vocabulary/a1-a2/468-87fa612247d5ebe1.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_017": [
+    "ice cream",
+    "/audio/vocabulary/a1-a2/469-81c8add1e3f6c769.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_018": [
+    "jelly roll",
+    "/audio/vocabulary/a1-a2/470-4a8c58ef54eaf52c.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_019": [
+    "marmalade",
+    "/audio/vocabulary/a1-a2/471-cfa2391c405c5c76.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_020": [
+    "milk",
+    "/audio/vocabulary/a1-a2/472-239607eb52c4ba34.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_021": [
+    "muffin",
+    "/audio/vocabulary/a1-a2/473-baa8885262ea9515.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_022": [
+    "onion ring",
+    "/audio/vocabulary/a1-a2/474-ef4d6b081a5e5b29.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_023": [
+    "orange juice",
+    "/audio/vocabulary/a1-a2/475-048409c904442bb5.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_024": [
+    "pancake",
+    "/audio/vocabulary/a1-a2/476-eebe619b05f315d5.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_025": [
+    "pita",
+    "/audio/vocabulary/a1-a2/477-47236989ac3e85dc.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_026": [
+    "pizza",
+    "/audio/vocabulary/a1-a2/478-b8a2797b2fc8d932.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_027": [
+    "porridge",
+    "/audio/vocabulary/a1-a2/479-440ff394582d8f82.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_028": [
+    "pretzel",
+    "/audio/vocabulary/a1-a2/480-ad204c6806f9a05f.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_029": [
+    "salad",
+    "/audio/vocabulary/a1-a2/481-8091bf23debb9698.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_030": [
+    "sandwich",
+    "/audio/vocabulary/a1-a2/482-000cc96828167a11.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_031": [
+    "sausage",
+    "/audio/vocabulary/a1-a2/483-ee4b142d97f20d04.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_032": [
+    "taco",
+    "/audio/vocabulary/a1-a2/484-7bf8aa6c50577bda.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_033": [
+    "toast",
+    "/audio/vocabulary/a1-a2/485-a8710e7c6cf86767.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_034": [
+    "waffle",
+    "/audio/vocabulary/a1-a2/486-5f2c03901d211df9.mp3"
+  ],
+  "A1_A2-A1_A2_FOOD_DRINKS_035": [
+    "yogurt",
+    "/audio/vocabulary/a1-a2/487-9292a577e61a6a7f.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_001": [
+    "apple",
+    "/audio/vocabulary/a1-a2/275-006a094e46d4fd57.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_002": [
+    "apricot",
+    "/audio/vocabulary/a1-a2/276-0a1824c99c4fd111.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_003": [
+    "artichoke",
+    "/audio/vocabulary/a1-a2/277-84bf47a27a57c5e7.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_004": [
+    "asparagus",
+    "/audio/vocabulary/a1-a2/278-14b917bb695f96a1.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_005": [
+    "avocado",
+    "/audio/vocabulary/a1-a2/279-3a401d1e3bf6b8e9.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_006": [
+    "banana",
+    "/audio/vocabulary/a1-a2/280-267d041b93a7e646.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_007": [
+    "bean",
+    "/audio/vocabulary/a1-a2/281-782d15b0244274e4.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_008": [
+    "beetroot",
+    "/audio/vocabulary/a1-a2/282-1249606b5bcc4512.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_009": [
+    "blueberry",
+    "/audio/vocabulary/a1-a2/283-f75074594a8251ec.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_010": [
+    "broccoli",
+    "/audio/vocabulary/a1-a2/284-31396063738974f3.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_011": [
+    "Brussels sprout",
+    "/audio/vocabulary/a1-a2/285-9f79f710eb327f03.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_012": [
+    "cabbage",
+    "/audio/vocabulary/a1-a2/286-959a90e2b83f6bf7.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_013": [
+    "carrot",
+    "/audio/vocabulary/a1-a2/287-38ef964cada50454.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_014": [
+    "cauliflower",
+    "/audio/vocabulary/a1-a2/288-886ba2f6069c3cbf.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_015": [
+    "celery",
+    "/audio/vocabulary/a1-a2/289-ebc802e8c2e02085.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_016": [
+    "cherry",
+    "/audio/vocabulary/a1-a2/290-6add8510f0b5faa8.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_017": [
+    "chili pepper",
+    "/audio/vocabulary/a1-a2/291-1097b8ad5dafe6d0.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_018": [
+    "coconut",
+    "/audio/vocabulary/a1-a2/292-e2c13b164550f9aa.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_019": [
+    "corn",
+    "/audio/vocabulary/a1-a2/293-6e3a480ad62662a2.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_020": [
+    "courgette / zucchini",
+    "/audio/vocabulary/a1-a2/294-35c20ce119ed09bb.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_021": [
+    "cucumber",
+    "/audio/vocabulary/a1-a2/295-52593c06f4ff9380.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_022": [
+    "eggplant",
+    "/audio/vocabulary/a1-a2/296-cf2356309f0874d1.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_023": [
+    "garlic",
+    "/audio/vocabulary/a1-a2/297-bbff412ffd9d7ba4.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_024": [
+    "ginger",
+    "/audio/vocabulary/a1-a2/298-fc3e410bfc78af83.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_025": [
+    "grape",
+    "/audio/vocabulary/a1-a2/299-becd936526bca475.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_026": [
+    "grapefruit",
+    "/audio/vocabulary/a1-a2/300-75b7d23b860d645d.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_027": [
+    "jackfruit",
+    "/audio/vocabulary/a1-a2/301-0d9eb001c95eb985.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_028": [
+    "kiwi",
+    "/audio/vocabulary/a1-a2/302-fb5f1c32188733c6.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_029": [
+    "leek",
+    "/audio/vocabulary/a1-a2/303-ddd0ab55027e90c2.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_030": [
+    "lemon",
+    "/audio/vocabulary/a1-a2/304-ec99a0686b1b435f.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_031": [
+    "lettuce",
+    "/audio/vocabulary/a1-a2/305-02c934ba889beeb7.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_032": [
+    "lime",
+    "/audio/vocabulary/a1-a2/306-11d16c4269c3c17b.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_033": [
+    "mandarin",
+    "/audio/vocabulary/a1-a2/307-6ceb54a85f278763.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_034": [
+    "mango",
+    "/audio/vocabulary/a1-a2/308-663b6501bb298657.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_035": [
+    "melon",
+    "/audio/vocabulary/a1-a2/309-e6b8b7abea5d1c46.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_036": [
+    "mushroom",
+    "/audio/vocabulary/a1-a2/310-d61426b90cc88f5c.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_037": [
+    "nectarine",
+    "/audio/vocabulary/a1-a2/311-a95dcf50e383c388.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_038": [
+    "onion",
+    "/audio/vocabulary/a1-a2/312-203dccec906b010a.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_039": [
+    "orange",
+    "/audio/vocabulary/a1-a2/313-2bda6eb83d7d0339.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_040": [
+    "papaya",
+    "/audio/vocabulary/a1-a2/314-1a442af06200b423.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_041": [
+    "pea",
+    "/audio/vocabulary/a1-a2/315-d30323951c3cbcf1.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_042": [
+    "peach",
+    "/audio/vocabulary/a1-a2/316-9d8c7c4ecd641ebf.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_043": [
+    "pear",
+    "/audio/vocabulary/a1-a2/317-c97576dcdd683aa5.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_044": [
+    "pineapple",
+    "/audio/vocabulary/a1-a2/318-c2df11344539d685.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_045": [
+    "plum",
+    "/audio/vocabulary/a1-a2/319-d148a0640fa4409e.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_046": [
+    "pomegranate",
+    "/audio/vocabulary/a1-a2/320-842c836a77a0bba0.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_047": [
+    "potato",
+    "/audio/vocabulary/a1-a2/321-3fd05c7066fe335e.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_048": [
+    "pumpkin",
+    "/audio/vocabulary/a1-a2/322-9e078eb4c216336e.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_049": [
+    "radish",
+    "/audio/vocabulary/a1-a2/323-f8f79240df4a46f2.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_050": [
+    "raspberry",
+    "/audio/vocabulary/a1-a2/324-14ef18857fcc0cbc.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_051": [
+    "spinach",
+    "/audio/vocabulary/a1-a2/325-bb300a2f2bbdfedc.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_052": [
+    "spring onion",
+    "/audio/vocabulary/a1-a2/326-37a2a335caa4c9b0.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_053": [
+    "squash",
+    "/audio/vocabulary/a1-a2/327-25b5cd9e7f2be4d3.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_054": [
+    "starfruit",
+    "/audio/vocabulary/a1-a2/328-f0cb5e24409e1596.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_055": [
+    "strawberry",
+    "/audio/vocabulary/a1-a2/329-0bd42d777e2bac94.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_056": [
+    "sweet potato",
+    "/audio/vocabulary/a1-a2/330-5a3db400472b09c9.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_057": [
+    "tomato",
+    "/audio/vocabulary/a1-a2/331-f11c5839ceca06dc.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_058": [
+    "turnip",
+    "/audio/vocabulary/a1-a2/332-a1ef5fd63e41affd.mp3"
+  ],
+  "A1_A2-A1_A2_FRUIT_VEGETABLES_059": [
+    "watermelon",
+    "/audio/vocabulary/a1-a2/333-6fd5c9107e6920de.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_001": [
+    "accommodation",
+    "/audio/vocabulary/a1-a2/224-927dba6fb027f84f.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_002": [
+    "armchair",
+    "/audio/vocabulary/a1-a2/225-b9deafba1f13bf9e.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_003": [
+    "attic",
+    "/audio/vocabulary/a1-a2/226-38f968e9c6e2a6e8.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_004": [
+    "balcony",
+    "/audio/vocabulary/a1-a2/227-3405fbb2318c4de2.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_005": [
+    "basement",
+    "/audio/vocabulary/a1-a2/228-d1560772abc33eaf.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_006": [
+    "bathroom",
+    "/audio/vocabulary/a1-a2/229-0531588d3352435b.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_007": [
+    "bathtub",
+    "/audio/vocabulary/a1-a2/230-3f64fcb196e12081.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_008": [
+    "bedroom",
+    "/audio/vocabulary/a1-a2/231-347d3ea054a15862.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_009": [
+    "bleach",
+    "/audio/vocabulary/a1-a2/232-1a13fc950bf6d021.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_010": [
+    "broom",
+    "/audio/vocabulary/a1-a2/233-1789ebe7487ef363.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_011": [
+    "bucket",
+    "/audio/vocabulary/a1-a2/234-61ba9aad91ff3b01.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_012": [
+    "chimney",
+    "/audio/vocabulary/a1-a2/235-fa42889a98a8d13f.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_013": [
+    "closet",
+    "/audio/vocabulary/a1-a2/236-e56c1dbbd541f2a2.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_014": [
+    "cloth",
+    "/audio/vocabulary/a1-a2/237-68bf1d3175a7f9ba.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_015": [
+    "cottage",
+    "/audio/vocabulary/a1-a2/238-2ce275219b0061d7.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_016": [
+    "couch",
+    "/audio/vocabulary/a1-a2/239-82ae8f2c518312a5.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_017": [
+    "counter",
+    "/audio/vocabulary/a1-a2/240-1e92dc80de26dfe9.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_018": [
+    "doorstep",
+    "/audio/vocabulary/a1-a2/241-9fcd204e2e7646b1.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_019": [
+    "doorway",
+    "/audio/vocabulary/a1-a2/242-122d48e6b4d0ffc6.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_020": [
+    "dustpan",
+    "/audio/vocabulary/a1-a2/243-bf0d15b0f0dc7d7d.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_021": [
+    "entrance",
+    "/audio/vocabulary/a1-a2/244-52200ff2f4521011.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_022": [
+    "garage",
+    "/audio/vocabulary/a1-a2/245-5e6411d4f7039b42.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_023": [
+    "hose",
+    "/audio/vocabulary/a1-a2/246-bb2445d523719ba2.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_024": [
+    "iron",
+    "/audio/vocabulary/a1-a2/247-30d63c1aaddc6625.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_025": [
+    "ironing board",
+    "/audio/vocabulary/a1-a2/248-afb918215352530f.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_026": [
+    "kettle",
+    "/audio/vocabulary/a1-a2/249-e60593146bc0a111.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_027": [
+    "kitchen",
+    "/audio/vocabulary/a1-a2/250-dae73eaea732cfa5.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_028": [
+    "laundry basket",
+    "/audio/vocabulary/a1-a2/251-de6a6fc01f7392ac.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_029": [
+    "laundry detergent",
+    "/audio/vocabulary/a1-a2/252-f0da486c9cae6731.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_030": [
+    "mop",
+    "/audio/vocabulary/a1-a2/253-9a953b5ebb00c068.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_031": [
+    "napkin",
+    "/audio/vocabulary/a1-a2/254-25d73949b071da64.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_032": [
+    "oven",
+    "/audio/vocabulary/a1-a2/255-ea3b98ac98c5510a.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_033": [
+    "pantry",
+    "/audio/vocabulary/a1-a2/256-fcf2edc54240d989.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_034": [
+    "patio",
+    "/audio/vocabulary/a1-a2/257-1c5e44dd18cfa28a.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_035": [
+    "pillow",
+    "/audio/vocabulary/a1-a2/258-76e7dbdb74ab45dc.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_036": [
+    "roof",
+    "/audio/vocabulary/a1-a2/259-e7591dc955467020.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_037": [
+    "rubber gloves",
+    "/audio/vocabulary/a1-a2/260-9f60f15966ffc942.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_038": [
+    "rug",
+    "/audio/vocabulary/a1-a2/261-7b1d9add0b180973.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_039": [
+    "scrub brush",
+    "/audio/vocabulary/a1-a2/262-92189b7ed001d453.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_040": [
+    "shower",
+    "/audio/vocabulary/a1-a2/263-35f930d756a78906.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_041": [
+    "sink",
+    "/audio/vocabulary/a1-a2/264-25b72896c880494b.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_042": [
+    "sponge",
+    "/audio/vocabulary/a1-a2/265-f981735f5e0a4e73.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_043": [
+    "squeegee mop",
+    "/audio/vocabulary/a1-a2/266-479d914bc82c42b2.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_044": [
+    "stove",
+    "/audio/vocabulary/a1-a2/267-fec1535f3c3135e6.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_045": [
+    "toaster",
+    "/audio/vocabulary/a1-a2/268-cfdbca6a17878e14.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_046": [
+    "toilet",
+    "/audio/vocabulary/a1-a2/269-f95351b573673506.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_047": [
+    "towel",
+    "/audio/vocabulary/a1-a2/270-b547961c06279101.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_048": [
+    "trash can",
+    "/audio/vocabulary/a1-a2/271-68872d60b505a379.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_049": [
+    "wardrobe",
+    "/audio/vocabulary/a1-a2/272-ab55a3abf897c67f.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_050": [
+    "washing machine",
+    "/audio/vocabulary/a1-a2/273-38921d562827b187.mp3"
+  ],
+  "A1_A2-A1_A2_HOME_051": [
+    "window",
+    "/audio/vocabulary/a1-a2/274-ce1e8bc4ce8bb127.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_001": [
+    "accountant",
+    "/audio/vocabulary/a1-a2/764-d4573fe257e8f975.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_002": [
+    "actor / actress",
+    "/audio/vocabulary/a1-a2/765-d33fce0b600e80a0.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_003": [
+    "artist",
+    "/audio/vocabulary/a1-a2/766-5edd383b602a689f.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_004": [
+    "astronaut",
+    "/audio/vocabulary/a1-a2/767-137be63475aea9c8.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_005": [
+    "baker",
+    "/audio/vocabulary/a1-a2/768-98f9abd55aed8d9b.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_006": [
+    "bellboy",
+    "/audio/vocabulary/a1-a2/769-b953c605f444399c.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_007": [
+    "bishop",
+    "/audio/vocabulary/a1-a2/770-11c7d86bacadaad3.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_008": [
+    "butcher",
+    "/audio/vocabulary/a1-a2/771-4fcc6f81d979beab.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_009": [
+    "cashier",
+    "/audio/vocabulary/a1-a2/772-c66af9ac3dd2c1f1.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_010": [
+    "chef",
+    "/audio/vocabulary/a1-a2/773-8b97f18be74046a2.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_011": [
+    "customs officer",
+    "/audio/vocabulary/a1-a2/774-e2ab87e6858beead.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_012": [
+    "deliveryman",
+    "/audio/vocabulary/a1-a2/775-589b0bbf0bf9c603.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_013": [
+    "entrepreneur",
+    "/audio/vocabulary/a1-a2/776-bb6f45edc9a3d088.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_014": [
+    "factory worker",
+    "/audio/vocabulary/a1-a2/777-5228a644e9035306.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_015": [
+    "florist",
+    "/audio/vocabulary/a1-a2/778-adc8cd8b6c212427.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_016": [
+    "hairdresser",
+    "/audio/vocabulary/a1-a2/779-341302f45fcf1a5f.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_017": [
+    "judge",
+    "/audio/vocabulary/a1-a2/780-803c073e9c7275b4.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_018": [
+    "lawyer",
+    "/audio/vocabulary/a1-a2/781-64fe80b96e7abbf3.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_019": [
+    "miner",
+    "/audio/vocabulary/a1-a2/782-ec8f09b8648fde3d.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_020": [
+    "musician",
+    "/audio/vocabulary/a1-a2/783-b265a798f8071e36.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_021": [
+    "optician",
+    "/audio/vocabulary/a1-a2/784-1e58ec4ebe57913c.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_022": [
+    "pharmacist",
+    "/audio/vocabulary/a1-a2/785-9a5ac6afc8fb0018.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_023": [
+    "plumber",
+    "/audio/vocabulary/a1-a2/786-0d978bcbbde4768e.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_024": [
+    "politician",
+    "/audio/vocabulary/a1-a2/787-4463e6e20f636993.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_025": [
+    "programmer",
+    "/audio/vocabulary/a1-a2/788-8719e8501165b4aa.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_026": [
+    "real estate agent",
+    "/audio/vocabulary/a1-a2/789-ea4558f4859c5cfc.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_027": [
+    "receptionist",
+    "/audio/vocabulary/a1-a2/790-6bcd2568aa2e1a01.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_028": [
+    "speaker",
+    "/audio/vocabulary/a1-a2/791-91a61e6f1e860cdf.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_029": [
+    "street vendor",
+    "/audio/vocabulary/a1-a2/792-e48fa2ee14d7e996.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_030": [
+    "tailor",
+    "/audio/vocabulary/a1-a2/793-17971eddf6a2429d.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_031": [
+    "taxi driver",
+    "/audio/vocabulary/a1-a2/794-b27271600d6102e7.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_032": [
+    "teacher",
+    "/audio/vocabulary/a1-a2/795-045b29aa50353f40.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_033": [
+    "veterinarian",
+    "/audio/vocabulary/a1-a2/796-5f172eb938892a38.mp3"
+  ],
+  "A1_A2-A1_A2_JOBS_034": [
+    "writer",
+    "/audio/vocabulary/a1-a2/797-b2f5b28432e92ab8.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_001": [
+    "animal",
+    "/audio/vocabulary/a1-a2/067-8f8d71c8513535c2.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_002": [
+    "Arctic",
+    "/audio/vocabulary/a1-a2/068-df708104b045bd6e.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_003": [
+    "atmosphere",
+    "/audio/vocabulary/a1-a2/069-ec42f0b0327198a7.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_004": [
+    "beach",
+    "/audio/vocabulary/a1-a2/070-f3be577a79d9bd4a.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_005": [
+    "breezy",
+    "/audio/vocabulary/a1-a2/071-f37bf44a65439b67.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_006": [
+    "bush",
+    "/audio/vocabulary/a1-a2/072-4fb482550764818e.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_007": [
+    "cave",
+    "/audio/vocabulary/a1-a2/073-f100fae097522a59.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_008": [
+    "cliff",
+    "/audio/vocabulary/a1-a2/074-716204356ac0e4e1.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_009": [
+    "coal",
+    "/audio/vocabulary/a1-a2/075-1fd171eba7fb4114.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_010": [
+    "creek",
+    "/audio/vocabulary/a1-a2/076-d849ed0c6330ee93.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_011": [
+    "daisy",
+    "/audio/vocabulary/a1-a2/077-7cfd5ebfa29adbb9.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_012": [
+    "deforestation",
+    "/audio/vocabulary/a1-a2/078-3f0c0c6c18eac1c9.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_013": [
+    "desert",
+    "/audio/vocabulary/a1-a2/079-e71307e0443f5edc.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_014": [
+    "ecological",
+    "/audio/vocabulary/a1-a2/080-78abe690b55959fc.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_015": [
+    "environment",
+    "/audio/vocabulary/a1-a2/081-1788966ed6fbbebc.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_016": [
+    "eruption",
+    "/audio/vocabulary/a1-a2/082-5f694c3e3b7c3cf3.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_017": [
+    "flood",
+    "/audio/vocabulary/a1-a2/083-b591224167a399c7.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_018": [
+    "flower",
+    "/audio/vocabulary/a1-a2/084-d6948900dc8d6f43.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_019": [
+    "fossil",
+    "/audio/vocabulary/a1-a2/085-eea5a25016348641.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_020": [
+    "gloomy",
+    "/audio/vocabulary/a1-a2/086-14d14450cb3f8354.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_021": [
+    "graze",
+    "/audio/vocabulary/a1-a2/087-325e3767eec60051.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_022": [
+    "herd",
+    "/audio/vocabulary/a1-a2/088-f08a2a595766073d.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_023": [
+    "highland",
+    "/audio/vocabulary/a1-a2/089-fb3df2d55e022189.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_024": [
+    "hurricane",
+    "/audio/vocabulary/a1-a2/090-e638f67504db1e1c.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_025": [
+    "insect",
+    "/audio/vocabulary/a1-a2/091-5837d13bf32dd6d7.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_026": [
+    "livestock",
+    "/audio/vocabulary/a1-a2/092-438fbc1981a59d8f.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_027": [
+    "meadow",
+    "/audio/vocabulary/a1-a2/093-c85bcd9c69521af5.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_028": [
+    "misty",
+    "/audio/vocabulary/a1-a2/094-195edf6655b718ad.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_029": [
+    "mountain",
+    "/audio/vocabulary/a1-a2/095-79f755fe16ab9751.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_030": [
+    "mud",
+    "/audio/vocabulary/a1-a2/096-9e97b3b504d66904.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_031": [
+    "overcast",
+    "/audio/vocabulary/a1-a2/097-3db1c249e3a258eb.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_032": [
+    "peninsula",
+    "/audio/vocabulary/a1-a2/098-8a24b4b89ff64f69.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_033": [
+    "petal",
+    "/audio/vocabulary/a1-a2/099-ee42dd4e83469d51.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_034": [
+    "planet",
+    "/audio/vocabulary/a1-a2/100-3a20b8746194aad1.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_035": [
+    "pollution",
+    "/audio/vocabulary/a1-a2/101-0783317f01e13215.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_036": [
+    "pond",
+    "/audio/vocabulary/a1-a2/102-03eed63da45b1760.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_037": [
+    "river",
+    "/audio/vocabulary/a1-a2/103-76724489aa70e821.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_038": [
+    "riverbank",
+    "/audio/vocabulary/a1-a2/104-a795d61dc02494ad.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_039": [
+    "root",
+    "/audio/vocabulary/a1-a2/105-a993fd571bc78781.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_040": [
+    "rubbish",
+    "/audio/vocabulary/a1-a2/106-545f629818b2cf6b.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_041": [
+    "savanna",
+    "/audio/vocabulary/a1-a2/107-7b5dc7afb0e2429e.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_042": [
+    "scenery",
+    "/audio/vocabulary/a1-a2/108-a34e552f1aea782d.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_043": [
+    "sea",
+    "/audio/vocabulary/a1-a2/109-870f59f0a5fb0397.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_044": [
+    "season",
+    "/audio/vocabulary/a1-a2/110-6265914c64881ff0.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_045": [
+    "seed",
+    "/audio/vocabulary/a1-a2/111-030351f9a4189ed7.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_046": [
+    "slaughter",
+    "/audio/vocabulary/a1-a2/112-ae34fe819a4d89b6.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_047": [
+    "sleet",
+    "/audio/vocabulary/a1-a2/113-c5b4018c0919d366.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_048": [
+    "slope",
+    "/audio/vocabulary/a1-a2/114-cc2d453c0764f192.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_049": [
+    "snowslide",
+    "/audio/vocabulary/a1-a2/115-cd4664e643730425.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_050": [
+    "soil",
+    "/audio/vocabulary/a1-a2/116-a7b72ed427a2a54b.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_051": [
+    "solar",
+    "/audio/vocabulary/a1-a2/117-3c972188f9cbdf47.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_052": [
+    "sunshine",
+    "/audio/vocabulary/a1-a2/118-201200a1378f7423.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_053": [
+    "sustainable",
+    "/audio/vocabulary/a1-a2/119-9b8a6a411ab4b954.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_054": [
+    "temperature",
+    "/audio/vocabulary/a1-a2/120-34d9627c2f940552.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_055": [
+    "tornado",
+    "/audio/vocabulary/a1-a2/121-ea2be098ee9b480d.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_056": [
+    "tsunami",
+    "/audio/vocabulary/a1-a2/122-b6f33cf2d76fc6ed.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_057": [
+    "valley",
+    "/audio/vocabulary/a1-a2/123-da43fa3da8065b33.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_058": [
+    "vapor",
+    "/audio/vocabulary/a1-a2/124-d2ca09ecba045b34.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_059": [
+    "vivid",
+    "/audio/vocabulary/a1-a2/125-f9e1c25f14a3a068.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_060": [
+    "volcano",
+    "/audio/vocabulary/a1-a2/126-502637a0ac778fbc.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_061": [
+    "waterfall",
+    "/audio/vocabulary/a1-a2/127-ca45cfd5847ee6cc.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_062": [
+    "wild",
+    "/audio/vocabulary/a1-a2/128-3ecbb7890a713337.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_063": [
+    "wildlife",
+    "/audio/vocabulary/a1-a2/129-ef51860ed879ac62.mp3"
+  ],
+  "A1_A2-A1_A2_NATURE_064": [
+    "winter",
+    "/audio/vocabulary/a1-a2/130-aa7cde36970513a9.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_001": [
+    "active",
+    "/audio/vocabulary/a1-a2/334-428ad82e77e1dda1.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_002": [
+    "alert",
+    "/audio/vocabulary/a1-a2/335-a77247f3e73515df.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_003": [
+    "ambitious",
+    "/audio/vocabulary/a1-a2/336-f1c98fa29728c84e.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_004": [
+    "attentive",
+    "/audio/vocabulary/a1-a2/337-8a40d7ff92a620be.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_005": [
+    "bold",
+    "/audio/vocabulary/a1-a2/338-fda76183a7ced5f4.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_006": [
+    "brave",
+    "/audio/vocabulary/a1-a2/339-a72c5dba2184c10e.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_007": [
+    "careful",
+    "/audio/vocabulary/a1-a2/340-4d647226e285379e.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_008": [
+    "careless",
+    "/audio/vocabulary/a1-a2/341-e1a62e6fe681f7c1.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_009": [
+    "cautious",
+    "/audio/vocabulary/a1-a2/342-de6bc5cb65adeea3.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_010": [
+    "conscientious",
+    "/audio/vocabulary/a1-a2/343-fa8ec5958dff8a34.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_011": [
+    "courageous",
+    "/audio/vocabulary/a1-a2/344-cd031e45dc852175.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_012": [
+    "crafty",
+    "/audio/vocabulary/a1-a2/345-63969ee4385fdcba.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_013": [
+    "cunning",
+    "/audio/vocabulary/a1-a2/346-6fb5d7c3f00df6ee.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_014": [
+    "deceitful",
+    "/audio/vocabulary/a1-a2/347-c4d61287c04b9bdc.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_015": [
+    "decent",
+    "/audio/vocabulary/a1-a2/348-31ae1b320e7534bd.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_016": [
+    "dependable",
+    "/audio/vocabulary/a1-a2/349-218451183f468101.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_017": [
+    "determined",
+    "/audio/vocabulary/a1-a2/350-f1e027082094dffd.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_018": [
+    "devoted",
+    "/audio/vocabulary/a1-a2/351-7cd47effcb06160f.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_019": [
+    "diligent",
+    "/audio/vocabulary/a1-a2/352-03ac1074e4bf4eda.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_020": [
+    "disciplined",
+    "/audio/vocabulary/a1-a2/353-1de15227f58f626b.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_021": [
+    "dishonest",
+    "/audio/vocabulary/a1-a2/354-4689106c2985b596.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_022": [
+    "disloyal",
+    "/audio/vocabulary/a1-a2/355-386d33e045f11f82.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_023": [
+    "energetic",
+    "/audio/vocabulary/a1-a2/356-53453dfec27a9dba.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_024": [
+    "fair",
+    "/audio/vocabulary/a1-a2/357-ac2076e1ced1723a.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_025": [
+    "faithful",
+    "/audio/vocabulary/a1-a2/358-bc9a0a04d111be28.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_026": [
+    "fearless",
+    "/audio/vocabulary/a1-a2/359-15c124f985ff4d5e.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_027": [
+    "forgetful",
+    "/audio/vocabulary/a1-a2/360-c1441abbd8805d3f.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_028": [
+    "hard-headed",
+    "/audio/vocabulary/a1-a2/361-b7c035144486a45c.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_029": [
+    "hardworking",
+    "/audio/vocabulary/a1-a2/362-7fa7f25fdc846990.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_030": [
+    "hardy",
+    "/audio/vocabulary/a1-a2/363-485ac5e7ca56ca0b.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_031": [
+    "honest",
+    "/audio/vocabulary/a1-a2/364-77e519dfe8306f67.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_032": [
+    "idle",
+    "/audio/vocabulary/a1-a2/365-73ad6460d9b19797.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_033": [
+    "immature",
+    "/audio/vocabulary/a1-a2/366-bc5bd7de4603488f.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_034": [
+    "impartial",
+    "/audio/vocabulary/a1-a2/367-b12cc727904e4bb7.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_035": [
+    "inattentive",
+    "/audio/vocabulary/a1-a2/368-48094250fa525773.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_036": [
+    "independent",
+    "/audio/vocabulary/a1-a2/369-8a1e9e3f5b5d3474.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_037": [
+    "inert",
+    "/audio/vocabulary/a1-a2/370-51d39820a7a3fd39.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_038": [
+    "insightful",
+    "/audio/vocabulary/a1-a2/371-69a6596a6bee3239.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_039": [
+    "insincere",
+    "/audio/vocabulary/a1-a2/372-73dded13ea629a97.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_040": [
+    "irrational",
+    "/audio/vocabulary/a1-a2/373-19b678e499cb2c34.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_041": [
+    "irresponsible",
+    "/audio/vocabulary/a1-a2/374-2ca9d1737413343e.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_042": [
+    "lazy",
+    "/audio/vocabulary/a1-a2/375-b99d36466c768514.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_043": [
+    "level-headed",
+    "/audio/vocabulary/a1-a2/376-24ee796c2e938ced.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_044": [
+    "loyal",
+    "/audio/vocabulary/a1-a2/377-aa0e6139fd9577c5.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_045": [
+    "mature",
+    "/audio/vocabulary/a1-a2/378-db6841e6b58a3323.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_046": [
+    "methodical",
+    "/audio/vocabulary/a1-a2/379-a099ee37261f6b1a.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_047": [
+    "naive",
+    "/audio/vocabulary/a1-a2/380-e76c9512509bc4cb.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_048": [
+    "objective",
+    "/audio/vocabulary/a1-a2/381-c32b770617e3d035.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_049": [
+    "observant",
+    "/audio/vocabulary/a1-a2/382-8e11d09feccec250.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_050": [
+    "opinionated",
+    "/audio/vocabulary/a1-a2/383-9394c461d4ebec52.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_051": [
+    "organized",
+    "/audio/vocabulary/a1-a2/384-058f599caf1243b9.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_052": [
+    "passive",
+    "/audio/vocabulary/a1-a2/385-7aae1dc7ea023794.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_053": [
+    "perceptive",
+    "/audio/vocabulary/a1-a2/386-5bc0fa7e258f1bc0.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_054": [
+    "persevering",
+    "/audio/vocabulary/a1-a2/387-59db57352bb4de90.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_055": [
+    "practical",
+    "/audio/vocabulary/a1-a2/388-7ad9b6cb7404d277.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_056": [
+    "prudent",
+    "/audio/vocabulary/a1-a2/389-24a683cf2d5ae207.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_057": [
+    "quick",
+    "/audio/vocabulary/a1-a2/390-87063c6d401a0666.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_058": [
+    "rational",
+    "/audio/vocabulary/a1-a2/391-a340b68b81df04f2.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_059": [
+    "reasonable",
+    "/audio/vocabulary/a1-a2/392-75d34ce3e275444b.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_060": [
+    "reckless",
+    "/audio/vocabulary/a1-a2/393-954bbe4ec4539a1c.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_061": [
+    "reliable",
+    "/audio/vocabulary/a1-a2/394-ac06e53c681d6a27.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_062": [
+    "resolute",
+    "/audio/vocabulary/a1-a2/395-a6ba7e93eb5ac585.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_063": [
+    "responsible",
+    "/audio/vocabulary/a1-a2/396-ebd8476fb53e7b52.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_064": [
+    "scrupulous",
+    "/audio/vocabulary/a1-a2/397-42b496c800f32842.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_065": [
+    "sensible",
+    "/audio/vocabulary/a1-a2/398-cc274e4a9c75875c.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_066": [
+    "shallow",
+    "/audio/vocabulary/a1-a2/399-68c0b63d10d50b0c.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_067": [
+    "shrewd",
+    "/audio/vocabulary/a1-a2/400-186d91c61f6c2c11.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_068": [
+    "sincere",
+    "/audio/vocabulary/a1-a2/401-4a32e7861506a95b.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_069": [
+    "slow",
+    "/audio/vocabulary/a1-a2/402-1aaf3eb36b07b832.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_070": [
+    "sluggish",
+    "/audio/vocabulary/a1-a2/403-704aa7ad5f34b9fb.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_071": [
+    "sly",
+    "/audio/vocabulary/a1-a2/404-20f8a6c509664520.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_072": [
+    "strong",
+    "/audio/vocabulary/a1-a2/405-49e384e660286cf7.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_073": [
+    "strong-minded",
+    "/audio/vocabulary/a1-a2/406-60dbc0a1d3f9c7c0.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_074": [
+    "strong-willed",
+    "/audio/vocabulary/a1-a2/407-70d26797bdbe9b3b.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_075": [
+    "stubborn",
+    "/audio/vocabulary/a1-a2/408-e8d8388437cfda2d.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_076": [
+    "superficial",
+    "/audio/vocabulary/a1-a2/409-4664263ff3923e03.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_077": [
+    "superstitious",
+    "/audio/vocabulary/a1-a2/410-d623e2fb3a0895e0.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_078": [
+    "thorough",
+    "/audio/vocabulary/a1-a2/411-00642fd9490916b4.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_079": [
+    "timid",
+    "/audio/vocabulary/a1-a2/412-9115d2fd0442f948.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_080": [
+    "tough",
+    "/audio/vocabulary/a1-a2/413-9b689d2c76d98b60.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_081": [
+    "treacherous",
+    "/audio/vocabulary/a1-a2/414-96ddb6612fb5ab05.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_082": [
+    "trustworthy",
+    "/audio/vocabulary/a1-a2/415-1bfdf18672a890c9.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_083": [
+    "truthful",
+    "/audio/vocabulary/a1-a2/416-21af8ceb56148f42.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_084": [
+    "unbiased",
+    "/audio/vocabulary/a1-a2/417-436a54bb0fc2faa0.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_085": [
+    "unpredictable",
+    "/audio/vocabulary/a1-a2/418-e86aa051f527c205.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_086": [
+    "unreasonable",
+    "/audio/vocabulary/a1-a2/419-c3dcf4f979e9f852.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_087": [
+    "unreliable",
+    "/audio/vocabulary/a1-a2/420-313fcb2df2008993.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_088": [
+    "unscrupulous",
+    "/audio/vocabulary/a1-a2/421-3c647bc0e0a9c106.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_089": [
+    "vigorous",
+    "/audio/vocabulary/a1-a2/422-8b347b1934cc0c9a.mp3"
+  ],
+  "A1_A2-A1_A2_PERSONALITY_090": [
+    "weak",
+    "/audio/vocabulary/a1-a2/423-1a74b5b224230a87.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_001": [
+    "backpack",
+    "/audio/vocabulary/a1-a2/038-94beb7c4b057634b.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_002": [
+    "ballpoint pen",
+    "/audio/vocabulary/a1-a2/039-088fbfbf164546e4.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_003": [
+    "beaker",
+    "/audio/vocabulary/a1-a2/040-a247c95a1eaed7b0.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_004": [
+    "binder",
+    "/audio/vocabulary/a1-a2/041-67b03304eb790836.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_005": [
+    "blackboard",
+    "/audio/vocabulary/a1-a2/042-a29a2be1ff005d1f.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_006": [
+    "book",
+    "/audio/vocabulary/a1-a2/043-b7e88c09dcd53fc5.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_007": [
+    "calculator",
+    "/audio/vocabulary/a1-a2/044-a73b2ea2c539c32a.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_008": [
+    "chair",
+    "/audio/vocabulary/a1-a2/045-aa70785fee8fdf36.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_009": [
+    "clip",
+    "/audio/vocabulary/a1-a2/046-c92446ad21972cd9.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_010": [
+    "clock",
+    "/audio/vocabulary/a1-a2/047-3fbf31925c29b701.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_011": [
+    "compass",
+    "/audio/vocabulary/a1-a2/048-b886a4b23f2ada80.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_012": [
+    "computer",
+    "/audio/vocabulary/a1-a2/049-5e328ee2c6939000.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_013": [
+    "desk",
+    "/audio/vocabulary/a1-a2/050-076a1b02323e15c1.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_014": [
+    "eraser",
+    "/audio/vocabulary/a1-a2/051-bbf247a083c3058b.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_015": [
+    "funnel",
+    "/audio/vocabulary/a1-a2/052-54508cc244f7e55d.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_016": [
+    "globe",
+    "/audio/vocabulary/a1-a2/053-11a72bbe284ca5e6.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_017": [
+    "glue",
+    "/audio/vocabulary/a1-a2/054-f7b3669f3ac69871.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_018": [
+    "highlighter",
+    "/audio/vocabulary/a1-a2/055-9ebdf3fcee3c48ee.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_019": [
+    "magnifying glass",
+    "/audio/vocabulary/a1-a2/056-0c130184edaebbd5.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_020": [
+    "map",
+    "/audio/vocabulary/a1-a2/057-2b5cd79defb1212c.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_021": [
+    "paintbrush",
+    "/audio/vocabulary/a1-a2/058-dd4408534feb3ff7.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_022": [
+    "paper",
+    "/audio/vocabulary/a1-a2/059-27cc9c9ddea3ecce.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_023": [
+    "pin",
+    "/audio/vocabulary/a1-a2/060-1692ecaafd43ae5d.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_024": [
+    "protractor",
+    "/audio/vocabulary/a1-a2/061-35c3327ae8d3b3f9.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_025": [
+    "scissors",
+    "/audio/vocabulary/a1-a2/062-9eedfd2e91e1835f.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_026": [
+    "Scotch tape",
+    "/audio/vocabulary/a1-a2/063-9a54a8f2f8053020.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_027": [
+    "set square",
+    "/audio/vocabulary/a1-a2/064-aa1d95d4fe4d86f3.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_028": [
+    "stapler",
+    "/audio/vocabulary/a1-a2/065-94d0daeb4be2cff1.mp3"
+  ],
+  "A1_A2-A1_A2_SCHOOL_OBJECTS_029": [
+    "test tube",
+    "/audio/vocabulary/a1-a2/066-c3d62dba216965ef.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_001": [
+    "arrow",
+    "/audio/vocabulary/a1-a2/827-38ddf88f48cb6b7d.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_002": [
+    "circle",
+    "/audio/vocabulary/a1-a2/828-591fcd201c0a8410.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_003": [
+    "cone",
+    "/audio/vocabulary/a1-a2/829-c71488d49d4c9374.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_004": [
+    "crescent",
+    "/audio/vocabulary/a1-a2/830-8c7f8d8abd4bbb04.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_005": [
+    "cross",
+    "/audio/vocabulary/a1-a2/831-f4b2583a8c5d5bc8.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_006": [
+    "cube",
+    "/audio/vocabulary/a1-a2/832-1e52c8b6bd395b00.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_007": [
+    "curve",
+    "/audio/vocabulary/a1-a2/833-d6ec46272068b293.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_008": [
+    "cylinder",
+    "/audio/vocabulary/a1-a2/834-85b4002d5a787d01.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_009": [
+    "decagon",
+    "/audio/vocabulary/a1-a2/835-06b4374ca90df84b.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_010": [
+    "diamond",
+    "/audio/vocabulary/a1-a2/836-9da2d3b1663199f8.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_011": [
+    "ellipse",
+    "/audio/vocabulary/a1-a2/837-bf818477a063e551.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_012": [
+    "equilateral triangle",
+    "/audio/vocabulary/a1-a2/838-30ef07d38d8cca54.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_013": [
+    "heart",
+    "/audio/vocabulary/a1-a2/839-a97913fd443cb25d.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_014": [
+    "heptagon",
+    "/audio/vocabulary/a1-a2/840-3f3190ae22d053f7.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_015": [
+    "hexagon",
+    "/audio/vocabulary/a1-a2/841-da7450a7ddc30beb.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_016": [
+    "isosceles triangle",
+    "/audio/vocabulary/a1-a2/842-b2ae16efb4b6f45b.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_017": [
+    "nonagon",
+    "/audio/vocabulary/a1-a2/843-1ef7973822599cd5.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_018": [
+    "octagon",
+    "/audio/vocabulary/a1-a2/844-8ed1934b0d802ba1.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_019": [
+    "orb",
+    "/audio/vocabulary/a1-a2/845-1a49477a8330c140.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_020": [
+    "oval",
+    "/audio/vocabulary/a1-a2/846-da2146e5d75101d2.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_021": [
+    "parallelogram",
+    "/audio/vocabulary/a1-a2/847-ca894b848c5fd49c.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_022": [
+    "pentagon",
+    "/audio/vocabulary/a1-a2/848-cbe36ac210fb7668.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_023": [
+    "pyramid",
+    "/audio/vocabulary/a1-a2/849-ae36c58c69d73d2d.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_024": [
+    "rectangle",
+    "/audio/vocabulary/a1-a2/850-0b95fb9495816f6c.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_025": [
+    "rhombus",
+    "/audio/vocabulary/a1-a2/851-c814e1d6a7abb116.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_026": [
+    "right-angled triangle",
+    "/audio/vocabulary/a1-a2/852-fb4d81aa6a5f4932.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_027": [
+    "scalene triangle",
+    "/audio/vocabulary/a1-a2/853-e909560845ee1998.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_028": [
+    "semicircle",
+    "/audio/vocabulary/a1-a2/854-aa2abc8922b0a776.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_029": [
+    "sphere",
+    "/audio/vocabulary/a1-a2/855-8e4a0a4098685060.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_030": [
+    "square",
+    "/audio/vocabulary/a1-a2/856-ef59df247c497e16.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_031": [
+    "star",
+    "/audio/vocabulary/a1-a2/857-c12ca163067d8cf6.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_032": [
+    "trapezoid",
+    "/audio/vocabulary/a1-a2/858-e0b193818c5bfd57.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_033": [
+    "triangle",
+    "/audio/vocabulary/a1-a2/859-2a3a0e7d084cacfd.mp3"
+  ],
+  "A1_A2-A1_A2_SHAPES_034": [
+    "wedge",
+    "/audio/vocabulary/a1-a2/860-41f0fd8fff44d52e.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_001": [
+    "aerial",
+    "/audio/vocabulary/a1-a2/861-435c2383ff8de3fe.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_002": [
+    "aerial tramway",
+    "/audio/vocabulary/a1-a2/862-cef3ff15bc6522fd.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_003": [
+    "airplane",
+    "/audio/vocabulary/a1-a2/863-acdbc96a68cfa483.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_004": [
+    "airship",
+    null
+  ],
+  "A1_A2-A1_A2_TRANSPORT_005": [
+    "ambulance",
+    "/audio/vocabulary/a1-a2/865-e371b282236b39a0.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_006": [
+    "automobile",
+    "/audio/vocabulary/a1-a2/866-41b81aaf2d331e62.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_007": [
+    "baby carriage",
+    "/audio/vocabulary/a1-a2/867-8b27643822014a3a.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_008": [
+    "bicycle",
+    "/audio/vocabulary/a1-a2/868-aa6c0c9d04a57101.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_009": [
+    "boat",
+    "/audio/vocabulary/a1-a2/869-ae70b6beb869b832.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_010": [
+    "bus",
+    "/audio/vocabulary/a1-a2/870-ad004b1fd9ce9ce6.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_011": [
+    "carriage",
+    "/audio/vocabulary/a1-a2/871-5411365430896417.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_012": [
+    "cement mixer",
+    "/audio/vocabulary/a1-a2/872-5bb9457a41e40067.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_013": [
+    "crane",
+    "/audio/vocabulary/a1-a2/873-4365de64409f7263.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_014": [
+    "dump truck",
+    "/audio/vocabulary/a1-a2/874-aaf2e17241bf36e9.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_015": [
+    "emergency brake",
+    null
+  ],
+  "A1_A2-A1_A2_TRANSPORT_016": [
+    "fire engine",
+    "/audio/vocabulary/a1-a2/876-22c861ae8e66ab44.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_017": [
+    "forklift",
+    "/audio/vocabulary/a1-a2/877-791942e299d80fa1.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_018": [
+    "helicopter",
+    "/audio/vocabulary/a1-a2/878-f428afe17226f898.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_019": [
+    "motorcycle",
+    "/audio/vocabulary/a1-a2/879-30a1b4775ca54c45.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_020": [
+    "mountain bike",
+    "/audio/vocabulary/a1-a2/880-bd60ab7904ce0392.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_021": [
+    "police car",
+    "/audio/vocabulary/a1-a2/881-e24eb17f1af0dab2.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_022": [
+    "propeller",
+    "/audio/vocabulary/a1-a2/882-195262e2a10b9259.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_023": [
+    "rearview mirror",
+    "/audio/vocabulary/a1-a2/883-abe6a154faec65e8.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_024": [
+    "rowboat",
+    "/audio/vocabulary/a1-a2/884-df0bc70fcea878ea.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_025": [
+    "scooter",
+    "/audio/vocabulary/a1-a2/885-95536f4f327bc501.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_026": [
+    "seatbelt",
+    "/audio/vocabulary/a1-a2/886-557671396c3b3577.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_027": [
+    "skateboard",
+    "/audio/vocabulary/a1-a2/887-f9c179abd21271ef.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_028": [
+    "streetcar",
+    "/audio/vocabulary/a1-a2/888-dc669a8e572eaaf0.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_029": [
+    "subway",
+    "/audio/vocabulary/a1-a2/889-03d7584fbfd74523.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_030": [
+    "taxi",
+    "/audio/vocabulary/a1-a2/890-3034b91af2cb2ff0.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_031": [
+    "tractor",
+    "/audio/vocabulary/a1-a2/891-09db903416b5e6cc.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_032": [
+    "train",
+    "/audio/vocabulary/a1-a2/892-21953782e761eb6f.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_033": [
+    "tramway",
+    "/audio/vocabulary/a1-a2/893-2b97eeea11f5da30.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_034": [
+    "van",
+    "/audio/vocabulary/a1-a2/894-6894d70f826f2f4d.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_035": [
+    "vehicle",
+    "/audio/vocabulary/a1-a2/895-342126afc0d6a7df.mp3"
+  ],
+  "A1_A2-A1_A2_TRANSPORT_036": [
+    "windshield wiper",
+    null
+  ],
+  "A1_A2-A1_A2_TRAVEL_001": [
+    "airport",
+    "/audio/vocabulary/a1-a2/897-9bb9d10a074f8b77.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_002": [
+    "arrive",
+    "/audio/vocabulary/a1-a2/898-b1d2dda2d55cd1e3.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_003": [
+    "check-in",
+    "/audio/vocabulary/a1-a2/899-451057d6dfa9ee8f.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_004": [
+    "cruise",
+    "/audio/vocabulary/a1-a2/900-304b9e40aa7638bd.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_005": [
+    "depart",
+    "/audio/vocabulary/a1-a2/901-88b80d4fa5df4424.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_006": [
+    "destination",
+    "/audio/vocabulary/a1-a2/902-e8ffbb2ccce4845f.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_007": [
+    "expedition",
+    "/audio/vocabulary/a1-a2/903-6454b59569d7f5ba.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_008": [
+    "journey",
+    "/audio/vocabulary/a1-a2/904-8868d8443fda2a08.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_009": [
+    "land",
+    "/audio/vocabulary/a1-a2/905-062c31ce5049df13.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_010": [
+    "leave",
+    "/audio/vocabulary/a1-a2/906-23123a2205b33fa5.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_011": [
+    "passenger",
+    "/audio/vocabulary/a1-a2/907-27816e156d17bdc5.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_012": [
+    "route",
+    "/audio/vocabulary/a1-a2/908-0d22a580571c7e94.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_013": [
+    "safari",
+    "/audio/vocabulary/a1-a2/909-d9d5a58697d913dd.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_014": [
+    "tour",
+    "/audio/vocabulary/a1-a2/910-e2dd45260e1adf40.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_015": [
+    "travel",
+    "/audio/vocabulary/a1-a2/911-ddaa20a1e064b74a.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_016": [
+    "trip",
+    "/audio/vocabulary/a1-a2/912-6adca13aff94fe1e.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_017": [
+    "visit",
+    "/audio/vocabulary/a1-a2/913-3f97b077a2bd4e24.mp3"
+  ],
+  "A1_A2-A1_A2_TRAVEL_018": [
+    "voyage",
+    "/audio/vocabulary/a1-a2/914-b7db1171fa640669.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_001": [
+    "Absent",
+    "/audio/vocabulary/b1/001-d48eec7be8137b49.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_002": [
+    "Achieve",
+    "/audio/vocabulary/b1/002-4e88e604d29e1317.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_003": [
+    "By heart",
+    "/audio/vocabulary/b1/003-514f3fd0be235481.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_004": [
+    "Cheat",
+    "/audio/vocabulary/b1/004-f1bc84f27d59db5d.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_005": [
+    "Classroom",
+    "/audio/vocabulary/b1/005-05235e2e93978b9d.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_006": [
+    "Clever",
+    "/audio/vocabulary/b1/006-2c6e8e887589b6f9.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_007": [
+    "Course",
+    "/audio/vocabulary/b1/007-0f649e9da5af59ef.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_008": [
+    "Curriculum",
+    "/audio/vocabulary/b1/008-c95df21fe7758ee7.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_009": [
+    "Degree",
+    "/audio/vocabulary/b1/009-62b1de19067bba68.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_010": [
+    "Essay",
+    "/audio/vocabulary/b1/010-bb25e02a938284e2.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_011": [
+    "Good at",
+    "/audio/vocabulary/b1/011-f407f37ab98c4133.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_012": [
+    "Homework",
+    "/audio/vocabulary/b1/012-a5c2b15fcd483876.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_013": [
+    "Instructor",
+    "/audio/vocabulary/b1/013-49e4c4baa9f122d8.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_014": [
+    "Laboratory (Lab)",
+    "/audio/vocabulary/b1/014-a51e80552263db30.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_015": [
+    "Learn about",
+    "/audio/vocabulary/b1/015-605b2a3dfcf5c3c4.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_016": [
+    "Mark",
+    "/audio/vocabulary/b1/016-76277dbc471245fd.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_017": [
+    "Memorize",
+    "/audio/vocabulary/b1/017-ab5c1333f2413b5a.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_018": [
+    "Primary school",
+    "/audio/vocabulary/b1/018-fd5fc246bf34adf2.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_019": [
+    "Project",
+    "/audio/vocabulary/b1/019-c7ea8cd46480918c.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_020": [
+    "Pupil",
+    "/audio/vocabulary/b1/020-11e546b1976dd0e1.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_021": [
+    "Research",
+    "/audio/vocabulary/b1/021-df49d58d2c76a244.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_022": [
+    "Secondary school",
+    "/audio/vocabulary/b1/022-b44ac87da70c370c.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_023": [
+    "Subject",
+    "/audio/vocabulary/b1/023-a586708ee02640c9.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_024": [
+    "Take an exam",
+    "/audio/vocabulary/b1/024-676edfe58a53c176.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_025": [
+    "Term",
+    "/audio/vocabulary/b1/025-1f877f27beeae96c.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_026": [
+    "University",
+    "/audio/vocabulary/b1/026-7e99f6b1d10570ec.mp3"
+  ],
+  "VSTEP_B1-B1_EDUCATION_027": [
+    "Write down",
+    "/audio/vocabulary/b1/027-63addd12701c2625.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_001": [
+    "Aware of",
+    "/audio/vocabulary/b1/192-ea53ba4a9ef13c17.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_002": [
+    "Climate change",
+    "/audio/vocabulary/b1/193-e40542e1507c3ed5.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_003": [
+    "Damage to",
+    "/audio/vocabulary/b1/194-58a7be570dde7e52.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_004": [
+    "Earth",
+    "/audio/vocabulary/b1/195-80eeaf176597c8d8.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_005": [
+    "Environmentalist",
+    "/audio/vocabulary/b1/196-0e9080399b620e4b.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_006": [
+    "Extinct",
+    "/audio/vocabulary/b1/197-0a12b3484e615717.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_007": [
+    "Petrol",
+    "/audio/vocabulary/b1/198-4e957e9437763fc2.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_008": [
+    "Increase",
+    "/audio/vocabulary/b1/199-91cc9b082c73534c.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_009": [
+    "Insect",
+    "/audio/vocabulary/b1/200-5837d13bf32dd6d7.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_010": [
+    "Jungle",
+    "/audio/vocabulary/b1/201-a107dddd9ad1b8ef.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_011": [
+    "Landscape",
+    "/audio/vocabulary/b1/202-909311ca0e8be822.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_012": [
+    "Litter",
+    "/audio/vocabulary/b1/203-f32683ea9cdc43f5.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_013": [
+    "Nature",
+    "/audio/vocabulary/b1/204-37d82d14ca8abcdc.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_014": [
+    "Ocean",
+    "/audio/vocabulary/b1/205-5e4d8bcd5c3711a2.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_015": [
+    "Pollution",
+    "/audio/vocabulary/b1/206-0783317f01e13215.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_016": [
+    "Preserve",
+    "/audio/vocabulary/b1/207-1c70d67e44d401af.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_017": [
+    "Prevent someone from",
+    null
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_018": [
+    "Rainforest",
+    "/audio/vocabulary/b1/209-773b38f223fceaa1.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_019": [
+    "Recycle",
+    "/audio/vocabulary/b1/210-26ec7b56a996d92e.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_020": [
+    "Species",
+    "/audio/vocabulary/b1/211-ace843008dd6d025.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_021": [
+    "Waste",
+    "/audio/vocabulary/b1/212-f3d9095345a4c255.mp3"
+  ],
+  "VSTEP_B1-B1_ENVIRONMENT_022": [
+    "Wildlife",
+    "/audio/vocabulary/b1/213-ef51860ed879ac62.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_001": [
+    "Ache",
+    "/audio/vocabulary/b1/141-c46a5e9438eee4de.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_002": [
+    "Allergic to",
+    "/audio/vocabulary/b1/142-0b0652f8dbcbbc3d.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_003": [
+    "Bandage",
+    "/audio/vocabulary/b1/143-bde35a56e4e32e5a.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_004": [
+    "Bleed",
+    "/audio/vocabulary/b1/144-80e83b254fde068e.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_005": [
+    "Checkup",
+    "/audio/vocabulary/b1/145-65ae7358d2aeb98d.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_006": [
+    "Cold",
+    "/audio/vocabulary/b1/146-890962a7de520111.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_007": [
+    "Cure",
+    "/audio/vocabulary/b1/147-db0ff17b57b60d93.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_008": [
+    "Cut",
+    "/audio/vocabulary/b1/148-54665e1d90ab3cd8.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_009": [
+    "Diet",
+    "/audio/vocabulary/b1/149-a9f2aa9353e201f9.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_010": [
+    "Doctor",
+    "/audio/vocabulary/b1/150-e65bf68904baed7d.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_011": [
+    "Emergency",
+    "/audio/vocabulary/b1/151-829d1a844830d76c.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_012": [
+    "Exercise",
+    "/audio/vocabulary/b1/152-6494dfab3ca2ac00.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_013": [
+    "Fever",
+    "/audio/vocabulary/b1/153-651c208b8f407550.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_014": [
+    "Get better",
+    "/audio/vocabulary/b1/154-587552991243e5c2.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_015": [
+    "Gym",
+    "/audio/vocabulary/b1/155-f62b8c4c339138cc.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_016": [
+    "Healthy",
+    "/audio/vocabulary/b1/156-da86fc7b09ba6485.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_017": [
+    "Medicine",
+    "/audio/vocabulary/b1/157-d2c7dac6ec18e3f1.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_018": [
+    "Operation",
+    "/audio/vocabulary/b1/158-82b15ed584ffcca3.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_019": [
+    "Pharmacy",
+    "/audio/vocabulary/b1/159-d82524c9428ff873.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_020": [
+    "Prescription",
+    "/audio/vocabulary/b1/160-932911f87c209ef4.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_021": [
+    "Recover from",
+    "/audio/vocabulary/b1/161-0b427602502c5252.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_022": [
+    "Rest",
+    "/audio/vocabulary/b1/162-aa4df7a94ec7399b.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_023": [
+    "Sore throat",
+    "/audio/vocabulary/b1/163-b3498c2708dbefcf.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_024": [
+    "Suffer from",
+    null
+  ],
+  "VSTEP_B1-B1_HEALTH_025": [
+    "Unwell",
+    "/audio/vocabulary/b1/165-474d1a738cb9c757.mp3"
+  ],
+  "VSTEP_B1-B1_HEALTH_026": [
+    "Vitamin",
+    "/audio/vocabulary/b1/166-92996481846bf03a.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_001": [
+    "Board game",
+    "/audio/vocabulary/b1/073-28778fd4676b933a.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_002": [
+    "Cook",
+    "/audio/vocabulary/b1/074-40a3defb7ddc06c3.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_003": [
+    "Cycling",
+    "/audio/vocabulary/b1/075-bbee8703c61cb058.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_004": [
+    "Entertainment",
+    "/audio/vocabulary/b1/076-b92aba6c06b1e1c8.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_005": [
+    "Enthusiast",
+    "/audio/vocabulary/b1/077-f698ca5833307b5e.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_006": [
+    "Exercise",
+    "/audio/vocabulary/b1/078-6494dfab3ca2ac00.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_007": [
+    "Gardening",
+    "/audio/vocabulary/b1/079-d64928a30363cd31.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_008": [
+    "Indoor",
+    "/audio/vocabulary/b1/080-960c381d6a98d289.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_009": [
+    "Interested in",
+    "/audio/vocabulary/b1/081-1c8b75b1c9fc4375.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_010": [
+    "Listen to",
+    "/audio/vocabulary/b1/082-28c4abbb6027f70f.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_011": [
+    "Martial arts",
+    "/audio/vocabulary/b1/083-b3c76f2e8e11148c.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_012": [
+    "Pastime",
+    "/audio/vocabulary/b1/084-94995f3f488cfc09.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_013": [
+    "Play an instrument",
+    "/audio/vocabulary/b1/085-d180efecdf6de744.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_014": [
+    "Read",
+    "/audio/vocabulary/b1/086-2a5b7acbde251a6b.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_015": [
+    "Relaxing",
+    "/audio/vocabulary/b1/087-35812b1728b9c136.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_016": [
+    "Sewing",
+    "/audio/vocabulary/b1/088-10cfb40492da3fbf.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_017": [
+    "Sports",
+    "/audio/vocabulary/b1/089-f2fc58223dc60bed.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_018": [
+    "Stressed out",
+    "/audio/vocabulary/b1/090-4c62d93c956b449c.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_019": [
+    "Swim",
+    "/audio/vocabulary/b1/091-640ba304fc3d533c.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_020": [
+    "Take part in",
+    "/audio/vocabulary/b1/092-34a560c91a5e77b8.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_021": [
+    "Take up",
+    "/audio/vocabulary/b1/093-1efd0d6d9d163fa5.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_022": [
+    "Video game",
+    "/audio/vocabulary/b1/094-fbe5eeeb4bfb1353.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_023": [
+    "Watch TV",
+    "/audio/vocabulary/b1/095-1c9d6157887f8096.mp3"
+  ],
+  "VSTEP_B1-B1_HOBBY_024": [
+    "Go out",
+    "/audio/vocabulary/b1/096-aeff96c0772b7a8a.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_001": [
+    "Accommodation",
+    "/audio/vocabulary/b1/167-927dba6fb027f84f.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_002": [
+    "Address",
+    "/audio/vocabulary/b1/168-1241db0b5647d3ea.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_003": [
+    "Apartment / flat",
+    "/audio/vocabulary/b1/169-abe7846baa2e72ba.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_004": [
+    "Architecture",
+    "/audio/vocabulary/b1/170-0d90a01dbadf1c5f.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_005": [
+    "Balcony",
+    "/audio/vocabulary/b1/171-3405fbb2318c4de2.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_006": [
+    "Bedroom",
+    "/audio/vocabulary/b1/172-347d3ea054a15862.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_007": [
+    "Build",
+    "/audio/vocabulary/b1/173-3bf8e92533cccdce.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_008": [
+    "Cottage",
+    "/audio/vocabulary/b1/174-2ce275219b0061d7.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_009": [
+    "Cozy",
+    "/audio/vocabulary/b1/175-d0889728f58dd47d.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_010": [
+    "Cupboard",
+    "/audio/vocabulary/b1/176-0c4bb9c733780197.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_011": [
+    "Dining room",
+    "/audio/vocabulary/b1/177-c4e9aa551297ce14.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_012": [
+    "Do the laundry",
+    "/audio/vocabulary/b1/178-f20f6e62a347702a.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_013": [
+    "Furnished",
+    "/audio/vocabulary/b1/179-083e5992d8cf7f6c.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_014": [
+    "Garage",
+    "/audio/vocabulary/b1/180-5e6411d4f7039b42.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_015": [
+    "Ground floor",
+    "/audio/vocabulary/b1/181-15cc3b80e0401651.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_016": [
+    "Housework",
+    "/audio/vocabulary/b1/182-b6a434ba0e2fa664.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_017": [
+    "Kitchen",
+    "/audio/vocabulary/b1/183-dae73eaea732cfa5.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_018": [
+    "Move in / move out",
+    "/audio/vocabulary/b1/184-38c8ded878e447c2.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_019": [
+    "Pay rent",
+    "/audio/vocabulary/b1/185-42ac8e69510e1c13.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_020": [
+    "Refrigerator",
+    "/audio/vocabulary/b1/186-229cf4eedadd2aee.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_021": [
+    "Repair",
+    "/audio/vocabulary/b1/187-b3f2914e4c742320.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_022": [
+    "Roommate",
+    "/audio/vocabulary/b1/188-3a4761c4a47f39ab.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_023": [
+    "Spacious",
+    "/audio/vocabulary/b1/189-289abad36631e6d1.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_024": [
+    "Villa",
+    "/audio/vocabulary/b1/190-808ffbe1992d8e71.mp3"
+  ],
+  "VSTEP_B1-B1_HOUSE_025": [
+    "Washing machine",
+    "/audio/vocabulary/b1/191-38921d562827b187.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_001": [
+    "Admire",
+    "/audio/vocabulary/b1/049-92d29c4cd1a8baaa.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_002": [
+    "Anniversary",
+    "/audio/vocabulary/b1/050-c22b26f4659835c5.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_003": [
+    "Argue with someone about something",
+    null
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_004": [
+    "Bring up",
+    "/audio/vocabulary/b1/052-27fa185e79f1dc46.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_005": [
+    "Close-knit",
+    "/audio/vocabulary/b1/053-732dbe1c28780eda.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_006": [
+    "Family",
+    "/audio/vocabulary/b1/054-94da390f6ea82213.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_007": [
+    "Friendship",
+    "/audio/vocabulary/b1/055-b4ede4616d9f5df2.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_008": [
+    "Get on",
+    "/audio/vocabulary/b1/056-1c9063c73f3c5bb0.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_009": [
+    "Get together",
+    "/audio/vocabulary/b1/057-b558e846be07c7af.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_010": [
+    "Go out with",
+    "/audio/vocabulary/b1/058-04d3696820ca6cca.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_011": [
+    "Introduce",
+    "/audio/vocabulary/b1/059-75cc8fd2b9eeaeb7.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_012": [
+    "Jealous of",
+    "/audio/vocabulary/b1/060-36dbf6f91c5d1577.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_013": [
+    "Look after someone",
+    null
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_014": [
+    "Make friends with someone",
+    null
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_015": [
+    "Married to",
+    "/audio/vocabulary/b1/063-8e2d7c284bb0eba8.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_016": [
+    "Neighborhood",
+    "/audio/vocabulary/b1/064-bbece1af0e6dfa94.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_017": [
+    "Relative",
+    "/audio/vocabulary/b1/065-f8a7c23ee2c25bea.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_018": [
+    "Reliable",
+    "/audio/vocabulary/b1/066-ac06e53c681d6a27.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_019": [
+    "Romantic",
+    "/audio/vocabulary/b1/067-85f8f53de0e85139.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_020": [
+    "Support",
+    "/audio/vocabulary/b1/068-8f120b1f62918c71.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_021": [
+    "Visit a relative",
+    null
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_022": [
+    "Proud (of)",
+    "/audio/vocabulary/b1/070-64ca8391b8dd2b59.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_023": [
+    "Personality",
+    "/audio/vocabulary/b1/071-0ee75834f0d5e27a.mp3"
+  ],
+  "VSTEP_B1-B1_RELATIONSHIP_024": [
+    "Quality time",
+    "/audio/vocabulary/b1/072-d2966d2939913280.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_001": [
+    "Access",
+    "/audio/vocabulary/b1/117-c205283f8aa4a707.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_002": [
+    "App",
+    "/audio/vocabulary/b1/118-cafbb29b64a4381a.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_003": [
+    "Break down",
+    "/audio/vocabulary/b1/119-df643e4009bdb0aa.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_004": [
+    "Connect something to",
+    "/audio/vocabulary/b1/120-25649e1c9e69a97f.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_005": [
+    "Data",
+    "/audio/vocabulary/b1/121-61f49190ccc17c71.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_006": [
+    "Digital",
+    "/audio/vocabulary/b1/122-a3b8267aa19b346c.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_007": [
+    "Disconnect something from",
+    "/audio/vocabulary/b1/123-74f760ba180c64a0.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_008": [
+    "Electronic",
+    "/audio/vocabulary/b1/124-e7f1f53072688f00.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_009": [
+    "Email",
+    "/audio/vocabulary/b1/125-2a9eefa43d629f8e.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_010": [
+    "Equipment",
+    "/audio/vocabulary/b1/126-64d09181a3c38223.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_011": [
+    "Internet",
+    "/audio/vocabulary/b1/127-1319099c3e0013a5.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_012": [
+    "Interactive",
+    "/audio/vocabulary/b1/128-e1e1fd0ef1bff193.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_013": [
+    "Keep in touch with",
+    "/audio/vocabulary/b1/129-a538a873c8f3a628.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_014": [
+    "Laptop",
+    "/audio/vocabulary/b1/130-bb006c7e1ae003f7.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_015": [
+    "Modern",
+    "/audio/vocabulary/b1/131-dd071628e8ee2a56.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_016": [
+    "Programmer",
+    "/audio/vocabulary/b1/132-8719e8501165b4aa.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_017": [
+    "Secure",
+    "/audio/vocabulary/b1/133-5c4688cf8a16f1ba.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_018": [
+    "Sign up",
+    "/audio/vocabulary/b1/134-32c0792701479eb1.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_019": [
+    "Smartphone",
+    "/audio/vocabulary/b1/135-faf7e77683f21340.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_020": [
+    "Social media",
+    "/audio/vocabulary/b1/136-683594fcf250c8ca.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_021": [
+    "Upgrade",
+    "/audio/vocabulary/b1/137-86c250dacdd6eef0.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_022": [
+    "Upload",
+    "/audio/vocabulary/b1/138-bbfadb6601cf94fb.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_023": [
+    "User-friendly",
+    "/audio/vocabulary/b1/139-3437039a6f4ffb13.mp3"
+  ],
+  "VSTEP_B1-B1_TECHNOLOGY_024": [
+    "Up-to-date",
+    "/audio/vocabulary/b1/140-36eeba4c1e813097.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_001": [
+    "Abroad",
+    "/audio/vocabulary/b1/214-84e8b3fcca7ac433.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_002": [
+    "Airport",
+    "/audio/vocabulary/b1/215-9bb9d10a074f8b77.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_003": [
+    "Arrive at",
+    "/audio/vocabulary/b1/216-de6102e6269d1fa4.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_004": [
+    "Backpacker",
+    "/audio/vocabulary/b1/217-81473fdf1e32b89b.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_005": [
+    "Board",
+    "/audio/vocabulary/b1/218-025a874c943ef5d3.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_006": [
+    "Bus stop",
+    "/audio/vocabulary/b1/219-cb88bf9be9ccd822.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_007": [
+    "By air / by car / by rail / by sea",
+    null
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_008": [
+    "Check in",
+    "/audio/vocabulary/b1/221-b9a75be6f176dc55.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_009": [
+    "Cruise",
+    "/audio/vocabulary/b1/222-304b9e40aa7638bd.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_010": [
+    "Depart",
+    "/audio/vocabulary/b1/223-88b80d4fa5df4424.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_011": [
+    "Double room",
+    "/audio/vocabulary/b1/224-60d21054d5ef1b17.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_012": [
+    "Ferry",
+    "/audio/vocabulary/b1/225-ef023446abe79e6c.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_013": [
+    "Hotel",
+    "/audio/vocabulary/b1/226-07c1482ab262dd4e.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_014": [
+    "Luggage",
+    "/audio/vocabulary/b1/227-8c14a007c1d40b86.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_015": [
+    "On foot",
+    "/audio/vocabulary/b1/228-8cba3c3c81e7decf.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_016": [
+    "Reservation",
+    "/audio/vocabulary/b1/229-2e904cfe9d089178.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_017": [
+    "Souvenir",
+    "/audio/vocabulary/b1/230-bfdcf1a0ac3c98ba.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_018": [
+    "Subway",
+    "/audio/vocabulary/b1/231-03d7584fbfd74523.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_019": [
+    "Take off",
+    "/audio/vocabulary/b1/232-c53bac03ff6351e6.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_020": [
+    "Tourist",
+    "/audio/vocabulary/b1/233-8fa59a6e38fa0df4.mp3"
+  ],
+  "VSTEP_B1-B1_TRAVEL_TRANSPORT_021": [
+    "Vehicle",
+    "/audio/vocabulary/b1/234-342126afc0d6a7df.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_001": [
+    "Blow",
+    "/audio/vocabulary/b1/097-a38de373b30a4d76.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_002": [
+    "Breeze",
+    "/audio/vocabulary/b1/098-04d035c1e6ccc78e.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_003": [
+    "Cloudy",
+    "/audio/vocabulary/b1/099-c265c62fc2f2c712.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_004": [
+    "Degrees",
+    "/audio/vocabulary/b1/100-6445359b3b8381e9.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_005": [
+    "Drizzle",
+    "/audio/vocabulary/b1/101-fd61209dfa17de59.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_006": [
+    "Dry",
+    "/audio/vocabulary/b1/102-c1369feb5f1ced51.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_007": [
+    "Forecast",
+    "/audio/vocabulary/b1/103-5568851e068d0034.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_008": [
+    "Fog",
+    "/audio/vocabulary/b1/104-c5199df6fa0fc2a7.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_009": [
+    "Freezing",
+    "/audio/vocabulary/b1/105-3c585cdfd98baa05.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_010": [
+    "Humid",
+    "/audio/vocabulary/b1/106-8429f4077b09c998.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_011": [
+    "Icy",
+    "/audio/vocabulary/b1/107-e8478119fa560aab.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_012": [
+    "Lightning",
+    "/audio/vocabulary/b1/108-934131852f58430e.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_013": [
+    "Rain",
+    "/audio/vocabulary/b1/109-d284e87a1f763e9a.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_014": [
+    "Shower",
+    "/audio/vocabulary/b1/110-35f930d756a78906.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_015": [
+    "Snow",
+    "/audio/vocabulary/b1/111-21e8e7ade9e13d27.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_016": [
+    "Storm",
+    "/audio/vocabulary/b1/112-36705306f167ed80.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_017": [
+    "Sunny",
+    "/audio/vocabulary/b1/113-bb42f81787326e39.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_018": [
+    "Temperature",
+    "/audio/vocabulary/b1/114-34d9627c2f940552.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_019": [
+    "Warm",
+    "/audio/vocabulary/b1/115-61d054791b848dac.mp3"
+  ],
+  "VSTEP_B1-B1_WEATHER_020": [
+    "Windy",
+    "/audio/vocabulary/b1/116-a4a8aabf0010ac00.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_001": [
+    "Accountant",
+    "/audio/vocabulary/b1/028-d4573fe257e8f975.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_002": [
+    "Apply for",
+    "/audio/vocabulary/b1/029-04d0b0299f064c4d.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_003": [
+    "Assistant",
+    "/audio/vocabulary/b1/030-003c803279c67617.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_004": [
+    "Career",
+    "/audio/vocabulary/b1/031-c3533f7911675957.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_005": [
+    "Colleague",
+    "/audio/vocabulary/b1/032-f632d9e3b1625dce.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_006": [
+    "Contract",
+    "/audio/vocabulary/b1/033-0ed46883c5694342.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_007": [
+    "Director",
+    "/audio/vocabulary/b1/034-4356fb9e3e356d5f.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_008": [
+    "Employee",
+    "/audio/vocabulary/b1/035-cc83525e393a9dba.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_009": [
+    "Farming",
+    "/audio/vocabulary/b1/036-8314b8ddc10f11d6.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_010": [
+    "Full-time",
+    "/audio/vocabulary/b1/037-a632d399ff56e50a.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_011": [
+    "Income",
+    "/audio/vocabulary/b1/038-e7ce38e8c3e91a98.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_012": [
+    "Industry",
+    "/audio/vocabulary/b1/039-94c8b723867f1c1d.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_013": [
+    "Manage",
+    "/audio/vocabulary/b1/040-1df7faa959a76033.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_014": [
+    "Out of work",
+    "/audio/vocabulary/b1/041-96e5a914c5d52e00.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_015": [
+    "Profession",
+    "/audio/vocabulary/b1/042-4196d098835a76b1.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_016": [
+    "Promote",
+    "/audio/vocabulary/b1/043-f1b4d2cb270fc70f.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_017": [
+    "Retire",
+    "/audio/vocabulary/b1/044-b8da8eaa77a9f1a7.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_018": [
+    "Salary",
+    "/audio/vocabulary/b1/045-2f63d1b2f5c3c5de.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_019": [
+    "Successful",
+    "/audio/vocabulary/b1/046-799ef42e29dc64ca.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_020": [
+    "Tax",
+    "/audio/vocabulary/b1/047-84c8840e556e3aed.mp3"
+  ],
+  "VSTEP_B1-B1_WORK_021": [
+    "Work for",
+    "/audio/vocabulary/b1/048-bc11658e0efb5112.mp3"
+  ]
+}

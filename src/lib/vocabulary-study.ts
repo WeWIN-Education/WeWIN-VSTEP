@@ -3,8 +3,9 @@ import { Prisma } from "@prisma/client";
 import { randomUUID, createHash } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { STUDY_GOALS, reviewSchedule, studyScore, vietnamStudyDay } from "./vocabulary-study-rules";
+import { withVocabularyAudio } from "./vocabulary-audio";
 
-const entryFields = { id: true, term: true, meaningVi: true, ipa: true, partOfSpeech: true, exampleEn: true, exampleVi: true, audioUrl: true, topic: { select: { name: true } } } as const;
+const entryFields = { id: true, entryCode: true, term: true, meaningVi: true, ipa: true, partOfSpeech: true, exampleEn: true, exampleVi: true, audioUrl: true, topic: { select: { name: true } } } as const;
 type Tx = Prisma.TransactionClient;
 export class StudyError extends Error {
   constructor(message: string, public status = 400) { super(message); }
@@ -12,7 +13,7 @@ export class StudyError extends Error {
 
 async function entriesFor(tx: Tx, ids: string[]) {
   const entries = await tx.vocabularyEntry.findMany({ where: { id: { in: ids } }, select: entryFields });
-  const byId = new Map(entries.map(entry => [entry.id, entry]));
+  const byId = new Map(entries.map(entry => [entry.id, withVocabularyAudio(entry)]));
   return ids.flatMap(id => byId.has(id) ? [byId.get(id)!] : []);
 }
 
@@ -52,7 +53,7 @@ export async function startStudy(userId: string, goal: number) {
     if (!entries.length) throw new StudyError("Bạn đã học hết kho từ hiện có. Hãy quay lại khi có từ đến hạn ôn.", 409);
     const data = { goal, version: randomUUID(), entryIds: entries.map(entry => entry.id), isReview: due.length > 0, passedAt: null, result: Prisma.DbNull };
     const saved = await tx.vocabularyStudy.upsert({ where: { userId }, create: { userId, ...data }, update: data });
-    return { version: saved.version, isReview: saved.isReview, entries };
+    return { version: saved.version, isReview: saved.isReview, entries: entries.map(withVocabularyAudio) };
   });
 }
 

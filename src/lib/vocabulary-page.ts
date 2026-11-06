@@ -2,10 +2,11 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createHash } from "node:crypto";
+import { withVocabularyAudio } from "./vocabulary-audio";
 
 export type VocabularyScope = { mode: "collection" | "collocations" | "notebook"; collection?: string; topic?: string; q?: string; status?: string };
 const fields = { id: true, term: true, meaningVi: true, ipa: true, exampleEn: true } as const;
-const sharedFields = { ...fields, partOfSpeech: true, exampleVi: true, audioUrl: true } as const;
+const sharedFields = { ...fields, entryCode: true, partOfSpeech: true, exampleVi: true, audioUrl: true } as const;
 type Key = { source: number; values: string[] };
 
 export async function notebookCounts(userId: string) {
@@ -63,7 +64,7 @@ export async function getVocabularyPage(userId: string, input: VocabularyScope, 
       prisma.personalVocabulary.findMany({ where: { AND: [{ userId, ...(status ? { status } : {}), ...search }, boundary(1, names, true)] }, orderBy: order(names, true), take: 31,
         select: { ...fields, updatedAt: true, status: true } }),
     ]);
-    const a = saved.map(r => ({ ...r.entry, status: r.status, cursor: token({ source: 0, values: [r.updatedAt.toISOString(), r.id] }) }));
+    const a = saved.map(r => ({ ...withVocabularyAudio(r.entry), status: r.status, cursor: token({ source: 0, values: [r.updatedAt.toISOString(), r.id] }) }));
     const b = personal.map(r => ({ id: r.id, term: r.term, meaningVi: r.meaningVi, ipa: r.ipa, exampleEn: r.exampleEn, exampleVi: null, partOfSpeech: null, status: r.status, cursor: token({ source: 1, values: [r.updatedAt.toISOString(), r.id] }) }));
     rows = previous ? [...b, ...a] : [...a, ...b];
   } else {
@@ -79,7 +80,7 @@ export async function getVocabularyPage(userId: string, input: VocabularyScope, 
       orderBy: order(names, false), take: 31,
       select: { ...sharedFields, entryCode: true, progress: { where: userId ? { userId } : { id: { in: [] } }, select: { status: true } } },
     });
-    rows = entries.map(({ entryCode, progress, ...entry }) => ({ ...entry, status: progress[0]?.status,
+    rows = entries.map(({ entryCode, progress, ...entry }) => ({ ...withVocabularyAudio({ ...entry, entryCode }), status: progress[0]?.status,
       cursor: token({ source: 0, values: input.mode === "collection" ? [entryCode, entry.id] : [entry.term, entryCode, entry.id] }) }));
   }
   const items = rows.slice(0, 30);

@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: "https", hostname: "img.youtube.com" }],
   },
+  async headers() {
+    return [{ source: "/audio/vocabulary/:collection/:file", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] }];
+  },
   async redirects() {
     return [
       { source: "/beginner", destination: "/exam/vstep", permanent: false },
