@@ -26,7 +26,13 @@ export const metadata: Metadata = {
   title: "Học tiếng Anh online | WEWIN EDUCATION",
   description:
     "WEWIN EDUCATION — luyện thi VSTEP cho người học Việt Nam.",
-  icons: { icon: "/brand/wewin-logo-gold.webp" },
+  icons: {
+    icon: [
+      { url: "/favicon.ico?v=wewin-w-1", type: "image/x-icon", sizes: "16x16 32x32 48x48" },
+      { url: "/brand/wewin-icon-192.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: { url: "/brand/wewin-apple-icon.png", sizes: "180x180", type: "image/png" },
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
