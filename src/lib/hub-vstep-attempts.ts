@@ -140,30 +140,50 @@ export async function listHubVstepAttempts(
 
   const now = new Date();
   try {
-    const rows = await prisma.examAttempt.findMany({
-      where: buildWhere(parsed.status, parsed.q, now),
-      orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-      take: parsed.take,
-      skip: parsed.offset,
-      select: {
-        id: true,
-        catalog: true,
-        status: true,
-        listeningScore: true,
-        readingScore: true,
-        writingStatus: true,
-        speakingStatus: true,
-        startedAt: true,
-        submittedAt: true,
-        expiresAt: true,
-        updatedAt: true,
-        userId: true,
-        guestSessionId: true,
-        user: { select: { name: true, email: true } },
-        examPaper: { select: { title: true } },
-        paperPart: { select: { title: true } },
-      },
-    });
+    const where = buildWhere(parsed.status, parsed.q, now);
+    const select = {
+      id: true,
+      catalog: true,
+      status: true,
+      listeningScore: true,
+      readingScore: true,
+      writingStatus: true,
+      speakingStatus: true,
+      startedAt: true,
+      submittedAt: true,
+      expiresAt: true,
+      updatedAt: true,
+      userId: true,
+      guestSessionId: true,
+      user: { select: { name: true, email: true } },
+      examPaper: { select: { title: true } },
+      paperPart: { select: { title: true } },
+    } as const;
+
+    // Neon compute can be cold after idle; retry briefly before failing the hub.
+    let rows: Awaited<ReturnType<typeof prisma.examAttempt.findMany>> | null = null;
+    let lastError: unknown;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        rows = await prisma.examAttempt.findMany({
+          where,
+          orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+          take: parsed.take,
+          skip: parsed.offset,
+          select,
+        });
+        lastError = null;
+        break;
+      } catch (error) {
+        lastError = error;
+        const message = error instanceof Error ? error.message : "";
+        if (!message.includes("Can't reach database server") || attempt === 2) {
+          throw error;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1500 * (attempt + 1)));
+      }
+    }
+    if (!rows) throw lastError instanceof Error ? lastError : new Error("QUERY_FAILED");
 
     const origin = publicOrigin();
     const items: HubVstepAttemptItem[] = rows.map((row) => {
