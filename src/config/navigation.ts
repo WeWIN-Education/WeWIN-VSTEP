@@ -107,6 +107,7 @@ export const NAV_GROUPS: NavGroup[] = [
           { label: "Lịch học", href: "/manage/sessions", roles: ["ADMIN"] },
           { label: "Zoom & tác vụ", href: "/manage/integrations", roles: ["ADMIN"] },
           { label: "Tài khoản", href: "/manage/users", roles: ["ADMIN"] },
+          { label: "Lịch sử làm bài", href: "/manage/vstep/history", roles: ["ADMIN"] },
           { label: "Đề thi", href: "/manage/exams", roles: ["ADMIN"] },
           { label: "Kỹ năng", href: "/manage/skills", roles: ["ADMIN"] },
           { label: "Bài tập", href: "/manage/practice", roles: ["ADMIN"] },
