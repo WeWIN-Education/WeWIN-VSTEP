@@ -14,8 +14,10 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("[hub/vstep-attempts]", error);
+    const message =
+      error instanceof Error ? error.message.slice(0, 200) : "SERVER_ERROR";
     return NextResponse.json(
-      { code: "SERVER_ERROR" },
+      { code: "SERVER_ERROR", error: message },
       { status: 500, headers: NO_STORE },
     );
   }
