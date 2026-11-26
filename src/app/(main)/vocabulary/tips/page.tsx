@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Mẹo nhớ từ vựng | WEWIN EDUCATION" };
+export const metadata: Metadata = { title: "Mẹo nhớ từ vựng | WEWIN EDUCATION", alternates: { canonical: "/vocabulary/tips" } };
 
 const methods = [
   { icon: Brain, title: "Học theo ngữ cảnh", text: "Đừng chỉ ghi nhớ word = meaning. Đặt từ vào một câu và liên kết với tình huống quen thuộc.", example: "The steak sizzled in the pan. · Miếng bít tết phát ra tiếng xèo xèo trong chảo." },

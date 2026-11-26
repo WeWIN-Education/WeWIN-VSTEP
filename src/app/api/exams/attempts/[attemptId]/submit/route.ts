@@ -24,7 +24,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ att
     if(!exam)return NextResponse.json({error:"Nội dung đề không hợp lệ."},{status:409});
     if (attempt.status === "SUBMITTED") {
       const xpAward = owner.kind === "user" ? await awardXpForAttempt(attemptId, owner.userId).catch(() => null) : null;
-      return NextResponse.json({id:attemptId,...scoreExam(exam.paper,exam.privateData,savedAnswers(attempt.answers).answers as Record<string,string>),...publicGrading(attempt.grading),writingStatus:attempt.writingStatus,speakingStatus:attempt.speakingStatus,xpAward},{headers:{"Cache-Control":"private, no-store"}});
+      return NextResponse.json({id:attemptId,...scoreExam(exam.paper,exam.privateData,savedAnswers(attempt.answers).answers as Record<string,string>),...publicGrading(attempt.grading),writingStatus:attempt.writingStatus,speakingStatus:attempt.speakingStatus,xpAward,newlySubmitted:false},{headers:{"Cache-Control":"private, no-store"}});
     }
     const data = validateSubmission(body,attempt.answers,attempt.recordings,exam.paper,attemptId);
     const storedRecordings = await prisma.examRecording.findMany({ where: { attemptId, status: "SAVED" }, select: { partId: true, storageKey: true } });
@@ -41,6 +41,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ att
     const objectiveScores = attempt.catalog === "LISTENING" ? [score.listening.score] : attempt.catalog === "READING" ? [score.reading.score] : attempt.catalog === "FULL" ? [score.listening.score, score.reading.score] : [];
     const objectiveAverage = objectiveScores.length && objectiveScores.every((value): value is number => typeof value === "number") ? Math.round(objectiveScores.reduce((a,b)=>a+b,0)/objectiveScores.length*10)/10 : null;
     const xpAward = owner.kind === "user" ? await awardXpForAttempt(attemptId, owner.userId).catch(() => null) : null;
-    return NextResponse.json({id:attemptId,...score,objectiveAverage,overallScore:null,writingStatus,speakingStatus,xpAward});
+    return NextResponse.json({id:attemptId,...score,objectiveAverage,overallScore:null,writingStatus,speakingStatus,xpAward,newlySubmitted:true});
   } catch(error) { return NextResponse.json({error:error instanceof Error ? error.message : "Không thể nộp bài."},{status:400}); }
 }

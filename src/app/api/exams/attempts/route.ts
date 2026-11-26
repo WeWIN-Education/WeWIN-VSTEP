@@ -27,8 +27,8 @@ function noStore<T>(body: T, init?: ResponseInit) {
   });
 }
 
-function startResponse(attempt: { id: string; expiresAt: Date | null }) {
-  return noStore({ id: attempt.id, attemptId: attempt.id, expiresAt: attempt.expiresAt?.toISOString() });
+function startResponse(attempt: { id: string; expiresAt: Date | null }, created: boolean) {
+  return noStore({ id: attempt.id, attemptId: attempt.id, expiresAt: attempt.expiresAt?.toISOString(), created });
 }
 
 async function createAttempt(paper: ExamPaper, input: { userId?: string; guestSessionId?: string; catalog: CatalogCode; paperPartId?: string; skill?: ExamSkill | null; durationMin?: number }) {
@@ -82,10 +82,10 @@ export async function POST(request: Request) {
       orderBy: { updatedAt: "desc" },
       select: { id: true, expiresAt: true },
     });
-    if (existing) return startResponse(existing);
+    if (existing) return startResponse(existing, false);
 
     try {
-      return startResponse(await createAttempt(paper, { userId: user.id, catalog, paperPartId: part?.id, skill: part?.skill, durationMin: part?.durationMin ?? paper.durationMin }));
+      return startResponse(await createAttempt(paper, { userId: user.id, catalog, paperPartId: part?.id, skill: part?.skill, durationMin: part?.durationMin ?? paper.durationMin }), true);
     } catch (error) {
       return noStore({ error: isConflict(error) ? "Lượt thi vừa được tạo. Hãy thử lại." : "Không thể bắt đầu lượt thi." }, { status: 409 });
     }
@@ -138,7 +138,7 @@ export async function POST(request: Request) {
       }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
       if (result.kind === "quota") return noStore({ error: "Bạn đã dùng đủ 2 đề khác nhau trong kho này.", code: "GUEST_QUOTA_EXHAUSTED" }, { status: 403 });
       if (result.kind === "finished") return noStore({ error: "Lượt học thử này đã kết thúc. Hãy mở lại bài từ đường dẫn kết quả hoặc chọn một đề khác.", code: "GUEST_ATTEMPT_FINISHED", attemptId: result.attempt.id }, { status: 409 });
-      return startResponse(result.attempt);
+      return startResponse(result.attempt, result.kind === "created");
     } catch (error) {
       const serializationConflict = error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
       if ((serializationConflict || isConflict(error)) && retry < 2) continue;

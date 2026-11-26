@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { grammarSummary } from "@/lib/grammar";
 import styles from "@/components/grammar/grammar.module.css";
 
-export const metadata = { title: "Ngữ pháp | WEWIN VSTEP" };
+export const metadata = { title: "Ngữ pháp | WEWIN VSTEP", alternates: { canonical: "/grammar" } };
 export const dynamic = "force-dynamic";
 export default async function GrammarPage() {
   const user = await getCurrentUser();

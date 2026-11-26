@@ -24,7 +24,9 @@ function readCatalog(value: string | string[] | undefined): CatalogCode {
 
 export async function generateMetadata({ params }: { params: Promise<{ level: string }> }): Promise<Metadata> {
   const { level } = await params;
-  return level === "vstep" ? { title: "Luyện thi VSTEP | WEWIN EDUCATION" } : { title: "Luyện thi | WEWIN EDUCATION" };
+  return level === "vstep"
+    ? { title: "Luyện thi VSTEP | WEWIN EDUCATION", alternates: { canonical: "/exam/vstep" } }
+    : { title: "Luyện thi | WEWIN EDUCATION" };
 }
 
 export default async function ExamHubPage({ params, searchParams }: { params: Promise<{ level: string }>; searchParams: Promise<{ catalog?: string | string[]; page?: string }> }) {

@@ -1,5 +1,6 @@
 "use client";
 import { notifyLearningActivity } from "@/lib/learning-activity-events";
+import { trackExam } from "@/lib/wewin-analytics";
 
 import { openMicrophone } from "@/lib/microphone";
 import { SpeakingSession } from "./SpeakingSession";
@@ -572,9 +573,10 @@ export function ExamTake({ exam: initialExam, candidate, catalog = "FULL" }: Pro
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ program: exam.program, slug: exam.slug, catalog }),
         });
-        const data = await response.json().catch(() => ({})) as { id?: string; attemptId?: string; error?: string };
+        const data = await response.json().catch(() => ({})) as { id?: string; attemptId?: string; error?: string; created?: boolean };
         if (!response.ok) throw new Error(data.error || "Không thể bắt đầu lượt thi.");
         id = data.id ?? data.attemptId ?? null;
+        if (id && data.created === true) trackExam("exam_started", catalog.toLowerCase());
       }
       if (!id) throw new Error("Máy chủ chưa trả về mã lượt thi.");
       const query = new URLSearchParams(window.location.search);
@@ -654,8 +656,9 @@ export function ExamTake({ exam: initialExam, candidate, catalog = "FULL" }: Pro
         const data = (await response.json().catch(() => ({}))) as { error?: string };
         throw new Error(data.error || "Không thể nộp bài.");
       }
-      const result = (await response.json()) as SubmitResult;
+      const result = (await response.json()) as SubmitResult & { newlySubmitted?: boolean };
       notifyLearningActivity();
+      if (result.newlySubmitted === true) trackExam("exam_completed", catalog.toLowerCase());
 
       setSubmittedResult({ ...result, id: result.id ?? result.attemptId ?? id, attemptId: id });
       const query = new URLSearchParams(window.location.search);
@@ -670,7 +673,7 @@ export function ExamTake({ exam: initialExam, candidate, catalog = "FULL" }: Pro
       submittingRef.current = false;
       if (mountedRef.current) setSubmitting(false);
     }
-  }, [saveProgress, stopRecording]);
+  }, [catalog, saveProgress, stopRecording]);
 
   useEffect(() => {
     if (!attemptId || stage !== "exam") return;

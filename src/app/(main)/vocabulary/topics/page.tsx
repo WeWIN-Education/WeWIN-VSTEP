@@ -6,7 +6,7 @@ import { ArrowRight, BookOpen } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Từ vựng theo chủ đề | WEWIN EDUCATION" };
+export const metadata: Metadata = { title: "Từ vựng theo chủ đề | WEWIN EDUCATION", alternates: { canonical: "/vocabulary/topics" } };
 
 export default async function VocabularyTopicsPage() {
   const collections = await prisma.vocabularyCollection.findMany({ where: { kind: "VOCABULARY" }, orderBy: { code: "asc" }, include: { topics: { orderBy: { sortOrder: "asc" }, include: { _count: { select: { entries: true } } } } } });

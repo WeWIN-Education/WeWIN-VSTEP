@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { SupportChatWidget } from "@/components/chat/SupportChatWidget";
+import { WebAnalytics } from "@/components/layout/WebAnalytics";
+import { siteOrigin } from "@/lib/site-pages";
 
 const beVietnam = localFont({
   src: [
@@ -23,6 +25,7 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteOrigin),
   title: "Học tiếng Anh online | WEWIN EDUCATION",
   description:
     "WEWIN EDUCATION — luyện thi VSTEP cho người học Việt Nam.",
@@ -46,6 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: `try{document.documentElement.dataset.theme=localStorage.getItem('wewin-theme')==='dark'?'dark':'light'}catch{}` }} />
         {children}
         <SupportChatWidget />
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ? <WebAnalytics /> : null}
       </body>
     </html>
   );

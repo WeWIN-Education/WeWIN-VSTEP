@@ -3,7 +3,7 @@ import { VideoCatalog } from "@/components/video/VideoCatalog";
 import { listPublishedLearningVideos } from "@/lib/video-repository";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Luyện thi VSTEP qua video | WEWIN EDUCATION" };
+export const metadata: Metadata = { title: "Luyện thi VSTEP qua video | WEWIN EDUCATION", alternates: { canonical: "/video" } };
 export const dynamic = "force-dynamic";
 
 export default async function VideoIndexPage({ searchParams }: { searchParams: Promise<{ page?: string; filter?: string; q?: string }> }) {

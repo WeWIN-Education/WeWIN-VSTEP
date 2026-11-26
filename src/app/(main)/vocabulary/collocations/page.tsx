@@ -5,7 +5,7 @@ import { getVocabularyPage } from "@/lib/vocabulary-page";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Cụm từ & collocations | WEWIN EDUCATION" };
+export const metadata: Metadata = { title: "Cụm từ & collocations | WEWIN EDUCATION", alternates: { canonical: "/vocabulary/collocations" } };
 
 export default async function VocabularyCollocationsPage({ searchParams }: { searchParams: Promise<{ q?: string | string[] }> }) {
   const user = await getCurrentUser();

@@ -24,13 +24,14 @@ it("replaces an empty submitted trial within its existing quota slot", async () 
   expect(response.status).toBe(200);
   const body = await response.json();
   expect(body.id).toBe("fresh");
+  expect(body.created).toBe(true);
   expect(Date.parse(body.expiresAt)).toBeGreaterThan(Date.now());
   expect(mocks.createUse).not.toHaveBeenCalled();
   expect(mocks.updateUse).toHaveBeenCalledWith({ where: { id: "use" }, data: { attemptId: "fresh" } });
 });
 it("resumes a live trial without resetting the clock or creating another attempt", async () => {
   mocks.existing.mockResolvedValue({ id: "use", attempt: { ...expired, status: "IN_PROGRESS", expiresAt: new Date(Date.now() + 60_000) } });
-  expect((await (await start()).json()).id).toBe("old");
+  expect(await (await start()).json()).toMatchObject({ id: "old", created: false });
   expect(mocks.createAttempt).not.toHaveBeenCalled();
 });
 it("keeps submitted answers and does not silently open results from a new-start link", async () => {
